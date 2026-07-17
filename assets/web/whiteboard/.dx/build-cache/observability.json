@@ -1,0 +1,402 @@
+{
+  "version": 1,
+  "generated": "2026-06-26T14:29:10.804417500+00:00",
+  "manifest_hash": "blake3:3a2149c1757e00dcaafb3af528d9093d5fb111b79e59d33c8209e2837418cee8",
+  "runtime": "dx-www-production-contract",
+  "secret_fields_collected": false,
+  "privacy": {
+    "collects_request_headers": false,
+    "collects_request_payloads": false,
+    "collects_cookies": false,
+    "collects_query_strings": false,
+    "collects_environment_secrets": false
+  },
+  "health_checks": [],
+  "ready_check": {
+    "path": "/.dx/ready",
+    "method": "GET",
+    "cache_control": "no-store",
+    "required_artifacts": [
+      ".dx/build-cache/deploy-adapter.json",
+      ".dx/build-cache/manifest.json",
+      ".dx/build-cache/observability.json",
+      ".dx/build-cache/rollback.json",
+      "app/app-router-execution.json",
+      "app/index.html"
+    ]
+  },
+  "route_timings": [
+    {
+      "path": "/",
+      "html": "app/index.html",
+      "metric": "route.duration_ms",
+      "unit": "milliseconds",
+      "hook": "preview-contract-route-handler",
+      "collects_query": false,
+      "collects_headers": false,
+      "collects_payload": false
+    }
+  ],
+  "packet_byte_sizes": [
+    {
+      "path": ".dx/build-cache/image-placeholders/public/favicon-b0698a08bf67b748.placeholder.svg",
+      "metric": "packet.bytes",
+      "bytes": 173,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": ".dx/build-cache/image-placeholders/public/icon-653d1ed174ed39da.placeholder.svg",
+      "metric": "packet.bytes",
+      "bytes": 169,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "_dx/styles/react-route-cacdba51273ec77f.css",
+      "metric": "packet.bytes",
+      "bytes": 42439,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "_dx/styles/react-route-cacdba51273ec77f.css.br",
+      "metric": "packet.bytes",
+      "bytes": 6496,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "_dx/styles/react-route-cacdba51273ec77f.css.gz",
+      "metric": "packet.bytes",
+      "bytes": 7334,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "agent-cursor.js",
+      "metric": "packet.bytes",
+      "bytes": 11677,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "agent-cursor.js.br",
+      "metric": "packet.bytes",
+      "bytes": 2979,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "agent-cursor.js.gz",
+      "metric": "packet.bytes",
+      "bytes": 3441,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "app/index.dxpk",
+      "metric": "packet.bytes",
+      "bytes": 37824,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "app/index.dxpk.br",
+      "metric": "packet.bytes",
+      "bytes": 9121,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "app/index.dxpk.gz",
+      "metric": "packet.bytes",
+      "bytes": 11005,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "canvas-export.js",
+      "metric": "packet.bytes",
+      "bytes": 6413,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "canvas-export.js.br",
+      "metric": "packet.bytes",
+      "bytes": 1611,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "canvas-export.js.gz",
+      "metric": "packet.bytes",
+      "bytes": 1809,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "favicon.svg",
+      "metric": "packet.bytes",
+      "bytes": 1160,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "favicon.svg.br",
+      "metric": "packet.bytes",
+      "bytes": 500,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "favicon.svg.gz",
+      "metric": "packet.bytes",
+      "bytes": 605,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "icon.svg",
+      "metric": "packet.bytes",
+      "bytes": 487,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "icon.svg.br",
+      "metric": "packet.bytes",
+      "bytes": 236,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "icon.svg.gz",
+      "metric": "packet.bytes",
+      "bytes": 277,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/agent-cursor-7cbbde833ae1eff0.js",
+      "metric": "packet.bytes",
+      "bytes": 11677,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/agent-cursor-7cbbde833ae1eff0.js.br",
+      "metric": "packet.bytes",
+      "bytes": 2979,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/agent-cursor-7cbbde833ae1eff0.js.gz",
+      "metric": "packet.bytes",
+      "bytes": 3441,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/canvas-export-b2b11c06ceed2815.js",
+      "metric": "packet.bytes",
+      "bytes": 6413,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/canvas-export-b2b11c06ceed2815.js.br",
+      "metric": "packet.bytes",
+      "bytes": 1611,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/canvas-export-b2b11c06ceed2815.js.gz",
+      "metric": "packet.bytes",
+      "bytes": 1809,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/favicon-b79469898e890b32.svg",
+      "metric": "packet.bytes",
+      "bytes": 1160,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/favicon-b79469898e890b32.svg.br",
+      "metric": "packet.bytes",
+      "bytes": 500,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/favicon-b79469898e890b32.svg.gz",
+      "metric": "packet.bytes",
+      "bytes": 605,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/icon-1f5e3f2581bd66f8.svg",
+      "metric": "packet.bytes",
+      "bytes": 487,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/icon-1f5e3f2581bd66f8.svg.br",
+      "metric": "packet.bytes",
+      "bytes": 236,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/icon-1f5e3f2581bd66f8.svg.gz",
+      "metric": "packet.bytes",
+      "bytes": 277,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/whiteboard-runtime-e47c4c795307d776.js",
+      "metric": "packet.bytes",
+      "bytes": 113834,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/whiteboard-runtime-e47c4c795307d776.js.br",
+      "metric": "packet.bytes",
+      "bytes": 20805,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/whiteboard-runtime-e47c4c795307d776.js.gz",
+      "metric": "packet.bytes",
+      "bytes": 24483,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "styles/generated.css",
+      "metric": "packet.bytes",
+      "bytes": 1722,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "styles/generated.css.br",
+      "metric": "packet.bytes",
+      "bytes": 553,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "styles/generated.css.gz",
+      "metric": "packet.bytes",
+      "bytes": 684,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "styles/globals.css",
+      "metric": "packet.bytes",
+      "bytes": 38613,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "styles/globals.css.br",
+      "metric": "packet.bytes",
+      "bytes": 6131,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "styles/globals.css.gz",
+      "metric": "packet.bytes",
+      "bytes": 6978,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "styles/theme.css",
+      "metric": "packet.bytes",
+      "bytes": 1727,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "styles/theme.css.br",
+      "metric": "packet.bytes",
+      "bytes": 590,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "styles/theme.css.gz",
+      "metric": "packet.bytes",
+      "bytes": 677,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "styles/whiteboard.css",
+      "metric": "packet.bytes",
+      "bytes": 34775,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "styles/whiteboard.css.br",
+      "metric": "packet.bytes",
+      "bytes": 5272,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "styles/whiteboard.css.gz",
+      "metric": "packet.bytes",
+      "bytes": 6001,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "whiteboard-runtime.js",
+      "metric": "packet.bytes",
+      "bytes": 113834,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "whiteboard-runtime.js.br",
+      "metric": "packet.bytes",
+      "bytes": 20805,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "whiteboard-runtime.js.gz",
+      "metric": "packet.bytes",
+      "bytes": 24483,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    }
+  ],
+  "packet_bytes_total": 598918,
+  "server_action_receipts": [],
+  "hooks": {
+    "health": [],
+    "ready": "/.dx/ready",
+    "observability": "/.dx/observability",
+    "route_timing_metric": "route.duration_ms",
+    "packet_byte_metric": "packet.bytes",
+    "server_action_receipt_metric": "server_action.receipts_total"
+  }
+}
