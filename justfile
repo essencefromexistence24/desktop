@@ -5,7 +5,7 @@
 # validation window.
 set shell := ["powershell.exe", "-NoLogo", "-Command"]
 
-build_target_dir := "G:/Dx/code/target"
+build_target_dir := "G:/Dx/desktop/target"
 min_build_free_gb := "18"
 min_incremental_free_gb := "4"
 
