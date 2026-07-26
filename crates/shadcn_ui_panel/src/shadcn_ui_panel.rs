@@ -18,9 +18,12 @@ use std::{
     fmt::Write as _,
     fs::{self as std_fs, File},
     path::{Component, Path, PathBuf},
-    sync::{Mutex, OnceLock},
+    sync::{Arc, Mutex, OnceLock},
 };
-use ui::{ListHeader, ListItem, ListItemSpacing, TintColor, Tooltip, ContextMenu, ContextMenuEntry, PopoverMenu, prelude::*};
+use ui::{
+    ContextMenu, ContextMenuEntry, ListHeader, ListItem, ListItemSpacing, PopoverMenu, TintColor,
+    Tooltip, prelude::*,
+};
 use url::Url;
 use workspace::{
     DraggedShadcnAsset, DraggedShadcnKind, Workspace,
@@ -464,6 +467,67 @@ impl ShadcnUiPanel {
 
     fn query(&self, cx: &App) -> String {
         lowercase_text(self.filter_editor.read(cx).text(cx).trim())
+    }
+
+    fn install_registry_command(&mut self, cx: &mut Context<Self>) {
+        let command = self.filter_editor.read(cx).text(cx).trim().to_string();
+        let parsed = match shadcn_ui::parse_shadcn_add_command(&command) {
+            Ok(parsed) => parsed,
+            Err(error) => {
+                self.status = Some(format!("{error:#}").into());
+                cx.notify();
+                return;
+            }
+        };
+        let Some(workspace) = self.workspace.upgrade() else {
+            self.status = Some("No active workspace".into());
+            cx.notify();
+            return;
+        };
+        let Some(editor) = workspace.read(cx).active_item_as::<Editor>(cx) else {
+            self.status = Some("Open a project file before installing UI".into());
+            cx.notify();
+            return;
+        };
+        let Some(project_root) = editor.read(cx).shadcn_project_root(cx) else {
+            self.status = Some("Could not resolve the active project root".into());
+            cx.notify();
+            return;
+        };
+        let http_client: Arc<dyn http_client::HttpClient> = cx.http_client();
+        self.status = Some(format!("Resolving {} registry item(s)...", parsed.items.len()).into());
+        cx.spawn(async move |panel, cx| {
+            let result =
+                shadcn_ui::install_registry_command(&command, &project_root, http_client).await;
+            panel
+                .update(cx, |panel, cx| {
+                    panel.status = Some(match result {
+                        Ok(report) => {
+                            let mut message = format!(
+                                "Installed {} item(s); wrote {} file(s)",
+                                report.installed_items.len(),
+                                report.written_files.len()
+                            );
+                            if !report.skipped_files.is_empty() {
+                                let _ = write!(
+                                    message,
+                                    "; kept {} existing file(s)",
+                                    report.skipped_files.len()
+                                );
+                            }
+                            if let Some(command) = report.package_install_command {
+                                let _ = write!(message, "; run {command}");
+                            }
+                            message.into()
+                        }
+                        Err(error) => format!("Registry install failed: {error:#}").into(),
+                    });
+                    cx.notify();
+                })
+                .ok();
+        })
+        .detach();
+        cx.notify();
     }
 
     fn matching_items(&self, query: &str, limit: usize) -> (Vec<CatalogItem>, usize) {
@@ -1616,6 +1680,9 @@ impl Render for ShadcnUiPanel {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         self.ensure_catalog_loaded(cx);
         let query = self.query(cx);
+        let has_registry_command =
+            shadcn_ui::parse_shadcn_add_command(self.filter_editor.read(cx).text(cx).trim())
+                .is_ok();
         let (items, total_matches) = self.matching_items(query.as_str(), MAX_SHADCN_ROWS);
         let mut preview_images = cached_shadcn_preview_image_urls(&items);
         self.ensure_visible_preview_images_warmed(&items, &preview_images, cx);
@@ -1729,7 +1796,25 @@ impl Render for ShadcnUiPanel {
                                     )),
                             ),
                     )
-                    .child(self.filter_editor.clone()),
+                    .child(
+                        h_flex()
+                            .gap_1()
+                            .items_center()
+                            .child(div().flex_1().child(self.filter_editor.clone()))
+                            .when(has_registry_command, |this| {
+                                this.child(
+                                    Button::new("shadcn-install-command", "Install")
+                                        .style(ButtonStyle::Tinted(TintColor::Accent))
+                                        .size(ButtonSize::Compact)
+                                        .tooltip(Tooltip::text(
+                                            "Resolve and install this shadcn registry command",
+                                        ))
+                                        .on_click(cx.listener(|panel, _, _, cx| {
+                                            panel.install_registry_command(cx);
+                                        })),
+                                )
+                            }),
+                    ),
             )
             .child(self.render_filter_tabs(&filter_counts, cx))
             .child(

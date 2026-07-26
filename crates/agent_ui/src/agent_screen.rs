@@ -1,10 +1,13 @@
+use editor::Editor;
 use gpui::{
-    App, Context, Entity, EventEmitter, FocusHandle, Focusable, Render, SharedString, Window,
+    App, AppContext as _, Context, Entity, EventEmitter, FocusHandle, Focusable, Render,
+    SharedString, Window,
 };
 use ui::{Icon, prelude::*};
 use workspace::{
     Item, Workspace,
     item::{ItemEvent, WorkspaceScreenKind},
+    pane_group::SplitDirection,
 };
 
 use crate::AgentPanel;
@@ -14,6 +17,53 @@ pub struct AgentScreen {
 }
 
 impl AgentScreen {
+    fn ensure_code_screen_on_right(
+        workspace: &mut Workspace,
+        ai_pane: &Entity<workspace::Pane>,
+        window: &mut Window,
+        cx: &mut Context<Workspace>,
+    ) {
+        let editor_pane = workspace.panes().iter().find(|pane| {
+            *pane != ai_pane
+                && pane
+                    .read(cx)
+                    .items()
+                    .any(|item| item.screen_kind(cx) == WorkspaceScreenKind::Editor)
+        });
+        if editor_pane.is_some() {
+            return;
+        }
+
+        if ai_pane
+            .read(cx)
+            .active_item()
+            .is_some_and(|item| item.screen_kind(cx) == WorkspaceScreenKind::Editor)
+        {
+            workspace.split_and_move(ai_pane.clone(), SplitDirection::Right, window, cx);
+            return;
+        }
+
+        let code_pane = workspace
+            .panes()
+            .iter()
+            .find(|pane| *pane != ai_pane && pane.read(cx).items_len() == 0)
+            .cloned()
+            .unwrap_or_else(|| {
+                workspace.split_pane(ai_pane.clone(), SplitDirection::Right, window, cx)
+            });
+        let project = workspace.project().clone();
+        let create_buffer = project.update(cx, |project, cx| project.create_buffer(None, true, cx));
+
+        cx.spawn_in(window, async move |workspace, cx| {
+            let buffer = create_buffer.await?;
+            workspace.update_in(cx, |workspace, window, cx| {
+                let editor = cx.new(|cx| Editor::for_buffer(buffer, Some(project), window, cx));
+                workspace.add_item(code_pane, Box::new(editor), None, true, false, window, cx);
+            })
+        })
+        .detach_and_log_err(cx);
+    }
+
     pub(crate) fn new(workspace: &Workspace, window: &mut Window, cx: &mut Context<Self>) -> Self {
         let panel = cx.new(|cx| AgentPanel::new_builder_workspace(workspace, window, cx));
         Self { panel }
@@ -34,6 +84,9 @@ impl AgentScreen {
                 })
             });
         if let Some(item) = existing_item {
+            if let Some(ai_pane) = workspace.pane_for(&*item) {
+                Self::ensure_code_screen_on_right(workspace, &ai_pane, window, cx);
+            }
             if let Some(agent_screen) = item.downcast::<AgentScreen>() {
                 agent_screen.update(cx, |agent_screen, cx| {
                     agent_screen.panel.update(cx, |panel, cx| {
@@ -47,6 +100,7 @@ impl AgentScreen {
         }
 
         let target_pane = workspace.screen_host_pane();
+        Self::ensure_code_screen_on_right(workspace, &target_pane, window, cx);
         let item = cx.new(|cx| Self::new(workspace, window, cx));
         workspace.add_item(target_pane, Box::new(item), None, true, true, window, cx);
     }

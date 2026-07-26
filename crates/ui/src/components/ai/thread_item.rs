@@ -467,7 +467,9 @@ impl RenderOnce for ThreadItem {
                                 .flex_shrink_0(),
                         )
                     })
-                    .when(self.is_truncated && opaque_window, |this| this.child(gradient_overlay))
+                    .when(self.is_truncated && opaque_window, |this| {
+                        this.child(gradient_overlay)
+                    })
                     .when(self.hovered || self.focused, |this| {
                         this.when_some(self.action_slot, |this, slot| {
                             this.child(

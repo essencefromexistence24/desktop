@@ -9407,9 +9407,7 @@ impl Render for ProjectPanel {
                         .on_action(cx.listener(Self::restore_file))
                         .on_action(cx.listener(Self::add_to_gitignore))
                         .on_action(cx.listener(Self::add_to_git_info_exclude))
-                        .when(!is_remote, |el| {
-                            el.on_action(cx.listener(Self::trash))
-                        })
+                        .when(!is_remote, |el| el.on_action(cx.listener(Self::trash)))
                 })
                 .when(is_local_or_wsl, |el| {
                     el.on_action(cx.listener(Self::reveal_in_finder))
@@ -9679,12 +9677,11 @@ impl Render for ProjectPanel {
                                         .border_t_1()
                                         .border_color(cx.theme().colors().border.opacity(0.5))
                                         .child(
-                                            ListHeader::new("Media")
-                                                .start_slot(
-                                                    Icon::new(IconName::Image)
-                                                        .size(IconSize::Small)
-                                                        .color(Color::Muted),
-                                                ),
+                                            ListHeader::new("Media").start_slot(
+                                                Icon::new(IconName::Image)
+                                                    .size(IconSize::Small)
+                                                    .color(Color::Muted),
+                                            ),
                                         )
                                         .child(media_preview::render_folder_media_shelf(
                                             &media_preview,

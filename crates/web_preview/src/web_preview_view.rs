@@ -31988,10 +31988,7 @@ impl WebPreviewView {
                         self.report_action_error("Canvas export failed", error, cx);
                     }
                     Err(_) => {
-                        self.report_action_panic(
-                            "Canvas export crashed while processing data",
-                            cx,
-                        );
+                        self.report_action_panic("Canvas export crashed while processing data", cx);
                     }
                 }
             }
@@ -34072,13 +34069,12 @@ impl Item for WebPreviewView {
         #[cfg(target_os = "windows")]
         {
             // Smart pause: throttle CPU on Windows to save battery/performance for inactive tabs.
-            let _ = self.call_devtools_protocol_method(
-                "Emulation.setCPUThrottlingRate",
-                r#"{"rate": 4}"#,
-            );
+            let _ = self
+                .call_devtools_protocol_method("Emulation.setCPUThrottlingRate", r#"{"rate": 4}"#);
         }
 
-        let _ = self.evaluate_script("document.querySelectorAll('video, audio').forEach(m => m.pause());");
+        let _ = self
+            .evaluate_script("document.querySelectorAll('video, audio').forEach(m => m.pause());");
 
         #[cfg(any(target_os = "windows", target_os = "macos"))]
         _window.set_background_appearance(gpui::WindowBackgroundAppearance::Opaque);
@@ -34107,14 +34103,14 @@ impl Render for WebPreviewView {
         #[cfg(target_os = "windows")]
         if became_active {
             // Unthrottle CPU when tab becomes active again
-            let _ = self.call_devtools_protocol_method(
-                "Emulation.setCPUThrottlingRate",
-                r#"{"rate": 1}"#,
-            );
+            let _ = self
+                .call_devtools_protocol_method("Emulation.setCPUThrottlingRate", r#"{"rate": 1}"#);
         }
 
         if became_active {
-            let _ = self.evaluate_script("document.querySelectorAll('video, audio').forEach(m => m.play());");
+            let _ = self.evaluate_script(
+                "document.querySelectorAll('video, audio').forEach(m => m.play());",
+            );
         }
 
         #[cfg(any(target_os = "windows", target_os = "macos"))]
@@ -34163,7 +34159,9 @@ impl Render for WebPreviewView {
                         .border_1()
                         .border_color(cx.theme().colors().border_variant)
                         .bg(cx.theme().colors().surface_background)
-                        .child(dx_loading_icon(IconSize::Small, Color::Muted).with_rotate_animation(2))
+                        .child(
+                            dx_loading_icon(IconSize::Small, Color::Muted).with_rotate_animation(2),
+                        )
                         .child(
                             Label::new("Loading Web Preview")
                                 .size(LabelSize::Small)
@@ -34410,10 +34408,17 @@ fn create_native_preview_for_request(request: &NativePreviewMountRequest) -> Res
     // Use a sensible default size if host bounds not yet known at mount time (e.g. first render of web preview screen
     // or when opened from AI screen with fixed topbar). This prevents create failures that previously manifested
     // as "native web preview not supported/available" errors. Sync will correct the rect immediately after.
-    let effective_initial = if initial_bounds.right > initial_bounds.left && initial_bounds.bottom > initial_bounds.top {
+    let effective_initial = if initial_bounds.right > initial_bounds.left
+        && initial_bounds.bottom > initial_bounds.top
+    {
         initial_bounds
     } else {
-        RECT { left: 0, top: 0, right: 1280, bottom: 800 }
+        RECT {
+            left: 0,
+            top: 0,
+            right: 1280,
+            bottom: 800,
+        }
     };
 
     let webview = WindowsVisualWebView::new(
@@ -34464,31 +34469,42 @@ fn create_native_preview_for_macos_window(
             size: Size::Logical(LogicalSize::new(32.0, 32.0)),
         });
 
-use rust_embed::RustEmbed;
+    use rust_embed::RustEmbed;
 
-#[derive(RustEmbed)]
-#[folder = "../../assets/web/"]
-struct WebProjectsAssets;
+    #[derive(RustEmbed)]
+    #[folder = "../../assets/web/"]
+    struct WebProjectsAssets;
 
-fn guess_mime(path: &str) -> &'static str {
-    if path.ends_with(".html") { "text/html" }
-    else if path.ends_with(".css") { "text/css" }
-    else if path.ends_with(".js") { "text/javascript" }
-    else if path.ends_with(".json") { "application/json" }
-    else if path.ends_with(".png") { "image/png" }
-    else if path.ends_with(".jpg") || path.ends_with(".jpeg") { "image/jpeg" }
-    else if path.ends_with(".svg") { "image/svg+xml" }
-    else if path.ends_with(".woff2") { "font/woff2" }
-    else if path.ends_with(".wasm") { "application/wasm" }
-    else { "application/octet-stream" }
-}
+    fn guess_mime(path: &str) -> &'static str {
+        if path.ends_with(".html") {
+            "text/html"
+        } else if path.ends_with(".css") {
+            "text/css"
+        } else if path.ends_with(".js") {
+            "text/javascript"
+        } else if path.ends_with(".json") {
+            "application/json"
+        } else if path.ends_with(".png") {
+            "image/png"
+        } else if path.ends_with(".jpg") || path.ends_with(".jpeg") {
+            "image/jpeg"
+        } else if path.ends_with(".svg") {
+            "image/svg+xml"
+        } else if path.ends_with(".woff2") {
+            "font/woff2"
+        } else if path.ends_with(".wasm") {
+            "application/wasm"
+        } else {
+            "application/octet-stream"
+        }
+    }
 
     let webview = WebViewBuilder::new_with_web_context(web_context.as_mut())
         .with_bounds(initial_bounds)
         .with_custom_protocol("dxcode".into(), move |request| {
             let uri_str = request.uri().to_string();
             let path_str = uri_str.as_str();
-            
+
             let path = path_str
                 .strip_prefix("dxcode://localhost/")
                 .or_else(|| path_str.strip_prefix("dxcode://"))
@@ -34554,14 +34570,12 @@ fn guess_mime(path: &str) -> &'static str {
                         .body(data)
                         .unwrap()
                 }
-                None => {
-                    wry::http::Response::builder()
-                        .status(404)
-                        .header("Content-Type", "text/plain")
-                        .header("Access-Control-Allow-Origin", "*")
-                        .body(Vec::new())
-                        .unwrap()
-                }
+                None => wry::http::Response::builder()
+                    .status(404)
+                    .header("Content-Type", "text/plain")
+                    .header("Access-Control-Allow-Origin", "*")
+                    .body(Vec::new())
+                    .unwrap(),
             }
         })
         .with_url(&resolve_webview_url(url.as_str()))

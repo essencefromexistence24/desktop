@@ -10,15 +10,17 @@ use language_model::{
     LanguageModelCompletionEvent, LanguageModelId, LanguageModelName, LanguageModelProvider,
     LanguageModelProviderId, LanguageModelProviderName, LanguageModelProviderState,
     LanguageModelRequest, LanguageModelToolChoice, LanguageModelToolSchemaFormat,
-    RateLimiter, env_var, NARA_ROUTER_PROVIDER_ID, NARA_ROUTER_PROVIDER_NAME,
+    NARA_ROUTER_PROVIDER_ID, NARA_ROUTER_PROVIDER_NAME, RateLimiter, env_var,
 };
 use menu;
+use open_ai::completion::{
+    OpenAiEventMapper, OpenAiResponseEventMapper, into_open_ai, into_open_ai_response,
+};
 use open_ai::{
     ResponseStreamEvent,
     responses::{Request as ResponseRequest, StreamEvent as ResponsesStreamEvent, stream_response},
     stream_completion,
 };
-use open_ai::completion::{OpenAiEventMapper, OpenAiResponseEventMapper, into_open_ai, into_open_ai_response};
 use settings::{NaraRouterAvailableModel as AvailableModel, Settings, SettingsStore};
 use ui::{ButtonLink, ConfiguredApiCard, List, ListBulletItem, prelude::*};
 use ui_input::InputField;

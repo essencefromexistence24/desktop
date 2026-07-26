@@ -616,16 +616,7 @@ impl LanguageModel for OpenCodeLanguageModel {
 
     fn name(&self) -> LanguageModelName {
         if self.subscription == OpenCodeSubscription::Free {
-            let brand_name = match self.model {
-                opencode::Model::BigPickle => "high",
-                opencode::Model::DeepSeekV4FlashFree => "xhigh",
-                opencode::Model::MimoV2_5Free => "default",
-                opencode::Model::MiniMaxM3Free => "low",
-                opencode::Model::Nemotron3SuperFree => "medium",
-                opencode::Model::Nemotron3UltraFree => "xlow",
-                _ => self.model.display_name(),
-            };
-            LanguageModelName::from(brand_name.to_string())
+            LanguageModelName::from(self.model.display_name().to_string())
         } else {
             LanguageModelName::from(format!(
                 "{}: {}",
@@ -1130,9 +1121,9 @@ mod tests {
 
         assert_eq!(
             opencode_language_model_id(&model),
-            LanguageModelId::from("default".to_string())
+            LanguageModelId::from("mimo-v2.5-free".to_string())
         );
-        assert_eq!(opencode_model_registry_key(&model), "default");
+        assert_eq!(opencode_model_registry_key(&model), "mimo-v2.5-free");
     }
 
     #[test]
@@ -1141,7 +1132,7 @@ mod tests {
 
         assert_eq!(
             opencode_external_model_id(&model),
-            "opencode/free-opensource-xhigh"
+            "opencode/deepseek-v4-flash-free"
         );
     }
 
@@ -1190,17 +1181,15 @@ mod tests {
             (default_id, default_fast_id, provided_ids)
         });
 
-        assert_eq!(default_id.as_deref(), Some("default"));
-        assert_eq!(default_fast_id.as_deref(), Some("xhigh"));
+        assert_eq!(default_id.as_deref(), Some("mimo-v2.5-free"));
+        assert_eq!(default_fast_id.as_deref(), Some("deepseek-v4-flash-free"));
         assert_eq!(
             provided_ids,
             [
-                "high",
-                "xhigh",
-                "default",
-                "low",
-                "medium",
-                "xlow",
+                "big-pickle",
+                "deepseek-v4-flash-free",
+                "mimo-v2.5-free",
+                "nemotron-3-ultra-free",
             ]
         );
     }

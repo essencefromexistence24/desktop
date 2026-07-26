@@ -2431,7 +2431,9 @@ impl Render for WebPreviewView {
                         .border_1()
                         .border_color(cx.theme().colors().border_variant)
                         .bg(cx.theme().colors().surface_background)
-                        .child(dx_loading_icon(IconSize::Small, Color::Muted).with_rotate_animation(2))
+                        .child(
+                            dx_loading_icon(IconSize::Small, Color::Muted).with_rotate_animation(2),
+                        )
                         .child(
                             Label::new("Loading Web Preview")
                                 .size(LabelSize::Small)
@@ -2754,12 +2756,10 @@ fn create_native_preview_for_macos_window(
                         .body(content.data.into_owned())
                         .unwrap()
                 }
-                None => {
-                    wry::http::Response::builder()
-                        .status(404)
-                        .body(Vec::new())
-                        .unwrap()
-                }
+                None => wry::http::Response::builder()
+                    .status(404)
+                    .body(Vec::new())
+                    .unwrap(),
             }
         })
         .with_url(url.as_str())
@@ -2969,12 +2969,10 @@ fn create_native_preview_for_linux_x11_window(
                         .body(content.data.into_owned())
                         .unwrap()
                 }
-                None => {
-                    wry::http::Response::builder()
-                        .status(404)
-                        .body(Vec::new())
-                        .unwrap()
-                }
+                None => wry::http::Response::builder()
+                    .status(404)
+                    .body(Vec::new())
+                    .unwrap(),
             }
         })
         .with_url(url.as_str())
@@ -3087,12 +3085,10 @@ fn create_native_preview_for_linux_wayland_window(
                         .body(content.data.into_owned())
                         .unwrap()
                 }
-                None => {
-                    wry::http::Response::builder()
-                        .status(404)
-                        .body(Vec::new())
-                        .unwrap()
-                }
+                None => wry::http::Response::builder()
+                    .status(404)
+                    .body(Vec::new())
+                    .unwrap(),
             }
         })
         .with_url(url.as_str())

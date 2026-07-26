@@ -1,14 +1,17 @@
+use crate::workflow_node_icons::workflow_node_icon_asset_for;
+use editor::Editor;
 use gpui::{
-    App, Context, EventEmitter, FocusHandle, Focusable, Render, SharedString, Window, ScrollHandle,
+    App, Context, EventEmitter, FocusHandle, Focusable, Render, ScrollHandle, SharedString, Window,
 };
-use ui::{Icon, prelude::*, Button, ButtonStyle, Label, LabelSize, Color, Divider, TintColor, IconButton, IconName};
+use ui::{
+    Button, ButtonStyle, Color, Divider, Icon, IconButton, IconName, Label, LabelSize, TintColor,
+    prelude::*,
+};
 use workspace::{
     Item, Workspace,
     item::{ItemEvent, WorkspaceScreenKind},
 };
 use zed_actions::assistant::OpenTools;
-use crate::workflow_node_icons::workflow_node_icon_asset_for;
-use editor::Editor;
 
 #[derive(Clone)]
 struct N8nNode {
@@ -22,14 +25,18 @@ impl N8nNode {
     fn generate_mock_data() -> Vec<Self> {
         let mut nodes = Vec::with_capacity(500);
         let categories = ["Core", "Dev", "Marketing", "Data", "AI", "Communication"];
-        let base_names = ["Postgres", "Telegram", "Slack", "Gmail", "AWS S3", "OpenAI", "Stripe", "Github", "Jira", "Notion"];
+        let base_names = [
+            "Postgres", "Telegram", "Slack", "Gmail", "AWS S3", "OpenAI", "Stripe", "Github",
+            "Jira", "Notion",
+        ];
         for i in 0..500 {
             let cat = categories[i % categories.len()];
             let base = base_names[i % base_names.len()];
             nodes.push(Self {
                 id: i,
                 name: format!("{base}").into(),
-                description: format!("Automate {base} workflows via the n8n {cat} integration.").into(),
+                description: format!("Automate {base} workflows via the n8n {cat} integration.")
+                    .into(),
                 category: cat.into(),
             });
         }
@@ -56,7 +63,8 @@ impl ToolsScreen {
             if matches!(event, editor::EditorEvent::BufferEdited) {
                 cx.notify();
             }
-        }).detach();
+        })
+        .detach();
 
         Self {
             focus_handle: cx.focus_handle(),
@@ -147,9 +155,14 @@ impl Render for ToolsScreen {
         let visible_nodes = if query.is_empty() {
             nodes.into_iter().take(48).collect::<Vec<_>>()
         } else {
-            nodes.into_iter().filter(|node| {
-                node.name.to_lowercase().contains(&query) || node.description.to_lowercase().contains(&query)
-            }).take(48).collect::<Vec<_>>()
+            nodes
+                .into_iter()
+                .filter(|node| {
+                    node.name.to_lowercase().contains(&query)
+                        || node.description.to_lowercase().contains(&query)
+                })
+                .take(48)
+                .collect::<Vec<_>>()
         };
 
         // Each card takes a fixed share of the row and shrinks so that multiple
@@ -161,30 +174,34 @@ impl Render for ToolsScreen {
             .size_full()
             .bg(cx.theme().colors().editor_background)
             .child(
-                v_flex()
-                    .px_4()
-                    .pt_4()
-                    .pb_3()
-                    .child(
-                        h_flex()
-                            .w_full()
-                            .justify_between()
-                            .items_center()
-                            .child(
-                                v_flex()
-                                    .child(Label::new("Plugins").size(LabelSize::Large).color(Color::Default))
-                                    .child(Label::new("Browse and install 500+ n8n workflow nodes.").size(LabelSize::Small).color(Color::Muted))
-                            )
-                            .child(
-                                h_flex()
-                                    .w(rems_from_px(240.))
-                                    .child(self.query_editor.clone())
-                            )
-                            .child(
-                                Button::new("refresh-plugins", "Refresh Catalog")
-                                    .style(ButtonStyle::Subtle)
-                            )
-                    ),
+                v_flex().px_4().pt_4().pb_3().child(
+                    h_flex()
+                        .w_full()
+                        .justify_between()
+                        .items_center()
+                        .child(
+                            v_flex()
+                                .child(
+                                    Label::new("Plugins")
+                                        .size(LabelSize::Large)
+                                        .color(Color::Default),
+                                )
+                                .child(
+                                    Label::new("Browse and install 500+ n8n workflow nodes.")
+                                        .size(LabelSize::Small)
+                                        .color(Color::Muted),
+                                ),
+                        )
+                        .child(
+                            h_flex()
+                                .w(rems_from_px(240.))
+                                .child(self.query_editor.clone()),
+                        )
+                        .child(
+                            Button::new("refresh-plugins", "Refresh Catalog")
+                                .style(ButtonStyle::Subtle),
+                        ),
+                ),
             )
             .child(Divider::horizontal())
             .child(
@@ -195,54 +212,70 @@ impl Render for ToolsScreen {
                     .w_full()
                     .overflow_y_scroll()
                     .track_scroll(&self.scroll_handle)
-                    .child(
-                        h_flex()
-                            .w_full()
-                            .flex_wrap()
-                            .gap_3()
-                            .p_4()
-                            .children(visible_nodes.iter().map(|node| {
-                                v_flex()
-                                    .id(("node-card", node.id))
-                                    .flex_1()
-                                    .min_w(card_min)
-                                    .max_w(rems_from_px(480.))
-                                    .p_3()
-                                    .rounded_md()
-                                    .bg(cx.theme().colors().elevated_surface_background)
-                                    .border_1()
-                                    .border_color(cx.theme().colors().border_variant)
-                                    .hover(|s| s.bg(cx.theme().colors().element_hover))
-                                    .child(
-                                        h_flex()
-                                            .w_full()
-                                            .justify_between()
-                                            .items_center()
-                                            .gap_2()
-                                            .child(
-                                                h_flex()
-                                                    .gap_2()
-                                                    .child(workflow_node_icon_asset_for(None, Some(node.category.as_ref()), node.name.as_ref()).render(IconSize::Medium, Color::Default))
-                                                    .child(
-                                                        v_flex()
-                                                            .child(Label::new(node.name.clone()).size(LabelSize::Default).color(Color::Default))
-                                                            .child(Label::new(node.description.clone()).size(LabelSize::Small).color(Color::Muted))
+                    .child(h_flex().w_full().flex_wrap().gap_3().p_4().children(
+                        visible_nodes.iter().map(|node| {
+                            v_flex()
+                                .id(("node-card", node.id))
+                                .flex_1()
+                                .min_w(card_min)
+                                .max_w(rems_from_px(480.))
+                                .p_3()
+                                .rounded_md()
+                                .bg(cx.theme().colors().elevated_surface_background)
+                                .border_1()
+                                .border_color(cx.theme().colors().border_variant)
+                                .hover(|s| s.bg(cx.theme().colors().element_hover))
+                                .child(
+                                    h_flex()
+                                        .w_full()
+                                        .justify_between()
+                                        .items_center()
+                                        .gap_2()
+                                        .child(
+                                            h_flex()
+                                                .gap_2()
+                                                .child(
+                                                    workflow_node_icon_asset_for(
+                                                        None,
+                                                        Some(node.category.as_ref()),
+                                                        node.name.as_ref(),
                                                     )
+                                                    .render(IconSize::Medium, Color::Default),
+                                                )
+                                                .child(
+                                                    v_flex()
+                                                        .child(
+                                                            Label::new(node.name.clone())
+                                                                .size(LabelSize::Default)
+                                                                .color(Color::Default),
+                                                        )
+                                                        .child(
+                                                            Label::new(node.description.clone())
+                                                                .size(LabelSize::Small)
+                                                                .color(Color::Muted),
+                                                        ),
+                                                ),
+                                        )
+                                        .child(
+                                            IconButton::new(
+                                                ("install", node.id),
+                                                IconName::Download,
                                             )
-                                            .child(
-                                                IconButton::new(("install", node.id), IconName::Download)
-                                                    .style(ButtonStyle::Tinted(TintColor::Accent))
-                                                    .on_click({
-                                                        let entity = entity.clone();
-                                                        move |_, _window, cx| {
-                                                            let _ = entity.update(cx, |_, cx| cx.notify());
-                                                        }
-                                                    })
+                                            .style(ButtonStyle::Tinted(TintColor::Accent))
+                                            .on_click(
+                                                {
+                                                    let entity = entity.clone();
+                                                    move |_, _window, cx| {
+                                                        let _ =
+                                                            entity.update(cx, |_, cx| cx.notify());
+                                                    }
+                                                },
                                             ),
-                                    )
-                                    .into_any_element()
-                            }))
-                    )
+                                        ),
+                                )
+                                .into_any_element()
+                        }),
+                    )),
             )
     }
 }

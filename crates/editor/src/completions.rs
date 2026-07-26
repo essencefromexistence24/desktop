@@ -160,7 +160,13 @@ impl Editor {
             };
 
             this.trigger_completion_on_input(&deferred.text, deferred.trigger_in_words, window, cx);
-            this.refresh_edit_prediction(true, false, EditPredictionRequestTrigger::BufferEdit, window, cx);
+            this.refresh_edit_prediction(
+                true,
+                false,
+                EditPredictionRequestTrigger::BufferEdit,
+                window,
+                cx,
+            );
         });
     }
 

@@ -26,7 +26,7 @@ fn open_normal_web_preview_tab(
     workspace
         .update(cx, |workspace, cx| {
             workspace.activate_screen_kind(workspace::WorkspaceScreenKind::Browser, window, cx);
-            
+
             // Open in active pane so it goes to the webpreview as a tab ("webpreview screen").
             // The compact icon bar stays in the AI input.
             crate::web_preview_view::WebPreviewView::open_new_url_in_active_pane(

@@ -1,20 +1,23 @@
 use std::sync::Arc;
 
 use gpui::{
-    App, AppContext as _, AsyncWindowContext, Context, Entity, EventEmitter, FocusHandle, Focusable,
-    InteractiveElement, StatefulInteractiveElement, Styled, Subscription, Task, WeakEntity, Window,
-    ScrollHandle, actions,
+    App, AppContext as _, AsyncWindowContext, Context, Entity, EventEmitter, FocusHandle,
+    Focusable, InteractiveElement, ScrollHandle, StatefulInteractiveElement, Styled, Subscription,
+    Task, WeakEntity, Window, actions,
 };
 use serde::Deserialize;
-use ui::{prelude::*, Button, ButtonStyle, Color, IconButton, IconName, IconSize, Label, LabelSize, ListItem, ListItemSpacing, TintColor, Tooltip, h_flex, v_flex, WithScrollbar};
+use ui::{
+    Button, ButtonStyle, Color, IconButton, IconName, IconSize, Label, LabelSize, ListItem,
+    ListItemSpacing, TintColor, Tooltip, WithScrollbar, h_flex, prelude::*, v_flex,
+};
 use workspace::{
     Workspace,
     dock::{DockPosition, Panel, PanelEvent},
 };
 use zed_actions::dx_skill_panel::ToggleFocus;
 
-use fs::Fs;
 use editor::{Editor, EditorEvent};
+use fs::Fs;
 
 actions!(skill_panel, [InsertSkill, RefreshSkills]);
 
@@ -26,7 +29,7 @@ pub struct SkillEntry {
     pub id: String,
     pub name: String,
     pub description: String,
-    pub source: String, // e.g. "API: skills.example.com" or "builtin"
+    pub source: String,  // e.g. "API: skills.example.com" or "builtin"
     pub content: String, // the SKILL.md body or frontmatter+body
 }
 
@@ -48,10 +51,16 @@ impl DxSkillPanel {
         workspace: WeakEntity<Workspace>,
         mut cx: AsyncWindowContext,
     ) -> anyhow::Result<Entity<Self>> {
-        workspace.update_in(&mut cx, |workspace, window, cx| Self::new(workspace, window, cx))
+        workspace.update_in(&mut cx, |workspace, window, cx| {
+            Self::new(workspace, window, cx)
+        })
     }
 
-    fn new(_workspace: &mut Workspace, window: &mut Window, cx: &mut Context<Workspace>) -> Entity<Self> {
+    fn new(
+        _workspace: &mut Workspace,
+        window: &mut Window,
+        cx: &mut Context<Workspace>,
+    ) -> Entity<Self> {
         let workspace = cx.entity().downgrade();
         let fs = _workspace.project().read(cx).fs().clone();
         let http_client = _workspace.project().read(cx).client().http_client().clone();
@@ -63,11 +72,12 @@ impl DxSkillPanel {
                 editor
             });
 
-            let search_subscription = cx.subscribe_in(&search_editor, window, |_, _, event, _, cx| {
-                if matches!(event, EditorEvent::BufferEdited) {
-                    cx.notify();
-                }
-            });
+            let search_subscription =
+                cx.subscribe_in(&search_editor, window, |_, _, event, _, cx| {
+                    if matches!(event, EditorEvent::BufferEdited) {
+                        cx.notify();
+                    }
+                });
 
             let mut panel = Self {
                 workspace,
@@ -160,10 +170,14 @@ impl DxSkillPanel {
     }
 
     fn insert_selected_skill(&mut self, _window: &mut Window, cx: &mut Context<Self>) {
-        let Some(ix) = self.selected_index else { return; };
+        let Some(ix) = self.selected_index else {
+            return;
+        };
         let skill = &self.skills[ix].clone();
 
-        let Some(workspace) = self.workspace.upgrade() else { return; };
+        let Some(workspace) = self.workspace.upgrade() else {
+            return;
+        };
 
         let fs = self.fs.clone();
         let skill_name = skill.name.clone();
@@ -192,7 +206,8 @@ impl DxSkillPanel {
                 let content = content_with_front;
                 cx.background_spawn(async move {
                     let _ = fs.write(&target2, content.as_bytes()).await;
-                }).detach();
+                })
+                .detach();
 
                 // Also notify / reveal in project panel conceptually
                 // (user sees it in project tree under .agents/skills)
@@ -207,7 +222,9 @@ impl DxSkillPanel {
     #[allow(dead_code)]
     fn select_next(&mut self, cx: &mut Context<Self>) {
         if !self.skills.is_empty() {
-            let next = self.selected_index.map_or(0, |i| (i + 1) % self.skills.len());
+            let next = self
+                .selected_index
+                .map_or(0, |i| (i + 1) % self.skills.len());
             self.selected_index = Some(next);
             cx.notify();
         }
@@ -217,7 +234,9 @@ impl DxSkillPanel {
     fn select_prev(&mut self, cx: &mut Context<Self>) {
         if !self.skills.is_empty() {
             let len = self.skills.len();
-            let prev = self.selected_index.map_or(0, |i| if i == 0 { len - 1 } else { i - 1 });
+            let prev = self
+                .selected_index
+                .map_or(0, |i| if i == 0 { len - 1 } else { i - 1 });
             self.selected_index = Some(prev);
             cx.notify();
         }
@@ -275,11 +294,16 @@ impl EventEmitter<PanelEvent> for DxSkillPanel {}
 impl Render for DxSkillPanel {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let search_query = self.search_editor.read(cx).text(cx).to_lowercase();
-        let skills: Vec<_> = self.skills.iter().filter(|s| {
-            search_query.is_empty() 
-                || s.name.to_lowercase().contains(&search_query) 
-                || s.description.to_lowercase().contains(&search_query)
-        }).cloned().collect();
+        let skills: Vec<_> = self
+            .skills
+            .iter()
+            .filter(|s| {
+                search_query.is_empty()
+                    || s.name.to_lowercase().contains(&search_query)
+                    || s.description.to_lowercase().contains(&search_query)
+            })
+            .cloned()
+            .collect();
 
         let selected = self.selected_index;
 
@@ -318,8 +342,12 @@ impl Render for DxSkillPanel {
                             .border_1()
                             .border_color(cx.theme().colors().border)
                             .rounded_md()
-                            .child(Icon::new(IconName::MagnifyingGlass).size(IconSize::Small).color(Color::Muted))
-                            .child(self.search_editor.clone())
+                            .child(
+                                Icon::new(IconName::MagnifyingGlass)
+                                    .size(IconSize::Small)
+                                    .color(Color::Muted),
+                            )
+                            .child(self.search_editor.clone()),
                     ),
             )
             .child(
@@ -338,8 +366,16 @@ impl Render for DxSkillPanel {
                             .child(
                                 v_flex()
                                     .child(Label::new(skill.name.clone()).size(LabelSize::Small))
-                                    .child(Label::new(skill.description.clone()).size(LabelSize::XSmall).color(Color::Muted))
-                                    .child(Label::new(skill.source.clone()).size(LabelSize::XSmall).color(Color::Muted))
+                                    .child(
+                                        Label::new(skill.description.clone())
+                                            .size(LabelSize::XSmall)
+                                            .color(Color::Muted),
+                                    )
+                                    .child(
+                                        Label::new(skill.source.clone())
+                                            .size(LabelSize::XSmall)
+                                            .color(Color::Muted),
+                                    ),
                             )
                             .on_click(cx.listener(move |this, _, window, cx| {
                                 this.selected_index = Some(ix);
@@ -357,7 +393,7 @@ impl Render for DxSkillPanel {
                                             .on_click(cx.listener(move |this, _, _w, cx| {
                                                 this.selected_index = Some(ix);
                                                 cx.notify();
-                                            }))
+                                            })),
                                     )
                                     .child(
                                         IconButton::new(format!("insert-{}", ix), IconName::Plus)
@@ -367,7 +403,7 @@ impl Render for DxSkillPanel {
                                             .on_click(cx.listener(move |this, _, window, cx| {
                                                 this.selected_index = Some(ix);
                                                 this.insert_selected_skill(window, cx);
-                                            }))
+                                            })),
                                     )
                                     .child(
                                         IconButton::new(format!("more-{}", ix), IconName::Ellipsis)
@@ -377,11 +413,11 @@ impl Render for DxSkillPanel {
                                             .on_click(cx.listener(move |this, _, _w, cx| {
                                                 this.selected_index = Some(ix);
                                                 cx.notify();
-                                            }))
-                                    )
+                                            })),
+                                    ),
                             )
                     }))
-                    .vertical_scrollbar_for(&self.scroll_handle, _window, cx)
+                    .vertical_scrollbar_for(&self.scroll_handle, _window, cx),
             )
             .child(
                 h_flex()
@@ -390,21 +426,31 @@ impl Render for DxSkillPanel {
                     .border_color(cx.theme().colors().border)
                     .justify_end()
                     .gap_2()
-                    .child(Label::new("Click Insert to download & add skill to project .agents/skills/").size(LabelSize::XSmall).color(Color::Muted))
+                    .child(
+                        Label::new(
+                            "Click Insert to download & add skill to project .agents/skills/",
+                        )
+                        .size(LabelSize::XSmall)
+                        .color(Color::Muted),
+                    ),
             )
     }
 }
 
 pub(crate) fn init(cx: &mut App) {
     cx.observe_new(|workspace: &mut Workspace, _, _| {
-        workspace.register_action(|workspace, _: &zed_actions::dx_skill_panel::ToggleFocus, window, cx| {
-            workspace.toggle_panel_focus::<DxSkillPanel>(window, cx);
-        });
-        workspace.register_action(|workspace, _: &zed_actions::dx_skill_panel::Toggle, window, cx| {
-            if !workspace.toggle_panel_focus::<DxSkillPanel>(window, cx) {
-                workspace.close_panel::<DxSkillPanel>(window, cx);
-            }
-        });
+        workspace.register_action(
+            |workspace, _: &zed_actions::dx_skill_panel::ToggleFocus, window, cx| {
+                workspace.toggle_panel_focus::<DxSkillPanel>(window, cx);
+            },
+        );
+        workspace.register_action(
+            |workspace, _: &zed_actions::dx_skill_panel::Toggle, window, cx| {
+                if !workspace.toggle_panel_focus::<DxSkillPanel>(window, cx) {
+                    workspace.close_panel::<DxSkillPanel>(window, cx);
+                }
+            },
+        );
     })
     .detach();
 }

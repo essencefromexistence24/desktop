@@ -2284,7 +2284,9 @@ impl Render for WebPreviewView {
                         .border_1()
                         .border_color(cx.theme().colors().border_variant)
                         .bg(cx.theme().colors().surface_background)
-                        .child(dx_loading_icon(IconSize::Small, Color::Muted).with_rotate_animation(2))
+                        .child(
+                            dx_loading_icon(IconSize::Small, Color::Muted).with_rotate_animation(2),
+                        )
                         .child(
                             Label::new("Loading Web Preview")
                                 .size(LabelSize::Small)
@@ -2590,24 +2592,35 @@ fn create_native_preview_for_macos_window(
             size: Size::Logical(LogicalSize::new(32.0, 32.0)),
         });
 
-use rust_embed::RustEmbed;
+    use rust_embed::RustEmbed;
 
-#[derive(RustEmbed)]
-#[folder = "../../assets/web/"]
-struct WebProjectsAssets;
+    #[derive(RustEmbed)]
+    #[folder = "../../assets/web/"]
+    struct WebProjectsAssets;
 
-fn guess_mime(path: &str) -> &'static str {
-    if path.ends_with(".html") { "text/html" }
-    else if path.ends_with(".css") { "text/css" }
-    else if path.ends_with(".js") { "text/javascript" }
-    else if path.ends_with(".json") { "application/json" }
-    else if path.ends_with(".png") { "image/png" }
-    else if path.ends_with(".jpg") || path.ends_with(".jpeg") { "image/jpeg" }
-    else if path.ends_with(".svg") { "image/svg+xml" }
-    else if path.ends_with(".woff2") { "font/woff2" }
-    else if path.ends_with(".wasm") { "application/wasm" }
-    else { "application/octet-stream" }
-}
+    fn guess_mime(path: &str) -> &'static str {
+        if path.ends_with(".html") {
+            "text/html"
+        } else if path.ends_with(".css") {
+            "text/css"
+        } else if path.ends_with(".js") {
+            "text/javascript"
+        } else if path.ends_with(".json") {
+            "application/json"
+        } else if path.ends_with(".png") {
+            "image/png"
+        } else if path.ends_with(".jpg") || path.ends_with(".jpeg") {
+            "image/jpeg"
+        } else if path.ends_with(".svg") {
+            "image/svg+xml"
+        } else if path.ends_with(".woff2") {
+            "font/woff2"
+        } else if path.ends_with(".wasm") {
+            "application/wasm"
+        } else {
+            "application/octet-stream"
+        }
+    }
 
     let webview = WebViewBuilder::new_with_web_context(web_context.as_mut())
         .with_bounds(initial_bounds)
@@ -2628,12 +2641,10 @@ fn guess_mime(path: &str) -> &'static str {
                         .body(content.data.into_owned())
                         .unwrap()
                 }
-                None => {
-                    wry::http::Response::builder()
-                        .status(404)
-                        .body(Vec::new())
-                        .unwrap()
-                }
+                None => wry::http::Response::builder()
+                    .status(404)
+                    .body(Vec::new())
+                    .unwrap(),
             }
         })
         .with_url(url.as_str())

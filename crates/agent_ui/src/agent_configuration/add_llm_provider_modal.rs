@@ -611,12 +611,15 @@ impl AddLlmProviderModal {
                                     model.capabilities.supports_parallel_tool_calls,
                                 )
                                 .label("Supports parallel_tool_calls")
-                                .on_click(cx.listener(move |this, checked, _window, cx| {
-                                    if let Some(model) = this.input.models.get_mut(ix) {
-                                        model.capabilities.supports_parallel_tool_calls = *checked;
-                                        cx.notify();
-                                    }
-                                })),
+                                .on_click(cx.listener(
+                                    move |this, checked, _window, cx| {
+                                        if let Some(model) = this.input.models.get_mut(ix) {
+                                            model.capabilities.supports_parallel_tool_calls =
+                                                *checked;
+                                            cx.notify();
+                                        }
+                                    },
+                                )),
                             )
                             .child(
                                 Checkbox::new(
@@ -624,12 +627,14 @@ impl AddLlmProviderModal {
                                     model.capabilities.supports_prompt_cache_key,
                                 )
                                 .label("Supports prompt_cache_key")
-                                .on_click(cx.listener(move |this, checked, _window, cx| {
-                                    if let Some(model) = this.input.models.get_mut(ix) {
-                                        model.capabilities.supports_prompt_cache_key = *checked;
-                                        cx.notify();
-                                    }
-                                })),
+                                .on_click(cx.listener(
+                                    move |this, checked, _window, cx| {
+                                        if let Some(model) = this.input.models.get_mut(ix) {
+                                            model.capabilities.supports_prompt_cache_key = *checked;
+                                            cx.notify();
+                                        }
+                                    },
+                                )),
                             )
                             .child(
                                 Checkbox::new(
@@ -637,12 +642,14 @@ impl AddLlmProviderModal {
                                     model.capabilities.supports_chat_completions,
                                 )
                                 .label("Supports /chat/completions")
-                                .on_click(cx.listener(move |this, checked, _window, cx| {
-                                    if let Some(model) = this.input.models.get_mut(ix) {
-                                        model.capabilities.supports_chat_completions = *checked;
-                                        cx.notify();
-                                    }
-                                })),
+                                .on_click(cx.listener(
+                                    move |this, checked, _window, cx| {
+                                        if let Some(model) = this.input.models.get_mut(ix) {
+                                            model.capabilities.supports_chat_completions = *checked;
+                                            cx.notify();
+                                        }
+                                    },
+                                )),
                             )
                     }),
             )

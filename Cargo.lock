@@ -17878,8 +17878,11 @@ name = "shadcn_ui"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "futures 0.3.32",
+ "http_client",
  "serde",
  "serde_json",
+ "url",
  "workspace",
 ]
 
@@ -17891,10 +17894,12 @@ dependencies = [
  "db",
  "editor",
  "gpui",
+ "http_client",
  "memmap2",
  "rkyv",
  "serde",
  "serde_json",
+ "shadcn_ui",
  "ui",
  "url",
  "web_preview",

@@ -145,10 +145,8 @@ pub(crate) fn write_event_with_relative_paths(
 }
 
 fn generate_timestamp_name() -> String {
-    let now = time::OffsetDateTime::now_local()
-        .unwrap_or_else(|_| time::OffsetDateTime::now_utc());
-    let format =
-        time::macros::format_description!("[year]-[month]-[day] [hour]:[minute]:[second]");
+    let now = time::OffsetDateTime::now_local().unwrap_or_else(|_| time::OffsetDateTime::now_utc());
+    let format = time::macros::format_description!("[year]-[month]-[day] [hour]:[minute]:[second]");
     now.format(&format)
         .unwrap_or_else(|_| "unknown-time".to_string())
 }

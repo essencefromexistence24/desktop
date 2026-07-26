@@ -7,6 +7,10 @@ use std::{
 };
 use workspace::{DraggedShadcnAsset, DraggedShadcnKind};
 
+mod registry;
+
+pub use registry::{RegistryInstallReport, install_registry_command, parse_shadcn_add_command};
+
 pub struct InstallReport {
     pub installed_path: String,
     pub added_dependencies: Vec<String>,

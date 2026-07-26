@@ -392,10 +392,12 @@ impl RenderOnce for Button {
                 .gap(DynamicSpacing::Base04.rems(cx))
                 .when_else(
                     self.loading,
-                    |this| this.child(
-                        dx_loading_icon(IconSize::Small, Color::Muted)
-                            .with_keyed_rotate_animation(loading_icon_id, 2),
-                    ),
+                    |this| {
+                        this.child(
+                            dx_loading_icon(IconSize::Small, Color::Muted)
+                                .with_keyed_rotate_animation(loading_icon_id, 2),
+                        )
+                    },
                     |this| {
                         this.when_some(self.start_icon, |this, icon| {
                             this.child(if is_disabled {

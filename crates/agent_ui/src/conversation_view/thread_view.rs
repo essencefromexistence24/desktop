@@ -731,15 +731,60 @@ impl DxWebToolLogo {
 }
 
 const DX_WEB_TOOL_LOGOS: &[DxWebToolLogo] = &[
-    DxWebToolLogo { id: "design", label: "Design", light_path: "icons/dx_web_tools/design-light-transparent.svg", dark_path: "icons/dx_web_tools/design-dark-transparent.svg" },
-    DxWebToolLogo { id: "graphics", label: "Graphics", light_path: "icons/dx_web_tools/graphics-light-transparent.svg", dark_path: "icons/dx_web_tools/graphics-dark-transparent.svg" },
-    DxWebToolLogo { id: "presentations", label: "Presentations", light_path: "icons/dx_web_tools/presentations-light-transparent.svg", dark_path: "icons/dx_web_tools/presentations-dark-transparent.svg" },
-    DxWebToolLogo { id: "spreadsheets", label: "Spreadsheets", light_path: "icons/dx_web_tools/spreadsheets-light-transparent.svg", dark_path: "icons/dx_web_tools/spreadsheets-dark-transparent.svg" },
-    DxWebToolLogo { id: "video", label: "Video", light_path: "icons/dx_web_tools/video-light-transparent.svg", dark_path: "icons/dx_web_tools/video-dark-transparent.svg" },
-    DxWebToolLogo { id: "music", label: "Music", light_path: "icons/dx_web_tools/music-light-transparent.svg", dark_path: "icons/dx_web_tools/music-dark-transparent.svg" },
-    DxWebToolLogo { id: "whiteboard", label: "Whiteboard", light_path: "icons/dx_web_tools/whiteboard-light-transparent.svg", dark_path: "icons/dx_web_tools/whiteboard-dark-transparent.svg" },
-    DxWebToolLogo { id: "3d", label: "3D", light_path: "icons/dx_web_tools/3d-light-transparent.svg", dark_path: "icons/dx_web_tools/3d-dark-transparent.svg" },
-    DxWebToolLogo { id: "shader", label: "Shader", light_path: "icons/dx_web_tools/shader-light-transparent.svg", dark_path: "icons/dx_web_tools/shader-dark-transparent.svg" },
+    DxWebToolLogo {
+        id: "design",
+        label: "Design",
+        light_path: "icons/dx_web_tools/design-light-transparent.svg",
+        dark_path: "icons/dx_web_tools/design-dark-transparent.svg",
+    },
+    DxWebToolLogo {
+        id: "graphics",
+        label: "Graphics",
+        light_path: "icons/dx_web_tools/graphics-light-transparent.svg",
+        dark_path: "icons/dx_web_tools/graphics-dark-transparent.svg",
+    },
+    DxWebToolLogo {
+        id: "presentations",
+        label: "Presentations",
+        light_path: "icons/dx_web_tools/presentations-light-transparent.svg",
+        dark_path: "icons/dx_web_tools/presentations-dark-transparent.svg",
+    },
+    DxWebToolLogo {
+        id: "spreadsheets",
+        label: "Spreadsheets",
+        light_path: "icons/dx_web_tools/spreadsheets-light-transparent.svg",
+        dark_path: "icons/dx_web_tools/spreadsheets-dark-transparent.svg",
+    },
+    DxWebToolLogo {
+        id: "video",
+        label: "Video",
+        light_path: "icons/dx_web_tools/video-light-transparent.svg",
+        dark_path: "icons/dx_web_tools/video-dark-transparent.svg",
+    },
+    DxWebToolLogo {
+        id: "music",
+        label: "Music",
+        light_path: "icons/dx_web_tools/music-light-transparent.svg",
+        dark_path: "icons/dx_web_tools/music-dark-transparent.svg",
+    },
+    DxWebToolLogo {
+        id: "whiteboard",
+        label: "Whiteboard",
+        light_path: "icons/dx_web_tools/whiteboard-light-transparent.svg",
+        dark_path: "icons/dx_web_tools/whiteboard-dark-transparent.svg",
+    },
+    DxWebToolLogo {
+        id: "3d",
+        label: "3D",
+        light_path: "icons/dx_web_tools/3d-light-transparent.svg",
+        dark_path: "icons/dx_web_tools/3d-dark-transparent.svg",
+    },
+    DxWebToolLogo {
+        id: "shader",
+        label: "Shader",
+        light_path: "icons/dx_web_tools/shader-light-transparent.svg",
+        dark_path: "icons/dx_web_tools/shader-dark-transparent.svg",
+    },
     DxWebToolLogo {
         id: "dx-web",
         label: "DX Web",
@@ -4314,10 +4359,13 @@ impl ThreadView {
                     .shadow_sm()
                     .flex_shrink_1()
                     .flex_grow_0()
-                    .when(dx_compact_icon_bar_only, |this| this.h(rems(2.2)).shadow_none().w_auto().p_1() ) // tight width just for the 10 icons, centered by parent, less padding
-                    .when(overlay_chat_input && !expands_editor_area && !dx_compact_icon_bar_only, |this| {
-                        this.max_h(rems(COMPOSER_COLLAPSED_MAX_HEIGHT_REMS))
-                    })
+                    .when(dx_compact_icon_bar_only, |this| {
+                        this.h(rems(2.2)).shadow_none().w_auto().p_1()
+                    }) // tight width just for the 10 icons, centered by parent, less padding
+                    .when(
+                        overlay_chat_input && !expands_editor_area && !dx_compact_icon_bar_only,
+                        |this| this.max_h(rems(COMPOSER_COLLAPSED_MAX_HEIGHT_REMS)),
+                    )
                     .when(expands_editor_area, |this| this.h_full())
                     .justify_between()
                     .gap_1()
@@ -4325,47 +4373,54 @@ impl ThreadView {
                     .child(
                         v_flex()
                             .relative()
-                            .when(dx_compact_icon_bar_only, |this| this.w_auto().justify_center())
+                            .when(dx_compact_icon_bar_only, |this| {
+                                this.w_auto().justify_center()
+                            })
                             .when(!dx_compact_icon_bar_only, |this| this.w_full())
                             .min_h_0()
                             .when(expands_editor_area, |this| this.flex_1())
                             .gap_1()
                             .justify_between()
-                            .when(!dx_compact_icon_bar_only, |this| this.child(
-                                v_flex()
-                                    .id("agent-composer-collapsed-editor-scroll")
-                                    .relative()
-                                    .w_full()
-                                    .min_h_0()
-                                    .when(expands_editor_area, |this| this.flex_1())
-                                    .when(overlay_chat_input && !expands_editor_area, |this| {
-                                        this.overflow_y_scroll()
-                                            .max_h(rems(COMPOSER_COLLAPSED_EDITOR_MAX_HEIGHT_REMS))
-                                    })
-                                    .pt_0p5()
-                                    .pr_2p5()
-                                    .child(self.render_configured_plugin_strip(cx))
-                                    .child(self.message_editor.clone())
-                                    .when_some(
-                                        render_voice_recording_panel(
-                                            &self.composer_voice_state,
-                                            cx.listener(|this, _event, window, cx| {
-                                                this.stop_flow_voice_action(window, cx);
-                                            }),
-                                            cx.listener(|this, _event, _window, cx| {
-                                                this.cancel_flow_voice_recording(cx);
-                                            }),
-                                            cx.listener(|this, _event, window, cx| {
-                                                this.start_flow_voice_recording(window, cx);
-                                            }),
-                                            cx.listener(|this, _event, _window, cx| {
-                                                this.dismiss_flow_voice_error(cx);
-                                            }),
-                                            cx,
+                            .when(!dx_compact_icon_bar_only, |this| {
+                                this.child(
+                                    v_flex()
+                                        .id("agent-composer-collapsed-editor-scroll")
+                                        .relative()
+                                        .w_full()
+                                        .min_h_0()
+                                        .when(expands_editor_area, |this| this.flex_1())
+                                        .when(overlay_chat_input && !expands_editor_area, |this| {
+                                            this.overflow_y_scroll().max_h(rems(
+                                                COMPOSER_COLLAPSED_EDITOR_MAX_HEIGHT_REMS,
+                                            ))
+                                        })
+                                        .pt_0p5()
+                                        .pr_2p5()
+                                        .child(self.render_configured_plugin_strip(cx))
+                                        .child(self.message_editor.clone())
+                                        .when_some(
+                                            render_voice_recording_panel(
+                                                &self.composer_voice_state,
+                                                cx.listener(|this, _event, window, cx| {
+                                                    this.stop_flow_voice_action(window, cx);
+                                                }),
+                                                cx.listener(|this, _event, _window, cx| {
+                                                    this.cancel_flow_voice_recording(cx);
+                                                }),
+                                                cx.listener(|this, _event, window, cx| {
+                                                    this.start_flow_voice_recording(window, cx);
+                                                }),
+                                                cx.listener(|this, _event, _window, cx| {
+                                                    this.dismiss_flow_voice_error(cx);
+                                                }),
+                                                cx,
+                                            ),
+                                            |this, panel| this.child(panel),
                                         ),
-                                        |this, panel| this.child(panel),
-                                    ))
-                                    .when(has_messages && !dx_compact_icon_bar_only, |this| {
+                                )
+                                .when(
+                                    has_messages && !dx_compact_icon_bar_only,
+                                    |this| {
                                         this.child(
                                             h_flex()
                                                 .absolute()
@@ -4398,74 +4453,77 @@ impl ThreadView {
                                                         )),
                                                 ),
                                         )
-                                    }),
-                            )
-                            .child(
-                                {
-                                    if dx_compact_icon_bar_only {
-                                        // Compact container just wide enough for the 10 items (back + 9 icons).
-                                        // Centered horizontally in the AI input area.
-                                        // Icons vertically centered in the slim bar.
-                                        h_flex()
-                                            .w_auto()
-                                            .h_full()
-                                            .items_center()
-                                            .justify_center()
-                                            .child(self.render_dx_web_tool_logo_strip(cx))
-                                            .into_any_element()
-                                    } else {
-                                        h_flex()
-                                            .w_full()
-                                            .flex_none()
-                                            .flex_wrap()
-                                            .items_center()
-                                            .gap_1()
-                                            .child(
+                                    },
+                                )
+                            })
+                            .child({
+                                if dx_compact_icon_bar_only {
+                                    // Compact container just wide enough for the 10 items (back + 9 icons).
+                                    // Centered horizontally in the AI input area.
+                                    // Icons vertically centered in the slim bar.
+                                    h_flex()
+                                        .w_auto()
+                                        .h_full()
+                                        .items_center()
+                                        .justify_center()
+                                        .child(self.render_dx_web_tool_logo_strip(cx))
+                                        .into_any_element()
+                                } else {
+                                    h_flex()
+                                        .w_full()
+                                        .flex_none()
+                                        .flex_wrap()
+                                        .items_center()
+                                        .gap_1()
+                                        .child(
+                                            h_flex()
+                                                .gap_0p5()
+                                                .flex_wrap()
+                                                .items_center()
+                                                .child(self.render_add_context_button(cx))
+                                                .children(self.profile_selector.clone())
+                                                .children(self.render_profile_option_slots(cx))
+                                                .child(div().h_5().child(
+                                                    Divider::vertical().color(DividerColor::Border),
+                                                ))
+                                                .children(self.render_mode_shortcuts(cx))
+                                                .child(self.render_follow_toggle(cx)),
+                                        )
+                                        .child(div().flex_1().min_w_0())
+                                        .when(window.viewport_size().width > px(800.), |this| {
+                                            this.child(
                                                 h_flex()
-                                                    .gap_0p5()
-                                                    .flex_wrap()
+                                                    .gap_2()
                                                     .items_center()
-                                                    .child(self.render_add_context_button(cx))
-                                                    .children(self.profile_selector.clone())
-                                                    .children(self.render_profile_option_slots(cx))
-                                                    .child(div().h_5().child(
-                                                        Divider::vertical().color(DividerColor::Border),
-                                                    ))
-                                                    .children(self.render_mode_shortcuts(cx))
-                                                    .child(self.render_follow_toggle(cx)),
+                                                    .child(self.render_dx_web_tool_logo_strip(cx)),
                                             )
-                                            .child(div().flex_1().min_w_0())
-                                            .when(window.viewport_size().width > px(800.), |this| {
-                                                this.child(
-                                                    h_flex()
-                                                        .gap_2()
-                                                        .items_center()
-                                                        .child(self.render_dx_web_tool_logo_strip(cx)),
-                                                )
-                                            })
-                                            .child(div().flex_1().min_w_0())
-                                            .child(
-                                                h_flex()
-                                                    .flex_wrap()
-                                                    .items_center()
-                                                    .justify_end()
-                                                    .gap_1()
-                                                    .children(self.render_token_usage(cx))
-                                                    .children(self.render_fast_mode_control(cx))
-                                                    .children(self.render_thinking_control(cx))
-                                                    .map(|this| match self.config_options_view.clone() {
-                                                        Some(config_view) => this.child(config_view),
+                                        })
+                                        .child(div().flex_1().min_w_0())
+                                        .child(
+                                            h_flex()
+                                                .flex_wrap()
+                                                .items_center()
+                                                .justify_end()
+                                                .gap_1()
+                                                .children(self.render_token_usage(cx))
+                                                .children(self.render_fast_mode_control(cx))
+                                                .children(self.render_thinking_control(cx))
+                                                .map(|this| {
+                                                    match self.config_options_view.clone() {
+                                                        Some(config_view) => {
+                                                            this.child(config_view)
+                                                        }
                                                         None => this
                                                             .children(self.mode_selector.clone())
                                                             .children(self.model_selector.clone()),
-                                                    })
-                                                    .children(self.render_voice_controls(window, cx))
-                                                    .child(self.render_send_button(cx)),
-                                            )
-                                            .into_any_element()
-                                    }
+                                                    }
+                                                })
+                                                .children(self.render_voice_controls(window, cx))
+                                                .child(self.render_send_button(cx)),
+                                        )
+                                        .into_any_element()
                                 }
-                            ),
+                            }),
                     ),
             )
             .into_any()
@@ -6188,12 +6246,16 @@ impl ThreadView {
 
     fn render_dx_web_tool_logo_strip(&self, cx: &mut Context<Self>) -> impl IntoElement {
         let is_light = cx.theme().appearance.is_light();
-        let active_tool_id = if let AgentThreadCenterSurface::WwwPreview { tool_id } = self.center_surface {
-            Some(tool_id)
-        } else {
-            self.launched_dx_web_tool
-        };
-        let showing_preview = matches!(self.center_surface, AgentThreadCenterSurface::WwwPreview { .. }) || self.launched_dx_web_tool.is_some();
+        let active_tool_id =
+            if let AgentThreadCenterSurface::WwwPreview { tool_id } = self.center_surface {
+                Some(tool_id)
+            } else {
+                self.launched_dx_web_tool
+            };
+        let showing_preview = matches!(
+            self.center_surface,
+            AgentThreadCenterSurface::WwwPreview { .. }
+        ) || self.launched_dx_web_tool.is_some();
 
         let mut strip = h_flex()
             .id("dx-web-tool-logo-strip")
@@ -6201,8 +6263,8 @@ impl ThreadView {
             .flex_none()
             .gap_0p5()
             .items_center();
-            // Pack the 10 items (back + icons) tightly as a group.
-            // Height determined by size_5 icons. The compact bar centers this group vertically.
+        // Pack the 10 items (back + icons) tightly as a group.
+        // Height determined by size_5 icons. The compact bar centers this group vertically.
 
         if showing_preview {
             // back + divider only in the compact preview mode (10 items total: back + 9 icons)
@@ -6237,29 +6299,34 @@ impl ThreadView {
         // icons (Design/3D/Video/Music/Presentations/Spreadsheets/Graphics/Whiteboard/Shader)
         // now live in the sidebar bottom 12-cell grid and only the DX Web entry remains in
         // DX_WEB_TOOL_LOGOS, so this strip is a no-op pass-through for the single DX Web entry.
-        strip.children(DX_WEB_TOOL_LOGOS.iter().filter(|logo| logo.id == "dx-web").map(|logo| {
-            let tool_id = logo.id;
-            let is_active = active_tool_id == Some(tool_id);
+        strip.children(
+            DX_WEB_TOOL_LOGOS
+                .iter()
+                .filter(|logo| logo.id == "dx-web")
+                .map(|logo| {
+                    let tool_id = logo.id;
+                    let is_active = active_tool_id == Some(tool_id);
 
-            div()
-                .id(format!("dx-web-tool-logo-{}", logo.id))
-                .size_5()
-                .flex_none()
-                .flex()
-                .items_center()
-                .justify_center()
-                .rounded_sm()
-                .when(is_active, |this| {
-                    this.bg(cx.theme().colors().element_selected)
-                })
-                .cursor_pointer()
-                .hover(|style| style.bg(cx.theme().colors().element_hover))
-                .child(Icon::from_path(logo.path_for_theme(is_light)).size(IconSize::Small))
-                .tooltip(Tooltip::text(logo.label))
-                .on_click(cx.listener(move |this, _, window, cx| {
-                    this.open_dx_web_tool_in_webpreview_tab(tool_id, window, cx);
-                }))
-        }))
+                    div()
+                        .id(format!("dx-web-tool-logo-{}", logo.id))
+                        .size_5()
+                        .flex_none()
+                        .flex()
+                        .items_center()
+                        .justify_center()
+                        .rounded_sm()
+                        .when(is_active, |this| {
+                            this.bg(cx.theme().colors().element_selected)
+                        })
+                        .cursor_pointer()
+                        .hover(|style| style.bg(cx.theme().colors().element_hover))
+                        .child(Icon::from_path(logo.path_for_theme(is_light)).size(IconSize::Small))
+                        .tooltip(Tooltip::text(logo.label))
+                        .on_click(cx.listener(move |this, _, window, cx| {
+                            this.open_dx_web_tool_in_webpreview_tab(tool_id, window, cx);
+                        }))
+                }),
+        )
     }
 
     #[allow(dead_code)]
@@ -6301,7 +6368,9 @@ impl ThreadView {
         if url_opt.is_none()
             && cx.has_global::<crate::agent_thread_www_preview::WebPreviewServerPort>()
         {
-            let port = cx.global::<crate::agent_thread_www_preview::WebPreviewServerPort>().0;
+            let port = cx
+                .global::<crate::agent_thread_www_preview::WebPreviewServerPort>()
+                .0;
             url_opt = Some(format!("http://127.0.0.1:{}/{}", port, tool_id));
         }
 
@@ -7488,16 +7557,16 @@ impl ThreadView {
                 IconButton::new("agent-response-text-to-speech", read_aloud_icon)
                     .shape(ui::IconButtonShape::Square)
                     .icon_size(IconSize::Small)
-                    .icon_color(read_aloud_color)
-                    .disabled(read_aloud_disabled)
+                    .icon_color(Color::Accent)
+                    .disabled(Color::Ignored)
                     .tooltip(Tooltip::text(
                         if matches!(
                             voice_phase,
                             ComposerVoicePhase::Synthesizing | ComposerVoicePhase::Speaking
                         ) {
-                            "Stop Kokoro read-aloud"
+                            "Stop read-aloud"
                         } else {
-                            "Read latest agent response aloud with Kokoro"
+                            "Read latest agent response aloud"
                         },
                     ))
                     .on_click(cx.listener(move |this, _, _window, cx| {
@@ -13110,4 +13179,3 @@ pub(crate) fn reset_fast_mode_warnings(cx: &mut App) {
     })
     .detach();
 }
-

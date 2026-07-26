@@ -123,11 +123,16 @@ fn plugin_action_stack(node: DxWorkflowNodeSummary, panel: WeakEntity<AgentPanel
         .gap_1()
         .flex_none()
         .child(
-            ui::IconButton::new(workflow_node_element_id("plugin-preview", &node.id), IconName::Eye)
-                .icon_size(IconSize::Small)
-                .style(ButtonStyle::Subtle)
-                .tooltip(Tooltip::text("Preview Plugin"))
-                .on_click(|_, _, cx| { cx.stop_propagation(); }),
+            ui::IconButton::new(
+                workflow_node_element_id("plugin-preview", &node.id),
+                IconName::Eye,
+            )
+            .icon_size(IconSize::Small)
+            .style(ButtonStyle::Subtle)
+            .tooltip(Tooltip::text("Preview Plugin"))
+            .on_click(|_, _, cx| {
+                cx.stop_propagation();
+            }),
         )
         .child(render_plugin_config_menu(node, panel))
         .into_any_element()

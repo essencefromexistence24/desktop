@@ -15,7 +15,7 @@ pub const EDITORCONFIG_NAME: &str = ".editorconfig";
 /// and state directory paths.
 ///
 /// Forks should change this to avoid colliding with Zed's user data.
-pub const APP_NAME: &str = "Dx-Code"; // rebranded from Zed; uses .dx-code paths (config/data become Dx-Code / .dx-code on platforms)
+pub const APP_NAME: &str = "Dx-Desktop";
 
 /// Lowercased form of [`APP_NAME`], for use in XDG-style paths on
 /// Linux/FreeBSD and the macOS `~/.config` fallback.

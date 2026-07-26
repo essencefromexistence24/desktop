@@ -658,7 +658,7 @@ impl ComposerProfileKind {
             DxAiProfileKind::Ask => ComposerProfileKind::Ask,
             DxAiProfileKind::Agents => ComposerProfileKind::Agents,
             DxAiProfileKind::Search => ComposerProfileKind::Ask, // commented out - only Agent and Ask
-            DxAiProfileKind::Study => ComposerProfileKind::Ask, // commented out in UI
+            DxAiProfileKind::Study => ComposerProfileKind::Ask,  // commented out in UI
             DxAiProfileKind::Media => ComposerProfileKind::Ask, // commented out - only Agent and Ask
         }
     }

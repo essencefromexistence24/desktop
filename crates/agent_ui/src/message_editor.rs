@@ -2174,9 +2174,9 @@ impl Render for MessageEditor {
                     },
                 )
             })
-            // TODO(dx-chatinput): Commented out 10-ICON STRIP (back + 9 web tools).
-            // The 9 DX web tool icons now live in the sidebar bottom 12-cell grid.
-            // .child(render_simple_web_icons(self.workspace.clone(), window, cx))
+        // TODO(dx-chatinput): Commented out 10-ICON STRIP (back + 9 web tools).
+        // The 9 DX web tool icons now live in the sidebar bottom 12-cell grid.
+        // .child(render_simple_web_icons(self.workspace.clone(), window, cx))
     }
 }
 

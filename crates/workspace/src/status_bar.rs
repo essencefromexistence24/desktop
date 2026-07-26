@@ -151,10 +151,7 @@ impl Render for StatusBar {
 }
 
 impl StatusBar {
-    fn render_center_tools(
-        &self,
-        cx: &mut Context<Self>,
-    ) -> impl IntoElement {
+    fn render_center_tools(&self, cx: &mut Context<Self>) -> impl IntoElement {
         let web_tools = [
             ("whiteboard", "Whiteboard"),
             ("design", "Design"),
@@ -177,7 +174,7 @@ impl StatusBar {
                 } else {
                     format!("icons/dx_web_tools/{id}-dark-transparent.svg")
                 };
-                
+
                 div()
                     .id(format!("status-bar-web-tool-{id}"))
                     .size_5()
@@ -187,7 +184,11 @@ impl StatusBar {
                     .rounded_sm()
                     .cursor_pointer()
                     .hover(|style| style.bg(cx.theme().colors().element_hover))
-                    .child(Icon::from_path(path).size(IconSize::Small).color(Color::Muted))
+                    .child(
+                        Icon::from_path(path)
+                            .size(IconSize::Small)
+                            .color(Color::Muted),
+                    )
                     .tooltip(Tooltip::text(label.to_string()))
                     .on_click(cx.listener({
                         let id = id.to_string();
@@ -196,7 +197,9 @@ impl StatusBar {
                             if let Some(workspace) = workspace.upgrade() {
                                 workspace.update(cx, |_workspace, cx| {
                                     window.dispatch_action(
-                                        Box::new(crate::OpenWebPreview { project: id.clone() }),
+                                        Box::new(crate::OpenWebPreview {
+                                            project: id.clone(),
+                                        }),
                                         cx,
                                     );
                                 });

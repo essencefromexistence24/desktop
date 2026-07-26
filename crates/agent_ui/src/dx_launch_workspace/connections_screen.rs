@@ -175,7 +175,10 @@ fn mobile_pairing_state(cx: &mut Context<AgentPanel>) -> AnyElement {
                         .gap_4()
                         .w_1_2()
                         .child(Label::new("Pair New Device").weight(FontWeight::BOLD))
-                        .child(Label::new("Pair with DX Mobile app to continue on the go.").color(Color::Muted))
+                        .child(
+                            Label::new("Pair with DX Mobile app to continue on the go.")
+                                .color(Color::Muted),
+                        )
                         .child(
                             h_flex()
                                 .gap_6()
@@ -196,48 +199,83 @@ fn mobile_pairing_state(cx: &mut Context<AgentPanel>) -> AnyElement {
                                                     h_flex()
                                                         .w_full()
                                                         .justify_between()
-                                                        .child(div().size(px(36.0)).bg(gpui::black()).rounded_md())
-                                                        .child(div().size(px(36.0)).bg(gpui::black()).rounded_md())
+                                                        .child(
+                                                            div()
+                                                                .size(px(36.0))
+                                                                .bg(gpui::black())
+                                                                .rounded_md(),
+                                                        )
+                                                        .child(
+                                                            div()
+                                                                .size(px(36.0))
+                                                                .bg(gpui::black())
+                                                                .rounded_md(),
+                                                        ),
                                                 )
                                                 .child(
-                                                    h_flex()
-                                                        .w_full()
-                                                        .justify_center()
-                                                        .child(div().size(px(48.0)).h(px(16.0)).bg(gpui::black()).rounded_sm())
+                                                    h_flex().w_full().justify_center().child(
+                                                        div()
+                                                            .size(px(48.0))
+                                                            .h(px(16.0))
+                                                            .bg(gpui::black())
+                                                            .rounded_sm(),
+                                                    ),
                                                 )
                                                 .child(
                                                     h_flex()
                                                         .w_full()
                                                         .justify_between()
-                                                        .child(div().size(px(36.0)).bg(gpui::black()).rounded_md())
-                                                        .child(div().size(px(36.0)).bg(gpui::black()).rounded_md())
-                                                )
-                                        )
+                                                        .child(
+                                                            div()
+                                                                .size(px(36.0))
+                                                                .bg(gpui::black())
+                                                                .rounded_md(),
+                                                        )
+                                                        .child(
+                                                            div()
+                                                                .size(px(36.0))
+                                                                .bg(gpui::black())
+                                                                .rounded_md(),
+                                                        ),
+                                                ),
+                                        ),
                                 )
                                 .child(
                                     v_flex()
                                         .gap_3()
                                         .justify_center()
-                                        .child(Label::new("1. Open DX Mobile app").color(Color::Default))
-                                        .child(Label::new("2. Tap 'Scan to Connect'").color(Color::Default))
-                                        .child(Label::new("3. Point camera at QR").color(Color::Default))
+                                        .child(
+                                            Label::new("1. Open DX Mobile app")
+                                                .color(Color::Default),
+                                        )
+                                        .child(
+                                            Label::new("2. Tap 'Scan to Connect'")
+                                                .color(Color::Default),
+                                        )
+                                        .child(
+                                            Label::new("3. Point camera at QR")
+                                                .color(Color::Default),
+                                        )
                                         .child(
                                             div().mt_2().child(
                                                 Button::new("refresh-qr", "Refresh Code")
-                                                    .start_icon(Icon::new(IconName::RotateCw).size(IconSize::Small))
-                                                    .style(ButtonStyle::Subtle)
-                                            )
-                                        )
-                                )
-                        )
+                                                    .start_icon(
+                                                        Icon::new(IconName::RotateCw)
+                                                            .size(IconSize::Small),
+                                                    )
+                                                    .style(ButtonStyle::Subtle),
+                                            ),
+                                        ),
+                                ),
+                        ),
                 )
                 .child(
                     v_flex()
                         .gap_4()
                         .w_1_2()
                         .child(Label::new("Paired Devices").weight(FontWeight::BOLD))
-                        .children(
-                            paired_devices.into_iter().enumerate().map(|(i, (name, status, last_seen, icon))| {
+                        .children(paired_devices.into_iter().enumerate().map(
+                            |(i, (name, status, last_seen, icon))| {
                                 let is_active = status == "Active";
                                 h_flex()
                                     .w_full()
@@ -251,25 +289,45 @@ fn mobile_pairing_state(cx: &mut Context<AgentPanel>) -> AnyElement {
                                     .child(
                                         div()
                                             .p_2()
-                                            .bg(if is_active { cx.theme().status().info_background } else { cx.theme().colors().element_background })
+                                            .bg(if is_active {
+                                                cx.theme().status().info_background
+                                            } else {
+                                                cx.theme().colors().element_background
+                                            })
                                             .rounded_full()
-                                            .child(Icon::new(icon).size(IconSize::Medium).color(if is_active { Color::Info } else { Color::Muted }))
+                                            .child(Icon::new(icon).size(IconSize::Medium).color(
+                                                if is_active { Color::Info } else { Color::Muted },
+                                            )),
                                     )
                                     .child(
                                         v_flex()
                                             .flex_1()
                                             .child(Label::new(name).weight(FontWeight::MEDIUM))
-                                            .child(Label::new(format!("{} • Last seen: {}", status, last_seen)).color(if is_active { Color::Info } else { Color::Muted }).size(LabelSize::Small))
+                                            .child(
+                                                Label::new(format!(
+                                                    "{} • Last seen: {}",
+                                                    status, last_seen
+                                                ))
+                                                .color(if is_active {
+                                                    Color::Info
+                                                } else {
+                                                    Color::Muted
+                                                })
+                                                .size(LabelSize::Small),
+                                            ),
                                     )
                                     .child(
-                                        IconButton::new(SharedString::from(format!("device-options-{i}")), IconName::Ellipsis)
-                                            .style(ButtonStyle::Subtle)
-                                            .icon_size(IconSize::Medium)
-                                            .tooltip(Tooltip::text("Device Options"))
+                                        IconButton::new(
+                                            SharedString::from(format!("device-options-{i}")),
+                                            IconName::Ellipsis,
+                                        )
+                                        .style(ButtonStyle::Subtle)
+                                        .icon_size(IconSize::Medium)
+                                        .tooltip(Tooltip::text("Device Options")),
                                     )
-                            })
-                        )
-                )
+                            },
+                        )),
+                ),
         )
         .into_any_element()
 }

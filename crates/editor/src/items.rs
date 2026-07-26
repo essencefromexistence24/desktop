@@ -57,8 +57,8 @@ use workspace::{
     },
 };
 use workspace::{
-    DraggedIconAsset, DraggedMediaAsset, DraggedMediaKind, DraggedShadcnAsset, Pane, TabBarSettings,
-    WorkspaceSettings,
+    DraggedIconAsset, DraggedMediaAsset, DraggedMediaKind, DraggedShadcnAsset, Pane,
+    TabBarSettings, WorkspaceSettings,
     item::{FollowEvent, ProjectItemKind},
     searchable::SearchOptions,
 };
@@ -443,6 +443,13 @@ impl Editor {
         }
 
         Ok(install_report.status_message(asset.title.as_ref()).into())
+    }
+
+    pub fn shadcn_project_root(&self, cx: &App) -> Option<PathBuf> {
+        let project_path = self.active_project_path(cx)?;
+        self.project()?
+            .read(cx)
+            .get_workspace_root(&project_path, cx)
     }
 
     fn insert_shadcn_asset_on_drop(

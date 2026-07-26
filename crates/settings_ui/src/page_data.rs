@@ -1216,7 +1216,8 @@ fn appearance_page() -> SettingsPage {
             SettingsPageItem::SettingItem(SettingItem {
                 title: "Rainbow Caret Animation",
                 description: "Whether the DX rainbow caret cycles hue while painting.",
-                field: Box::new(SettingField { organization_override: None,
+                field: Box::new(SettingField {
+                    organization_override: None,
                     json_path: Some("rainbow_caret_animation"),
                     pick: |settings_content| {
                         settings_content.editor.rainbow_caret_animation.as_ref()
@@ -8230,7 +8231,8 @@ fn ai_page() -> SettingsPage {
                 SettingsPageItem::SettingItem(SettingItem {
                     title: $title,
                     description: $description,
-                    field: Box::new(SettingField::<$ty> { organization_override: None,
+                    field: Box::new(SettingField::<$ty> {
+                        organization_override: None,
                         json_path: Some($path),
                         pick: |settings_content| {
                             settings_content
@@ -8268,7 +8270,8 @@ fn ai_page() -> SettingsPage {
                 SettingsPageItem::SettingItem(SettingItem {
                     title: $title,
                     description: $description,
-                    field: Box::new(SettingField::<f32> { organization_override: None,
+                    field: Box::new(SettingField::<f32> {
+                        organization_override: None,
                         json_path: Some($path),
                         pick: |settings_content| {
                             settings_content
@@ -8521,7 +8524,8 @@ fn ai_page() -> SettingsPage {
             SettingsPageItem::SettingItem(SettingItem {
                 title: "Enabled",
                 description: "Show DX Agents bridge status, redacted receipts, social readiness, automations, and managed provider/model catalog state in Zed.",
-                field: Box::new(SettingField { organization_override: None,
+                field: Box::new(SettingField {
+                    organization_override: None,
                     json_path: Some("agent.dx_agents.enabled"),
                     pick: |settings_content| {
                         settings_content
@@ -8547,7 +8551,8 @@ fn ai_page() -> SettingsPage {
             SettingsPageItem::SettingItem(SettingItem {
                 title: "CLI Path",
                 description: "Root DX executable used when Zed runs an explicit dx agents bridge action.",
-                field: Box::new(SettingField { organization_override: None,
+                field: Box::new(SettingField {
+                    organization_override: None,
                     json_path: Some("agent.dx_agents.cli_path"),
                     pick: |settings_content| {
                         settings_content
@@ -8573,7 +8578,8 @@ fn ai_page() -> SettingsPage {
             SettingsPageItem::SettingItem(SettingItem {
                 title: "Receipt Root",
                 description: "Directory Zed reads for redacted DX Agents receipt JSON.",
-                field: Box::new(SettingField { organization_override: None,
+                field: Box::new(SettingField {
+                    organization_override: None,
                     json_path: Some("agent.dx_agents.receipt_root"),
                     pick: |settings_content| {
                         settings_content
@@ -8599,7 +8605,8 @@ fn ai_page() -> SettingsPage {
             SettingsPageItem::SettingItem(SettingItem {
                 title: "Provider Catalog Path",
                 description: "Generated rkyv/memmap provider catalog used for fast DX Agents provider and model discovery.",
-                field: Box::new(SettingField { organization_override: None,
+                field: Box::new(SettingField {
+                    organization_override: None,
                     json_path: Some("agent.dx_agents.provider_catalog_path"),
                     pick: |settings_content| {
                         settings_content
@@ -8625,7 +8632,8 @@ fn ai_page() -> SettingsPage {
             SettingsPageItem::SettingItem(SettingItem {
                 title: "Allow CLI Actions",
                 description: "Allow GPUI controls to run explicit dx-agents bridge commands such as refresh, social list readiness, automations list, and run receipts.",
-                field: Box::new(SettingField { organization_override: None,
+                field: Box::new(SettingField {
+                    organization_override: None,
                     json_path: Some("agent.dx_agents.allow_cli_actions"),
                     pick: |settings_content| {
                         settings_content
@@ -8651,7 +8659,8 @@ fn ai_page() -> SettingsPage {
             SettingsPageItem::SettingItem(SettingItem {
                 title: "Show Managed Providers",
                 description: "Show provider and model rows marked as managed by DX Agents without importing credentials.",
-                field: Box::new(SettingField { organization_override: None,
+                field: Box::new(SettingField {
+                    organization_override: None,
                     json_path: Some("agent.dx_agents.show_managed_providers"),
                     pick: |settings_content| {
                         settings_content
@@ -8677,7 +8686,8 @@ fn ai_page() -> SettingsPage {
             SettingsPageItem::SettingItem(SettingItem {
                 title: "Show In Agent Rail",
                 description: "Show DX Agents receipts, background tasks, automations, and social account readiness in the Agent panel rail.",
-                field: Box::new(SettingField { organization_override: None,
+                field: Box::new(SettingField {
+                    organization_override: None,
                     json_path: Some("agent.dx_agents.show_in_agent_rail"),
                     pick: |settings_content| {
                         settings_content

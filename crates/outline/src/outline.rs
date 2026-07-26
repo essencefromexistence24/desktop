@@ -681,7 +681,8 @@ mod tests {
         let (selected_candidate_id, expected_deepest_containing_candidate_id) = outline_view
             .update(cx, |outline_view, cx| {
                 let delegate = &outline_view.delegate;
-                let selected_candidate_id = delegate.matches[delegate.selected_match_index].candidate_id();
+                let selected_candidate_id =
+                    delegate.matches[delegate.selected_match_index].candidate_id();
                 let (buffer, cursor_offset) = delegate.active_editor.update(cx, |editor, cx| {
                     let buffer = editor.buffer().read(cx).snapshot(cx);
                     let cursor_offset = editor

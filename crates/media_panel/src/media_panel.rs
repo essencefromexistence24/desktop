@@ -2577,11 +2577,16 @@ fn media_roots_for_workspace(workspace: &Workspace, cx: &App) -> Vec<PathBuf> {
     // Use full DX media assets (G:\Dx\media and variants have millions of items for search).
     // Add global DX media roots for comprehensive indexing beyond workspace-specific.
     for base in [
-        std::env::var("DX_HOME").ok().map(|h| PathBuf::from(h).join("media")),
+        std::env::var("DX_HOME")
+            .ok()
+            .map(|h| PathBuf::from(h).join("media")),
         Some(PathBuf::from(r"G:\Dx\media")),
         std::env::var("DX_MEDIA_ROOT").ok().map(PathBuf::from),
         Some(PathBuf::from(r"G:\Dx\code\assets\media")), // fallback
-    ].into_iter().flatten() {
+    ]
+    .into_iter()
+    .flatten()
+    {
         if base.is_dir() && !has_ignored_media_segment(&base) && !roots.contains(&base) {
             roots.push(base);
         }

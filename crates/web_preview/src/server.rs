@@ -8,18 +8,18 @@ use std::{
 
 use assets::Assets;
 use axum::{
+    Router,
     body::Body,
     extract::{
-        ws::{Message, WebSocket, WebSocketUpgrade},
         Path as AxumPath,
+        ws::{Message, WebSocket, WebSocketUpgrade},
     },
-    http::{header::CONTENT_TYPE, StatusCode},
+    http::{StatusCode, header::CONTENT_TYPE},
     response::IntoResponse,
     routing::get,
-    Router,
 };
-use futures::stream::StreamExt;
 use futures::SinkExt;
+use futures::stream::StreamExt;
 use gpui::AssetSource;
 use tiny_http::{Header, Response, Server};
 use tokio::runtime::Runtime;
@@ -120,9 +120,7 @@ fn is_dx_web_root(p: &Path) -> bool {
 
 fn web_root() -> Option<&'static Path> {
     static WEB_ROOT: OnceLock<Option<PathBuf>> = OnceLock::new();
-    WEB_ROOT
-        .get_or_init(find_dx_web_root)
-        .as_deref()
+    WEB_ROOT.get_or_init(find_dx_web_root).as_deref()
 }
 
 /// Resolve the static output directory for a tool id, matching the project
@@ -143,7 +141,10 @@ fn project_output_dir(tool_id: &str) -> Option<PathBuf> {
         if let Ok(rd) = std::fs::read_dir(&assets_root) {
             if let Some(found) = rd.flatten().map(|e| e.path()).find(|pp| {
                 pp.is_dir()
-                    && pp.file_name().and_then(|n| n.to_str()).is_some_and(|n| n.eq_ignore_ascii_case(wanted))
+                    && pp
+                        .file_name()
+                        .and_then(|n| n.to_str())
+                        .is_some_and(|n| n.eq_ignore_ascii_case(wanted))
                     && pp.join("index.html").is_file()
             }) {
                 return Some(found);
@@ -169,7 +170,10 @@ fn project_output_dir(tool_id: &str) -> Option<PathBuf> {
     }
 
     let output_dir = project_dir.join(".dx").join("www").join("output");
-    output_dir.join("index.html").is_file().then_some(output_dir)
+    output_dir
+        .join("index.html")
+        .is_file()
+        .then_some(output_dir)
 }
 
 /// Find assets/web professional static outputs root (for copied nextjs exports).
@@ -177,7 +181,9 @@ fn project_output_dir(tool_id: &str) -> Option<PathBuf> {
 fn find_assets_web_root() -> Option<PathBuf> {
     if let Ok(env) = std::env::var("DX_ASSETS_WEB_ROOT") {
         let p = PathBuf::from(env);
-        if p.is_dir() { return Some(p); }
+        if p.is_dir() {
+            return Some(p);
+        }
     }
 
     let mut candidates: Vec<PathBuf> = Vec::new();
@@ -201,7 +207,8 @@ fn find_assets_web_root() -> Option<PathBuf> {
             }
             // Also check if `start` itself is assets/web
             if d.file_name().map_or(false, |n| n == "web")
-                && d.parent().map_or(false, |pp| pp.file_name().map_or(false, |n| n == "assets"))
+                && d.parent()
+                    .map_or(false, |pp| pp.file_name().map_or(false, |n| n == "assets"))
                 && has_output_subdirs(d)
             {
                 return Some(d.to_path_buf());
@@ -231,9 +238,7 @@ static PROJECT_SERVERS: std::sync::LazyLock<std::sync::Mutex<ProjectServers>> =
     std::sync::LazyLock::new(|| std::sync::Mutex::new(ProjectServers::default()));
 
 fn lock_project_servers() -> std::sync::MutexGuard<'static, ProjectServers> {
-    PROJECT_SERVERS
-        .lock()
-        .unwrap_or_else(|e| e.into_inner())
+    PROJECT_SERVERS.lock().unwrap_or_else(|e| e.into_inner())
 }
 
 pub fn local_preview_url(tool_id: &str) -> Option<String> {
@@ -266,8 +271,16 @@ pub fn ensure_dx_preview_server_running() {
     STARTED.get_or_init(|| {
         start_agent_cursor_ws_relay();
         let ids = [
-            "design", "graphics", "presentations", "spreadsheets", "video", "music",
-            "whiteboard", "3d", "shader", "dx-web",
+            "design",
+            "graphics",
+            "presentations",
+            "spreadsheets",
+            "video",
+            "music",
+            "whiteboard",
+            "3d",
+            "shader",
+            "dx-web",
         ];
         for id in ids {
             let _ = local_preview_url(id);
@@ -321,10 +334,7 @@ fn start_agent_cursor_ws_relay_inner() -> Option<u16> {
         .name("agent-cursor-ws-relay".to_string())
         .spawn(move || {
             rt.block_on(async move {
-                info!(
-                    port = actual_port,
-                    "agent cursor relay listening"
-                );
+                info!(port = actual_port, "agent cursor relay listening");
                 if let Ok(server) = axum::Server::from_tcp(listener) {
                     if let Err(e) = server.serve(app.into_make_service()).await {
                         error!(%e, "agent cursor relay server error");
@@ -342,7 +352,10 @@ async fn handle_agent_cursor_ws(socket: WebSocket, tx: broadcast::Sender<String>
     let active = WS_ACTIVE_CONNECTIONS.fetch_add(1, Ordering::Relaxed) + 1;
 
     if active as usize > MAX_WS_CONNECTIONS {
-        warn!(conn_id, active, "dropping connection — too many concurrent connections");
+        warn!(
+            conn_id,
+            active, "dropping connection — too many concurrent connections"
+        );
         WS_ACTIVE_CONNECTIONS.fetch_sub(1, Ordering::Relaxed);
         return;
     }
@@ -438,20 +451,26 @@ fn start_axum_static_server_for_tool(tool: String, root: PathBuf) -> Option<u16>
     let root_arc = Arc::new(root);
 
     let app = Router::new()
-        .route("/", get({
-            let root = root_arc.clone();
-            let tool = tool.clone();
-            move || async move {
-                serve_dx_file_direct(root, tool.clone(), "index.html".to_string()).await
-            }
-        }))
-        .route("/*path", get({
-            let root = root_arc.clone();
-            let tool = tool.clone();
-            move |AxumPath(path): AxumPath<String>| async move {
-                serve_dx_file_direct(root, tool.clone(), path).await
-            }
-        }))
+        .route(
+            "/",
+            get({
+                let root = root_arc.clone();
+                let tool = tool.clone();
+                move || async move {
+                    serve_dx_file_direct(root, tool.clone(), "index.html".to_string()).await
+                }
+            }),
+        )
+        .route(
+            "/*path",
+            get({
+                let root = root_arc.clone();
+                let tool = tool.clone();
+                move |AxumPath(path): AxumPath<String>| async move {
+                    serve_dx_file_direct(root, tool.clone(), path).await
+                }
+            }),
+        )
         .fallback(get(|| async { (StatusCode::NOT_FOUND, "Not Found") }));
 
     let rt = shared_tokio_runtime();
@@ -472,7 +491,11 @@ fn start_axum_static_server_for_tool(tool: String, root: PathBuf) -> Option<u16>
     Some(port)
 }
 
-async fn serve_dx_file_direct(root: Arc<PathBuf>, tool: String, mut req_path: String) -> impl axum::response::IntoResponse {
+async fn serve_dx_file_direct(
+    root: Arc<PathBuf>,
+    tool: String,
+    mut req_path: String,
+) -> impl axum::response::IntoResponse {
     if req_path.is_empty() || req_path == "/" {
         req_path = "index.html".to_string();
     }
@@ -517,7 +540,11 @@ fn placeholder_html(tool: &str) -> String {
         .chars()
         .filter(|c| c.is_alphanumeric() || *c == '-' || *c == '_')
         .collect();
-    let safe = if safe.is_empty() { "tool".to_string() } else { safe };
+    let safe = if safe.is_empty() {
+        "tool".to_string()
+    } else {
+        safe
+    };
     format!(
         r#"<!doctype html>
 <html lang="en">
@@ -584,40 +611,40 @@ pub fn start_embedded_web_server() -> u16 {
     let _ = thread::Builder::new()
         .name("dx-embedded-web-server".to_string())
         .spawn(move || {
-        for request in server.incoming_requests() {
-            let mut path = request.url().to_string();
-            if let Some(idx) = path.find('?') {
-                path = path[..idx].to_string();
-            }
-            path = path.trim_start_matches('/').to_string();
+            for request in server.incoming_requests() {
+                let mut path = request.url().to_string();
+                if let Some(idx) = path.find('?') {
+                    path = path[..idx].to_string();
+                }
+                path = path.trim_start_matches('/').to_string();
 
-            let mut asset_path = format!("web/{}", path);
-            let assets = Assets;
+                let mut asset_path = format!("web/{}", path);
+                let assets = Assets;
 
-            let mut bytes_opt = assets.load(&asset_path).ok().flatten();
+                let mut bytes_opt = assets.load(&asset_path).ok().flatten();
 
-            if bytes_opt.is_none() {
-                let index_path = format!("{}/index.html", asset_path.trim_end_matches('/'));
-                if let Ok(Some(bytes)) = assets.load(&index_path) {
-                    bytes_opt = Some(bytes);
-                    asset_path = index_path;
+                if bytes_opt.is_none() {
+                    let index_path = format!("{}/index.html", asset_path.trim_end_matches('/'));
+                    if let Ok(Some(bytes)) = assets.load(&index_path) {
+                        bytes_opt = Some(bytes);
+                        asset_path = index_path;
+                    }
+                }
+
+                if let Some(bytes) = bytes_opt {
+                    let mime_type = get_mime_type(&asset_path);
+                    let response = Response::from_data(bytes.into_owned())
+                        .with_status_code(200)
+                        .with_header(
+                            Header::from_bytes(&b"Content-Type"[..], mime_type.as_bytes()).unwrap(),
+                        );
+                    let _ = request.respond(response);
+                } else {
+                    let response = Response::empty(404);
+                    let _ = request.respond(response);
                 }
             }
-
-            if let Some(bytes) = bytes_opt {
-                let mime_type = get_mime_type(&asset_path);
-                let response = Response::from_data(bytes.into_owned())
-                    .with_status_code(200)
-                    .with_header(
-                        Header::from_bytes(&b"Content-Type"[..], mime_type.as_bytes()).unwrap(),
-                    );
-                let _ = request.respond(response);
-            } else {
-                let response = Response::empty(404);
-                let _ = request.respond(response);
-            }
-        }
-    });
+        });
 
     port
 }

@@ -39,7 +39,8 @@ impl From<client::Status> for SignInStatus {
 }
 
 #[derive(RegisterComponent, IntoElement)]
-pub struct ZedAiOnboarding { // rebranded/repurposed as Dx onboarding (Zed-like editor onboarding, not webpreview)
+pub struct ZedAiOnboarding {
+    // rebranded/repurposed as Dx onboarding (Zed-like editor onboarding, not webpreview)
     pub sign_in_status: SignInStatus,
     pub plan: Option<Plan>,
     pub account_too_young: bool,

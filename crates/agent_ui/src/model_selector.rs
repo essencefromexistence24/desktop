@@ -792,7 +792,6 @@ mod tests {
         );
     }
 
-
     struct TestModelSelector {
         models: Vec<AgentModelInfo>,
         selected_model: RefCell<AgentModelInfo>,

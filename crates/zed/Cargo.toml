@@ -6,7 +6,7 @@ version = "1.8.0"
 publish.workspace = true
 license = "GPL-3.0-or-later"
 authors = ["Zed Team <hi@zed.dev>"]
-default-run = "dx-code"
+default-run = "dx-desktop"
 
 [lints]
 workspace = true
@@ -54,7 +54,7 @@ visual-tests = [
 ]
 
 [[bin]]
-name = "dx-code"
+name = "dx-desktop"
 path = "src/main.rs"
 
 [[bin]]

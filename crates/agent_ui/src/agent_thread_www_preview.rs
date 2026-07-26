@@ -49,12 +49,8 @@ pub struct AgentThreadWwwPreviewHooks {
     pub resolve_local_preview_url: fn(tool_id: &str) -> Option<String>,
     /// Open the given URL as a normal top-level WebPreview tab (not embedded in AI thread).
     /// This is used by the AI chat input center icons to go to the real webpreview screen.
-    pub open_normal_web_preview_tab: fn(
-        workspace: WeakEntity<Workspace>,
-        url: String,
-        window: &mut Window,
-        cx: &mut App,
-    ),
+    pub open_normal_web_preview_tab:
+        fn(workspace: WeakEntity<Workspace>, url: String, window: &mut Window, cx: &mut App),
 }
 
 static HOOKS: OnceLock<AgentThreadWwwPreviewHooks> = OnceLock::new();
@@ -129,7 +125,10 @@ pub fn placeholder_preview_html_data_url(name: &str) -> String {
 <body><div class="center">{safe}</div></body>
 </html>"#
     );
-    format!("data:text/html;charset=utf-8,{}", percent_encode_for_data_url(&html))
+    format!(
+        "data:text/html;charset=utf-8,{}",
+        percent_encode_for_data_url(&html)
+    )
 }
 
 fn html_escape(s: &str) -> String {

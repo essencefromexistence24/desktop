@@ -25,8 +25,8 @@ use client::{Client, UserStore, zed_urls};
 use command_palette_hooks::CommandPaletteFilter;
 
 use gpui::{
-    Action, Anchor, Animation, AnimationExt, AnyElement, App, Context, Element, Entity,
-    Focusable, InteractiveElement, IntoElement, MouseButton, ParentElement, Render,
+    Action, Anchor, Animation, AnimationExt, AnyElement, App, Context, Element, Entity, Focusable,
+    InteractiveElement, IntoElement, MouseButton, ParentElement, Render,
     StatefulInteractiveElement, Styled, Subscription, TaskExt, WeakEntity, Window, actions, div,
     pulsating_between,
 };
@@ -346,7 +346,6 @@ impl Render for TitleBar {
             cx,
         );
 
-
         let right_content = h_flex()
             .min_w_0()
             .flex_1()
@@ -583,35 +582,46 @@ impl TitleBar {
                 dock.child(self.render_screen_dock_divider(cx))
             })
             .child(
-                h_flex()
-                    .items_center()
-                    .gap_0p5()
-                    .children(self.screen_order.clone().into_iter().enumerate().map(|(ix, kind)| {
-                        let is_active = if kind == WorkspaceScreenKind::Agent {
-                            agent_screen_is_active
-                        } else {
-                            !agent_screen_is_active && active_screen_kind == kind
-                        };
+                h_flex().items_center().gap_0p5().children(
+                    self.screen_order
+                        .clone()
+                        .into_iter()
+                        .enumerate()
+                        .map(|(ix, kind)| {
+                            let is_active = if kind == WorkspaceScreenKind::Agent {
+                                agent_screen_is_active
+                            } else {
+                                !agent_screen_is_active && active_screen_kind == kind
+                            };
 
-                        let button = if kind == WorkspaceScreenKind::Agent {
-                            self.render_agent_screen_button(is_active, cx).into_any_element()
-                        } else {
-                            self.render_screen_kind_button(kind, is_active, cx).into_any_element()
-                        };
+                            let button = if kind == WorkspaceScreenKind::Agent {
+                                self.render_agent_screen_button(is_active, cx)
+                                    .into_any_element()
+                            } else {
+                                self.render_screen_kind_button(kind, is_active, cx)
+                                    .into_any_element()
+                            };
 
-                        div()
-                            .id(format!("screen-kind-{ix}"))
-                            .on_drag(DraggedScreenKind(kind), |_, _, _, cx| {
-                                cx.new(|_| gpui::Empty)
-                            })
-                            .on_drop(cx.listener(move |this, dragged: &DraggedScreenKind, _window, cx| {
-                                let old_ix = this.screen_order.iter().position(|k| *k == dragged.0).unwrap();
-                                this.screen_order.remove(old_ix);
-                                this.screen_order.insert(ix, dragged.0);
-                                cx.notify();
-                            }))
-                            .child(button)
-                    })),
+                            div()
+                                .id(format!("screen-kind-{ix}"))
+                                .on_drag(DraggedScreenKind(kind), |_, _, _, cx| {
+                                    cx.new(|_| gpui::Empty)
+                                })
+                                .on_drop(cx.listener(
+                                    move |this, dragged: &DraggedScreenKind, _window, cx| {
+                                        let old_ix = this
+                                            .screen_order
+                                            .iter()
+                                            .position(|k| *k == dragged.0)
+                                            .unwrap();
+                                        this.screen_order.remove(old_ix);
+                                        this.screen_order.insert(ix, dragged.0);
+                                        cx.notify();
+                                    },
+                                ))
+                                .child(button)
+                        }),
+                ),
             )
             .child(
                 h_flex()
@@ -1021,7 +1031,6 @@ impl TitleBar {
             //     zed_actions::dx_forge::TogglePanel.boxed_clone(),
             //     active_right_panel == Some("Forge"),
             // ), // commented out per request
-
             self.render_title_right_panel_button(
                 "titlebar-media-panel",
                 dx_icon(DxUiIcon::Media),

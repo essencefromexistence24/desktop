@@ -48,7 +48,9 @@ use workspace::OpenWebPreview;
 #[cfg(target_os = "windows")]
 pub fn init(cx: &mut App) {
     let port = server::start_embedded_web_server();
-    cx.set_global(agent_ui::agent_thread_www_preview::WebPreviewServerPort(port));
+    cx.set_global(agent_ui::agent_thread_www_preview::WebPreviewServerPort(
+        port,
+    ));
 
     // Start the Axum dx-slug static server for the 9 AI chat input center icons early.
     server::ensure_dx_preview_server_running();
@@ -60,17 +62,18 @@ pub fn init(cx: &mut App) {
             return;
         };
         web_preview_view::WebPreviewView::register(workspace, window, cx);
-        
+
         workspace.register_action(move |workspace, action: &OpenWebPreview, window, cx| {
-            let should_close = workspace
-                .active_pane()
-                .read(cx)
-                .active_item()
-                .is_some_and(|active_item| {
-                    active_item
-                        .downcast::<web_preview_view::WebPreviewView>()
-                        .is_none()
-                });
+            let should_close =
+                workspace
+                    .active_pane()
+                    .read(cx)
+                    .active_item()
+                    .is_some_and(|active_item| {
+                        active_item
+                            .downcast::<web_preview_view::WebPreviewView>()
+                            .is_none()
+                    });
             if should_close {
                 window.dispatch_action(
                     Box::new(workspace::CloseActiveItem {
@@ -82,8 +85,9 @@ pub fn init(cx: &mut App) {
             }
 
             let url = server::local_preview_url(&action.project).unwrap_or_else(|| {
-                let port =
-                    cx.global::<agent_ui::agent_thread_www_preview::WebPreviewServerPort>().0;
+                let port = cx
+                    .global::<agent_ui::agent_thread_www_preview::WebPreviewServerPort>()
+                    .0;
                 format!("http://127.0.0.1:{}/{}", port, action.project)
             });
             workspace.activate_screen_kind(workspace::WorkspaceScreenKind::Browser, window, cx);

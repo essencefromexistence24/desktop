@@ -600,7 +600,7 @@ impl Matches {
             return;
         };
 
-let worktree_name_by_id = worktree_names_for_history_matching(&worktree_store, cx);
+        let worktree_name_by_id = worktree_names_for_history_matching(&worktree_store, cx);
         let new_history_matches = matching_history_items(
             history_items,
             currently_opened,

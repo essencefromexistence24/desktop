@@ -18,12 +18,12 @@ use workspace::{
 use crate::dx_check_panel::{
     DxCheckPanelSnapshot, dx_check_panel_snapshot, invalidate_dx_check_panel_snapshot_cache,
 };
-use agent_client_protocol::schema as acp;
 use crate::dx_check_panel_view::view_rows::{
     adapter_plan_row, config_label, count_label, detail_row, duration_label, empty_row, notice_row,
     notice_title, outcome_label, overflow_row, quick_fix_row, section, section_row, status_color,
     web_audit_row,
 };
+use agent_client_protocol::schema as acp;
 
 mod tabs;
 mod view_rows;
@@ -233,7 +233,7 @@ impl DxCheckPanel {
         cx: &mut Context<Self>,
     ) -> AnyElement {
         let workspace = self.workspace.clone();
-        
+
         // Build prompt from snapshot - all problems for AI (fix or solution)
         let mut prompt = String::new();
         prompt.push_str("Here are all the problems found by the checks in the codebase:\n\n");
@@ -244,18 +244,33 @@ impl DxCheckPanel {
             prompt.push_str(&format!("- Warning: {}\n", warning.message));
         }
         for fix in &snapshot.quick_fixes {
-            prompt.push_str(&format!("- Quick fix: {} (risk: {}, action: {})\n", fix.label, fix.risk_level, fix.next_action));
+            prompt.push_str(&format!(
+                "- Quick fix: {} (risk: {}, action: {})\n",
+                fix.label, fix.risk_level, fix.next_action
+            ));
         }
         for section in &snapshot.sections {
             if section.status.to_lowercase() != "pass" {
-                prompt.push_str(&format!("- Section '{}': status {}\n", section.title, section.status));
+                prompt.push_str(&format!(
+                    "- Section '{}': status {}\n",
+                    section.title, section.status
+                ));
             }
         }
         for plan in &snapshot.adapter_plans {
-            prompt.push_str(&format!("- Adapter plan: {} -> {}\n", plan.label, plan.target));
+            prompt.push_str(&format!(
+                "- Adapter plan: {} -> {}\n",
+                plan.label, plan.target
+            ));
         }
-        
-        let has_issues = !snapshot.blockers.is_empty() || !snapshot.warnings.is_empty() || !snapshot.quick_fixes.is_empty() || snapshot.sections.iter().any(|s| s.status.to_lowercase() != "pass");
+
+        let has_issues = !snapshot.blockers.is_empty()
+            || !snapshot.warnings.is_empty()
+            || !snapshot.quick_fixes.is_empty()
+            || snapshot
+                .sections
+                .iter()
+                .any(|s| s.status.to_lowercase() != "pass");
 
         h_flex()
             .id("dx-check-panel-header")
@@ -301,11 +316,14 @@ impl DxCheckPanel {
                                     if let Some(workspace) = workspace.upgrade() {
                                         workspace.update(cx, |workspace, cx| {
                                             if workspace.panel::<crate::AgentPanel>(cx).is_none() {
-                                                workspace.open_panel::<crate::AgentPanel>(window, cx);
+                                                workspace
+                                                    .open_panel::<crate::AgentPanel>(window, cx);
                                             }
                                             if let Some(panel) = workspace
                                                 .focus_panel::<crate::AgentPanel>(window, cx)
-                                                .or_else(|| workspace.panel::<crate::AgentPanel>(cx))
+                                                .or_else(|| {
+                                                    workspace.panel::<crate::AgentPanel>(cx)
+                                                })
                                             {
                                                 panel.update(cx, |panel, cx| {
                                                     panel.activate_new_thread(
@@ -314,7 +332,9 @@ impl DxCheckPanel {
                                                         window,
                                                         cx,
                                                     );
-                                                    let blocks = vec![acp::ContentBlock::Text(acp::TextContent::new(&prompt))];
+                                                    let blocks = vec![acp::ContentBlock::Text(
+                                                        acp::TextContent::new(&prompt),
+                                                    )];
                                                     panel.insert_content_blocks(blocks, window, cx);
                                                 });
                                             }
