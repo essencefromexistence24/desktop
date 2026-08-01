@@ -7558,7 +7558,7 @@ impl ThreadView {
                     .shape(ui::IconButtonShape::Square)
                     .icon_size(IconSize::Small)
                     .icon_color(Color::Accent)
-                    .disabled(Color::Ignored)
+                    .disabled(read_aloud_disabled)
                     .tooltip(Tooltip::text(
                         if matches!(
                             voice_phase,

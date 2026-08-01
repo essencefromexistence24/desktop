@@ -7,7 +7,7 @@ set shell := ["powershell.exe", "-NoLogo", "-Command"]
 
 build_target_dir := "G:/Dx/desktop/target"
 min_build_free_gb := "18"
-min_incremental_free_gb := "4"
+min_incremental_free_gb := "12"
 
 # Default recipe - shows available commands
 default:
@@ -100,10 +100,10 @@ show-memory-guide:
     @echo "=== LOCAL ZED BUILD CONFIGURATION ==="
     @echo ""
     @echo "Current verified machine profile:"
-    @echo "  CPU: Ryzen 5 5600G, 6 cores / 8 logical processors"
-    @echo "  RAM: 24 GB installed"
+    @echo "  CPU: Ryzen 5 5600G, 6 cores / 12 logical processors"
+    @echo "  RAM: 25 GB installed"
     @echo "  Build output: G:/Dx/desktop/target"
-    @echo "  Cargo workers: 12 by default, override with CARGO_BUILD_JOBS"
+    @echo "  Cargo workers: 4 by default, override with CARGO_BUILD_JOBS"
     @echo "  Runnable build preflight: at least 18 GB free on G:"
     @echo "  Runnable build mode: CARGO_INCREMENTAL=1 for faster local UI iteration"
     @echo "  Full zed + cli build: just run-full"
