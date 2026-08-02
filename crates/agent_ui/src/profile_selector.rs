@@ -117,10 +117,7 @@ impl ProfileSelector {
         let current_profile_id = self.provider.profile_id(cx);
         let profiles: std::collections::HashMap<_, _> = AgentProfile::available_profiles(cx)
             .into_iter()
-            .filter(|(id, _)| {
-                let s = id.to_string().to_lowercase();
-                !s.contains("search") && !s.contains("media") && !s.contains("study")
-            })
+            .filter(|(id, _)| !builtin_profiles::is_hidden(id))
             .collect();
         if profiles.contains_key(&current_profile_id) {
             return current_profile_id;
@@ -389,6 +386,10 @@ impl ProfilePickerDelegate {
     }
 
     fn candidates_from(profiles: AvailableProfiles) -> Vec<ProfileCandidate> {
+        let profiles = profiles
+            .into_iter()
+            .filter(|(id, _)| !builtin_profiles::is_hidden(id))
+            .collect::<Vec<_>>();
         let profile_count = profiles.len();
         if profile_count > MAX_PROFILE_SELECTOR_CANDIDATES {
             log::warn!(

@@ -22,10 +22,16 @@ pub mod builtin_profiles {
     pub const SEARCH: &str = "search";
     pub const STUDY: &str = "study";
     pub const LEGACY_MINIMAL: &str = "minimal";
-    pub const DX_PROFILE_ORDER: [&str; 4] = [WRITE, SEARCH, MEDIA, ASK];
+    // Search, Media, and Study remain defined for compatibility with existing
+    // profile metadata, but only Agents and Ask are enabled in the default UI.
+    pub const DX_PROFILE_ORDER: [&str; 2] = [WRITE, ASK];
 
     pub fn is_builtin(profile_id: &AgentProfileId) -> bool {
-        matches!(profile_id.as_str(), WRITE | ASK | MEDIA | SEARCH)
+        matches!(profile_id.as_str(), WRITE | ASK)
+    }
+
+    pub fn is_hidden(profile_id: &AgentProfileId) -> bool {
+        matches!(profile_id.as_str(), MEDIA | SEARCH | STUDY)
     }
 }
 

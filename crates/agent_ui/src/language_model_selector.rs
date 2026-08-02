@@ -66,7 +66,9 @@ pub fn language_model_selector(
             .width(rems(20.))
             .max_height(Some(rems(20.).into()))
     } else {
-        Picker::list(delegate, window, cx).show_scrollbar(true)
+        Picker::list(delegate, window, cx)
+            .show_scrollbar(true)
+            .max_height(Some(rems(20.).into()))
     }
 }
 
