@@ -4482,7 +4482,8 @@ impl ThreadView {
                                                 .items_center()
                                                 .child(self.render_add_context_button(cx))
                                                 .children(self.profile_selector.clone())
-                                                .children(self.render_profile_option_slots(cx))
+                                                // Temporarily hidden; keep the profile option slots and handlers intact.
+                                                // .children(self.render_profile_option_slots(cx))
                                                 .child(div().h_5().child(
                                                     Divider::vertical().color(DividerColor::Border),
                                                 ))
