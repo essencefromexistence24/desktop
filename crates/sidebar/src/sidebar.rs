@@ -10791,8 +10791,9 @@ impl Sidebar {
                     .w_full()
                     .gap(DynamicSpacing::Base08.rems(cx))
                     .p(DynamicSpacing::Base04.rems(cx))
-                    .border_t_1()
-                    .border_color(cx.theme().colors().border_variant)
+                    // Temporarily hidden duplicate; keep the outer bottom-bar separator above.
+                    // .border_t_1()
+                    // .border_color(cx.theme().colors().border_variant)
                     .child(left_slot)
                     // project (add/open) and time (history/clock) icons grouped on the left of expanded sidebar bottom
                     .child(

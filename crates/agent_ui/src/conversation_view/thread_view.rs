@@ -7530,6 +7530,8 @@ impl ThreadView {
                     }),
             );
 
+            // Temporarily hidden; preserve the response read-aloud state and handler code.
+            /*
             let voice_phase = self.composer_voice_state.phase();
             let read_aloud_disabled = matches!(
                 voice_phase,
@@ -7574,6 +7576,7 @@ impl ThreadView {
                         this.speak_agent_response_text(agent_response_text.clone(), cx);
                     })),
             );
+            */
         }
 
         let enable_thread_feedback = util::maybe!({
