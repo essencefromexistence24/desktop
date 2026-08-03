@@ -2288,10 +2288,11 @@ impl Render for WebPreviewView {
                             dx_loading_icon(IconSize::Small, Color::Muted).with_rotate_animation(2),
                         )
                         .child(
-                            Label::new("Loading Web Preview")
+                            Label::new("Loading...")
                                 .size(LabelSize::Small)
                                 .color(Color::Muted),
                         ),
+                        // Sumon Web Preview Loadning
                 )
         });
         #[cfg(target_os = "windows")]

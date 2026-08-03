@@ -670,7 +670,7 @@ fn render_zed_agent_button(user_store: &Entity<UserStore>, cx: &mut App) -> impl
                 })
             } else {
                 this.on_click(move |_, _, cx| {
-                    telemetry::event!("Welcome Zed Agent Sign In Clicked");
+                    telemetry::event!("Welcome Dx Agent Sign In Clicked");
                     let client = Client::global(cx);
                     cx.spawn(async move |cx| client.sign_in_with_optional_connect(true, cx).await)
                         .detach_and_log_err(cx);
