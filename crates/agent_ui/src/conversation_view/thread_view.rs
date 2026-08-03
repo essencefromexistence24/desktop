@@ -4519,7 +4519,7 @@ impl ThreadView {
                                                             .children(self.model_selector.clone()),
                                                     }
                                                 })
-                                                .children(self.render_voice_controls(window, cx))
+                                                // .children(self.render_voice_controls(window, cx)) Sumon
                                                 .child(self.render_send_button(cx)),
                                         )
                                         .into_any_element()

@@ -1031,13 +1031,13 @@ impl TitleBar {
             //     zed_actions::dx_forge::TogglePanel.boxed_clone(),
             //     active_right_panel == Some("Forge"),
             // ), // commented out per request
-            self.render_title_right_panel_button(
-                "titlebar-media-panel",
-                dx_icon(DxUiIcon::Media),
-                "Media",
-                media_panel::ToggleFocus.boxed_clone(),
-                active_right_panel == Some("Media"),
-            ),
+            // self.render_title_right_panel_button(
+            //     "titlebar-media-panel",
+            //     dx_icon(DxUiIcon::Media),
+            //     "Media",
+            //     media_panel::ToggleFocus.boxed_clone(),
+            //     active_right_panel == Some("Media"),
+            // ),
             self.render_title_right_panel_button(
                 "titlebar-shadcn-ui-panel",
                 dx_icon(DxUiIcon::Ui),
@@ -1047,20 +1047,20 @@ impl TitleBar {
             ),
             // TODO(dx-style-panel): Re-enable the Style panel button when its Web Preview
             // workflow graduates from parked implementation to production UI.
-            self.render_title_right_panel_button(
-                "titlebar-dx-check-panel",
-                dx_icon(DxUiIcon::Check),
-                "Check",
-                zed_actions::dx_check_panel::ToggleFocus.boxed_clone(),
-                active_right_panel == Some("Check"),
-            ),
-            self.render_title_right_panel_button(
-                "titlebar-dx-skill-panel",
-                dx_icon(DxUiIcon::Automations),
-                "Skill",
-                zed_actions::dx_skill_panel::ToggleFocus.boxed_clone(),
-                active_right_panel == Some("Skill"),
-            ),
+            // self.render_title_right_panel_button(
+            //     "titlebar-dx-check-panel",
+            //     dx_icon(DxUiIcon::Check),
+            //     "Check",
+            //     zed_actions::dx_check_panel::ToggleFocus.boxed_clone(),
+            //     active_right_panel == Some("Check"),
+            // ),
+            // self.render_title_right_panel_button(
+            //     "titlebar-dx-skill-panel",
+            //     dx_icon(DxUiIcon::Automations),
+            //     "Skill",
+            //     zed_actions::dx_skill_panel::ToggleFocus.boxed_clone(),
+            //     active_right_panel == Some("Skill"),
+            // ),
             self.render_hidden_feature_menu(cx),
         ]
     }
@@ -1126,11 +1126,11 @@ impl TitleBar {
                 Some(ContextMenu::build(window, cx, move |menu, _, _| {
                     let menu = menu
                         .action("Settings", zed_actions::OpenSettings.boxed_clone())
-                        .action("Keymap", zed_actions::OpenKeymap.boxed_clone())
-                        .action(
-                            "Extensions",
-                            zed_actions::Extensions::default().boxed_clone(),
-                        )
+                        // .action("Keymap", zed_actions::OpenKeymap.boxed_clone())
+                        // .action(
+                        //     "Extensions",
+                        //     zed_actions::Extensions::default().boxed_clone(),
+                        // )
                         .action("File Finder", ToggleFileFinder::default().boxed_clone())
                         .action("Project Symbols", ToggleProjectSymbols.boxed_clone())
                         .action(
@@ -1142,15 +1142,15 @@ impl TitleBar {
                             "Skills",
                             zed_actions::assistant::ManageSkills::default().boxed_clone(),
                         )
-                        .action("ACP Registry", zed_actions::AcpRegistry.boxed_clone())
-                        .action(
-                            "Agent Panel",
-                            zed_actions::assistant::ToggleFocus.boxed_clone(),
-                        )
-                        .action(
-                            "Check Panel",
-                            zed_actions::dx_check_panel::ToggleFocus.boxed_clone(),
-                        )
+                        // .action("ACP Registry", zed_actions::AcpRegistry.boxed_clone())
+                        // .action(
+                        //     "Agent Panel",
+                        //     zed_actions::assistant::ToggleFocus.boxed_clone(),
+                        // )
+                        // .action(
+                        //     "Check Panel",
+                        //     zed_actions::dx_check_panel::ToggleFocus.boxed_clone(),
+                        // )
                         .action("Documentation", zed_actions::OpenDocs.boxed_clone())
                         .action(
                             "Dependency Licenses",
@@ -1948,36 +1948,36 @@ impl TitleBar {
                         "Extensions",
                         zed_actions::Extensions::default().boxed_clone(),
                     )
-                    .when(ai_enabled, |menu| {
-                        menu.separator()
-                            .submenu("Panel Layout", move |menu, _window, _cx| {
-                                menu.toggleable_entry(
-                                    "Classic",
-                                    is_editor,
-                                    IconPosition::Start,
-                                    Some(UseClassicLayout.boxed_clone()),
-                                    move |window, cx| {
-                                        window.dispatch_action(UseClassicLayout.boxed_clone(), cx);
-                                    },
-                                )
-                                .toggleable_entry(
-                                    "Agentic",
-                                    is_agent,
-                                    IconPosition::Start,
-                                    Some(UseAgenticLayout.boxed_clone()),
-                                    move |window, cx| {
-                                        window.dispatch_action(UseAgenticLayout.boxed_clone(), cx);
-                                    },
-                                )
-                                .when(is_custom, |menu| {
-                                    menu.item(
-                                        ContextMenuEntry::new("Custom")
-                                            .toggleable(IconPosition::Start, true)
-                                            .disabled(true),
-                                    )
-                                })
-                            })
-                    })
+                    // .when(ai_enabled, |menu| {
+                    //     menu.separator()
+                    //         .submenu("Panel Layout", move |menu, _window, _cx| {
+                    //             menu.toggleable_entry(
+                    //                 "Classic",
+                    //                 is_editor,
+                    //                 IconPosition::Start,
+                    //                 Some(UseClassicLayout.boxed_clone()),
+                    //                 move |window, cx| {
+                    //                     window.dispatch_action(UseClassicLayout.boxed_clone(), cx);
+                    //                 },
+                    //             )
+                    //             .toggleable_entry(
+                    //                 "Agentic",
+                    //                 is_agent,
+                    //                 IconPosition::Start,
+                    //                 Some(UseAgenticLayout.boxed_clone()),
+                    //                 move |window, cx| {
+                    //                     window.dispatch_action(UseAgenticLayout.boxed_clone(), cx);
+                    //                 },
+                    //             )
+                    //             .when(is_custom, |menu| {
+                    //                 menu.item(
+                    //                     ContextMenuEntry::new("Custom")
+                    //                         .toggleable(IconPosition::Start, true)
+                    //                         .disabled(true),
+                    //                 )
+                    //             })
+                    //         })
+                    // })
                     .when(is_signed_in, |this| {
                         this.separator()
                             .action("Sign Out", client::SignOut.boxed_clone())
@@ -1988,3 +1988,4 @@ impl TitleBar {
             .anchor(Anchor::TopRight)
     }
 }
+// Sumon

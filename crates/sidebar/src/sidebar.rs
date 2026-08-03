@@ -9231,27 +9231,29 @@ impl Sidebar {
         // .chain(std::iter::once(self.render_sidebar_dx_web_tool_grid(px(0.0), cx).into_any_element()))
         .chain([
             // TODO(dx-sidebar): Restored Mobile Preview button
-            button(
-                cx,
-                "sidebar-activity-mobile",
-                dx_icon(DxUiIcon::Browser),
-                "Mobile Preview",
-                |this, _, window, cx| {
-                    this.activate_workspace_screen(WorkspaceScreenKind::Browser, window, cx);
-                },
-            )
-            .into_any_element(),
+            // button(
+            //     cx,
+            //     "sidebar-activity-mobile",
+            //     dx_icon(DxUiIcon::Browser),
+            //     "Mobile Preview",
+            //     |this, _, window, cx| {
+            //         this.activate_workspace_screen(WorkspaceScreenKind::Browser, window, cx);
+            //     },
+            // )
+            // .into_any_element(),
+
             // TODO(dx-sidebar): Restored CLI button
-            button(
-                cx,
-                "sidebar-activity-cli",
-                dx_icon(DxUiIcon::Commands),
-                "CLI",
-                |this, _, window, cx| {
-                    this.activate_workspace_screen(WorkspaceScreenKind::Terminal, window, cx);
-                },
-            )
-            .into_any_element(),
+            // button(
+            //     cx,
+            //     "sidebar-activity-cli",
+            //     dx_icon(DxUiIcon::Commands),
+            //     "CLI",
+            //     |this, _, window, cx| {
+            //         this.activate_workspace_screen(WorkspaceScreenKind::Terminal, window, cx);
+            //     },
+            // )
+            // .into_any_element(),
+
             // TODO(dx-sidebar): Commented out Plugins button per request (collapsed bar).
             // button(
             //     cx,
@@ -9275,16 +9277,17 @@ impl Sidebar {
             // )
             // .into_any_element(),
             // TODO(dx-sidebar): Restored Automations button
-            button(
-                cx,
-                "sidebar-activity-automations",
-                dx_icon(DxUiIcon::Automations),
-                "Automations",
-                |this, _, window, cx| {
-                    this.activate_workspace_screen(WorkspaceScreenKind::Automations, window, cx);
-                },
-            )
-            .into_any_element(),
+
+            // button(
+            //     cx,
+            //     "sidebar-activity-automations",
+            //     dx_icon(DxUiIcon::Automations),
+            //     "Automations",
+            //     |this, _, window, cx| {
+            //         this.activate_workspace_screen(WorkspaceScreenKind::Automations, window, cx);
+            //     },
+            // )
+            // .into_any_element(),
         ])
         .chain(
             self.render_collapsed_thread_shortcuts(
