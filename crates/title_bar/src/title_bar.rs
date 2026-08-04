@@ -1114,7 +1114,6 @@ impl TitleBar {
 
     fn render_hidden_feature_menu(&self, cx: &mut Context<Self>) -> AnyElement {
         let is_remote = self.project.read(cx).is_via_remote_server();
-        let workspace = self.workspace.clone();
         PopoverMenu::new("titlebar-hidden-feature-menu")
             .anchor(Anchor::TopRight)
             .trigger_with_tooltip(
@@ -1124,27 +1123,10 @@ impl TitleBar {
                 Tooltip::text("More"),
             )
             .menu(move |window, cx| {
-                let workspace = workspace.clone();
                 Some(ContextMenu::build(window, cx, move |menu, _, _| {
-                    let workspace = workspace.clone();
                     let menu = menu
-                        .item(
-                            ContextMenuEntry::new("Settings").handler(move |window, cx| {
-                                if let Some(workspace) = workspace.upgrade() {
-                                    let focus_handle = workspace.read(cx).focus_handle(cx);
-                                    focus_handle.dispatch_action(
-                                        &zed_actions::OpenSettings,
-                                        window,
-                                        cx,
-                                    );
-                                } else {
-                                    window.dispatch_action(
-                                        zed_actions::OpenSettings.boxed_clone(),
-                                        cx,
-                                    );
-                                }
-                            }),
-                        )
+                        // Graphical Settings as a workspace tab (never OpenSettingsFile / settings.json).
+                        .action("Settings", zed_actions::OpenSettings.boxed_clone())
                         // .action("Keymap", zed_actions::OpenKeymap.boxed_clone())
                         // .action(
                         //     "Extensions",

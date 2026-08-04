@@ -748,7 +748,7 @@ impl WindowsWindow {
         set_non_rude_hwnd(hwnd, true);
         configure_dwm_dark_mode(hwnd, appearance);
         this.state.border_offset.update(hwnd)?;
-        let placement = retrieve_window_placement(
+        let mut placement = retrieve_window_placement(
             hwnd,
             display,
             params.bounds,
@@ -756,7 +756,13 @@ impl WindowsWindow {
             &this.state.border_offset,
         )?;
         if params.show {
+            // Ensure showCmd actually shows the window. GetWindowPlacement on a brand-new
+            // HWND can report a non-show command; force a normal show when requested.
+            placement.showCmd = SW_SHOWNORMAL.0 as u32;
             unsafe { SetWindowPlacement(hwnd, &placement)? };
+            // Do not call activate() here: CreateWindow/SetWindowPlacement can re-enter
+            // WM_PAINT while the caller still holds GPUI's open_window update lock.
+            // Callers that need focus should activate after open_window returns.
         } else {
             this.state.initial_placement.set(Some(WindowOpenStatus {
                 placement,
@@ -792,6 +798,11 @@ impl Drop for WindowsWindow {
             .executor
             .spawn(async move {
                 let handle = this.hwnd;
+                // WM_DESTROY may already have destroyed the HWND before Drop runs. Skip only
+                // that already-gone case; still report real cleanup failures on live handles.
+                if handle.is_invalid() || !unsafe { IsWindow(Some(handle)).as_bool() } {
+                    return;
+                }
                 unsafe {
                     RevokeDragDrop(handle).log_err();
                     DestroyWindow(handle).log_err();

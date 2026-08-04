@@ -77,16 +77,20 @@ impl FontFamilyCache {
 
         cx.background_executor()
             .spawn(async move {
-                // We take this lock in the background executor to ensure that synchronous calls to `list_font_families` are blocked while we are prefetching,
-                // while not blocking the main thread and risking deadlocks
-                let mut lock = state.write();
+                // Enumerate fonts without holding the cache lock. Holding the write lock across
+                // all_font_names() can block the UI thread for tens of seconds if Settings (or
+                // another view) calls list_font_families during open/draw on Windows.
                 let all_font_names = text_system
                     .all_font_names()
                     .into_iter()
                     .map(SharedString::from)
                     .collect();
-                lock.font_families = all_font_names;
-                lock.loaded_at = Some(Instant::now());
+                let mut lock = state.write();
+                // Another caller may have filled the cache while we were enumerating.
+                if lock.loaded_at.is_none() {
+                    lock.font_families = all_font_names;
+                    lock.loaded_at = Some(Instant::now());
+                }
             })
             .await;
     }

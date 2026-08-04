@@ -9,17 +9,15 @@ use editor::{Editor, EditorEvent};
 use futures::{StreamExt, channel::mpsc};
 use fuzzy::StringMatchCandidate;
 use gpui::{
-    Action, App, AsyncApp, ClipboardItem, DEFAULT_ADDITIONAL_WINDOW_SIZE, Div, Entity, FocusHandle,
-    Focusable, Global, KeyContext, ListState, ReadGlobal as _, ScrollHandle, Stateful,
-    Subscription, Task, Tiling, TitlebarOptions, UniformListScrollHandle, WeakEntity, Window,
-    WindowBounds, WindowHandle, WindowOptions, actions, div, list, point, prelude::*, px,
-    uniform_list,
+    Action, App, AsyncApp, ClipboardItem, Div, Entity, EventEmitter, FocusHandle, Focusable, Global,
+    KeyContext, ListState, ReadGlobal as _, ScrollHandle, Stateful, Subscription, Task, Tiling,
+    UniformListScrollHandle, WeakEntity, Window, WindowHandle, actions, div, list, point,
+    prelude::*, px, uniform_list,
 };
 
 use language::Buffer;
 use platform_title_bar::PlatformTitleBar;
 use project::{Project, ProjectPath, Worktree, WorktreeId};
-use release_channel::ReleaseChannel;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use settings::{
@@ -34,7 +32,7 @@ use std::{
     path::PathBuf,
     rc::Rc,
     sync::{Arc, LazyLock, RwLock},
-    time::Duration,
+    time::{Duration, Instant},
 };
 use theme_settings::ThemeSettings;
 use ui::{
@@ -45,8 +43,9 @@ use ui::{
 
 use util::{ResultExt as _, paths::PathStyle, rel_path::RelPath};
 use workspace::{
-    AppState, MultiWorkspace, OpenOptions, OpenVisible, Workspace, WorkspaceSettings,
+    AppState, MultiWorkspace, OpenOptions, OpenVisible, Workspace,
     client_side_decorations,
+    item::{Item, ItemEvent},
 };
 use zed_actions::{
     AGENT_SKILLS_SETTINGS_PATH, OpenProjectSettings, OpenSettings, OpenSettingsAt,
@@ -428,34 +427,36 @@ pub fn init(cx: &mut App) {
     let queue = ProjectSettingsUpdateQueue::new(cx);
     cx.set_global(queue);
 
+    // Prefer opening Settings as a workspace tab. A separate OS window hangs on Windows.
     cx.on_action(|_: &OpenSettings, cx| {
-        open_settings_editor(None, None, None, cx);
+        open_settings_in_any_workspace(None, None, cx);
     });
     cx.on_action(|_: &zed_actions::assistant::OpenSkillCreator, cx| {
-        open_skill_creator(pages::SkillCreatorOpenMode::Form, None, cx);
+        open_skill_creator_in_any_workspace(pages::SkillCreatorOpenMode::Form, cx);
     });
     cx.on_action(|_: &zed_actions::assistant::CreateSkillFromUrl, cx| {
         let initial_url = pages::skill_url_from_clipboard(cx);
-        open_skill_creator(pages::SkillCreatorOpenMode::Url { initial_url }, None, cx);
+        open_skill_creator_in_any_workspace(
+            pages::SkillCreatorOpenMode::Url { initial_url },
+            cx,
+        );
     });
 
     cx.observe_new(|workspace: &mut workspace::Workspace, _, _| {
         workspace
-            .register_action(|_, action: &OpenSettingsAt, window, cx| {
-                let window_handle = window.window_handle().downcast::<MultiWorkspace>();
-                open_settings_editor_at_target(
-                    Some(&action.path),
+            .register_action(|workspace, action: &OpenSettingsAt, window, cx| {
+                open_settings_in_workspace(
+                    workspace,
+                    Some(action.path.as_str()),
                     action.target.as_ref().map(SettingsFileTarget::from),
-                    window_handle,
+                    window,
                     cx,
                 );
             })
-            .register_action(|_, _: &OpenSettings, window, cx| {
-                let window_handle = window.window_handle().downcast::<MultiWorkspace>();
-                open_settings_editor(None, None, window_handle, cx);
+            .register_action(|workspace, _: &OpenSettings, window, cx| {
+                open_settings_in_workspace(workspace, None, None, window, cx);
             })
             .register_action(|workspace, _: &OpenProjectSettings, window, cx| {
-                let window_handle = window.window_handle().downcast::<MultiWorkspace>();
                 let target_worktree_id = workspace
                     .project()
                     .read(cx)
@@ -466,22 +467,44 @@ pub fn init(cx: &mut App) {
                             .is_dir()
                             .then_some(tree.read(cx).id())
                     });
-                open_settings_editor(None, target_worktree_id, window_handle, cx);
+                open_settings_in_workspace(
+                    workspace,
+                    None,
+                    target_worktree_id.map(SettingsFileTarget::Project),
+                    window,
+                    cx,
+                );
             })
             .register_action(
-                |_, _: &zed_actions::assistant::OpenSkillCreator, window, cx| {
-                    let window_handle = window.window_handle().downcast::<MultiWorkspace>();
-                    open_skill_creator(pages::SkillCreatorOpenMode::Form, window_handle, cx);
+                |workspace, _: &zed_actions::assistant::OpenSkillCreator, window, cx| {
+                    open_settings_in_workspace_with(
+                        workspace,
+                        window,
+                        cx,
+                        |settings_window, window, cx| {
+                            settings_window.navigate_to_skill_creator(
+                                pages::SkillCreatorOpenMode::Form,
+                                window,
+                                cx,
+                            );
+                        },
+                    );
                 },
             )
             .register_action(
-                |_, _: &zed_actions::assistant::CreateSkillFromUrl, window, cx| {
-                    let window_handle = window.window_handle().downcast::<MultiWorkspace>();
+                |workspace, _: &zed_actions::assistant::CreateSkillFromUrl, window, cx| {
                     let initial_url = pages::skill_url_from_clipboard(cx);
-                    open_skill_creator(
-                        pages::SkillCreatorOpenMode::Url { initial_url },
-                        window_handle,
+                    open_settings_in_workspace_with(
+                        workspace,
+                        window,
                         cx,
+                        move |settings_window, window, cx| {
+                            settings_window.navigate_to_skill_creator(
+                                pages::SkillCreatorOpenMode::Url { initial_url },
+                                window,
+                                cx,
+                            );
+                        },
                     );
                 },
             );
@@ -652,198 +675,211 @@ impl From<&OpenSettingsAtTarget> for SettingsFileTarget {
     }
 }
 
+fn select_target_file(
+    target_file: SettingsFileTarget,
+    settings_window: &mut SettingsWindow,
+    window: &mut Window,
+    cx: &mut Context<SettingsWindow>,
+) {
+    let file_index = settings_window
+        .files
+        .iter()
+        .position(|(file, _)| match target_file {
+            SettingsFileTarget::User => matches!(file, SettingsUiFile::User),
+            SettingsFileTarget::Project(worktree_id) => file.worktree_id() == Some(worktree_id),
+        });
+    if let Some(file_index) = file_index {
+        settings_window.change_file(file_index, window, cx);
+    }
+}
+
+/// Navigate to a settings JSON path inside an already-open Settings UI.
+fn open_settings_path(
+    path: &str,
+    settings_window: &mut SettingsWindow,
+    window: &mut Window,
+    cx: &mut Context<SettingsWindow>,
+) {
+    if path.starts_with("languages.$(language)") {
+        log::error!("language-specific settings links are not currently supported");
+        return;
+    }
+
+    let query = format!("#{path}");
+    let indices = settings_window.filter_by_json_path(&query);
+
+    settings_window.opening_link = true;
+    settings_window.search_bar.update(cx, |editor, cx| {
+        editor.set_text(query.clone(), window, cx);
+    });
+    settings_window.apply_match_indices(indices.iter().copied(), &query);
+
+    if indices.len() == 1
+        && let Some(search_index) = settings_window.search_index.as_ref()
+        && let Some(search_entry) = indices
+            .first()
+            .and_then(|index| search_index.key_lut.get(*index))
+    {
+        let page_index = search_entry.page_index;
+        let item_index = search_entry.item_index;
+        let header_index = search_entry.header_index;
+
+        let sub_page = if settings_window.visible_page_item_matches(page_index, item_index)
+            && let Some(page) = settings_window.pages.get(page_index)
+            && let Some(item) = page.items.get(item_index)
+            && let SettingsPageItem::SubPageLink(link) = item
+            && let Some(SettingsPageItem::SectionHeader(header)) = page.items.get(header_index)
+        {
+            Some((link.clone(), SharedString::from(*header)))
+        } else {
+            None
+        };
+
+        if let Some((link, header)) = sub_page {
+            settings_window.push_sub_page(link, header, window, cx);
+        }
+    }
+
+    cx.notify();
+}
+
+fn find_settings_item(workspace: &Workspace, cx: &App) -> Option<Entity<SettingsWindow>> {
+    workspace.panes().iter().find_map(|pane| {
+        pane.read(cx)
+            .items()
+            .find_map(|item| item.downcast::<SettingsWindow>())
+    })
+}
+
+/// Public entry used by tests and external callers: open Settings as a tab in any workspace.
 pub fn open_settings_editor(
     path: Option<&str>,
     target_worktree_id: Option<WorktreeId>,
-    workspace_handle: Option<WindowHandle<MultiWorkspace>>,
+    _workspace_handle: Option<WindowHandle<MultiWorkspace>>,
     cx: &mut App,
 ) {
-    open_settings_editor_at_target(
+    open_settings_in_any_workspace(
         path,
         target_worktree_id.map(SettingsFileTarget::Project),
-        workspace_handle,
         cx,
     );
 }
 
-fn open_settings_editor_at_target(
-    path: Option<&str>,
-    target_file: Option<SettingsFileTarget>,
-    workspace_handle: Option<WindowHandle<MultiWorkspace>>,
+pub fn open_skill_creator(
+    open_mode: pages::SkillCreatorOpenMode,
+    _workspace_handle: Option<WindowHandle<MultiWorkspace>>,
     cx: &mut App,
 ) {
-    fn select_target_file(
-        target_file: SettingsFileTarget,
-        settings_window: &mut SettingsWindow,
-        window: &mut Window,
-        cx: &mut Context<SettingsWindow>,
-    ) {
-        let file_index = settings_window
-            .files
-            .iter()
-            .position(|(file, _)| match target_file {
-                SettingsFileTarget::User => matches!(file, SettingsUiFile::User),
-                SettingsFileTarget::Project(worktree_id) => file.worktree_id() == Some(worktree_id),
-            });
-        if let Some(file_index) = file_index {
-            settings_window.change_file(file_index, window, cx);
-        }
-    }
+    open_skill_creator_in_any_workspace(open_mode, cx);
+}
 
-    /// Assumes a settings GUI window is already open
-    fn open_path(
-        path: &str,
-        settings_window: &mut SettingsWindow,
-        window: &mut Window,
-        cx: &mut Context<SettingsWindow>,
-    ) {
-        if path.starts_with("languages.$(language)") {
-            log::error!("language-specific settings links are not currently supported");
-            return;
-        }
-
-        let query = format!("#{path}");
-        let indices = settings_window.filter_by_json_path(&query);
-
-        settings_window.opening_link = true;
-        settings_window.search_bar.update(cx, |editor, cx| {
-            editor.set_text(query.clone(), window, cx);
-        });
-        settings_window.apply_match_indices(indices.iter().copied(), &query);
-
-        if indices.len() == 1
-            && let Some(search_index) = settings_window.search_index.as_ref()
-            && let Some(search_entry) = indices
-                .first()
-                .and_then(|index| search_index.key_lut.get(*index))
-        {
-            let page_index = search_entry.page_index;
-            let item_index = search_entry.item_index;
-            let header_index = search_entry.header_index;
-
-            let sub_page = if settings_window.visible_page_item_matches(page_index, item_index)
-                && let Some(page) = settings_window.pages.get(page_index)
-                && let Some(item) = page.items.get(item_index)
-                && let SettingsPageItem::SubPageLink(link) = item
-                && let Some(SettingsPageItem::SectionHeader(header)) = page.items.get(header_index)
-            {
-                Some((link.clone(), SharedString::from(*header)))
-            } else {
-                None
-            };
-
-            if let Some((link, header)) = sub_page {
-                settings_window.push_sub_page(link, header, window, cx);
-            }
-        }
-
-        cx.notify();
-    }
-
+fn open_settings_in_any_workspace(
+    path: Option<&str>,
+    target_file: Option<SettingsFileTarget>,
+    cx: &mut App,
+) {
     let path = path.map(ToOwned::to_owned);
-    open_settings_editor_with(workspace_handle, cx, move |settings_window, window, cx| {
+    let Some(mw) = cx
+        .windows()
+        .into_iter()
+        .find_map(|window| window.downcast::<MultiWorkspace>())
+    else {
+        log::warn!("OpenSettings: no MultiWorkspace window available");
+        return;
+    };
+
+    let _ = mw.update(cx, |multi_workspace, window, cx| {
+        let workspace = multi_workspace.workspace().clone();
+        workspace.update(cx, |workspace, cx| {
+            open_settings_in_workspace(
+                workspace,
+                path.as_deref(),
+                target_file,
+                window,
+                cx,
+            );
+        });
+    });
+}
+
+fn open_skill_creator_in_any_workspace(
+    open_mode: pages::SkillCreatorOpenMode,
+    cx: &mut App,
+) {
+    let Some(mw) = cx
+        .windows()
+        .into_iter()
+        .find_map(|window| window.downcast::<MultiWorkspace>())
+    else {
+        log::warn!("OpenSkillCreator: no MultiWorkspace window available");
+        return;
+    };
+
+    let _ = mw.update(cx, |multi_workspace, window, cx| {
+        let workspace = multi_workspace.workspace().clone();
+        workspace.update(cx, |workspace, cx| {
+            open_settings_in_workspace_with(
+                workspace,
+                window,
+                cx,
+                move |settings_window, window, cx| {
+                    settings_window.navigate_to_skill_creator(open_mode, window, cx);
+                },
+            );
+        });
+    });
+}
+
+fn open_settings_in_workspace(
+    workspace: &mut Workspace,
+    path: Option<&str>,
+    target_file: Option<SettingsFileTarget>,
+    window: &mut Window,
+    cx: &mut Context<Workspace>,
+) {
+    let path = path.map(ToOwned::to_owned);
+    open_settings_in_workspace_with(workspace, window, cx, move |settings_window, window, cx| {
         if let Some(target_file) = target_file {
             select_target_file(target_file, settings_window, window, cx);
         }
-        if let Some(path) = path {
-            open_path(&path, settings_window, window, cx);
+        if let Some(path) = path.as_deref() {
+            open_settings_path(path, settings_window, window, cx);
         } else if target_file.is_some() {
             cx.notify();
         }
     });
 }
 
-pub fn open_skill_creator(
-    open_mode: pages::SkillCreatorOpenMode,
-    workspace_handle: Option<WindowHandle<MultiWorkspace>>,
-    cx: &mut App,
-) {
-    open_settings_editor_with(workspace_handle, cx, |settings_window, window, cx| {
-        settings_window.navigate_to_skill_creator(open_mode, window, cx);
-    });
-}
-
-fn open_settings_editor_with(
-    workspace_handle: Option<WindowHandle<MultiWorkspace>>,
-    cx: &mut App,
+fn open_settings_in_workspace_with(
+    workspace: &mut Workspace,
+    window: &mut Window,
+    cx: &mut Context<Workspace>,
     callback: impl FnOnce(&mut SettingsWindow, &mut Window, &mut Context<SettingsWindow>) + 'static,
 ) {
     telemetry::event!("Settings Viewed");
 
-    let existing_window = cx
-        .windows()
-        .into_iter()
-        .find_map(|window| window.downcast::<SettingsWindow>());
-
-    if let Some(existing_window) = existing_window {
-        existing_window
-            .update(cx, |settings_window, window, cx| {
-                settings_window.original_window = workspace_handle;
-
-                window.activate_window();
+    if let Some(existing) = find_settings_item(workspace, cx) {
+        log::info!("OpenSettings: activating existing Settings tab");
+        existing.update(cx, |settings_window, cx| {
+            // If the model is ready, run immediately; otherwise queue for after first load.
+            if settings_window.pages.is_empty() {
+                settings_window.queue_after_build(callback);
+            } else {
                 callback(settings_window, window, cx);
-            })
-            .ok();
+            }
+        });
+        workspace.activate_item(&existing, true, true, window, cx);
         return;
     }
 
-    // We have to defer this to get the workspace off the stack.
-    cx.defer(move |cx| {
-        let current_rem_size: f32 = theme_settings::ThemeSettings::get_global(cx)
-            .ui_font_size(cx)
-            .into();
-
-        let default_bounds = DEFAULT_ADDITIONAL_WINDOW_SIZE;
-        let default_rem_size = 16.0;
-        let scale_factor = current_rem_size / default_rem_size;
-        let scaled_bounds: gpui::Size<Pixels> = default_bounds.map(|axis| axis * scale_factor);
-
-        let app_id = ReleaseChannel::global(cx).app_id();
-        let window_decorations = match std::env::var("ZED_WINDOW_DECORATIONS") {
-            Ok(val) if val == "server" => gpui::WindowDecorations::Server,
-            Ok(val) if val == "client" => gpui::WindowDecorations::Client,
-            _ => match WorkspaceSettings::get_global(cx).window_decorations {
-                settings::WindowDecorations::Server => gpui::WindowDecorations::Server,
-                settings::WindowDecorations::Client => gpui::WindowDecorations::Client,
-            },
-        };
-
-        cx.open_window(
-            WindowOptions {
-                titlebar: Some(TitlebarOptions {
-                    title: Some("Zed — Settings".into()),
-                    appears_transparent: true,
-                    traffic_light_position: Some(point(px(12.0), px(12.0))),
-                }),
-                focus: true,
-                show: true,
-                is_movable: true,
-                kind: gpui::WindowKind::Normal,
-                window_background: cx.theme().window_background_appearance(),
-                app_id: Some(app_id.to_owned()),
-                window_decorations: Some(window_decorations),
-                window_min_size: Some(gpui::Size {
-                    // Don't make the settings window thinner than this,
-                    // otherwise, it gets unusable. Users with smaller res monitors
-                    // can customize the height, but not the width.
-                    width: px(900.0),
-                    height: px(240.0),
-                }),
-                window_bounds: Some(WindowBounds::centered(scaled_bounds, cx)),
-                ..Default::default()
-            },
-            |window, cx| {
-                let settings_window =
-                    cx.new(|cx| SettingsWindow::new(workspace_handle, window, cx));
-                settings_window.update(cx, |settings_window, cx| {
-                    callback(settings_window, window, cx);
-                });
-
-                settings_window
-            },
-        )
-        .log_err();
+    log::info!("OpenSettings: opening Settings as workspace tab");
+    let multi_workspace = window.window_handle().downcast::<MultiWorkspace>();
+    let settings_page = cx.new(|cx| {
+        let mut page = SettingsWindow::new(multi_workspace, true, window, cx);
+        page.queue_after_build(callback);
+        page
     });
+    workspace.add_item_to_active_pane(Box::new(settings_page), None, true, window, cx);
 }
 
 /// The current sub page path that is selected.
@@ -866,9 +902,15 @@ fn active_language_mut() -> Option<std::sync::RwLockWriteGuard<'static, Option<S
     ACTIVE_LANGUAGE.write().ok()
 }
 
+type PendingSettingsAction =
+    Box<dyn FnOnce(&mut SettingsWindow, &mut Window, &mut Context<SettingsWindow>) + 'static>;
+
 pub struct SettingsWindow {
+    /// When true, Settings is a workspace tab (no OS window chrome). Preferred on Windows.
+    embedded: bool,
     title_bar: Option<Entity<PlatformTitleBar>>,
     original_window: Option<WindowHandle<MultiWorkspace>>,
+    pending_after_build: Option<PendingSettingsAction>,
     files: Vec<(SettingsUiFile, FocusHandle)>,
     worktree_root_dirs: HashMap<WorktreeId, String>,
     current_file: SettingsUiFile,
@@ -1641,28 +1683,143 @@ impl SettingsUiFile {
 }
 
 impl SettingsWindow {
-    fn new(
+    /// Create Settings UI. Prefer `embedded = true` (workspace tab) — a separate OS window
+    /// freezes on Windows when creating a second GPUI/DirectX surface.
+    pub fn new(
         original_window: Option<WindowHandle<MultiWorkspace>>,
+        embedded: bool,
         window: &mut Window,
         cx: &mut Context<Self>,
     ) -> Self {
-        let font_family_cache = theme::FontFamilyCache::global(cx);
+        let started = Instant::now();
 
-        cx.spawn(async move |this, cx| {
-            font_family_cache.prefetch(cx).await;
-            this.update(cx, |_, cx| {
-                cx.notify();
-            })
-        })
-        .detach();
-
-        let current_file = SettingsUiFile::User;
         let search_bar = cx.new(|cx| {
             let mut editor = Editor::single_line(window, cx);
             editor.set_placeholder_text("Search settings…", window, cx);
             editor
         });
-        cx.subscribe(&search_bar, |this, _, event: &EditorEvent, cx| {
+
+        // Only standalone OS windows need a platform title bar.
+        let title_bar = if !embedded && !cfg!(target_os = "macos") {
+            Some(cx.new(|cx| PlatformTitleBar::new("settings-title-bar", cx)))
+        } else {
+            None
+        };
+
+        let list_state = gpui::ListState::new(0, gpui::ListAlignment::Top, px(0.0));
+        list_state.set_scroll_handler(|_, _, _| {});
+
+        let this = Self {
+            embedded,
+            title_bar,
+            original_window,
+            pending_after_build: None,
+            worktree_root_dirs: HashMap::default(),
+            files: vec![],
+            current_file: SettingsUiFile::User,
+            project_setting_file_buffers: HashMap::default(),
+            pages: vec![],
+            sub_page_stack: vec![],
+            opening_link: false,
+            navbar_entries: vec![],
+            navbar_entry: 0,
+            navbar_scroll_handle: UniformListScrollHandle::default(),
+            search_bar,
+            search_task: None,
+            filter_table: vec![],
+            has_query: false,
+            content_handles: vec![],
+            focus_handle: cx.focus_handle(),
+            navbar_focus_handle: NonFocusableHandle::new(
+                NAVBAR_CONTAINER_TAB_INDEX,
+                false,
+                window,
+                cx,
+            ),
+            navbar_focus_subscriptions: vec![],
+            content_focus_handle: NonFocusableHandle::new(
+                CONTENT_CONTAINER_TAB_INDEX,
+                false,
+                window,
+                cx,
+            ),
+            files_focus_handle: cx
+                .focus_handle()
+                .tab_index(HEADER_CONTAINER_TAB_INDEX)
+                .tab_stop(false),
+            search_index: None,
+            shown_errors: HashSet::default(),
+            hidden_deleted_skill_directory_paths: HashSet::default(),
+            regex_validation_error: None,
+            list_state,
+            last_copied_link_path: None,
+            last_copied_skill_directory_path: None,
+            skill_creator_page: None,
+        };
+
+        log::info!(
+            "SettingsWindow::new shell ready in {}ms (embedded={embedded})",
+            started.elapsed().as_millis()
+        );
+
+        // Build the full settings model after the first paint of this view.
+        cx.on_next_frame(window, |this, window, cx| {
+            log::info!("SettingsWindow: first frame — starting model load");
+            this.install_runtime_subscriptions(window, cx);
+
+            let phase = Instant::now();
+            this.fetch_files(window, cx);
+            this.build_ui(window, cx);
+            log::info!(
+                "SettingsWindow: files+UI built in {}ms (pages={})",
+                phase.elapsed().as_millis(),
+                this.pages.len()
+            );
+
+            if let Some(action) = this.pending_after_build.take() {
+                action(this, window, cx);
+            }
+
+            cx.notify();
+
+            cx.on_next_frame(window, |this, window, cx| {
+                let phase = Instant::now();
+                this.build_search_index();
+                this.search_bar.update(cx, |editor, cx| {
+                    editor.focus_handle(cx).focus(window, cx);
+                });
+                log::info!(
+                    "SettingsWindow: search index ready in {}ms",
+                    phase.elapsed().as_millis()
+                );
+                cx.notify();
+            });
+
+            let font_family_cache = theme::FontFamilyCache::global(cx);
+            cx.spawn(async move |this, cx| {
+                font_family_cache.prefetch(cx).await;
+                this.update(cx, |_, cx| cx.notify()).ok();
+            })
+            .detach();
+        });
+
+        this
+    }
+
+    fn queue_after_build(
+        &mut self,
+        action: impl FnOnce(&mut SettingsWindow, &mut Window, &mut Context<SettingsWindow>) + 'static,
+    ) {
+        self.pending_after_build = Some(Box::new(action));
+    }
+
+    /// Observers/subscriptions that must not run during `open_window` construction.
+    fn install_runtime_subscriptions(
+        &mut self,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) {
+        cx.subscribe(&self.search_bar, |this, _, event: &EditorEvent, cx| {
             let EditorEvent::Edited { transaction_id: _ } = event else {
                 return;
             };
@@ -1679,12 +1836,6 @@ impl SettingsWindow {
         cx.observe_global_in::<SettingsStore>(window, move |this, window, cx| {
             this.fetch_files(window, cx);
 
-            // Whenever settings are changed, it's possible that the changed
-            // settings affects the rendering of the `SettingsWindow`, like is
-            // the case with `ui_font_size`. When that happens, we need to
-            // instruct the `ListState` to re-measure the list items, as the
-            // list item heights may have changed depending on the new font
-            // size.
             let new_ui_font_size = ThemeSettings::get_global(cx).ui_font_size(cx);
             if new_ui_font_size != ui_font_size {
                 this.list_state.remeasure();
@@ -1728,22 +1879,24 @@ impl SettingsWindow {
         })
         .detach();
 
-        cx.on_window_closed(|cx, _window_id| {
-            if let Some(existing_window) = cx
-                .windows()
-                .into_iter()
-                .find_map(|window| window.downcast::<SettingsWindow>())
-                && cx.windows().len() == 1
-            {
-                cx.update_window(*existing_window, |_, window, _| {
-                    window.remove_window();
-                })
-                .ok();
-
-                telemetry::event!("Settings Closed")
-            }
-        })
-        .detach();
+        // Only standalone Settings OS windows need last-window cleanup.
+        if !self.embedded {
+            cx.on_window_closed(|cx, _window_id| {
+                if let Some(existing_window) = cx
+                    .windows()
+                    .into_iter()
+                    .find_map(|window| window.downcast::<SettingsWindow>())
+                    && cx.windows().len() == 1
+                {
+                    cx.update_window(*existing_window, |_, window, _| {
+                        window.remove_window();
+                    })
+                    .ok();
+                    telemetry::event!("Settings Closed");
+                }
+            })
+            .detach();
+        }
 
         let app_state = AppState::global(cx);
         let workspaces: Vec<Entity<Workspace>> = app_state
@@ -1800,14 +1953,8 @@ impl SettingsWindow {
             let project = workspace.project().clone();
             let this_weak = this_weak.clone();
 
-            // We defer on the settings window (via `handle`) rather than using
-            // the workspace's window from observe_new. When window.defer() runs
-            // its callback, it calls handle.update() which temporarily removes
-            // that window from cx.windows. If we deferred on the workspace's
-            // window, then when fetch_files() tries to read ALL workspaces from
-            // the store (including the newly created one), it would fail with
-            // "window not found" because that workspace's window would be
-            // temporarily removed from cx.windows for the duration of our callback.
+            // Defer on the settings window (via `handle`) rather than the workspace window so
+            // fetch_files does not observe a temporarily-removed workspace window.
             handle
                 .update(cx, move |_, window, cx| {
                     window.defer(cx, move |window, cx| {
@@ -1825,79 +1972,6 @@ impl SettingsWindow {
                 .ok();
         })
         .detach();
-
-        let title_bar = if !cfg!(target_os = "macos") {
-            Some(cx.new(|cx| PlatformTitleBar::new("settings-title-bar", cx)))
-        } else {
-            None
-        };
-
-        // Keep the settings page virtualized. Measuring every row before the first paint can
-        // stall the UI thread long enough for Windows to classify the application as hung.
-        let list_state = gpui::ListState::new(0, gpui::ListAlignment::Top, px(0.0));
-        list_state.set_scroll_handler(|_, _, _| {});
-
-        let this = Self {
-            title_bar,
-            original_window,
-
-            worktree_root_dirs: HashMap::default(),
-            files: vec![],
-
-            current_file: current_file,
-            project_setting_file_buffers: HashMap::default(),
-            pages: vec![],
-            sub_page_stack: vec![],
-            opening_link: false,
-            navbar_entries: vec![],
-            navbar_entry: 0,
-            navbar_scroll_handle: UniformListScrollHandle::default(),
-            search_bar,
-            search_task: None,
-            filter_table: vec![],
-            has_query: false,
-            content_handles: vec![],
-            focus_handle: cx.focus_handle(),
-            navbar_focus_handle: NonFocusableHandle::new(
-                NAVBAR_CONTAINER_TAB_INDEX,
-                false,
-                window,
-                cx,
-            ),
-            navbar_focus_subscriptions: vec![],
-            content_focus_handle: NonFocusableHandle::new(
-                CONTENT_CONTAINER_TAB_INDEX,
-                false,
-                window,
-                cx,
-            ),
-            files_focus_handle: cx
-                .focus_handle()
-                .tab_index(HEADER_CONTAINER_TAB_INDEX)
-                .tab_stop(false),
-            search_index: None,
-            shown_errors: HashSet::default(),
-            hidden_deleted_skill_directory_paths: HashSet::default(),
-            regex_validation_error: None,
-            list_state,
-            last_copied_link_path: None,
-            last_copied_skill_directory_path: None,
-            skill_creator_page: None,
-        };
-
-        // Let the settings window paint before loading the complete settings model. The model
-        // includes dynamic language and project data and must not block the first frame.
-        cx.defer_in(window, |this, window, cx| {
-            this.fetch_files(window, cx);
-            this.build_ui(window, cx);
-            this.build_search_index();
-        });
-
-        this.search_bar.update(cx, |editor, cx| {
-            editor.focus_handle(cx).focus(window, cx);
-        });
-
-        this
     }
 
     fn handle_project_event(
@@ -4416,12 +4490,53 @@ impl SettingsWindow {
     }
 }
 
+impl Focusable for SettingsWindow {
+    fn focus_handle(&self, cx: &App) -> FocusHandle {
+        self.search_bar.focus_handle(cx)
+    }
+}
+
+impl EventEmitter<ItemEvent> for SettingsWindow {}
+
+impl Item for SettingsWindow {
+    type Event = ItemEvent;
+
+    fn tab_content_text(&self, _detail: usize, _cx: &App) -> SharedString {
+        "Settings".into()
+    }
+
+    fn tab_icon(&self, _window: &Window, _cx: &App) -> Option<Icon> {
+        Some(Icon::new(IconName::Settings))
+    }
+
+    fn telemetry_event_text(&self) -> Option<&'static str> {
+        Some("Settings Page Opened")
+    }
+
+    fn show_toolbar(&self) -> bool {
+        false
+    }
+
+    fn to_item_events(event: &Self::Event, f: &mut dyn FnMut(ItemEvent)) {
+        f(*event)
+    }
+}
+
 impl Render for SettingsWindow {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let ui_font = theme_settings::setup_ui_font(window, cx);
+        let embedded = self.embedded;
+
+        let wrap_root = |content: Div, window: &mut Window, cx: &mut Context<Self>| {
+            if embedded {
+                content.into_any_element()
+            } else {
+                client_side_decorations(content, window, cx, Tiling::default()).into_any_element()
+            }
+        };
 
         if self.pages.is_empty() {
-            return client_side_decorations(
+            return wrap_root(
                 v_flex()
                     .text_color(cx.theme().colors().text)
                     .size_full()
@@ -4439,11 +4554,10 @@ impl Render for SettingsWindow {
                     ),
                 window,
                 cx,
-                Tiling::default(),
             );
         }
 
-        client_side_decorations(
+        wrap_root(
             v_flex()
                 .text_color(cx.theme().colors().text)
                 .size_full()
@@ -4516,7 +4630,7 @@ impl Render for SettingsWindow {
                         .font(ui_font)
                         .bg(cx.theme().colors().background)
                         .text_color(cx.theme().colors().text)
-                        .when(!cfg!(target_os = "macos"), |this| {
+                        .when(!embedded && !cfg!(target_os = "macos"), |this| {
                             this.border_t_1().border_color(cx.theme().colors().border)
                         })
                         .child(self.render_nav(window, cx))
@@ -4524,7 +4638,6 @@ impl Render for SettingsWindow {
                 ),
             window,
             cx,
-            Tiling::default(),
         )
     }
 }
@@ -5145,8 +5258,10 @@ pub mod test {
                 items: Box::new([]),
             };
             Self {
+                embedded: true,
                 title_bar: None,
                 original_window: None,
+                pending_after_build: None,
                 worktree_root_dirs: HashMap::default(),
                 files: Vec::default(),
                 current_file: SettingsUiFile::User,
@@ -5274,8 +5389,10 @@ pub mod test {
             .collect();
 
         let mut settings_window = SettingsWindow {
+            embedded: true,
             title_bar: None,
             original_window: None,
+            pending_after_build: None,
             worktree_root_dirs: HashMap::default(),
             files: Vec::default(),
             current_file: crate::SettingsUiFile::User,
@@ -5710,7 +5827,7 @@ pub mod test {
         cx.run_until_parked();
 
         let (settings_window, cx) = cx
-            .add_window_view(|window, cx| SettingsWindow::new(Some(workspace2_handle), window, cx));
+            .add_window_view(|window, cx| SettingsWindow::new(Some(workspace2_handle), false, window, cx));
 
         cx.run_until_parked();
 
@@ -5842,7 +5959,7 @@ pub mod test {
         cx.run_until_parked();
 
         let (settings_window, cx) = cx
-            .add_window_view(|window, cx| SettingsWindow::new(Some(workspace1_handle), window, cx));
+            .add_window_view(|window, cx| SettingsWindow::new(Some(workspace1_handle), false, window, cx));
 
         cx.run_until_parked();
 
@@ -6054,7 +6171,7 @@ pub mod test {
         cx.run_until_parked();
 
         let (settings_window, cx) = cx
-            .add_window_view(|window, cx| SettingsWindow::new(Some(workspace_handle), window, cx));
+            .add_window_view(|window, cx| SettingsWindow::new(Some(workspace_handle), false, window, cx));
 
         cx.run_until_parked();
 
@@ -6164,7 +6281,7 @@ pub mod test {
         cx.run_until_parked();
 
         let (settings_window, cx) = cx
-            .add_window_view(|window, cx| SettingsWindow::new(Some(workspace_handle), window, cx));
+            .add_window_view(|window, cx| SettingsWindow::new(Some(workspace_handle), false, window, cx));
 
         cx.run_until_parked();
 
