@@ -1114,6 +1114,7 @@ impl TitleBar {
 
     fn render_hidden_feature_menu(&self, cx: &mut Context<Self>) -> AnyElement {
         let is_remote = self.project.read(cx).is_via_remote_server();
+        let workspace = self.workspace.clone();
         PopoverMenu::new("titlebar-hidden-feature-menu")
             .anchor(Anchor::TopRight)
             .trigger_with_tooltip(
@@ -1123,9 +1124,27 @@ impl TitleBar {
                 Tooltip::text("More"),
             )
             .menu(move |window, cx| {
+                let workspace = workspace.clone();
                 Some(ContextMenu::build(window, cx, move |menu, _, _| {
+                    let workspace = workspace.clone();
                     let menu = menu
-                        .action("Settings", zed_actions::OpenSettings.boxed_clone())
+                        .item(
+                            ContextMenuEntry::new("Settings").handler(move |window, cx| {
+                                if let Some(workspace) = workspace.upgrade() {
+                                    let focus_handle = workspace.read(cx).focus_handle(cx);
+                                    focus_handle.dispatch_action(
+                                        &zed_actions::OpenSettings,
+                                        window,
+                                        cx,
+                                    );
+                                } else {
+                                    window.dispatch_action(
+                                        zed_actions::OpenSettings.boxed_clone(),
+                                        cx,
+                                    );
+                                }
+                            }),
+                        )
                         // .action("Keymap", zed_actions::OpenKeymap.boxed_clone())
                         // .action(
                         //     "Extensions",
@@ -1835,11 +1854,11 @@ impl TitleBar {
                 let user_store = user_store.clone();
                 let workspace = workspace.clone();
 
-                let ai_enabled = !project::DisableAiSettings::get_global(cx).disable_ai;
+                let _ai_enabled = !project::DisableAiSettings::get_global(cx).disable_ai;
                 let current_layout = AgentSettings::get_layout(cx);
-                let is_editor = matches!(current_layout, WindowLayout::Editor(_));
-                let is_agent = matches!(current_layout, WindowLayout::Agent(_));
-                let is_custom = matches!(current_layout, WindowLayout::Custom(_));
+                let _is_editor = matches!(current_layout, WindowLayout::Editor(_));
+                let _is_agent = matches!(current_layout, WindowLayout::Agent(_));
+                let _is_custom = matches!(current_layout, WindowLayout::Custom(_));
 
                 ContextMenu::build(window, cx, |menu, _, _cx| {
                     menu.when(is_signed_in, |this| {

@@ -1832,7 +1832,9 @@ impl SettingsWindow {
             None
         };
 
-        let list_state = gpui::ListState::new(0, gpui::ListAlignment::Top, px(0.0)).measure_all();
+        // Keep the settings page virtualized. Measuring every row before the first paint can
+        // stall the UI thread long enough for Windows to classify the application as hung.
+        let list_state = gpui::ListState::new(0, gpui::ListAlignment::Top, px(0.0));
         list_state.set_scroll_handler(|_, _, _| {});
 
         let mut this = Self {
@@ -1883,9 +1885,13 @@ impl SettingsWindow {
             skill_creator_page: None,
         };
 
-        this.fetch_files(window, cx);
-        this.build_ui(window, cx);
-        this.build_search_index();
+        // Let the settings window paint before loading the complete settings model. The model
+        // includes dynamic language and project data and must not block the first frame.
+        cx.defer_in(window, |this, window, cx| {
+            this.fetch_files(window, cx);
+            this.build_ui(window, cx);
+            this.build_search_index();
+        });
 
         this.search_bar.update(cx, |editor, cx| {
             editor.focus_handle(cx).focus(window, cx);
@@ -4413,6 +4419,29 @@ impl SettingsWindow {
 impl Render for SettingsWindow {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let ui_font = theme_settings::setup_ui_font(window, cx);
+
+        if self.pages.is_empty() {
+            return client_side_decorations(
+                v_flex()
+                    .text_color(cx.theme().colors().text)
+                    .size_full()
+                    .children(self.title_bar.clone())
+                    .child(
+                        div()
+                            .id("settings-loading")
+                            .flex()
+                            .flex_1()
+                            .items_center()
+                            .justify_center()
+                            .font(ui_font)
+                            .bg(cx.theme().colors().background)
+                            .child(Label::new("Loading Settings…")),
+                    ),
+                window,
+                cx,
+                Tiling::default(),
+            );
+        }
 
         client_side_decorations(
             v_flex()

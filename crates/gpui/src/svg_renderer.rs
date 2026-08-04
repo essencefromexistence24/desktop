@@ -6,8 +6,9 @@ use image::Frame;
 use resvg::tiny_skia::Pixmap;
 use smallvec::SmallVec;
 use std::{
+    collections::HashSet,
     hash::Hash,
-    sync::{Arc, LazyLock, OnceLock},
+    sync::{Arc, LazyLock, Mutex, OnceLock},
 };
 
 #[cfg(target_os = "macos")]
@@ -92,6 +93,7 @@ pub struct RenderSvgParams {
 pub struct SvgRenderer {
     asset_source: Arc<dyn AssetSource>,
     usvg_options: Arc<usvg::Options<'static>>,
+    invalid_paths: Arc<Mutex<HashSet<SharedString>>>,
 }
 
 /// The size in which to render the SVG.
@@ -166,6 +168,7 @@ impl SvgRenderer {
         Self {
             asset_source,
             usvg_options: Arc::new(options),
+            invalid_paths: Arc::new(Mutex::new(HashSet::new())),
         }
     }
 
@@ -201,6 +204,17 @@ impl SvgRenderer {
     ) -> Result<Option<(Size<DevicePixels>, Vec<u8>)>> {
         anyhow::ensure!(!params.size.is_zero(), "can't render at a zero size");
 
+        // A malformed external SVG can otherwise be parsed and logged on every frame,
+        // starving the UI thread and preventing windows such as Settings from painting.
+        if self
+            .invalid_paths
+            .lock()
+            .expect("SVG invalid-path cache poisoned")
+            .contains(&params.path)
+        {
+            return Ok(None);
+        }
+
         let render_pixmap = |bytes| {
             let pixmap = self.render_pixmap(bytes, SvgSize::Size(params.size))?;
 
@@ -218,13 +232,22 @@ impl SvgRenderer {
             Ok(Some((size, alpha_mask)))
         };
 
-        if let Some(bytes) = bytes {
+        let result = if let Some(bytes) = bytes {
             render_pixmap(bytes)
         } else if let Some(bytes) = self.asset_source.load(&params.path)? {
             render_pixmap(&bytes)
         } else {
             Ok(None)
+        };
+
+        if result.is_err() {
+            self.invalid_paths
+                .lock()
+                .expect("SVG invalid-path cache poisoned")
+                .insert(params.path.clone());
         }
+
+        result
     }
 
     fn render_pixmap(&self, bytes: &[u8], size: SvgSize) -> Result<Pixmap, usvg::Error> {

@@ -4762,6 +4762,8 @@ impl ProjectPanel {
         summary: DxExplorerSummary,
         has_worktree: bool,
         is_read_only: bool,
+        selected_count: usize,
+        selection_toolbar: Option<AnyElement>,
         cx: &mut Context<Self>,
     ) -> AnyElement {
         let project_panel_settings = ProjectPanelSettings::get_global(cx);
@@ -4833,7 +4835,7 @@ impl ProjectPanel {
         ]
         .join("\n");
 
-        let header_controls = h_flex()
+        let _legacy_header_controls = h_flex()
             .flex_none()
             .items_center()
             .gap_0p5()
@@ -5033,8 +5035,113 @@ impl ProjectPanel {
             )
             .child(self.render_side_panel_header_controls("dx-explorer", cx));
 
+        let more_menu_id = SharedString::from(format!("dx-explorer-more-menu-{panel_id:?}"));
+        let more_button_id = SharedString::from(format!("dx-explorer-more-{panel_id:?}"));
+        let panel_for_more = cx.entity().downgrade();
+        let panel_for_more_storage = panel_for_more.clone();
+        let more_control = PopoverMenu::new(more_menu_id)
+            .trigger_with_tooltip(
+                IconButton::new(more_button_id, IconName::Ellipsis)
+                    .shape(IconButtonShape::Square)
+                    .style(ButtonStyle::Subtle)
+                    .icon_size(IconSize::Small)
+                    .tab_index(0_isize)
+                    .track_focus(&header_focus_handle),
+                Tooltip::text("More project actions"),
+            )
+            .anchor(gpui::Anchor::TopRight)
+            .menu(move |window, cx| {
+                let panel = panel_for_more.clone();
+                let storage_panel = panel_for_more_storage.clone();
+                Some(ContextMenu::build(window, cx, move |menu, _window, _cx| {
+                    menu.action("Open Project", workspace::Open::default().boxed_clone())
+                        .action_disabled_when(
+                            !has_worktree,
+                            "Open File",
+                            ToggleFileFinder::default().boxed_clone(),
+                        )
+                        .separator()
+                        .action_disabled_when(
+                            is_read_only || !has_worktree,
+                            "New File",
+                            NewFile.boxed_clone(),
+                        )
+                        .action_disabled_when(
+                            is_read_only || !has_worktree,
+                            "New Folder",
+                            NewDirectory.boxed_clone(),
+                        )
+                        .separator()
+                        .entry(
+                            if storage_details_visible {
+                                "Hide Storage Details"
+                            } else {
+                                "Show Storage Details"
+                            },
+                            None,
+                            move |_window, cx| {
+                                if has_worktree {
+                                    storage_panel
+                                        .update_in(cx, |this, window, cx| {
+                                            this.toggle_storage_details_visible(window, cx);
+                                        })
+                                        .log_err();
+                                }
+                            },
+                        )
+                        .separator()
+                        .header("Project View")
+                        .action_checked_with_disabled(
+                            if show_ignored_entries {
+                                "Ignored files visible"
+                            } else {
+                                "Ignored files hidden"
+                            },
+                            ToggleHideGitIgnore.boxed_clone(),
+                            show_ignored_entries,
+                            !has_worktree,
+                        )
+                        .action_checked_with_disabled(
+                            if show_hidden_entries {
+                                "Hidden files visible"
+                            } else {
+                                "Hidden files hidden"
+                            },
+                            ToggleHideHidden.boxed_clone(),
+                            show_hidden_entries,
+                            !has_worktree,
+                        )
+                        .action_disabled_when(
+                            !has_worktree,
+                            "Project Symbols",
+                            ToggleProjectSymbols.boxed_clone(),
+                        )
+                        .action_disabled_when(
+                            !has_worktree,
+                            "Collapse Folders",
+                            CollapseAllEntries.boxed_clone(),
+                        )
+                        .separator()
+                        .action("Project Settings", zed_actions::OpenSettings.boxed_clone())
+                }))
+            })
+            .into_any_element();
+
+        let header_controls = h_flex()
+            .items_center()
+            .gap_0p5()
+            .when_some(selection_toolbar, |this, toolbar| this.child(toolbar))
+            .child(more_control)
+            .child(self.render_side_panel_header_controls("dx-explorer", cx));
+
         // Relocated custom toolbar into the native tree header area
-        ListHeader::new("Project")
+        let header_title = if selected_count > 0 {
+            Self::selected_entries_count_label(selected_count)
+        } else {
+            "Project".to_string()
+        };
+        ListHeader::new(header_title)
+            .inset(true)
             .end_slot::<AnyElement>(header_controls.into_any_element())
             .into_any_element()
     }
@@ -5060,7 +5167,6 @@ impl ProjectPanel {
         cx: &mut Context<Self>,
     ) -> AnyElement {
         let clipboard_operation = self.clipboard_operation_summary();
-        let clipboard_operation_for_status = clipboard_operation;
         let clipboard_operation_for_paste = clipboard_operation;
         let can_paste_to_selection = clipboard_operation_for_paste.is_some();
         let paste_tooltip = clipboard_operation_for_paste
@@ -5077,54 +5183,10 @@ impl ProjectPanel {
         let paste_selection_tooltip_focus_handle = paste_selection_focus_handle.clone();
         let trash_selection_focus_handle = toolbar_focus_handle.clone();
         let trash_selection_tooltip_focus_handle = trash_selection_focus_handle.clone();
-        let clear_selection_focus_handle = toolbar_focus_handle.clone();
 
         h_flex()
             .id("project-panel-selection-toolbar")
-            .w_full()
             .items_center()
-            .justify_between()
-            .gap_1()
-            .px_1()
-            .py_0p5()
-            .border_b_1()
-            .border_color(cx.theme().colors().border.opacity(0.6))
-            .bg(cx.theme().colors().panel_background)
-            .child(
-                h_flex()
-                    .min_w_0()
-                    .flex_1()
-                    .items_center()
-                    .gap_1()
-                    .child(
-                        Label::new(Self::selected_entries_count_label(selected_count))
-                            .size(LabelSize::Small)
-                            .color(Color::Muted),
-                    )
-                    .when_some(clipboard_operation_for_status, |this, operation| {
-                        let icon = match operation.mode {
-                            operation_status::ClipboardOperationMode::Copy => {
-                                dx_icon(DxUiIcon::Copy)
-                            }
-                            operation_status::ClipboardOperationMode::Move => {
-                                dx_icon(DxUiIcon::Move)
-                            }
-                        };
-
-                        this.child(
-                            div()
-                                .id("project-panel-clipboard-operation-status")
-                                .min_w_0()
-                                .child(
-                                    Chip::new(operation.status_label())
-                                        .icon(icon)
-                                        .icon_color(Color::Muted)
-                                        .label_color(Color::Muted)
-                                        .truncate(),
-                                ),
-                        )
-                    }),
-            )
             .child(
                 h_flex()
                     .flex_none()
@@ -5152,7 +5214,7 @@ impl ProjectPanel {
                     )
                     .when(!is_read_only, |this| {
                         this.child(
-                            IconButton::new("project-panel-cut-selection", dx_icon(DxUiIcon::Move))
+                            IconButton::new("project-panel-cut-selection", IconName::Scissors)
                                 .shape(IconButtonShape::Square)
                                 .style(ButtonStyle::Subtle)
                                 .icon_size(IconSize::Small)
@@ -5247,23 +5309,7 @@ impl ProjectPanel {
                                     this.trash(&Trash { skip_prompt: false }, window, cx);
                                 })),
                         )
-                    })
-                    .child(
-                        IconButton::new("project-panel-clear-selection", IconName::Close)
-                            .shape(IconButtonShape::Square)
-                            .style(ButtonStyle::Subtle)
-                            .icon_size(IconSize::Small)
-                            .tab_index(0_isize)
-                            .track_focus(&clear_selection_focus_handle)
-                            .tooltip(Tooltip::text("Clear selection"))
-                            .on_click(cx.listener(|this, _, window, cx| {
-                                this.selection = None;
-                                this.marked_entries.clear();
-                                this.focus_handle(cx).focus(window, cx);
-                                cx.notify();
-                            })),
-                    )
-                    .child(self.render_side_panel_header_controls("project-panel-selection", cx)),
+                    }),
             )
             .into_any_element()
     }
@@ -9425,19 +9471,14 @@ impl Render for ProjectPanel {
                             dx_explorer_summary,
                             has_worktree,
                             is_read_only,
+                            selected_entry_count,
+                            selected_entries_toolbar,
                             cx,
                         ))
                         .when_some(
                             self.render_dx_explorer_storage_root_strip(cx),
                             |this, root_strip| this.child(root_strip),
                         )
-                        .map(|this| {
-                            if let Some(toolbar) = selected_entries_toolbar {
-                                this.child(toolbar)
-                            } else {
-                                this
-                            }
-                        })
                         .when_some(
                             self.render_dx_explorer_storage_drilldown(cx),
                             |this, drilldown| this.child(drilldown),
@@ -10145,6 +10186,5 @@ fn git_status_indicator(git_status: GitSummary) -> Option<(&'static str, Color)>
 #[cfg(test)]
 mod project_panel_tests;
 mod tests;
-
 
 // Sumon
