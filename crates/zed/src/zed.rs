@@ -1655,29 +1655,42 @@ fn open_about_window(cx: &mut App) {
         height: px(300.),
     };
 
-    cx.open_window(
-        WindowOptions {
-            titlebar: Some(TitlebarOptions {
-                title: Some("About Dx".into()),
-                appears_transparent: true,
-                traffic_light_position: Some(point(px(12.), px(12.))),
-            }),
-            window_bounds: Some(WindowBounds::centered(window_size, cx)),
-            is_resizable: false,
-            is_minimizable: false,
-            kind: WindowKind::Floating,
-            app_id: Some(ReleaseChannel::global(cx).app_id().to_owned()),
-            ..Default::default()
-        },
-        |window, cx| {
-            let about_window = cx.new(AboutWindow::new);
-            let focus_handle = about_window.read(cx).ok_entry.focus_handle.clone();
-            window.activate_window();
-            focus_handle.focus(window, cx);
-            about_window
-        },
-    )
-    .log_err();
+    let about_window = cx
+        .open_window(
+            WindowOptions {
+                titlebar: Some(TitlebarOptions {
+                    title: Some("About Dx".into()),
+                    appears_transparent: true,
+                    traffic_light_position: Some(point(px(12.), px(12.))),
+                }),
+                window_bounds: Some(WindowBounds::centered(window_size, cx)),
+                is_resizable: false,
+                is_minimizable: false,
+                kind: WindowKind::Floating,
+                app_id: Some(ReleaseChannel::global(cx).app_id().to_owned()),
+                ..Default::default()
+            },
+            |_window, cx| {
+                let about_window = cx.new(AboutWindow::new);
+                // Do not activate/focus the window here: the `open_window` callback runs
+                // while GPUI still holds the update lock, and platform-level activation
+                // can re-enter the message loop and hang the app on Windows (AppHangB1).
+                // Defer activation and focus until `open_window` has returned.
+                // See PROBLEM.md → Problem 1.
+                about_window
+            },
+        )
+        .log_err();
+
+    if let Some(about_window) = about_window {
+        about_window
+            .update(cx, |about_window, window, cx| {
+                let focus_handle = about_window.ok_entry.focus_handle.clone();
+                window.activate_window();
+                focus_handle.focus(window, cx);
+            })
+            .log_err();
+    }
 }
 
 #[cfg(not(target_os = "windows"))]

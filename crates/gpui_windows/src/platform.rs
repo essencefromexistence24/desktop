@@ -571,6 +571,11 @@ impl Platform for WindowsPlatform {
     ) -> Receiver<Result<Option<Vec<PathBuf>>>> {
         let (tx, rx) = oneshot::channel();
         let window = self.find_current_active_window();
+        if window.is_none() {
+            log::warn!(
+                "prompt_for_paths: no active app window to own the native dialog; showing without an owner"
+            );
+        }
         self.foreground_executor()
             .spawn(async move {
                 let _ = tx.send(file_open_dialog(options, window));
@@ -589,6 +594,11 @@ impl Platform for WindowsPlatform {
         let suggested_name = suggested_name.map(|s| s.to_owned());
         let (tx, rx) = oneshot::channel();
         let window = self.find_current_active_window();
+        if window.is_none() {
+            log::warn!(
+                "prompt_for_new_path: no active app window to own the native dialog; showing without an owner"
+            );
+        }
         self.foreground_executor()
             .spawn(async move {
                 let _ = tx.send(file_save_dialog(directory, suggested_name, window));
@@ -1139,6 +1149,10 @@ fn open_target_in_explorer(target: &Path) -> Result<()> {
     })
 }
 
+/// `HRESULT_FROM_WIN32(ERROR_CANCELLED)`: the HRESULT returned by common file
+/// dialogs when the user dismisses them.
+const ERROR_CANCELLED_HRESULT: i32 = 0x8007_04C7_u32 as i32;
+
 fn file_open_dialog(
     options: PathPromptOptions,
     window: Option<HWND>,
@@ -1162,9 +1176,17 @@ fn file_open_dialog(
             folder_dialog.SetOkButtonLabel(&HSTRING::from(prompt))?;
         }
 
-        if folder_dialog.Show(window).is_err() {
-            // User cancelled
-            return Ok(None);
+        match folder_dialog.Show(window) {
+            Ok(()) => {}
+            Err(error) => {
+                // The user cancelling the dialog returns HRESULT_FROM_WIN32(ERROR_CANCELLED);
+                // anything else is a real failure we should surface instead of hiding it as a
+                // cancellation. See PROBLEM.md → Problem 2.
+                if error.code().0 == ERROR_CANCELLED_HRESULT {
+                    return Ok(None);
+                }
+                return Err(anyhow::Error::new(error).context("failed to show file open dialog"));
+            }
         }
     }
 
@@ -1222,9 +1244,17 @@ fn file_save_dialog(
             pszName: windows::core::w!("All files"),
             pszSpec: windows::core::w!("*.*"),
         }])?;
-        if dialog.Show(window).is_err() {
-            // User cancelled
-            return Ok(None);
+        match dialog.Show(window) {
+            Ok(()) => {}
+            Err(error) => {
+                // The user cancelling the dialog returns HRESULT_FROM_WIN32(ERROR_CANCELLED);
+                // anything else is a real failure we should surface instead of hiding it as a
+                // cancellation. See PROBLEM.md → Problem 2.
+                if error.code().0 == ERROR_CANCELLED_HRESULT {
+                    return Ok(None);
+                }
+                return Err(anyhow::Error::new(error).context("failed to show file save dialog"));
+            }
         }
     }
     let shell_item = unsafe { dialog.GetResult()? };

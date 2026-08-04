@@ -19,7 +19,17 @@ pub fn init(cx: &mut App) {
 
 fn process_settings(cx: &mut App) {
     let settings = WorkspaceSettings::get_global(cx);
-    if settings.use_system_prompts && cfg!(not(any(target_os = "linux", target_os = "freebsd"))) {
+    // On Windows the "system" prompt is a native TaskDialog that blocks the UI thread
+    // while the surrounding close/save flow is still running, which can freeze or
+    // crash the app (e.g. Save/Discard on an untitled file not showing). Always use
+    // the in-app prompt there. See PROBLEM.md → Problem 2.
+    if settings.use_system_prompts
+        && cfg!(not(any(
+            target_os = "linux",
+            target_os = "freebsd",
+            target_os = "windows"
+        )))
+    {
         cx.reset_prompt_builder();
     } else {
         cx.set_prompt_builder(zed_prompt_renderer);

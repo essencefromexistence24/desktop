@@ -3084,10 +3084,14 @@ impl Workspace {
         window: &mut Window,
         cx: &mut Context<Self>,
     ) -> oneshot::Receiver<Option<Vec<PathBuf>>> {
-        // TODO: If `on_prompt_for_open_path` is set, we should always use it
-        // rather than gating on `use_system_path_prompts`. This would let tests
-        // inject a mock without also having to disable the setting.
-        if !lister.is_local(cx) || !WorkspaceSettings::get_global(cx).use_system_path_prompts {
+        // Prefer the registered in-app prompt whenever it is available. On Windows the
+        // native COM open dialog can fail to appear or hang the UI thread, so always use
+        // the in-app prompt there. The `use_system_path_prompts` gate below only selects
+        // the native dialog on other platforms when no in-app prompt is registered.
+        let prefer_in_app_prompt = cfg!(target_os = "windows")
+            || !lister.is_local(cx)
+            || !WorkspaceSettings::get_global(cx).use_system_path_prompts;
+        if self.on_prompt_for_open_path.is_some() && prefer_in_app_prompt {
             let prompt = self.on_prompt_for_open_path.take().unwrap();
             let rx = prompt(self, lister, window, cx);
             self.on_prompt_for_open_path = Some(prompt);

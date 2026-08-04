@@ -8495,13 +8495,9 @@ impl Sidebar {
     }
 
     fn open_settings(&self, window: &mut Window, cx: &mut Context<Self>) {
-        // Open the settings.json file as an editor item inside the active
-        // workspace pane. This guarantees the settings appear ON TOP of the
-        // current code editor (as a regular focused tab), rather than spawning
-        // a separate OS window via `OpenSettings` which on Windows can end up
-        // opening behind / out of view. The user confirmed the in-editor
-        // settings screen "is good"; we just need it visible and interactive.
-        window.dispatch_action(Box::new(zed_actions::OpenSettingsFile), cx);
+        // Open the graphical Settings pane as a workspace tab (sidebar + pages).
+        // Do not open settings.json — that is OpenSettingsFile.
+        window.dispatch_action(Box::new(zed_actions::OpenSettings), cx);
     }
 
     fn dx_sounds_enabled(&self, cx: &App) -> bool {

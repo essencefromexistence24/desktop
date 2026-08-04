@@ -4506,7 +4506,8 @@ impl Item for SettingsWindow {
     }
 
     fn tab_icon(&self, _window: &Window, _cx: &App) -> Option<Icon> {
-        Some(Icon::new(IconName::Settings))
+        // Match the sidebar cog (DxUiIcon::Settings → IconName::DxCog).
+        Some(Icon::new(IconName::DxCog))
     }
 
     fn telemetry_event_text(&self) -> Option<&'static str> {

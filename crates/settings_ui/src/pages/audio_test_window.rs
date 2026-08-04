@@ -280,25 +280,48 @@ pub fn open_audio_test_window(_window: &mut Window, cx: &mut App) {
         height: px(240.0),
     };
 
-    cx.open_window(
-        WindowOptions {
-            titlebar: Some(gpui::TitlebarOptions {
-                title: Some("Audio Test".into()),
-                appears_transparent: true,
-                traffic_light_position: Some(gpui::point(px(12.0), px(12.0))),
-            }),
-            focus: true,
-            show: true,
-            is_movable: true,
-            kind: WindowKind::Normal,
-            window_background: cx.theme().window_background_appearance(),
-            app_id: Some(app_id.to_owned()),
-            window_decorations: Some(gpui::WindowDecorations::Client),
-            window_bounds: Some(WindowBounds::centered(window_size, cx)),
-            window_min_size: Some(window_min_size),
-            ..Default::default()
-        },
-        |_, cx| cx.new(AudioTestWindow::new),
-    )
-    .log_err();
+    // On Windows, creating and showing a second OS window while GPUI still holds the
+    // `open_window` update lock can re-enter the message loop (WM_PAINT / activation)
+    // and hang the app (AppHangB1). Create the window hidden and show + activate it on
+    // a later turn, once `open_window` has returned and the update stack has unwound.
+    // See PROBLEM.md → Problem 1.
+    #[cfg(target_os = "windows")]
+    let (show, focus) = (false, false);
+    #[cfg(not(target_os = "windows"))]
+    let (show, focus) = (true, true);
+
+    let window = cx
+        .open_window(
+            WindowOptions {
+                titlebar: Some(gpui::TitlebarOptions {
+                    title: Some("Audio Test".into()),
+                    appears_transparent: true,
+                    traffic_light_position: Some(gpui::point(px(12.0), px(12.0))),
+                }),
+                focus,
+                show,
+                is_movable: true,
+                kind: WindowKind::Normal,
+                window_background: cx.theme().window_background_appearance(),
+                app_id: Some(app_id.to_owned()),
+                window_decorations: Some(gpui::WindowDecorations::Client),
+                window_bounds: Some(WindowBounds::centered(window_size, cx)),
+                window_min_size: Some(window_min_size),
+                ..Default::default()
+            },
+            |_, cx| cx.new(AudioTestWindow::new),
+        )
+        .log_err();
+
+    #[cfg(target_os = "windows")]
+    if let Some(window) = window {
+        // `activate` enqueues the platform show/foreground work on the platform
+        // executor, so it runs after the current update stack has finished.
+        window
+            .update(cx, |_, window, _| window.activate_window())
+            .log_err();
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    let _ = window;
 }
