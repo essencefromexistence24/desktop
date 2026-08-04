@@ -5037,8 +5037,7 @@ impl ProjectPanel {
 
         let more_menu_id = SharedString::from(format!("dx-explorer-more-menu-{panel_id:?}"));
         let more_button_id = SharedString::from(format!("dx-explorer-more-{panel_id:?}"));
-        let panel_for_more = cx.entity().downgrade();
-        let panel_for_more_storage = panel_for_more.clone();
+        let panel_for_more_storage = cx.entity().downgrade();
         let more_control = PopoverMenu::new(more_menu_id)
             .trigger_with_tooltip(
                 IconButton::new(more_button_id, IconName::Ellipsis)
@@ -5051,7 +5050,6 @@ impl ProjectPanel {
             )
             .anchor(gpui::Anchor::TopRight)
             .menu(move |window, cx| {
-                let panel = panel_for_more.clone();
                 let storage_panel = panel_for_more_storage.clone();
                 Some(ContextMenu::build(window, cx, move |menu, _window, _cx| {
                     menu.action("Open Project", workspace::Open::default().boxed_clone())
@@ -5161,7 +5159,6 @@ impl ProjectPanel {
 
     fn render_selected_entries_toolbar(
         &self,
-        selected_count: usize,
         is_read_only: bool,
         is_remote: bool,
         cx: &mut Context<Self>,
@@ -9273,9 +9270,7 @@ impl Render for ProjectPanel {
         let dx_explorer_summary = self.dx_explorer_summary(dx_explorer_source_kind);
         let selected_entries_toolbar = (selected_entry_count > 0
             && self.state.edit_state.is_none())
-        .then(|| {
-            self.render_selected_entries_toolbar(selected_entry_count, is_read_only, is_remote, cx)
-        });
+        .then(|| self.render_selected_entries_toolbar(is_read_only, is_remote, cx));
         let _active_media_preview = (has_worktree && is_local_or_wsl)
             .then(|| self.top_folder_media_preview(cx))
             .flatten();

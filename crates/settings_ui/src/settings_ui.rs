@@ -1837,7 +1837,7 @@ impl SettingsWindow {
         let list_state = gpui::ListState::new(0, gpui::ListAlignment::Top, px(0.0));
         list_state.set_scroll_handler(|_, _, _| {});
 
-        let mut this = Self {
+        let this = Self {
             title_bar,
             original_window,
 
