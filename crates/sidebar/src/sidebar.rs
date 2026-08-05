@@ -4218,6 +4218,7 @@ impl Sidebar {
         new_title: String,
         cx: &mut Context<Self>,
     ) {
+        let shortcut_id = shortcut_id.trim_start_matches("sidebar-grid-pinned-");
         if let Some(shortcut) = self.grid_shortcuts.iter_mut().find(|s| s.id == shortcut_id) {
             shortcut.label = new_title;
             self.serialize(cx);
@@ -10075,6 +10076,16 @@ impl Sidebar {
         let dragged_raw_id = dragged.id.trim_start_matches("sidebar-grid-pinned-").to_string();
         let is_pinned = dragged.id.starts_with("sidebar-grid-pinned-");
 
+        if is_pinned {
+            if self
+                .grid_shortcuts
+                .iter()
+                .any(|existing| existing.matches_context(&context) && existing.id == dragged_raw_id)
+            {
+                return;
+            }
+        }
+
         let shortcut = if is_pinned {
             let Some(shortcut) = self
                 .grid_shortcuts
@@ -10200,10 +10211,23 @@ impl Sidebar {
             })
             .map(|(ix, _)| ix);
 
-        match target_ix {
-            Some(ix) => self.grid_shortcuts.insert(ix, shortcut),
-            None => self.grid_shortcuts.insert(0, shortcut),
-        }
+        let insert_ix = match target_ix {
+            Some(ix) => ix,
+            None => {
+                // Target is a generated (non-pinned) cell: drop the dragged entry
+                // right after the last pinned entry for this context, so it stays
+                // near the drop location instead of jumping to the front.
+                self.grid_shortcuts
+                    .iter()
+                    .enumerate()
+                    .filter(|(_, existing)| existing.matches_context(&context))
+                    .map(|(ix, _)| ix + 1)
+                    .last()
+                    .unwrap_or(0)
+            }
+        };
+
+        self.grid_shortcuts.insert(insert_ix, shortcut);
 
         self.grid_shortcuts.truncate(MAX_SIDEBAR_GRID_SHORTCUTS);
         self.grid_entry_cache.borrow_mut().clear();
@@ -10220,6 +10244,7 @@ impl Sidebar {
     ) {
         match action {
             SidebarGridAction::AddFolderToProject => {
+                self.activate_workspace_screen(WorkspaceScreenKind::Editor, window, cx);
                 if let Some(workspace) = self.active_workspace(cx) {
                     workspace.update(cx, |workspace, cx| {
                         workspace.add_folder_to_project(&AddFolderToProject, window, cx);
@@ -10227,6 +10252,7 @@ impl Sidebar {
                 }
             }
             SidebarGridAction::OpenFile(path) => {
+                self.activate_workspace_screen(WorkspaceScreenKind::Editor, window, cx);
                 if let Some(workspace) = self.active_workspace(cx) {
                     workspace.update(cx, |workspace, cx| {
                         workspace
@@ -10247,6 +10273,7 @@ impl Sidebar {
                 self.open_browser_grid_url(url.as_ref(), window, cx)
             }
             SidebarGridAction::OpenTerminalFolder(path) => {
+                self.activate_workspace_screen(WorkspaceScreenKind::Terminal, window, cx);
                 self.open_terminal_grid_folder(path, window, cx);
             }
             SidebarGridAction::OpenThread(thread_id) => {
