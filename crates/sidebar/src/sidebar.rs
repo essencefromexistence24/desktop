@@ -10109,7 +10109,13 @@ impl Sidebar {
             }
         };
 
-        self.grid_shortcuts.insert(0, shortcut);
+        let insert_ix = self
+            .grid_shortcuts
+            .iter()
+            .rposition(|existing| existing.matches_context(&context))
+            .map(|ix| ix + 1)
+            .unwrap_or(0);
+        self.grid_shortcuts.insert(insert_ix, shortcut);
         self.grid_shortcuts.truncate(MAX_SIDEBAR_GRID_SHORTCUTS);
         self.grid_entry_cache.borrow_mut().clear();
         Audio::play_dx_sound(DxSoundEvent::ChatDropMagic, cx);
@@ -10175,59 +10181,117 @@ impl Sidebar {
         }
         let (_, _, context) = self.grid_context(cx);
         let dragged_raw_id = dragged.id.trim_start_matches("sidebar-grid-pinned-").to_string();
+        let target_raw_id = target_id.trim_start_matches("sidebar-grid-pinned-").to_string();
 
-        let shortcut = match self
-            .grid_shortcuts
+        let mut display = self.grid_entries(cx);
+        let dragged_ix = display.iter().position(|entry| {
+            entry.id.trim_start_matches("sidebar-grid-pinned-") == dragged_raw_id.as_str()
+        });
+        let target_ix = display.iter().position(|entry| {
+            entry.id.trim_start_matches("sidebar-grid-pinned-") == target_raw_id.as_str()
+        });
+        let (Some(dragged_ix), Some(target_ix)) = (dragged_ix, target_ix) else {
+            return;
+        };
+        if dragged_ix == target_ix {
+            return;
+        }
+
+        // True swap: the dragged cell takes the target's position and the
+        // target takes the dragged's position.
+        display.swap(dragged_ix, target_ix);
+
+        // The grid always shows pinned cells before auto-suggested ones, so a
+        // suggested cell only holds its exact position if it is pinned. Pin:
+        // - any suggested cell that lands at or above the last pinned cell (it
+        //   would otherwise be pushed behind the whole pinned section), or
+        // - when the swap happens entirely among suggested cells, the suggested
+        //   cells from the swap region up.
+        let pin_from = dragged_ix.min(target_ix);
+        let last_pinned_ix = display
             .iter()
-            .find(|existing| existing.id == dragged_raw_id)
-            .cloned()
-        {
-            Some(shortcut) => shortcut,
-            None => {
-                if dragged.id.starts_with("sidebar-grid-pinned-") {
-                    return;
-                }
-                SerializedSidebarGridShortcut {
+            .enumerate()
+            .filter(|(_, entry)| {
+                let raw_id = entry.id.trim_start_matches("sidebar-grid-pinned-");
+                self.grid_shortcuts
+                    .iter()
+                    .any(|s| s.matches_context(&context) && s.id == raw_id)
+            })
+            .map(|(ix, _)| ix)
+            .last();
+        let (pin_start, pin_end) = match last_pinned_ix {
+            Some(last) if pin_from <= last => (0, last),
+            _ => (pin_from, display.len().saturating_sub(1)),
+        };
+        let mut new_pinned: Vec<SerializedSidebarGridShortcut> = Vec::new();
+        for (ix, entry) in display.iter().enumerate() {
+            let raw_id = entry.id.trim_start_matches("sidebar-grid-pinned-").to_string();
+            if let Some(shortcut) = self
+                .grid_shortcuts
+                .iter()
+                .find(|s| s.matches_context(&context) && s.id == raw_id)
+                .cloned()
+            {
+                new_pinned.push(shortcut);
+            } else if ix >= pin_start && ix <= pin_end {
+                new_pinned.push(SerializedSidebarGridShortcut {
                     screen_kind: context.screen_kind,
                     root_path: context.root_path.clone(),
-                    id: dragged_raw_id.clone(),
-                    icon: dragged.icon,
-                    label: dragged.label.to_string(),
-                    subtitle: dragged.subtitle.clone().map(|s| s.to_string()),
-                    action: dragged.action.to_serialized(),
-                }
+                    id: raw_id,
+                    icon: entry.icon,
+                    label: entry.label.to_string(),
+                    subtitle: entry.subtitle.clone().map(|s| s.to_string()),
+                    action: entry.action.to_serialized(),
+                });
             }
-        };
+        }
 
-        self.grid_shortcuts.retain(|existing| existing.id != dragged_raw_id);
+        // Keep pinned shortcuts for this context that weren't visible (beyond the
+        // display cap), preserving their order.
+        for shortcut in self
+            .grid_shortcuts
+            .iter()
+            .filter(|s| s.matches_context(&context))
+        {
+            if !new_pinned.iter().any(|s| s.id == shortcut.id) {
+                new_pinned.push(shortcut.clone());
+            }
+        }
 
-        let target_raw_id = target_id.trim_start_matches("sidebar-grid-pinned-").to_string();
-        let target_ix = self
+        // Replace this context's section of the list in place, preserving other
+        // contexts' entries and order.
+        let context_indices: Vec<usize> = self
             .grid_shortcuts
             .iter()
             .enumerate()
-            .find(|(_, existing)| {
-                existing.matches_context(&context) && existing.id == target_raw_id
-            })
-            .map(|(ix, _)| ix);
+            .filter(|(_, s)| s.matches_context(&context))
+            .map(|(ix, _)| ix)
+            .collect();
 
-        let insert_ix = match target_ix {
-            Some(ix) => ix,
-            None => {
-                // Target is a generated (non-pinned) cell: drop the dragged entry
-                // right after the last pinned entry for this context, so it stays
-                // near the drop location instead of jumping to the front.
-                self.grid_shortcuts
-                    .iter()
-                    .enumerate()
-                    .filter(|(_, existing)| existing.matches_context(&context))
-                    .map(|(ix, _)| ix + 1)
-                    .last()
-                    .unwrap_or(0)
+        let mut result = Vec::with_capacity(self.grid_shortcuts.len() + new_pinned.len());
+        if context_indices.is_empty() {
+            result.extend(std::mem::take(&mut self.grid_shortcuts));
+            result.extend(new_pinned);
+        } else {
+            let mut next = 0usize;
+            let mut replaced = false;
+            for (ix, shortcut) in std::mem::take(&mut self.grid_shortcuts)
+                .into_iter()
+                .enumerate()
+            {
+                if !replaced && ix == context_indices[next] {
+                    if next + 1 == context_indices.len() {
+                        replaced = true;
+                        result.extend(std::mem::take(&mut new_pinned));
+                    } else {
+                        next += 1;
+                    }
+                    continue;
+                }
+                result.push(shortcut);
             }
-        };
-
-        self.grid_shortcuts.insert(insert_ix, shortcut);
+        }
+        self.grid_shortcuts = result;
 
         self.grid_shortcuts.truncate(MAX_SIDEBAR_GRID_SHORTCUTS);
         self.grid_entry_cache.borrow_mut().clear();
