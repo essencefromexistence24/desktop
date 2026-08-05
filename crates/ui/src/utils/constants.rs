@@ -11,7 +11,7 @@ pub const TRAFFIC_LIGHT_PADDING: f32 = if MACOS_SDK_26_OR_LATER { 78. } else { 7
 
 /// Returns the platform-appropriate title bar height.
 ///
-/// On Windows, this returns a fixed height of 48px.
+/// On Windows, this returns a fixed height of 45px.
 /// On other platforms, it scales with the window's rem size (2.0x) with a minimum of 38px.
 #[cfg(not(target_os = "windows"))]
 pub fn platform_title_bar_height(window: &Window) -> Pixels {
@@ -21,5 +21,5 @@ pub fn platform_title_bar_height(window: &Window) -> Pixels {
 #[cfg(target_os = "windows")]
 pub fn platform_title_bar_height(_window: &Window) -> Pixels {
     // todo(windows) instead of hard coded size report the actual size to the Windows platform API
-    px(48.)
+    px(45.)
 }

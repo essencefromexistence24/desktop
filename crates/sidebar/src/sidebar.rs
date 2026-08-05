@@ -290,6 +290,8 @@ struct SerializedSidebar {
     #[serde(default)]
     grid_shortcuts: Vec<SerializedSidebarGridShortcut>,
     #[serde(default)]
+    hidden_grid_entry_ids: Vec<String>,
+    #[serde(default)]
     thread_sort_mode: SidebarThreadSortMode,
     #[serde(default)]
     manual_thread_order: Vec<ThreadId>,
@@ -715,6 +717,45 @@ struct DraggedSidebarThread {
     subtitle: Option<SharedString>,
 }
 
+#[derive(Clone)]
+struct DraggedSidebarGridEntry {
+    id: SharedString,
+    icon: IconName,
+    label: SharedString,
+    subtitle: Option<SharedString>,
+    action: SidebarGridAction,
+}
+
+impl Render for DraggedSidebarGridEntry {
+    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+        v_flex()
+            .id("dragged-sidebar-grid-entry")
+            .w(px(72.0))
+            .h(px(52.0))
+            .flex_shrink_0()
+            .rounded_md()
+            .border_1()
+            .border_color(cx.theme().colors().border_variant)
+            .bg(cx.theme().colors().elevated_surface_background)
+            .px_1p5()
+            .gap_1()
+            .items_center()
+            .justify_center()
+            .shadow_sm()
+            .child(
+                Icon::new(self.icon)
+                    .size(IconSize::Medium)
+                    .color(Color::Default),
+            )
+            .child(
+                Label::new(self.label.clone())
+                    .size(LabelSize::Small)
+                    .color(Color::Default)
+                    .truncate(),
+            )
+    }
+}
+
 impl Render for DraggedSidebarThread {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         h_flex()
@@ -880,6 +921,16 @@ impl SidebarGridAction {
                 Self::OpenTerminalFolder(path.clone())
             }
             SerializedSidebarGridAction::OpenThread { thread_id } => Self::OpenThread(*thread_id),
+        }
+    }
+
+    fn to_serialized(&self) -> SerializedSidebarGridAction {
+        match self {
+            Self::AddFolderToProject => SerializedSidebarGridAction::AddFolderToProject,
+            Self::OpenFile(path) => SerializedSidebarGridAction::OpenFile { path: path.clone() },
+            Self::OpenWebsite(url) => SerializedSidebarGridAction::OpenWebsite { url: url.to_string() },
+            Self::OpenTerminalFolder(path) => SerializedSidebarGridAction::OpenTerminalFolder { path: path.clone() },
+            Self::OpenThread(thread_id) => SerializedSidebarGridAction::OpenThread { thread_id: *thread_id },
         }
     }
 
@@ -1180,6 +1231,7 @@ pub struct Sidebar {
     space_page_start: usize,
     activity_bar_expanded: bool,
     grid_shortcuts: Vec<SerializedSidebarGridShortcut>,
+    hidden_grid_entry_ids: Vec<String>,
     thread_sort_mode: SidebarThreadSortMode,
     manual_thread_order: Vec<ThreadId>,
     thread_icon_overrides: HashMap<ThreadId, IconName>,
@@ -1341,6 +1393,7 @@ impl Sidebar {
             space_page_start: 0,
             activity_bar_expanded: false,
             grid_shortcuts: Vec::new(),
+            hidden_grid_entry_ids: Vec::new(),
             thread_sort_mode: SidebarThreadSortMode::default(),
             manual_thread_order: Vec::new(),
             thread_icon_overrides: HashMap::new(),
@@ -7549,8 +7602,6 @@ impl Sidebar {
                     this.action_slot(
                         h_flex()
                             .gap_0p5()
-                            .when_some(icon_picker, |this, picker| this.child(picker))
-                            .child(rename_button)
                             .when_some(contextual_action, |this, action| this.child(action))
                             .child(thread_more_menu),
                     )
@@ -9883,6 +9934,12 @@ impl Sidebar {
             WorkspaceScreenKind::Terminal => self.terminal_grid_entries(cx),
         };
 
+        let hidden = &self.hidden_grid_entry_ids;
+        let entries: Vec<SidebarGridEntry> = entries
+            .into_iter()
+            .filter(|entry| !hidden.iter().any(|id| id == &entry.id.to_string()))
+            .collect();
+
         self.grid_entry_cache
             .borrow_mut()
             .insert(cache_key, entries.clone());
@@ -9983,6 +10040,7 @@ impl Sidebar {
             .entry(thread_id)
             .cloned();
         if let Some(metadata) = metadata {
+            self.activate_workspace_screen(WorkspaceScreenKind::Agent, window, cx);
             self.open_thread_from_archive(metadata, window, cx);
         }
     }
@@ -10012,10 +10070,144 @@ impl Sidebar {
         cx.notify();
     }
 
-    fn delete_grid_shortcut(&mut self, entry_id: &str, cx: &mut Context<Self>) {
-        self.grid_shortcuts
-            .retain(|existing| existing.id != entry_id);
+    fn pin_grid_entry_shortcut(&mut self, dragged: &DraggedSidebarGridEntry, cx: &mut Context<Self>) {
+        let (_, _, context) = self.grid_context(cx);
+        let dragged_raw_id = dragged.id.trim_start_matches("sidebar-grid-pinned-").to_string();
+        let is_pinned = dragged.id.starts_with("sidebar-grid-pinned-");
+
+        let shortcut = if is_pinned {
+            let Some(shortcut) = self
+                .grid_shortcuts
+                .iter()
+                .find(|existing| existing.id == dragged_raw_id)
+                .cloned()
+            else {
+                return;
+            };
+            self.grid_shortcuts.retain(|existing| existing.id != dragged_raw_id);
+            shortcut
+        } else {
+            SerializedSidebarGridShortcut {
+                screen_kind: context.screen_kind,
+                root_path: context.root_path.clone(),
+                id: dragged_raw_id,
+                icon: dragged.icon,
+                label: dragged.label.to_string(),
+                subtitle: dragged.subtitle.clone().map(|s| s.to_string()),
+                action: dragged.action.to_serialized(),
+            }
+        };
+
+        self.grid_shortcuts.insert(0, shortcut);
+        self.grid_shortcuts.truncate(MAX_SIDEBAR_GRID_SHORTCUTS);
         self.grid_entry_cache.borrow_mut().clear();
+        Audio::play_dx_sound(DxSoundEvent::ChatDropMagic, cx);
+        self.serialize(cx);
+        cx.notify();
+    }
+
+    fn delete_grid_shortcut(&mut self, entry_id: &str, cx: &mut Context<Self>) {
+        let id = entry_id.trim_start_matches("sidebar-grid-pinned-");
+        self.grid_shortcuts
+            .retain(|existing| existing.id != id);
+        self.grid_entry_cache.borrow_mut().clear();
+        self.serialize(cx);
+        cx.notify();
+    }
+
+    fn hide_grid_suggestion(&mut self, entry_id: &str, cx: &mut Context<Self>) {
+        if !self
+            .hidden_grid_entry_ids
+            .iter()
+            .any(|id| id == entry_id)
+        {
+            self.hidden_grid_entry_ids.push(entry_id.to_string());
+        }
+        self.grid_entry_cache.borrow_mut().clear();
+        self.serialize(cx);
+        cx.notify();
+    }
+
+    fn add_grid_cell(&mut self, cx: &mut Context<Self>) {
+        let (_, _, context) = self.grid_context(cx);
+        let mut suffix = 0;
+        while self.grid_shortcuts.iter().any(|existing| {
+            existing.id == format!("add-folder-{suffix}") && existing.matches_context(&context)
+        }) {
+            suffix += 1;
+        }
+        let shortcut = SerializedSidebarGridShortcut {
+            screen_kind: context.screen_kind,
+            root_path: context.root_path.clone(),
+            id: format!("add-folder-{suffix}"),
+            icon: IconName::Plus,
+            label: "Add Folder".into(),
+            subtitle: None,
+            action: SerializedSidebarGridAction::AddFolderToProject,
+        };
+        self.grid_shortcuts.insert(0, shortcut);
+        self.grid_shortcuts.truncate(MAX_SIDEBAR_GRID_SHORTCUTS);
+        self.grid_entry_cache.borrow_mut().clear();
+        Audio::play_dx_sound(DxSoundEvent::ChatDropMagic, cx);
+        self.serialize(cx);
+        cx.notify();
+    }
+
+    fn reorder_grid_entry(
+        &mut self,
+        dragged: &DraggedSidebarGridEntry,
+        target_id: &str,
+        cx: &mut Context<Self>,
+    ) {
+        if dragged.id == target_id {
+            return;
+        }
+        let (_, _, context) = self.grid_context(cx);
+        let dragged_raw_id = dragged.id.trim_start_matches("sidebar-grid-pinned-").to_string();
+
+        let shortcut = match self
+            .grid_shortcuts
+            .iter()
+            .find(|existing| existing.id == dragged_raw_id)
+            .cloned()
+        {
+            Some(shortcut) => shortcut,
+            None => {
+                if dragged.id.starts_with("sidebar-grid-pinned-") {
+                    return;
+                }
+                SerializedSidebarGridShortcut {
+                    screen_kind: context.screen_kind,
+                    root_path: context.root_path.clone(),
+                    id: dragged_raw_id.clone(),
+                    icon: dragged.icon,
+                    label: dragged.label.to_string(),
+                    subtitle: dragged.subtitle.clone().map(|s| s.to_string()),
+                    action: dragged.action.to_serialized(),
+                }
+            }
+        };
+
+        self.grid_shortcuts.retain(|existing| existing.id != dragged_raw_id);
+
+        let target_raw_id = target_id.trim_start_matches("sidebar-grid-pinned-").to_string();
+        let target_ix = self
+            .grid_shortcuts
+            .iter()
+            .enumerate()
+            .find(|(_, existing)| {
+                existing.matches_context(&context) && existing.id == target_raw_id
+            })
+            .map(|(ix, _)| ix);
+
+        match target_ix {
+            Some(ix) => self.grid_shortcuts.insert(ix, shortcut),
+            None => self.grid_shortcuts.insert(0, shortcut),
+        }
+
+        self.grid_shortcuts.truncate(MAX_SIDEBAR_GRID_SHORTCUTS);
+        self.grid_entry_cache.borrow_mut().clear();
+        Audio::play_dx_sound(DxSoundEvent::ChatDropMagic, cx);
         self.serialize(cx);
         cx.notify();
     }
@@ -10080,6 +10272,7 @@ impl Sidebar {
         let hover_border = cx.theme().colors().border;
 
         v_flex()
+            .id("sidebar-space-grid")
             .w_full()
             .gap_2()
             .drag_over::<DraggedSidebarThread>(move |grid, _dragged, _, _cx| {
@@ -10088,6 +10281,14 @@ impl Sidebar {
             .on_drop(
                 cx.listener(|this, dragged: &DraggedSidebarThread, _window, cx| {
                     this.pin_thread_grid_shortcut(dragged, cx);
+                }),
+            )
+            .drag_over::<DraggedSidebarGridEntry>(move |grid, _dragged, _, _cx| {
+                grid.bg(hover_bg).rounded_md()
+            })
+            .on_drop(
+                cx.listener(|this, dragged: &DraggedSidebarGridEntry, _window, cx| {
+                    this.pin_grid_entry_shortcut(dragged, cx);
                 }),
             )
             .children(entries.chunks(SIDEBAR_SPACE_GRID_COLUMNS).enumerate().map(
@@ -10120,11 +10321,20 @@ impl Sidebar {
                                 String::new()
                             };
                             let entry_icon = entry.icon;
+                            let entry_action = entry.action.clone();
 
                             let is_light_theme = cx.theme().appearance.is_light();
                             let renaming_grid_shortcut_id = self.renaming_grid_shortcut_id.clone();
                             let thread_rename_editor = self.thread_rename_editor.clone();
                             let menu_entry_id = entry_id.clone();
+                            let reorder_on_drop = {
+                                let entry_id = entry_id.clone();
+                                cx.listener(
+                                    move |this, dragged: &DraggedSidebarGridEntry, _window, cx| {
+                                        this.reorder_grid_entry(dragged, &entry_id, cx);
+                                    },
+                                )
+                            };
                             right_click_menu::<ContextMenu>(format!("grid-context-{}", entry_id))
                                 .trigger({
                                     let entry_label = entry_label.clone();
@@ -10163,6 +10373,23 @@ impl Sidebar {
                                         .tooltip(Tooltip::text(tooltip_label))
                                         .hover(|style| style.bg(hover_bg).border_color(hover_border))
                                         .on_click(open_entry)
+                                        .on_drag(
+                                            DraggedSidebarGridEntry {
+                                                id: entry_id.clone(),
+                                                icon: entry_icon,
+                                                label: entry_label.clone(),
+                                                subtitle: None,
+                                                action: entry_action.clone(),
+                                            },
+                                            |dragged, _, _, cx| {
+                                                Audio::play_dx_sound(DxSoundEvent::DragWatchTick, cx);
+                                                cx.new(|_| dragged.clone())
+                                            },
+                                        )
+                                        .drag_over::<DraggedSidebarGridEntry>(move |cell, _, _, _| {
+                                            cell.bg(hover_bg).border_color(hover_border)
+                                        })
+                                        .on_drop(reorder_on_drop)
                                         .child(icon_element)
                                         .child(
                                             if renaming_grid_shortcut_id.as_ref() == Some(&entry_id.to_string()) {
@@ -10277,14 +10504,47 @@ impl Sidebar {
                                                         }
                                                     }),
                                             );
-                                        } else {
-                                            // Non-pinned entries: explain that only pinned shortcuts
-                                            // are customizable, instead of offering dead actions.
-                                            menu = menu.separator().item(
-                                                ContextMenuEntry::new("Only pinned shortcuts can be renamed or removed.")
-                                                    .disabled(true),
-                                            );
-                                        }
+} else {
+                                             // Non-pinned entries: allow removal and adding new cells.
+                                             menu = menu.item(
+                                                 ContextMenuEntry::new("Remove Suggestion")
+                                                     .icon(IconName::Trash)
+                                                     .handler({
+                                                         let entry_id = entry_id.clone();
+                                                         let sidebar_view = sidebar_view.clone();
+                                                         move |window, cx| {
+                                                             let entry_id = entry_id.clone();
+                                                             let sidebar_view = sidebar_view.clone();
+                                                             window.defer(cx, move |_window, cx| {
+                                                                 if let Some(sidebar) = sidebar_view.upgrade() {
+                                                                     sidebar.update(cx, |sidebar, cx| {
+                                                                         sidebar.hide_grid_suggestion(&entry_id, cx);
+                                                                         cx.notify();
+                                                                     });
+                                                                 }
+                                                             });
+                                                         }
+                                                     }),
+                                             );
+                                             menu = menu.item(
+                                                 ContextMenuEntry::new("Add Cell")
+                                                     .icon(IconName::Plus)
+                                                     .handler({
+                                                         let sidebar_view = sidebar_view.clone();
+                                                         move |window, cx| {
+                                                             let sidebar_view = sidebar_view.clone();
+                                                             window.defer(cx, move |_window, cx| {
+                                                                 if let Some(sidebar) = sidebar_view.upgrade() {
+                                                                     sidebar.update(cx, |sidebar, cx| {
+                                                                         sidebar.add_grid_cell(cx);
+                                                                         cx.notify();
+                                                                     });
+                                                                 }
+                                                             });
+                                                         }
+                                                     }),
+                                             );
+                                         }
 
                                         menu
                                     })
@@ -11287,6 +11547,7 @@ impl WorkspaceSidebar for Sidebar {
             },
             activity_bar_expanded: self.activity_bar_expanded,
             grid_shortcuts: self.grid_shortcuts.clone(),
+            hidden_grid_entry_ids: self.hidden_grid_entry_ids.clone(),
             thread_sort_mode: self.thread_sort_mode,
             manual_thread_order: self
                 .manual_thread_order
@@ -11340,6 +11601,7 @@ impl WorkspaceSidebar for Sidebar {
                 .into_iter()
                 .take(MAX_SIDEBAR_GRID_SHORTCUTS)
                 .collect();
+            self.hidden_grid_entry_ids = serialized.hidden_grid_entry_ids;
             self.thread_sort_mode = serialized.thread_sort_mode;
             self.manual_thread_order = serialized
                 .manual_thread_order

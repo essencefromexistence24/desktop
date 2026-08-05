@@ -401,10 +401,7 @@ impl RenderOnce for ThreadItem {
         let timestamp_color = if self.selected || self.hovered {
             Color::Default
         } else {
-            // Use the theme's primary/accent color so the timestamp on the right
-            // of draggable chat-item rows is clearly visible. Previously this was
-            // a faint text_muted/text blend that was hard to read.
-            Color::Accent
+            Color::Muted
         };
 
         let show_tooltip = matches!(
