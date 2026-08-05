@@ -146,7 +146,7 @@ fn remote_registry_row(
                 auth_backend_count,
             ),
             path: path_label,
-            open_path: registry_open_path.clone(),
+            open_path: registry_open_path,
             receipts: vec![
                 DxForgeReceiptDrilldown {
                     label: "Kinds".to_string(),

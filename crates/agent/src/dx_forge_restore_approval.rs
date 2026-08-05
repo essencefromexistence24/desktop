@@ -197,7 +197,7 @@ pub(crate) fn build_dx_forge_restore_approval(
         schema: DX_FORGE_RESTORE_APPROVAL_SCHEMA,
         generated_at_ms: request.generated_at_ms,
         request: DxForgeRestoreApprovalRequestSummary {
-            target_path: resolved_target_path.clone(),
+            target_path: resolved_target_path,
             target_path_source,
             operator_approval: request.operator_approval,
             rollback_verified: request.rollback_verified,

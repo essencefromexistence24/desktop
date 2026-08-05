@@ -129,7 +129,7 @@ impl ManagedChromePlaywrightExecutionInspector {
             let tools_root = workspace_root.join("tools");
             (tools_root.clone(), tools_root.join("agent-plugins"))
         } else {
-            (zed_plugin_root.clone(), zed_plugin_root.clone())
+            (zed_plugin_root.clone(), zed_plugin_root)
         };
         let execution_dir = plugin_root.join("chrome-executions");
 

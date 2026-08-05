@@ -113,6 +113,7 @@ pub(crate) struct DxMediaToolExecutionReceipt {
     pub next_action: String,
 }
 
+#[allow(clippy::disallowed_methods)]
 pub(crate) fn execute_dx_media_tool(
     request: DxMediaToolExecutionRequest,
 ) -> Result<DxMediaToolExecution, String> {

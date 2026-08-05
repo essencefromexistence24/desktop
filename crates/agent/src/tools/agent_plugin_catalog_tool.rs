@@ -743,7 +743,7 @@ fn agent_plugin_catalog_plugin_summary(plugin: &Value) -> Value {
             "next_action": {
                 "summary": next_action,
                 "source": next_action_source,
-                "recommended_handoff": recommended_handoff.clone(),
+                "recommended_handoff": recommended_handoff,
                 "read_only": true,
                 "dispatches_input": false,
             },
@@ -2995,7 +2995,7 @@ fn agent_plugin_bootstrap_readiness(
             "asset.provisioning_receipt",
             "Managed asset provisioning receipt",
             asset_provisioning_receipt_ready,
-            Some(asset_provisioning_receipt.clone()),
+            Some(asset_provisioning_receipt),
             "provision_required",
             "Run the managed asset provisioner with write_asset_receipt=true so agents can prove managed assets were prepared before Chrome execution.",
         ),

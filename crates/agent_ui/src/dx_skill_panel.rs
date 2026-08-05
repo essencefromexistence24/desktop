@@ -63,7 +63,7 @@ impl DxSkillPanel {
     ) -> Entity<Self> {
         let workspace = cx.entity().downgrade();
         let fs = _workspace.project().read(cx).fs().clone();
-        let http_client = _workspace.project().read(cx).client().http_client().clone();
+        let http_client = _workspace.project().read(cx).client().http_client();
 
         cx.new(|cx| {
             let search_editor = cx.new(|cx| {
@@ -202,7 +202,7 @@ impl DxSkillPanel {
                 );
 
                 let fs = fs.clone();
-                let target2 = target.clone();
+                let target2 = target;
                 let content = content_with_front;
                 cx.background_spawn(async move {
                     let _ = fs.write(&target2, content.as_bytes()).await;

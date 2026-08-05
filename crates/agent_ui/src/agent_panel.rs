@@ -25,7 +25,7 @@ use db::kvp::{Dismissable, KeyValueStore};
 
 use crate::{default_agent_icon, default_agent_icon_path};
 
-use project::{AgentId, ProjectItem};
+use project::{AgentId, AgentRegistryStore, ProjectItem};
 use serde::{Deserialize, Serialize};
 use settings::{LanguageModelProviderSetting, LanguageModelSelection};
 
@@ -2435,8 +2435,107 @@ impl AgentPanel {
             return;
         }
 
+        let agent_id = action.agent.clone();
+        let agent_server_store = self.project.read(cx).agent_server_store().clone();
+        let is_registered = agent_server_store
+            .read(cx)
+            .external_agents()
+            .any(|known| known == &agent_id);
+
+        if !is_registered {
+            self.auto_install_agent_and_wait(agent_id, window, cx);
+            return;
+        }
+
         self.selected_agent = action.agent.clone().into();
         self.activate_new_thread(true, AgentThreadSource::AgentPanel, window, cx);
+    }
+
+    /// Picks an ACP agent from the topbar dropdown that isn't installed yet:
+    /// instead of failing with a "not registered" connection error, install it
+    /// from the ACP registry automatically (the same settings write the
+    /// registry "Install" button performs) and wait for it to register before
+    /// opening the thread. The binary download happens during connecting
+    /// ("Installing …" status), exactly like the registry install flow.
+    fn auto_install_agent_and_wait(
+        &mut self,
+        agent_id: AgentId,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) {
+        self.selected_agent = agent_id.clone().into();
+
+        if !self.can_auto_install_agent(&agent_id, cx) {
+            // Not something we can auto-install; fall back to the previous
+            // behavior (the thread will surface the connection error).
+            self.activate_new_thread(true, AgentThreadSource::AgentPanel, window, cx);
+            return;
+        }
+
+        let fs = <dyn Fs>::global(cx);
+        let install_id = agent_id.0.to_string();
+        update_settings_file(fs, cx, move |settings, _| {
+            settings
+                .agent_servers
+                .get_or_insert_default()
+                .entry(install_id)
+                .or_insert_with(|| settings::CustomAgentServerSettings::Registry {
+                    default_mode: None,
+                    env: Default::default(),
+                    default_config_options: Default::default(),
+                    favorite_config_option_values: Default::default(),
+                });
+        });
+
+        let project = self.project.downgrade();
+        let deadline = Instant::now() + Duration::from_secs(30);
+        cx.spawn_in(window, async move |this, cx| {
+            loop {
+                let registered = project.upgrade().is_some_and(|project| {
+                    project
+                        .read_with(cx, |project, cx| {
+                            project
+                                .agent_server_store()
+                                .read(cx)
+                                .external_agents()
+                                .any(|known| known == &agent_id)
+                        })
+                });
+                if registered || Instant::now() >= deadline {
+                    break;
+                }
+                cx.background_executor()
+                    .timer(Duration::from_millis(200))
+                    .await;
+            }
+            this.update_in(cx, |this, window, cx| {
+                this.activate_new_thread(true, AgentThreadSource::AgentPanel, window, cx);
+            })
+            .ok();
+        })
+        .detach();
+    }
+
+    fn can_auto_install_agent(&self, agent_id: &AgentId, cx: &App) -> bool {
+        // Default ACP agents shown in the AI screen topbar dropdown even when
+        // not yet downloaded: always auto-install those.
+        const DEFAULT_ACP_AGENT_IDS: &[&str] = &[
+            "codex-acp",
+            "claude-acp",
+            "github-copilot-acp",
+            "cursor-acp",
+            "zai-acp",
+            "opencode-acp",
+        ];
+        if DEFAULT_ACP_AGENT_IDS.contains(&agent_id.0.as_ref()) {
+            return true;
+        }
+        AgentRegistryStore::try_global(cx).is_some_and(|store| {
+            store
+                .read(cx)
+                .agent(agent_id)
+                .is_some_and(|agent| agent.supports_current_platform())
+        })
     }
 
     pub fn new_terminal(

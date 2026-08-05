@@ -1077,7 +1077,7 @@ impl ThreadView {
 
         subscriptions.push(cx.observe(&message_editor, |this, editor, cx| {
             let has_composer_text = !editor.read(cx).text(cx).trim().is_empty();
-            let editor = editor.clone();
+            let editor = editor;
             this._draft_resolve_task = Some(cx.spawn(async move |this, cx| {
                 cx.background_executor()
                     .timer(std::time::Duration::from_millis(120))
@@ -1169,7 +1169,7 @@ impl ThreadView {
             message_editor,
             composer_voice_state: ComposerVoiceState::default(),
             composer_voice_availability,
-            flow_voice_runtime: flow_voice_runtime.clone(),
+            flow_voice_runtime: flow_voice_runtime,
             flow_recording_session: None,
             flow_speech_cancellation: None,
             configured_plugins: Vec::new(),
@@ -7520,7 +7520,7 @@ impl ThreadView {
                     .icon_color(Color::Ignored)
                     .tooltip(Tooltip::text("Copy Agent Response"))
                     .on_click({
-                        let agent_response_text = agent_response_text.clone();
+                        let agent_response_text = agent_response_text;
                         move |_, _window, cx| {
                             cx.stop_propagation();
                             cx.write_to_clipboard(ClipboardItem::new_string(

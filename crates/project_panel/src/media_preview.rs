@@ -262,7 +262,7 @@ pub(crate) fn render_folder_media_shelf(
     if has_overflow {
         shelf_cards.push(render_media_shelf_overflow_card(
             preview,
-            focus_handle.clone(),
+            focus_handle,
             cx,
         ));
     }

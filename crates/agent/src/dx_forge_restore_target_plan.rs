@@ -228,7 +228,7 @@ pub(crate) fn build_dx_forge_restore_target_plan(
         schema: DX_FORGE_RESTORE_TARGET_PLAN_SCHEMA,
         generated_at_ms: request.generated_at_ms,
         request: DxForgeRestoreTargetPlanRequestSummary {
-            target_path: target_path.clone(),
+            target_path: target_path,
             target_path_source,
             require_approval_ready: request.require_approval_ready,
             require_rollback_verified: request.require_rollback_verified,

@@ -116,7 +116,7 @@ fn provider_group_controls(
     .tab_index(0_isize)
     .disabled(!enabled)
     .tooltip({
-        let title = open_title.clone();
+        let title = open_title;
         let meta = tooltip_meta.clone();
         move |_, cx| Tooltip::with_meta(title.clone(), None, meta.clone(), cx)
     })

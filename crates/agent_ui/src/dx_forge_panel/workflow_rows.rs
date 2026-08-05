@@ -93,7 +93,7 @@ pub(super) fn selection_checkbox(
         ToggleState::Unselected
     };
     let panel = panel.clone();
-    let checkbox_key = item_key.clone();
+    let checkbox_key = item_key;
 
     h_flex()
         .id(SharedString::from(format!("dx-forge-selection-slot-{id}")))

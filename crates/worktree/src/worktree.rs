@@ -3133,7 +3133,7 @@ impl BackgroundScannerState {
             .edit(entries_by_path_edits, ());
         self.snapshot.entries_by_id.edit(entries_by_id_edits, ());
 
-        insert_changed_path(&mut self.changed_paths, parent_path.clone());
+        insert_changed_path(&mut self.changed_paths, parent_path);
 
         #[cfg(feature = "test-support")]
         self.snapshot.check_invariants(false);

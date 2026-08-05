@@ -83,7 +83,7 @@ impl State {
 
     fn all_models(&self) -> Vec<AvailableModel> {
         let mut models = BTreeMap::default();
-        models.insert(self.selected_model().name.clone(), self.selected_model());
+        models.insert(self.selected_model().name, self.selected_model());
         models.insert(
             self.settings.normal_model.name.clone(),
             self.settings.normal_model.clone(),
@@ -447,6 +447,7 @@ impl Drop for LlamaCppRuntime {
 }
 
 impl LlamaCppRuntime {
+    #[allow(clippy::disallowed_methods)]
     async fn ensure_server(
         &self,
         config: LlamaCppLaunchConfig,
@@ -1955,10 +1956,10 @@ async fn download_llama_server(
 }
 
 #[cfg(not(target_family = "wasm"))]
-fn select_llama_release_asset<'a>(
-    assets: &'a [http_client::github::GithubReleaseAsset],
+fn select_llama_release_asset(
+    assets: &[http_client::github::GithubReleaseAsset],
 ) -> Option<(
-    &'a http_client::github::GithubReleaseAsset,
+    &http_client::github::GithubReleaseAsset,
     http_client::github::AssetKind,
 )> {
     fn matches(name: &str, required: &[&str], forbidden: &[&str]) -> bool {

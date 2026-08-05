@@ -848,6 +848,7 @@ impl KokoroTtsRuntime {
         Ok(output_path)
     }
 
+    #[allow(clippy::disallowed_methods)]
     fn start_server(&self) -> Result<KokoroTtsServer> {
         self.prepare_tts_dirs()?;
         let mut command = self.kokoro_command();
@@ -1528,6 +1529,7 @@ fn command_error(label: &str, output: Output) -> anyhow::Error {
     )
 }
 
+#[allow(clippy::disallowed_methods)]
 fn run_command_with_timeout(
     mut command: Command,
     timeout: Duration,

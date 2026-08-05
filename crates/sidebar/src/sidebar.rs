@@ -2975,13 +2975,10 @@ impl Sidebar {
                     cx,
                 );
                 if show_chat_groups {
-                    let has_pinned = !self.grid_shortcuts.is_empty();
                     v_flex()
                         .w_full()
                         .child(header)
-                        .when(has_pinned, |this| {
-                            this.child(self.render_chat_group_label("Pinned", IconName::Pin, cx))
-                        })
+                        // "Pinned" chat-group label removed; only "All Chats" is shown.
                         .child(self.render_chat_group_label("All Chats", IconName::Chat, cx))
                         .into_any_element()
                 } else {
@@ -3146,11 +3143,12 @@ impl Sidebar {
         let group_name = SharedString::from(format!("{id_prefix}header-group-{ix}"));
 
         let is_collapsed = self.is_group_collapsed(key, cx);
-        let disclosure_icon = if is_collapsed {
-            IconName::ChevronRight
-        } else {
-            IconName::ChevronDown
-        };
+        // Chevron disclosure icon commented out along with the icon render above.
+        // let disclosure_icon = if is_collapsed {
+        //     IconName::ChevronRight
+        // } else {
+        //     IconName::ChevronDown
+        // };
 
         let drag_space_id = self.resolved_active_space_id(cx);
 
@@ -3266,17 +3264,19 @@ impl Sidebar {
                             },
                         )
                     })
-                    .when(!has_filter, |this| {
-                        this.child(
-                            div()
-                                .when(!is_focused, |this| this.visible_on_hover(&group_name))
-                                .child(
-                                    Icon::new(disclosure_icon)
-                                        .size(IconSize::Small)
-                                        .color(Color::Muted),
-                                ),
-                        )
-                    }),
+                    // Chevron disclosure icon commented out: the workspace row only
+                    // shows its path label now (collapse still works via row click).
+                    // .when(!has_filter, |this| {
+                    //     this.child(
+                    //         div()
+                    //             .when(!is_focused, |this| this.visible_on_hover(&group_name))
+                    //             .child(
+                    //                 Icon::new(disclosure_icon)
+                    //                     .size(IconSize::Small)
+                    //                     .color(Color::Muted),
+                    //             ),
+                    //     )
+                    // }),
             )
             .children(opaque_window.then(|| gradient_overlay()))
             .child(

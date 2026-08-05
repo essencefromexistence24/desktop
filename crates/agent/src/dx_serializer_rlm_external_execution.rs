@@ -235,6 +235,7 @@ pub(crate) fn execute_serializer_rlm_external_reducer(
     )
 }
 
+#[allow(clippy::disallowed_methods)]
 fn run_external_command(
     request: DxSerializerRlmExternalExecutionRequest,
     preview: DxSerializerRlmExternalExecutionPreviewSummary,

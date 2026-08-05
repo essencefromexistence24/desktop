@@ -276,7 +276,7 @@ fn ensure_components_json(
                     .map(str::trim),
                 Some(css) if !css.is_empty()
             ) {
-                tailwind.insert("css".to_string(), serde_json::Value::String(css.clone()));
+                tailwind.insert("css".to_string(), serde_json::Value::String(css));
                 changed = true;
             }
             if tailwind

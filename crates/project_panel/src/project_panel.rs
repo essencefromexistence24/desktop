@@ -4955,7 +4955,7 @@ impl ProjectPanel {
                     .anchor(gpui::Anchor::TopRight)
                     .menu(move |window, cx| {
                         let panel = panel_for_project_options.clone();
-                        let panel_for_storage_details = panel.clone();
+                        let panel_for_storage_details = panel;
                         Some(ContextMenu::build(window, cx, move |menu, _window, _cx| {
                             menu.header("Project View")
                                 .action_checked_with_disabled(
@@ -5178,7 +5178,7 @@ impl ProjectPanel {
         let duplicate_selection_tooltip_focus_handle = duplicate_selection_focus_handle.clone();
         let paste_selection_focus_handle = toolbar_focus_handle.clone();
         let paste_selection_tooltip_focus_handle = paste_selection_focus_handle.clone();
-        let trash_selection_focus_handle = toolbar_focus_handle.clone();
+        let trash_selection_focus_handle = toolbar_focus_handle;
         let trash_selection_tooltip_focus_handle = trash_selection_focus_handle.clone();
 
         h_flex()

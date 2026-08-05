@@ -341,7 +341,7 @@ pub(super) fn overflow_row(
                 .color(Color::Muted),
         )
         .child(
-            Label::new(message.clone())
+            Label::new(message)
                 .size(LabelSize::Small)
                 .color(Color::Muted)
                 .truncate(),

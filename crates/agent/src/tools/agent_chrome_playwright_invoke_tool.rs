@@ -552,6 +552,7 @@ impl ManagedChromePlaywrightInvocation {
         })
     }
 
+    #[allow(clippy::disallowed_methods)]
     fn run_adapter(&self, timeout_ms: u64, include_output: bool) -> Result<Value, String> {
         let node = find_executable(&["node", "node.exe"])
             .ok_or_else(|| "Node.js was not found on PATH".to_string())?;

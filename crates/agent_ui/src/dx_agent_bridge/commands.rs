@@ -195,6 +195,7 @@ pub(crate) fn run_dx_agent_metadata_command(
     Ok(())
 }
 
+#[allow(clippy::disallowed_methods)]
 fn run_bridge_command(
     cli_path: String,
     args: Vec<String>,
