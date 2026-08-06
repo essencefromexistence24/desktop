@@ -1490,7 +1490,7 @@ pub(crate) fn source_apply_review_receipt(payload: &Value) -> Value {
             "className": class_name,
             "css": css,
             "preview_kind": preview_kind,
-            "preview_anatomy": preview_anatomy.clone(),
+            "preview_anatomy": preview_anatomy,
         },
         "preview_output": {
             "kind": preview_kind,
@@ -3218,9 +3218,7 @@ fn validate_reverse_delta_preview_replacement_policy(
     let replacement_utility_strings = collect_reverse_delta_replacement_utilities(preview, reasons);
     if let Some(target_utility) = target_utility
         && let Some(replacement_utility_strings) = replacement_utility_strings.as_ref()
-        && !replacement_utility_strings
-            .iter()
-            .any(|utility| *utility == target_utility)
+        && !replacement_utility_strings.contains(&target_utility)
     {
         reasons.push(
             "ready reverse CSS delta preview replacement utilities do not contain target utility"

@@ -322,9 +322,9 @@ fn start_agent_cursor_ws_relay_inner() -> Option<u16> {
     let app = Router::new().route(
         "/",
         get({
-            let tx = tx.clone();
+            let tx = tx;
             move |ws: WebSocketUpgrade| async move {
-                ws.on_upgrade(move |socket| handle_agent_cursor_ws(socket, tx.clone()))
+                ws.on_upgrade(move |socket| handle_agent_cursor_ws(socket, tx))
             }
         }),
     );
@@ -464,7 +464,7 @@ fn start_axum_static_server_for_tool(tool: String, root: PathBuf) -> Option<u16>
         .route(
             "/*path",
             get({
-                let root = root_arc.clone();
+                let root = root_arc;
                 let tool = tool.clone();
                 move |AxumPath(path): AxumPath<String>| async move {
                     serve_dx_file_direct(root, tool.clone(), path).await

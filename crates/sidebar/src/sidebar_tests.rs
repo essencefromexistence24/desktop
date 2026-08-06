@@ -810,7 +810,7 @@ async fn test_restore_serialized_archive_view_does_not_panic(cx: &mut TestAppCon
         space_labels: Vec::new(),
         space_order: Vec::new(),
         next_space_number: 1,
-        active_view: SerializedSidebarView::Archive,
+        active_view: SerializedSidebarView::History,
         activity_bar_expanded: true,
         grid_shortcuts: Vec::new(),
         hidden_grid_entry_ids: Vec::new(),

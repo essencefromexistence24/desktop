@@ -64,34 +64,23 @@ pub fn init(cx: &mut App) {
         web_preview_view::WebPreviewView::register(workspace, window, cx);
 
         workspace.register_action(move |workspace, action: &OpenWebPreview, window, cx| {
-            let should_close =
-                workspace
-                    .active_pane()
-                    .read(cx)
-                    .active_item()
-                    .is_some_and(|active_item| {
-                        active_item
-                            .downcast::<web_preview_view::WebPreviewView>()
-                            .is_none()
-                    });
-            if should_close {
-                window.dispatch_action(
-                    Box::new(workspace::CloseActiveItem {
-                        save_intent: None,
-                        close_pinned: false,
-                    }),
-                    cx,
-                );
-            }
-
             let url = server::local_preview_url(&action.project).unwrap_or_else(|| {
                 let port = cx
                     .global::<agent_ui::agent_thread_www_preview::WebPreviewServerPort>()
                     .0;
                 format!("http://127.0.0.1:{}/{}", port, action.project)
             });
+            // First move to the Web Preview browser screen (creating one if needed),
+            // then open the tool URL there. Mirrors the sidebar 12-cell grid behavior.
             workspace.activate_screen_kind(workspace::WorkspaceScreenKind::Browser, window, cx);
-            web_preview_view::WebPreviewView::open_url_in_active_pane(workspace, &url, window, cx);
+            // The screen-kind switch dispatches NewWebPreview, which is deferred, so
+            // defer the URL open too: it runs after the tab exists and loads the URL
+            // into the already-created tab instead of adding a second blank one.
+            cx.defer_in(window, move |workspace, window, cx| {
+                web_preview_view::WebPreviewView::open_url_in_active_pane(
+                    workspace, &url, window, cx,
+                );
+            });
         });
 
         cx.defer_in(window, |workspace, window, cx| {

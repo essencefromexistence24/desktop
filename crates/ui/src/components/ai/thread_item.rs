@@ -350,6 +350,11 @@ impl RenderOnce for ThreadItem {
         let title = self.title;
         let highlight_positions = self.highlight_positions;
 
+        // On opaque windows the title normally fades into the row via a gradient
+        // overlay, but when hovered/focused the action slot (archive, more, etc.)
+        // appears next to the timestamp, so the title must truncate to leave room.
+        let truncate_title = !opaque_window || self.hovered || self.focused;
+
         let title_label = if let Some(title_slot) = self.title_slot {
             title_slot
         } else if self.title_generating {
@@ -366,12 +371,12 @@ impl RenderOnce for ThreadItem {
         } else if highlight_positions.is_empty() {
             Label::new(title)
                 .when_some(self.title_label_color, |label, color| label.color(color))
-                .when(!opaque_window, |label| label.truncate())
+                .when(truncate_title, |label| label.truncate())
                 .into_any_element()
         } else {
             HighlightedLabel::new(title, highlight_positions)
                 .when_some(self.title_label_color, |label, color| label.color(color))
-                .when(!opaque_window, |label| label.truncate())
+                .when(truncate_title, |label| label.truncate())
                 .into_any_element()
         };
 
@@ -464,9 +469,12 @@ impl RenderOnce for ThreadItem {
                                 .flex_shrink_0(),
                         )
                     })
-                    .when(self.is_truncated && opaque_window, |this| {
-                        this.child(gradient_overlay)
-                    })
+                    .when(
+                        self.is_truncated && opaque_window && !self.hovered && !self.focused,
+                        |this| {
+                            this.child(gradient_overlay)
+                        },
+                    )
                     .when(self.hovered || self.focused, |this| {
                         this.when_some(self.action_slot, |this, slot| {
                             this.child(

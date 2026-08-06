@@ -3068,7 +3068,7 @@ impl Sidebar {
                             });
                         menu = menu.item(entry);
                     }
-                    let sidebar = sidebar.clone();
+                    let sidebar = sidebar;
                     menu.separator().item(
                         ContextMenuEntry::new("Filter Threads")
                             .icon(IconName::Filter)
@@ -3114,7 +3114,7 @@ impl Sidebar {
                                 .color(Color::Muted),
                         ),
                     )
-                    .child(div().visible_on_hover(group.clone()).child(sort_menu)),
+                    .child(div().visible_on_hover(group).child(sort_menu)),
             )
             .into_any_element()
     }
@@ -7448,7 +7448,7 @@ impl Sidebar {
             .focused(is_focused)
             .hovered(is_hovered || is_icon_picker_open || is_thread_more_menu_open)
             .on_hover(cx.listener({
-                let more_menu_handle = thread_more_menu_handle.clone();
+                let more_menu_handle = thread_more_menu_handle;
                 move |this, is_hovered: &bool, _window, cx| {
                     if *is_hovered {
                         this.hovered_thread_index = Some(ix);
@@ -7609,7 +7609,7 @@ impl Sidebar {
                 },
             )
             .on_click({
-                let thread_workspace = thread_workspace.clone();
+                let thread_workspace = thread_workspace;
                 cx.listener(move |this, _, window, cx| {
                     this.selection = None;
                     match &thread_workspace {
@@ -7666,9 +7666,9 @@ impl Sidebar {
             .trigger(move |_, _, _| row)
             .menu({
                 let sidebar = cx.weak_entity();
-                let title = title.clone();
-                let dragged_thread = thread_context_dragged.clone();
-                let session_id = session_id_for_delete.clone();
+                let title = title;
+                let dragged_thread = thread_context_dragged;
+                let session_id = session_id_for_delete;
                 move |window, cx| {
                     Self::render_thread_context_menu(
                         sidebar.clone(),
@@ -8574,7 +8574,7 @@ impl Sidebar {
         let workspace_for_fs = self.active_workspace(cx).or_else(|| {
             self.multi_workspace
                 .upgrade()
-                .and_then(|mw| mw.read(cx).workspaces().cloned().next())
+                .and_then(|mw| mw.read(cx).workspaces().next().cloned())
         });
         if let Some(workspace) = workspace_for_fs {
             let fs = workspace.read(cx).project().read(cx).fs().clone();
@@ -8714,7 +8714,7 @@ impl Sidebar {
                                         on_click_listener(event, window, cx)
                                     }
                                 })
-                                .child(Icon::from_path(path.clone()).size(IconSize::Small).color(Color::Muted))
+                                .child(Icon::from_path(path).size(IconSize::Small).color(Color::Muted))
                                 .into_any_element()
                         }
                     })
@@ -9215,7 +9215,7 @@ impl Sidebar {
                         .into_any_element()
                 })
                 .menu({
-                    let tooltip_str = tooltip_str.clone();
+                    let tooltip_str = tooltip_str;
                     move |_window, _cx| {
                         let tooltip_str = tooltip_str.clone();
                         ContextMenu::build(_window, _cx, move |menu, _window, cx| {
@@ -10022,7 +10022,7 @@ impl Sidebar {
                     window,
                     cx,
                     move |project: &mut Project, cx| {
-                        project.create_terminal_shell(Some(path.clone()), cx)
+                        project.create_terminal_shell(Some(path), cx)
                     },
                 )
                 .detach_and_log_err(cx);
@@ -10155,7 +10155,7 @@ impl Sidebar {
         }
         let shortcut = SerializedSidebarGridShortcut {
             screen_kind: context.screen_kind,
-            root_path: context.root_path.clone(),
+            root_path: context.root_path,
             id: format!("add-folder-{suffix}"),
             icon: IconName::Plus,
             label: "Add Folder".into(),
@@ -10218,7 +10218,7 @@ impl Sidebar {
                     .any(|s| s.matches_context(&context) && s.id == raw_id)
             })
             .map(|(ix, _)| ix)
-            .last();
+            .next_back();
         let (pin_start, pin_end) = match last_pinned_ix {
             Some(last) if pin_from <= last => (0, last),
             _ => (pin_from, display.len().saturating_sub(1)),
@@ -10404,7 +10404,7 @@ impl Sidebar {
                             });
                             let entry_id = entry.id.clone();
                             let entry_label = entry.label.clone();
-                            let entry_subtitle = subtitle.clone();
+                            let entry_subtitle = subtitle;
                             let is_dx_web_tool = entry.id.starts_with("dx-web-tool-");
                             let dx_web_tool_id = if is_dx_web_tool {
                                 entry.id.trim_start_matches("dx-web-tool-").to_string()
@@ -10412,7 +10412,7 @@ impl Sidebar {
                                 String::new()
                             };
                             let entry_icon = entry.icon;
-                            let entry_action = entry.action.clone();
+                            let entry_action = entry.action;
 
                             let is_light_theme = cx.theme().appearance.is_light();
                             let renaming_grid_shortcut_id = self.renaming_grid_shortcut_id.clone();
@@ -10429,7 +10429,7 @@ impl Sidebar {
                             right_click_menu::<ContextMenu>(format!("grid-context-{}", entry_id))
                                 .trigger({
                                     let entry_label = entry_label.clone();
-                                    let entry_id = entry_id.clone();
+                                    let entry_id = entry_id;
                                     move |_is_menu_active, _window, _cx| {
                                     let icon_element: AnyElement = if is_dx_web_tool {
                                         let path = if is_light_theme {
@@ -10508,7 +10508,7 @@ impl Sidebar {
                                     }
                                 })
                                 .menu({
-                                    let sidebar_view = sidebar_view.clone();
+                                    let sidebar_view = sidebar_view;
                                     move |window, cx| {
                                     let entry_id = menu_entry_id.clone();
                                     let sidebar_view = sidebar_view.clone();
@@ -10580,8 +10580,8 @@ impl Sidebar {
                                                 ContextMenuEntry::new("Remove Pin")
                                                     .icon(IconName::Trash)
                                                     .handler({
-                                                        let entry_id = entry_id.clone();
-                                                        let sidebar_view = sidebar_view.clone();
+                                                        let entry_id = entry_id;
+                                                        let sidebar_view = sidebar_view;
                                                         move |window, cx| {
                                                             let value = entry_id.clone();
                                                             let sidebar_view = sidebar_view.clone();
@@ -10601,7 +10601,7 @@ impl Sidebar {
                                                  ContextMenuEntry::new("Remove Suggestion")
                                                      .icon(IconName::Trash)
                                                      .handler({
-                                                         let entry_id = entry_id.clone();
+                                                         let entry_id = entry_id;
                                                          let sidebar_view = sidebar_view.clone();
                                                          move |window, cx| {
                                                              let entry_id = entry_id.clone();
@@ -10621,7 +10621,7 @@ impl Sidebar {
                                                  ContextMenuEntry::new("Add Cell")
                                                      .icon(IconName::Plus)
                                                      .handler({
-                                                         let sidebar_view = sidebar_view.clone();
+                                                         let sidebar_view = sidebar_view;
                                                          move |window, cx| {
                                                              let sidebar_view = sidebar_view.clone();
                                                              window.defer(cx, move |_window, cx| {

@@ -4447,7 +4447,7 @@ impl WebPreviewView {
         let size_inspection = serde_json::json!({
             "schema": AGENT_BROWSER_FINAL_RUNTIME_HEADROOM_SIZE_INSPECTION_SCHEMA,
             "status": size_inspection_status,
-            "target_drive_policy": target_drive_policy.clone(),
+            "target_drive_policy": target_drive_policy,
             "commands": [
                 {
                     "id": "measure_target_top_level_children",
@@ -4486,10 +4486,10 @@ impl WebPreviewView {
         let cleanup_result_template = serde_json::json!({
             "schema": AGENT_BROWSER_FINAL_RUNTIME_HEADROOM_CLEANUP_RESULT_TEMPLATE_SCHEMA,
             "status": cleanup_result_template_status,
-            "target_drive_policy": target_drive_policy.clone(),
+            "target_drive_policy": target_drive_policy,
             "target": {
-                "target_dir": target_dir.clone(),
-                "target_root": target_root.clone(),
+                "target_dir": target_dir,
+                "target_root": target_root,
                 "minimum_required_free_bytes": AGENT_BROWSER_FINAL_RUNTIME_MIN_FREE_BYTES,
                 "minimum_required_free_gib": Self::gib_from_bytes(AGENT_BROWSER_FINAL_RUNTIME_MIN_FREE_BYTES),
                 "observed_before_cleanup_bytes": observed_free_bytes,
@@ -4567,7 +4567,7 @@ impl WebPreviewView {
             "source_template_schema": AGENT_BROWSER_FINAL_RUNTIME_HEADROOM_CLEANUP_RESULT_TEMPLATE_SCHEMA,
             "status": cleanup_result_gate_status,
             "ready_for_capacity_recheck": recovery_status == "no_recovery_needed",
-            "target_drive_policy": target_drive_policy.clone(),
+            "target_drive_policy": target_drive_policy,
             "required_template_fields": [
                 "operator_fields.cleanup_performed",
                 "operator_fields.cleanup_summary",
@@ -4618,7 +4618,7 @@ impl WebPreviewView {
         serde_json::json!({
             "schema": AGENT_BROWSER_FINAL_RUNTIME_HEADROOM_RECOVERY_PLAN_SCHEMA,
             "status": recovery_status,
-            "target_drive_policy": target_drive_policy.clone(),
+            "target_drive_policy": target_drive_policy,
             "target": {
                 "target_dir": target_dir,
                 "target_root": target_root,
@@ -4631,10 +4631,10 @@ impl WebPreviewView {
             "inspection_checklist": {
                 "schema": AGENT_BROWSER_FINAL_RUNTIME_HEADROOM_INSPECTION_CHECKLIST_SCHEMA,
                 "status": inspection_status,
-                "target_drive_policy": target_drive_policy.clone(),
-                "size_inspection": size_inspection.clone(),
-                "cleanup_result_template": cleanup_result_template.clone(),
-                "cleanup_result_gate": cleanup_result_gate.clone(),
+                "target_drive_policy": target_drive_policy,
+                "size_inspection": size_inspection,
+                "cleanup_result_template": cleanup_result_template,
+                "cleanup_result_gate": cleanup_result_gate,
                 "steps": [
                     {
                         "id": "confirm_target_drive",
@@ -4919,7 +4919,7 @@ impl WebPreviewView {
                 "guarded_reason": "Avoid starting the large Zed build/run proof when the configured target drive cannot satisfy the recipe headroom check.",
                 "target_move_allowed_by_default": false
             },
-            "headroom_recovery_plan": headroom_recovery_plan.clone(),
+            "headroom_recovery_plan": headroom_recovery_plan,
             "headroom_cleanup_result_gate": headroom_cleanup_result_gate,
             "headroom_cleanup_result_durable_evidence": headroom_cleanup_result_durable_evidence,
             "headroom_recovery_card": headroom_recovery_card,
@@ -8880,7 +8880,7 @@ impl WebPreviewView {
                 "runtime_green_claim_readiness_can_report": runtime_green_claim_readiness.pointer("/can_report_runtime_green").and_then(Value::as_bool),
                 "runtime_green_report_gate_status": runtime_green_report_gate.pointer("/status").and_then(Value::as_str),
                 "runtime_green_report_gate_can_report": runtime_green_report_gate.pointer("/can_report_runtime_green").and_then(Value::as_bool),
-                "runtime_green_report_badge": runtime_green_report_badge.clone(),
+                "runtime_green_report_badge": runtime_green_report_badge,
                 "runtime_green_final_proof_guide_status": runtime_green_final_proof_guide.pointer("/status").and_then(Value::as_str),
                 "runtime_green_final_proof_next_action": runtime_green_final_proof_guide.pointer("/next_action").and_then(Value::as_str),
                 "runtime_green_final_proof_guide_browser_final_blocker_strip": runtime_green_final_proof_guide.pointer("/browser_final_blocker_strip").cloned(),
@@ -9091,7 +9091,7 @@ impl WebPreviewView {
                     "current_summary": Self::agent_browser_final_runtime_proof_capacity_summary(
                         &final_runtime_proof_capacity
                     ),
-                    "current_capacity": final_runtime_proof_capacity.clone(),
+                    "current_capacity": final_runtime_proof_capacity,
                     "read_only": true,
                     "purpose": "Check the target-drive headroom required by just run before the final Windows runtime proof."
                 },
@@ -9135,7 +9135,7 @@ impl WebPreviewView {
                     "current_summary": Self::agent_browser_final_runtime_headroom_recovery_plan_summary(
                         &final_runtime_headroom_recovery_plan
                     ),
-                    "current_plan": final_runtime_headroom_recovery_plan.clone(),
+                    "current_plan": final_runtime_headroom_recovery_plan,
                     "read_only": true,
                     "purpose": "Copy or send the non-destructive target-drive recovery plan without copying the full capacity payload."
                 },
@@ -9161,7 +9161,7 @@ impl WebPreviewView {
                     "current_summary": Self::agent_browser_final_runtime_headroom_recovery_card_summary(
                         &final_runtime_headroom_recovery_card
                     ),
-                    "current_card": final_runtime_headroom_recovery_card.clone(),
+                    "current_card": final_runtime_headroom_recovery_card,
                     "read_only": true,
                     "purpose": "Render a compact headroom blocker card in the AI panel before cleanup and final just run proof."
                 },
@@ -9189,7 +9189,7 @@ impl WebPreviewView {
                     "current_summary": Self::agent_browser_final_runtime_headroom_inspection_checklist_summary(
                         &final_runtime_headroom_inspection_checklist
                     ),
-                    "current_checklist": final_runtime_headroom_inspection_checklist.clone(),
+                    "current_checklist": final_runtime_headroom_inspection_checklist,
                     "read_only": true,
                     "purpose": "Copy or send only the safe manual disk-recovery inspection checklist before final just run proof."
                 },
@@ -9203,7 +9203,7 @@ impl WebPreviewView {
                     "current_summary": Self::agent_browser_final_runtime_headroom_size_inspection_summary(
                         &final_runtime_headroom_size_inspection
                     ),
-                    "current_size_inspection": final_runtime_headroom_size_inspection.clone(),
+                    "current_size_inspection": final_runtime_headroom_size_inspection,
                     "read_only": true,
                     "purpose": "Copy or send only the read-only target/cache size measurement command pack before manual cleanup."
                 },
@@ -9217,7 +9217,7 @@ impl WebPreviewView {
                     "current_summary": Self::agent_browser_final_runtime_headroom_cleanup_result_template_summary(
                         &final_runtime_headroom_cleanup_result_template
                     ),
-                    "current_template": final_runtime_headroom_cleanup_result_template.clone(),
+                    "current_template": final_runtime_headroom_cleanup_result_template,
                     "read_only": true,
                     "purpose": "Copy or send the fillable manual cleanup-result template before checking the cleanup-result gate."
                 },
@@ -9256,7 +9256,7 @@ impl WebPreviewView {
                     "current_summary": Self::agent_browser_final_runtime_headroom_cleanup_result_gate_summary(
                         &final_runtime_headroom_cleanup_result_gate
                     ),
-                    "current_gate": final_runtime_headroom_cleanup_result_gate.clone(),
+                    "current_gate": final_runtime_headroom_cleanup_result_gate,
                     "read_only": true,
                     "purpose": "Render the compact cleanup-result readiness gate after manual cleanup, before capacity recheck."
                 },
@@ -9279,7 +9279,7 @@ impl WebPreviewView {
                     "current_summary": Self::agent_browser_final_runtime_headroom_reclaim_candidates_summary(
                         &final_runtime_headroom_reclaim_candidates
                     ),
-                    "current_candidates": final_runtime_headroom_reclaim_candidates.clone(),
+                    "current_candidates": final_runtime_headroom_reclaim_candidates,
                     "read_only": true,
                     "purpose": "Render read-only target-drive reclaim candidates and preserve rules before any manual cleanup decision."
                 },
@@ -9291,7 +9291,7 @@ impl WebPreviewView {
                     "current_summary": Self::agent_browser_final_runtime_blocker_board_summary(
                         &final_runtime_blocker_board
                     ),
-                    "current_board": final_runtime_blocker_board.clone(),
+                    "current_board": final_runtime_blocker_board,
                     "read_only": true,
                     "purpose": "Show one ordered final-runtime blocker board across panel-result, panel-proof, and target-drive headroom gates."
                 },
@@ -9305,7 +9305,7 @@ impl WebPreviewView {
                     "current_summary": Self::agent_browser_final_runtime_headroom_readiness_gate_summary(
                         &final_runtime_headroom_readiness_gate
                     ),
-                    "current_gate": final_runtime_headroom_readiness_gate.clone(),
+                    "current_gate": final_runtime_headroom_readiness_gate,
                     "read_only": true,
                     "purpose": "Report the current target-drive headroom gate before panel live UI exercise and final just run proof."
                 },
@@ -9317,7 +9317,7 @@ impl WebPreviewView {
                     "current_summary": Self::agent_browser_final_runtime_headroom_recovery_sequence_summary(
                         &final_runtime_headroom_recovery_sequence
                     ),
-                    "current_sequence": final_runtime_headroom_recovery_sequence.clone(),
+                    "current_sequence": final_runtime_headroom_recovery_sequence,
                     "read_only": true,
                     "purpose": "Expose the ordered target-drive headroom recovery path inside the final bundle without requiring a separate observability packet."
                 },
@@ -9388,7 +9388,7 @@ impl WebPreviewView {
                     "ready_lane_fraction": runtime_green_claim_gate.pointer("/ready_lane_fraction").and_then(Value::as_str),
                     "first_pending_lane": runtime_green_claim_gate.pointer("/first_pending_lane_label").and_then(Value::as_str),
                     "final_operator_checklist": Self::runtime_green_final_operator_checklist_summary(&runtime_green_claim_gate),
-                    "current_snapshot": runtime_green_claim_gate.clone()
+                    "current_snapshot": runtime_green_claim_gate
                 },
                 "runtime_green_claim_readiness": {
                     "schema": AGENT_PLUGIN_RUNTIME_GREEN_CLAIM_READINESS_SCHEMA,
@@ -9396,7 +9396,7 @@ impl WebPreviewView {
                     "send_action": "send_agent_plugin_runtime_green_claim_readiness_to_agent",
                     "current_status": runtime_green_claim_readiness.pointer("/status").and_then(Value::as_str),
                     "can_report_runtime_green": runtime_green_claim_readiness.pointer("/can_report_runtime_green").and_then(Value::as_bool),
-                    "current_snapshot": runtime_green_claim_readiness.clone()
+                    "current_snapshot": runtime_green_claim_readiness
                 },
                 "runtime_green_report_gate": {
                     "schema": AGENT_PLUGIN_RUNTIME_GREEN_REPORT_GATE_SCHEMA,
@@ -9406,13 +9406,13 @@ impl WebPreviewView {
                     "can_report_runtime_green": runtime_green_report_gate.pointer("/can_report_runtime_green").and_then(Value::as_bool),
                     "severity": runtime_green_report_gate.pointer("/severity").and_then(Value::as_str),
                     "blocker": runtime_green_report_gate.pointer("/blocker").and_then(Value::as_str),
-                    "current_snapshot": runtime_green_report_gate.clone()
+                    "current_snapshot": runtime_green_report_gate
                 },
                 "runtime_green_report_badge": {
                     "schema": AGENT_PLUGIN_RUNTIME_GREEN_REPORT_BADGE_SCHEMA,
                     "copy_action": "copy_agent_plugin_runtime_green_report_gate",
                     "send_action": "send_agent_plugin_runtime_green_report_gate_to_agent",
-                    "current_badge": runtime_green_report_badge.clone(),
+                    "current_badge": runtime_green_report_badge,
                     "source": "runtime_green_report_gate.badge",
                     "read_only": true
                 },
@@ -9433,7 +9433,7 @@ impl WebPreviewView {
                     "current_headroom_recovery_steps": runtime_green_final_proof_guide.pointer("/browser_final_headroom_recovery_steps").cloned(),
                     "current_headroom_recovery_step_count": runtime_green_final_proof_guide.pointer("/browser_final_headroom_recovery_step_count").and_then(Value::as_u64),
                     "current_summary": Self::agent_plugin_runtime_green_final_proof_guide_summary(&runtime_green_final_proof_guide),
-                    "current_guide": runtime_green_final_proof_guide.clone(),
+                    "current_guide": runtime_green_final_proof_guide,
                     "read_only": true
                 },
                 "runtime_green_final_report_packet": {
@@ -9445,7 +9445,7 @@ impl WebPreviewView {
                     "current_status": runtime_green_final_report_packet.pointer("/status").and_then(Value::as_str),
                     "may_report_runtime_green": runtime_green_final_report_packet.pointer("/may_report_runtime_green").and_then(Value::as_bool),
                     "current_summary": Self::agent_plugin_runtime_green_final_report_packet_summary(&runtime_green_final_report_packet),
-                    "current_packet": runtime_green_final_report_packet.clone(),
+                    "current_packet": runtime_green_final_report_packet,
                     "read_only": true
                 },
                 "runtime_green_report_readiness_card": {
@@ -9457,7 +9457,7 @@ impl WebPreviewView {
                     "current_status": runtime_green_report_readiness_card.pointer("/status").and_then(Value::as_str),
                     "may_report_runtime_green": runtime_green_report_readiness_card.pointer("/may_report_runtime_green").and_then(Value::as_bool),
                     "current_summary": Self::agent_plugin_runtime_green_report_readiness_card_summary(&runtime_green_report_readiness_card),
-                    "current_card": runtime_green_report_readiness_card.clone(),
+                    "current_card": runtime_green_report_readiness_card,
                     "read_only": true
                 },
                 "runtime_status_tool": {
@@ -10383,7 +10383,7 @@ impl WebPreviewView {
                 "next_action": {
                     "summary": next_action,
                     "source": next_action_source,
-                    "recommended_handoff": recommended_handoff.clone(),
+                    "recommended_handoff": recommended_handoff,
                     "read_only": true,
                     "dispatches_input": false,
                 },
@@ -12728,6 +12728,7 @@ impl WebPreviewView {
         })
     }
 
+    #[allow(clippy::redundant_clone)]
     fn agent_browser_panel_card_affordances(
         handoff: &Value,
         refresh: &Value,
@@ -14440,7 +14441,7 @@ impl WebPreviewView {
             "source": "panel_live_validation_manual_check",
             "source_event_id": source_event_id,
             "status": "not_run",
-            "action": action.clone(),
+            "action": action,
             "timestamp_ms": Self::current_epoch_millis(),
             "message": "Fill this with completed, blocked, failed, or skipped after exercising the suggested visible right-side panel control.",
             "declared_status_values": declared_status_values,
@@ -16649,7 +16650,7 @@ impl WebPreviewView {
                 "asset.provisioning_receipt",
                 "Managed asset provisioning receipt",
                 asset_provisioning_receipt_ready,
-                Some(asset_provisioning_receipt.clone()),
+                Some(asset_provisioning_receipt),
                 "provision_required",
                 "Run the managed asset provisioner with write_asset_receipt=true so agents can prove managed assets were prepared before Chrome execution.",
             ),
@@ -16935,7 +16936,7 @@ impl WebPreviewView {
                     "missing_final_validation_result"
                 },
                 "panel_live_validation_result_gate_status": browser_panel_gate_status,
-                "missing_expected_required_checks": browser_missing_expected_required_checks.clone(),
+                "missing_expected_required_checks": browser_missing_expected_required_checks,
                 "missing_expected_required_check_count": browser_missing_expected_required_check_count,
                 "final_runtime_capacity_ready": browser_final_runtime_capacity_ready,
                 "final_runtime_capacity_status": browser_final_runtime_capacity_status,
@@ -20414,7 +20415,7 @@ impl WebPreviewView {
             "report_gate_status": guide.get("report_gate_status").and_then(Value::as_str),
             "report_badge_status": badge.get("status").and_then(Value::as_str),
             "report_badge_blocker": badge.get("blocker").and_then(Value::as_str),
-            "browser_final_blocker_strip": browser_final_blocker_strip.clone(),
+            "browser_final_blocker_strip": browser_final_blocker_strip,
             "browser_final_headroom_required": guide
                 .get("browser_final_headroom_required")
                 .and_then(Value::as_bool)
@@ -22168,7 +22169,7 @@ impl WebPreviewView {
                         "payload": {
                             "action": "type_text",
                             "selector": type_selector,
-                            "text": type_text.clone().unwrap_or_default(),
+                            "text": type_text.unwrap_or_default(),
                             "clear_existing": false
                         },
                         "target_candidate": type_target,
@@ -22217,9 +22218,9 @@ impl WebPreviewView {
         serde_json::to_string_pretty(bridge).unwrap_or_else(|_| "{}".to_string())
     }
 
-    fn extract_agent_browser_executor_payload_from_value<'a>(
-        value: &'a Value,
-    ) -> Option<&'a serde_json::Map<String, Value>> {
+    fn extract_agent_browser_executor_payload_from_value(
+        value: &Value,
+    ) -> Option<&serde_json::Map<String, Value>> {
         let candidates = [
             value.pointer("/payload"),
             value.pointer("/action_payload/payload"),
@@ -22682,9 +22683,9 @@ impl WebPreviewView {
         self.show_toast("Sent browser payload import receipt to the agent panel", cx);
     }
 
-    fn extract_type_text_payload_from_value<'a>(
-        value: &'a Value,
-    ) -> Option<&'a serde_json::Map<String, Value>> {
+    fn extract_type_text_payload_from_value(
+        value: &Value,
+    ) -> Option<&serde_json::Map<String, Value>> {
         let candidates = [
             value.pointer("/bridge/executor_payloads/type_text/payload"),
             value.pointer("/executor_payloads/type_text/payload"),
@@ -23116,13 +23117,13 @@ impl WebPreviewView {
                 "url": self.active_url.as_ref(),
                 "status": status,
                 "next_step": next_step,
-                "runtime_green_claim_gate": runtime_green_claim_gate.clone(),
-                "runtime_green_claim_readiness": runtime_green_claim_readiness.clone(),
-                "runtime_green_report_gate": runtime_green_report_gate.clone(),
-                "runtime_green_report_badge": runtime_green_report_badge.clone(),
-                "runtime_green_final_proof_guide": runtime_green_final_proof_guide.clone(),
-                "runtime_green_final_report_packet": runtime_green_final_report_packet.clone(),
-                "runtime_green_report_readiness_card": runtime_green_report_readiness_card.clone(),
+                "runtime_green_claim_gate": runtime_green_claim_gate,
+                "runtime_green_claim_readiness": runtime_green_claim_readiness,
+                "runtime_green_report_gate": runtime_green_report_gate,
+                "runtime_green_report_badge": runtime_green_report_badge,
+                "runtime_green_final_proof_guide": runtime_green_final_proof_guide,
+                "runtime_green_final_report_packet": runtime_green_final_report_packet,
+                "runtime_green_report_readiness_card": runtime_green_report_readiness_card,
                 "readiness": {
                     "context_ready": context_ready,
                     "audit_ready": audit_ready,
@@ -23189,7 +23190,7 @@ impl WebPreviewView {
                     "agent_plugin_catalog": {
                         "summary_schema": AGENT_PLUGIN_CATALOG_SUMMARY_SCHEMA,
                         "latest_summary": self.latest_agent_plugin_catalog_summary(),
-                        "current_summary": agent_plugin_catalog_current_summary.clone(),
+                        "current_summary": agent_plugin_catalog_current_summary,
                     },
                     "agent_browser_panel_control_result": self.latest_agent_browser_panel_control_result_summary(),
                     "agent_browser_panel_control_result_import_receipt": self.latest_agent_browser_panel_control_result_import_receipt_summary(),
@@ -23200,16 +23201,16 @@ impl WebPreviewView {
                     "agent_browser_panel_live_proof_readiness_card": agent_browser_panel_live_proof_readiness_card,
                     "agent_browser_panel_live_validation_exercise_plan": agent_browser_panel_live_validation_exercise_plan,
                     "agent_browser_panel_live_ui_proof_checklist": agent_browser_panel_live_ui_proof_checklist,
-                    "agent_browser_final_runtime_proof_capacity": agent_browser_final_runtime_proof_capacity.clone(),
-                    "agent_browser_final_runtime_headroom_recovery_plan": agent_browser_final_runtime_headroom_recovery_plan.clone(),
-                    "agent_browser_final_runtime_headroom_recovery_card": agent_browser_final_runtime_headroom_recovery_card.clone(),
-                    "agent_browser_final_runtime_headroom_inspection_checklist": agent_browser_final_runtime_headroom_inspection_checklist.clone(),
-                    "agent_browser_final_runtime_headroom_size_inspection": agent_browser_final_runtime_headroom_size_inspection.clone(),
-                    "agent_browser_final_runtime_headroom_cleanup_result_template": agent_browser_final_runtime_headroom_cleanup_result_template.clone(),
-                    "agent_browser_final_runtime_headroom_cleanup_result_gate": agent_browser_final_runtime_headroom_cleanup_result_gate.clone(),
-                    "agent_browser_final_runtime_headroom_readiness_gate": agent_browser_final_runtime_headroom_readiness_gate.clone(),
-                    "agent_browser_final_runtime_headroom_reclaim_candidates": agent_browser_final_runtime_headroom_reclaim_candidates.clone(),
-                    "agent_browser_final_runtime_blocker_board": agent_browser_final_runtime_blocker_board.clone(),
+                    "agent_browser_final_runtime_proof_capacity": agent_browser_final_runtime_proof_capacity,
+                    "agent_browser_final_runtime_headroom_recovery_plan": agent_browser_final_runtime_headroom_recovery_plan,
+                    "agent_browser_final_runtime_headroom_recovery_card": agent_browser_final_runtime_headroom_recovery_card,
+                    "agent_browser_final_runtime_headroom_inspection_checklist": agent_browser_final_runtime_headroom_inspection_checklist,
+                    "agent_browser_final_runtime_headroom_size_inspection": agent_browser_final_runtime_headroom_size_inspection,
+                    "agent_browser_final_runtime_headroom_cleanup_result_template": agent_browser_final_runtime_headroom_cleanup_result_template,
+                    "agent_browser_final_runtime_headroom_cleanup_result_gate": agent_browser_final_runtime_headroom_cleanup_result_gate,
+                    "agent_browser_final_runtime_headroom_readiness_gate": agent_browser_final_runtime_headroom_readiness_gate,
+                    "agent_browser_final_runtime_headroom_reclaim_candidates": agent_browser_final_runtime_headroom_reclaim_candidates,
+                    "agent_browser_final_runtime_blocker_board": agent_browser_final_runtime_blocker_board,
                     "agent_browser_panel_card_deck": agent_browser_panel_card_deck,
                     "agent_browser_panel_control_result_ledger": agent_browser_panel_control_result_ledger,
                     "managed_chrome_execution": managed_chrome_execution,
@@ -23219,10 +23220,10 @@ impl WebPreviewView {
                     "runtime_observability_digest": runtime_observability_digest_summary,
                     "runtime_green_operator_handoff": runtime_green_operator_handoff_summary,
                     "runtime_green_proof_path": runtime_green_proof_path_summary,
-                    "runtime_green_claim_gate": runtime_green_claim_gate.clone(),
-                    "runtime_green_claim_readiness": runtime_green_claim_readiness.clone(),
-                    "runtime_green_report_gate": runtime_green_report_gate.clone(),
-                    "runtime_green_report_badge": runtime_green_report_badge.clone(),
+                    "runtime_green_claim_gate": runtime_green_claim_gate,
+                    "runtime_green_claim_readiness": runtime_green_claim_readiness,
+                    "runtime_green_report_gate": runtime_green_report_gate,
+                    "runtime_green_report_badge": runtime_green_report_badge,
                     "runtime_green_final_proof_guide": Self::agent_plugin_runtime_green_final_proof_guide_summary(
                         &runtime_green_final_proof_guide
                     ),
@@ -23743,9 +23744,9 @@ impl WebPreviewView {
                 "route text and key dispatch only while WebPreview owns keyboard focus",
                 "capture before/after diagnostics and emit a receipt for every attempted dispatch"
             ],
-            "managed_chrome_execution": managed_chrome_execution.clone(),
-            "pc_use_status": pc_use_status.clone(),
-            "runtime_green_claim_gate": runtime_green_claim_gate.clone()
+            "managed_chrome_execution": managed_chrome_execution,
+            "pc_use_status": pc_use_status,
+            "runtime_green_claim_gate": runtime_green_claim_gate
         });
 
         serde_json::json!({
@@ -23762,9 +23763,9 @@ impl WebPreviewView {
                 "can_dispatch_now": gate_ready_for_executor,
                 "gate_ready_for_executor": gate_ready_for_executor,
                 "interactive_unlocked": interactive_unlocked,
-                "managed_chrome_execution": managed_chrome_execution.clone(),
-                "pc_use_status": pc_use_status.clone(),
-                "runtime_green_claim_gate": runtime_green_claim_gate.clone(),
+                "managed_chrome_execution": managed_chrome_execution,
+                "pc_use_status": pc_use_status,
+                "runtime_green_claim_gate": runtime_green_claim_gate,
                 "context_ready": context_ready,
                 "observability_ready": observability_ready,
                 "audit_ready": audit_ready,
@@ -24545,7 +24546,7 @@ impl WebPreviewView {
             "url": self.active_url.as_ref(),
             "title": self.current_tab_title().as_ref(),
             "load_state": self.load_state_name(),
-            "viewport": previous_viewport.clone(),
+            "viewport": previous_viewport,
         });
         let gate = self.agent_browser_executor_gate();
         let gate_ready_for_executor = gate.ready_for_executor();
@@ -24586,7 +24587,7 @@ impl WebPreviewView {
             "url": self.active_url.as_ref(),
             "title": self.current_tab_title().as_ref(),
             "load_state": self.load_state_name(),
-            "viewport": applied_viewport.clone(),
+            "viewport": applied_viewport,
         });
         let receipt = self.permissioned_executor_receipt(
             "zed.web_preview.permissioned_viewport_executor_receipt.v1",
@@ -24646,7 +24647,7 @@ impl WebPreviewView {
                 "page_script_dispatched": false,
                 "blockers": receipt_blockers,
                 "receipt": receipt,
-                "responsive_viewport_change": responsive_viewport_change.clone(),
+                "responsive_viewport_change": responsive_viewport_change,
                 "latest_executor_readiness": self.latest_agent_browser_executor_readiness_summary(),
             },
             "notes": [
@@ -24821,7 +24822,7 @@ impl WebPreviewView {
             "url": self.active_url.as_ref(),
             "title": self.current_tab_title().as_ref(),
             "load_state": self.load_state_name(),
-            "target_candidate": target_candidate.clone(),
+            "target_candidate": target_candidate,
             "readiness_probe": self.latest_readiness_probe_summary(),
             "interaction_preflight": self.latest_interaction_preflight_summary(),
         });
@@ -24846,7 +24847,7 @@ impl WebPreviewView {
             "url": self.active_url.as_ref(),
             "title": self.current_tab_title().as_ref(),
             "load_state": self.load_state_name(),
-            "target_candidate": target_candidate.clone(),
+            "target_candidate": target_candidate,
         });
         let receipt = self.permissioned_executor_receipt(
             receipt_schema,
@@ -25443,13 +25444,13 @@ impl WebPreviewView {
             "title": self.current_tab_title().as_ref(),
             "load_state": self.load_state_name(),
             "preflight": preflight.as_ref(),
-            "target_candidate": target_candidate.clone(),
+            "target_candidate": target_candidate,
         });
         let after = serde_json::json!({
             "url": self.active_url.as_ref(),
             "title": self.current_tab_title().as_ref(),
             "load_state": self.load_state_name(),
-            "coordinate_plan": coordinate_plan.clone(),
+            "coordinate_plan": coordinate_plan,
         });
         let receipt = self.permissioned_executor_receipt(
             config.receipt_schema,
@@ -25664,8 +25665,8 @@ impl WebPreviewView {
             "title": self.current_tab_title().as_ref(),
             "load_state": self.load_state_name(),
             "preflight": preflight.as_ref(),
-            "target_candidate": target_candidate.clone(),
-            "coordinate_plan": coordinate_plan.clone(),
+            "target_candidate": target_candidate,
+            "coordinate_plan": coordinate_plan,
         });
 
         let mut native_input_dispatched = false;
@@ -25695,7 +25696,7 @@ impl WebPreviewView {
             "url": self.active_url.as_ref(),
             "title": self.current_tab_title().as_ref(),
             "load_state": self.load_state_name(),
-            "coordinate_plan": coordinate_plan.clone(),
+            "coordinate_plan": coordinate_plan,
         });
         let receipt = self.permissioned_executor_receipt(
             "zed.web_preview.permissioned_native_click_executor_receipt.v1",
@@ -25951,8 +25952,8 @@ impl WebPreviewView {
             "title": self.current_tab_title().as_ref(),
             "load_state": self.load_state_name(),
             "preflight": preflight.as_ref(),
-            "target_candidate": target_candidate.clone(),
-            "coordinate_plan": coordinate_plan.clone(),
+            "target_candidate": target_candidate,
+            "coordinate_plan": coordinate_plan,
         });
 
         let mut native_input_dispatched = false;
@@ -25982,7 +25983,7 @@ impl WebPreviewView {
             "url": self.active_url.as_ref(),
             "title": self.current_tab_title().as_ref(),
             "load_state": self.load_state_name(),
-            "coordinate_plan": coordinate_plan.clone(),
+            "coordinate_plan": coordinate_plan,
         });
         let receipt = self.permissioned_executor_receipt(
             "zed.web_preview.permissioned_native_scroll_executor_receipt.v1",
@@ -26272,11 +26273,11 @@ impl WebPreviewView {
             "title": self.current_tab_title().as_ref(),
             "load_state": self.load_state_name(),
             "preflight": preflight.as_ref(),
-            "target_candidate": target_candidate.clone(),
-            "coordinate_plan": coordinate_plan.clone(),
-            "text_payload_source": text_payload_source.clone(),
+            "target_candidate": target_candidate,
+            "coordinate_plan": coordinate_plan,
+            "text_payload_source": text_payload_source,
             "text_length": text_length,
-            "text_preview": text_preview.clone(),
+            "text_preview": text_preview,
         });
 
         let mut browser_command_dispatched = false;
@@ -26308,7 +26309,7 @@ impl WebPreviewView {
             "url": self.active_url.as_ref(),
             "title": self.current_tab_title().as_ref(),
             "load_state": self.load_state_name(),
-            "coordinate_plan": coordinate_plan.clone(),
+            "coordinate_plan": coordinate_plan,
             "type_dispatch_is_async": browser_command_dispatched,
         });
         let receipt = self.permissioned_executor_receipt(
@@ -26346,10 +26347,10 @@ impl WebPreviewView {
                 ("coordinate_plan", serde_json::json!(coordinate_plan)),
                 (
                     "text_payload_source",
-                    serde_json::json!(text_payload_source.clone()),
+                    serde_json::json!(text_payload_source),
                 ),
                 ("text_length", serde_json::json!(text_length)),
-                ("text_preview", serde_json::json!(text_preview.clone())),
+                ("text_preview", serde_json::json!(text_preview)),
                 ("dry_run_only", serde_json::json!(false)),
                 (
                     "dispatch_status",
@@ -26554,8 +26555,8 @@ impl WebPreviewView {
             "title": self.current_tab_title().as_ref(),
             "load_state": self.load_state_name(),
             "preflight": preflight.as_ref(),
-            "target_candidate": target_candidate.clone(),
-            "coordinate_plan": coordinate_plan.clone(),
+            "target_candidate": target_candidate,
+            "coordinate_plan": coordinate_plan,
             "key": key,
         });
 
@@ -26586,7 +26587,7 @@ impl WebPreviewView {
             "url": self.active_url.as_ref(),
             "title": self.current_tab_title().as_ref(),
             "load_state": self.load_state_name(),
-            "coordinate_plan": coordinate_plan.clone(),
+            "coordinate_plan": coordinate_plan,
             "key_dispatch_is_async": browser_command_dispatched,
         });
         let receipt = self.permissioned_executor_receipt(
@@ -26802,7 +26803,7 @@ impl WebPreviewView {
             "url": self.active_url.as_ref(),
             "title": self.current_tab_title().as_ref(),
             "load_state": self.load_state_name(),
-            "history_plan": history_plan.clone(),
+            "history_plan": history_plan,
         });
         let outcome = if trace_ready {
             "trace_ready_dispatch_disabled"
@@ -27217,7 +27218,7 @@ impl WebPreviewView {
             "url": self.active_url.as_ref(),
             "title": self.current_tab_title().as_ref(),
             "load_state": self.load_state_name(),
-            "scope_plan": scope_plan.clone(),
+            "scope_plan": scope_plan,
         });
         let outcome = if trace_ready {
             "trace_ready_dispatch_disabled"
@@ -28301,7 +28302,7 @@ impl WebPreviewView {
                     "current_summary": Self::agent_browser_final_runtime_headroom_size_inspection_summary(
                         &final_runtime_headroom_size_inspection
                     ),
-                    "current_size_inspection": final_runtime_headroom_size_inspection.clone(),
+                    "current_size_inspection": final_runtime_headroom_size_inspection,
                     "read_only": true,
                     "purpose": "Copy or send only the read-only target/cache size inspection command pack before manual cleanup."
                 },
@@ -28462,7 +28463,7 @@ impl WebPreviewView {
                     "affordance_card_count": agent_browser_panel_card_deck
                         .pointer("/summary/cards_with_affordance_count")
                         .and_then(Value::as_u64),
-                    "latest_summary": agent_browser_panel_card_deck.clone(),
+                    "latest_summary": agent_browser_panel_card_deck,
                     "read_only": true,
                     "purpose": "Copy or send one compact right-side Agent Panel deck for screenshot, annotation, inspect, DevTools, responsive viewport, managed Chrome, and PC-use proof cards."
                 },
@@ -28498,7 +28499,7 @@ impl WebPreviewView {
                     "source_deck_schema": AGENT_BROWSER_PANEL_CARD_DECK_SCHEMA,
                     "copy_action": "copy_agent_browser_panel_control_result_ledger",
                     "send_action": "send_agent_browser_panel_control_result_ledger_to_agent",
-                    "latest_summary": agent_browser_panel_control_result_ledger.clone(),
+                    "latest_summary": agent_browser_panel_control_result_ledger,
                     "read_only": true,
                     "purpose": "Copy or send the normalized panel control result ledger built from imported durable panel results, latest payload import, blocked receipt, and success receipt template."
                 },
@@ -28652,7 +28653,7 @@ impl WebPreviewView {
                     "schema": AGENT_PLUGIN_RUNTIME_GREEN_CLAIM_GATE_SCHEMA,
                     "copy_action": "copy_agent_plugin_runtime_green_claim_gate",
                     "send_action": "send_agent_plugin_runtime_green_claim_gate_to_agent",
-                    "latest_summary": runtime_green_claim_gate.clone(),
+                    "latest_summary": runtime_green_claim_gate,
                     "final_operator_checklist": Self::runtime_green_final_operator_checklist_summary(&runtime_green_claim_gate),
                     "read_only": true,
                     "purpose": "Copy or send only the compact claim gate with ready-lane fraction, first pending evidence, and next operator step."
@@ -28661,7 +28662,7 @@ impl WebPreviewView {
                     "schema": AGENT_PLUGIN_RUNTIME_GREEN_CLAIM_READINESS_SCHEMA,
                     "copy_action": "copy_agent_plugin_runtime_green_claim_readiness",
                     "send_action": "send_agent_plugin_runtime_green_claim_readiness_to_agent",
-                    "latest_summary": runtime_green_claim_readiness.clone(),
+                    "latest_summary": runtime_green_claim_readiness,
                     "read_only": true,
                     "purpose": "Copy or send the single compact readiness packet that combines claim gate, final result state, final checklist, and reporting policy."
                 },
@@ -28669,8 +28670,8 @@ impl WebPreviewView {
                     "schema": AGENT_PLUGIN_RUNTIME_GREEN_REPORT_GATE_SCHEMA,
                     "copy_action": "copy_agent_plugin_runtime_green_report_gate",
                     "send_action": "send_agent_plugin_runtime_green_report_gate_to_agent",
-                    "latest_summary": runtime_green_report_gate.clone(),
-                    "badge": runtime_green_report_badge.clone(),
+                    "latest_summary": runtime_green_report_gate,
+                    "badge": runtime_green_report_badge,
                     "read_only": true,
                     "purpose": "Copy or send the canonical ready/blocked badge agents must check before reporting runtime-green, including Browser final blocker fields."
                 },
@@ -28679,7 +28680,7 @@ impl WebPreviewView {
                     "source": "runtime_green_report_gate.badge",
                     "copy_action": "copy_agent_plugin_runtime_green_report_gate",
                     "send_action": "send_agent_plugin_runtime_green_report_gate_to_agent",
-                    "latest_summary": runtime_green_report_badge.clone(),
+                    "latest_summary": runtime_green_report_badge,
                     "read_only": true,
                     "browser_final_blocker_fields": [
                         "runtime_green_report_gate.badge.stale_final_result_missing_expected_required_check_count",
@@ -29715,7 +29716,7 @@ impl WebPreviewView {
                             "current_summary": Self::agent_browser_final_runtime_proof_capacity_summary(
                                 &final_runtime_proof_capacity
                             ),
-                            "current_capacity": final_runtime_proof_capacity.clone(),
+                            "current_capacity": final_runtime_proof_capacity,
                             "read_only": true,
                             "source": "WebPreview More menu",
                             "purpose": "Check target-drive headroom before the final just run proof."
@@ -31153,7 +31154,7 @@ impl WebPreviewView {
                 "source_len_bytes_before": source_before.len(),
                 "expected_source_digest_after": expected_source_digest_after,
                 "expected_source_len_bytes_after": expected_source_len_bytes_after,
-                "source_digest_after": source_digest_after.clone(),
+                "source_digest_after": source_digest_after,
                 "source_len_bytes_after": source_after.len(),
                 "pre_write_digest_match": true,
                 "pre_write_source_len_match": true,
@@ -34279,7 +34280,7 @@ fn prune_browser_event_queue(queue: &mut Vec<BrowserEvent>) {
 fn queued_browser_event_count(queue: &[BrowserEvent]) -> usize {
     queue
         .iter()
-        .filter(|event| is_bounded_browser_event(*event))
+        .filter(|event| is_bounded_browser_event(event))
         .count()
 }
 

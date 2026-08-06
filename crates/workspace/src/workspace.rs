@@ -6161,6 +6161,24 @@ impl Workspace {
             match kind {
                 WorkspaceScreenKind::Browser => {
                     window.dispatch_action(NewWebPreview.boxed_clone(), cx);
+                    // `dispatch_action` is deferred, so the tab only exists after
+                    // the current task ends. Defer the re-scan too: it runs after
+                    // the NewWebPreview handler created the tab (same frame, before
+                    // render) and activates it so the FIRST click lands on the web
+                    // preview screen instead of leaving the previous screen visible.
+                    let target_pane_weak = target_pane.downgrade();
+                    cx.defer_in(window, move |workspace, window, cx| {
+                        let Some(target_pane) = target_pane_weak.upgrade() else {
+                            return;
+                        };
+                        let item = target_pane.read(cx).items().find_map(|item| {
+                            (item.screen_kind(cx) == WorkspaceScreenKind::Browser)
+                                .then(|| item.boxed_clone())
+                        });
+                        if let Some(item) = item {
+                            workspace.activate_item(&*item, true, true, window, cx);
+                        }
+                    });
                 }
                 _ => {
                     let target_pane_weak = target_pane.downgrade();

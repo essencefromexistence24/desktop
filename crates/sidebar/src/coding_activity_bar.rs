@@ -12,7 +12,7 @@ pub(crate) fn render_coding_activity_bar(
         .items_center()
         .justify_between()
         .overflow_hidden()
-        .py_1()
+        .py_2()
         .child(
             v_flex()
                 .id("workspace-sidebar-primary-actions")
