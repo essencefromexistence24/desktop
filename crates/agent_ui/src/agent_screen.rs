@@ -160,7 +160,9 @@ impl Item for AgentScreen {
 }
 
 impl Render for AgentScreen {
-    fn render(&mut self, _window: &mut Window, _cx: &mut Context<Self>) -> impl IntoElement {
-        div().size_full().child(self.panel.clone())
+    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+        div()
+            .size_full()
+            .child(self.panel.clone())
     }
 }

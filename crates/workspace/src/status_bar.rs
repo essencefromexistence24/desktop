@@ -3,8 +3,8 @@ use crate::{
     sidebar_side_context_menu,
 };
 use gpui::{
-    Anchor, AnyView, App, Context, Decorations, Entity, IntoElement, ParentElement, Render,
-    SharedString, Styled, Subscription, WeakEntity, Window,
+    Anchor, AnyView, App, Context, Decorations, Entity, IntoElement, ParentElement,
+    Render, SharedString, Styled, Subscription, WeakEntity, Window,
 };
 use settings::{SettingsContent, update_settings_file};
 use std::{any::TypeId, sync::Arc};
@@ -193,10 +193,12 @@ impl StatusBar {
                     .on_click(cx.listener({
                         let id = id.to_string();
                         move |this, _, window, cx| {
+                            let status_bar_entity_id = cx.entity().entity_id();
                             let workspace = this.active_pane.read(cx).workspace();
                             if let Some(workspace) = workspace.upgrade() {
-                                workspace.update(cx, |_workspace, cx| {
-                                    window.dispatch_action(
+                                workspace.update(cx, |_, cx| {
+                                    window.dispatch_action_on_view(
+                                        status_bar_entity_id,
                                         Box::new(crate::OpenWebPreview {
                                             project: id.clone(),
                                         }),

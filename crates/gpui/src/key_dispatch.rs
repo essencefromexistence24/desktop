@@ -605,7 +605,12 @@ impl DispatchTree {
     }
 
     pub fn focusable_node_id(&self, target: FocusId) -> Option<DispatchNodeId> {
-        self.focusable_node_ids.get(&target).copied()
+        let node = self.focusable_node_ids.get(&target).copied();
+        node
+    }
+
+    pub fn view_node_id(&self, view_id: EntityId) -> Option<DispatchNodeId> {
+        self.view_node_ids.get(&view_id).copied()
     }
 
     pub fn root_node_id(&self) -> DispatchNodeId {

@@ -6160,28 +6160,54 @@ impl Workspace {
 
             match kind {
                 WorkspaceScreenKind::Browser => {
-                    window.dispatch_action(NewWebPreview.boxed_clone(), cx);
-                    // `dispatch_action` is deferred, so the tab only exists after
-                    // the current task ends. Defer the re-scan too: it runs after
-                    // the NewWebPreview handler created the tab (same frame, before
-                    // render) and activates it so the FIRST click lands on the web
-                    // preview screen instead of leaving the previous screen visible.
+                    let status_bar_entity_id = self.status_bar.entity_id();
+                    window.dispatch_action_on_view(
+                        status_bar_entity_id,
+                        NewWebPreview.boxed_clone(),
+                        cx,
+                    );
+                    // `dispatch_action` is deferred, and the tab may only be
+                    // created asynchronously, so retry the re-scan a few times:
+                    // it runs after the NewWebPreview handler created the tab
+                    // and activates it so the FIRST click lands on the web
+                    // preview screen instead of leaving the previous screen
+                    // visible.
                     let target_pane_weak = target_pane.downgrade();
-                    cx.defer_in(window, move |workspace, window, cx| {
-                        let Some(target_pane) = target_pane_weak.upgrade() else {
-                            return;
-                        };
-                        let item = target_pane.read(cx).items().find_map(|item| {
-                            (item.screen_kind(cx) == WorkspaceScreenKind::Browser)
-                                .then(|| item.boxed_clone())
-                        });
-                        if let Some(item) = item {
-                            workspace.activate_item(&*item, true, true, window, cx);
+                    cx.spawn_in(
+                        window,
+                        async move |workspace, cx| -> anyhow::Result<()> {
+                        for _ in 0..10 {
+                            let found = workspace
+                                .update_in(cx, |workspace, window, cx| {
+                                    let Some(target_pane) = target_pane_weak.upgrade() else {
+                                        return false;
+                                    };
+                                    let item = target_pane.read(cx).items().find_map(|item| {
+                                        (item.screen_kind(cx) == WorkspaceScreenKind::Browser)
+                                            .then(|| item.boxed_clone())
+                                    });
+                                    if let Some(item) = item {
+                                        workspace.activate_item(&*item, true, true, window, cx);
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                })
+                                .unwrap_or(false);
+                            if found {
+                                return Ok(());
+                            }
+                            cx.background_executor()
+                                .timer(Duration::from_millis(100))
+                                .await;
                         }
-                    });
+                        Ok(())
+                    })
+                    .detach_and_log_err(cx);
                 }
                 _ => {
                     let target_pane_weak = target_pane.downgrade();
+                    let status_bar_entity_id = self.status_bar.entity_id();
                     cx.defer_in(window, move |workspace, window, cx| {
                         let Some(target_pane) = target_pane_weak.upgrade() else {
                             return;
@@ -6192,34 +6218,43 @@ impl Workspace {
 
                         match kind {
                             WorkspaceScreenKind::Agent => {
-                                window.dispatch_action(
+                                window.dispatch_action_on_view(
+                                    status_bar_entity_id,
                                     zed_actions::assistant::FocusAgentFullscreen.boxed_clone(),
                                     cx,
                                 );
                             }
                             WorkspaceScreenKind::Automations => {
-                                window.dispatch_action(
+                                window.dispatch_action_on_view(
+                                    status_bar_entity_id,
                                     zed_actions::assistant::OpenAutomations.boxed_clone(),
                                     cx,
                                 );
                             }
                             WorkspaceScreenKind::Connections => {
-                                window.dispatch_action(
+                                window.dispatch_action_on_view(
+                                    status_bar_entity_id,
                                     zed_actions::assistant::OpenConnections.boxed_clone(),
                                     cx,
                                 );
                             }
                             WorkspaceScreenKind::Tools => {
-                                window.dispatch_action(
+                                window.dispatch_action_on_view(
+                                    status_bar_entity_id,
                                     zed_actions::assistant::OpenTools.boxed_clone(),
                                     cx,
                                 );
                             }
                             WorkspaceScreenKind::Editor => {
-                                window.dispatch_action(NewFile.boxed_clone(), cx);
+                                window.dispatch_action_on_view(
+                                    status_bar_entity_id,
+                                    NewFile.boxed_clone(),
+                                    cx,
+                                );
                             }
                             WorkspaceScreenKind::Terminal => {
-                                window.dispatch_action(
+                                window.dispatch_action_on_view(
+                                    status_bar_entity_id,
                                     NewCenterTerminal::default().boxed_clone(),
                                     cx,
                                 );

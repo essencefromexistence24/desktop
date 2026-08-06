@@ -2072,6 +2072,30 @@ impl Window {
         })
     }
 
+    /// Dispatch the given action on the element that rendered the given view.
+    /// Unlike [`Window::dispatch_action`], this does not depend on focus state,
+    /// so it works even when the focused element is not part of the most
+    /// recently rendered frame.
+    pub fn dispatch_action_on_view(
+        &mut self,
+        view_id: EntityId,
+        action: Box<dyn Action>,
+        cx: &mut App,
+    ) {
+        let window = self.handle;
+        cx.defer(move |cx| {
+            window
+                .update(cx, |_, window, cx| {
+                    let Some(node_id) = window.rendered_frame.dispatch_tree.view_node_id(view_id)
+                    else {
+                        return;
+                    };
+                    window.dispatch_action_on_node(node_id, action.as_ref(), cx);
+                })
+                .log_err();
+        });
+    }
+
     pub(crate) fn dispatch_keystroke_observers(
         &mut self,
         event: &dyn Any,
