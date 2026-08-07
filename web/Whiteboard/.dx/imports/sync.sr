@@ -1,7 +1,7 @@
 tool="dx imports"
 command="sync"
 passed=true
-source_hash="blake3:9934975391230548b51ab63f21f19b9d91cc46b451bd28b442457ad5039acb8f"
+source_hash="blake3:0bca694f181ee0b377eeaa0691c51359f5373903d491ab9c608081001eaab6f4"
 entry_count=51
 public_barrel_entry_count=25
 used_symbol_count=28
@@ -10,7 +10,7 @@ untyped_entry_count=2
 skipped_entry_count=0
 scan_roots=["components", "composables", "utils"]
 used_roots=["app", "components", "lib", "server", "styles"]
-aliases=["#components", "#imports"]
+aliases=["#imports", "#components"]
 barrel="components/auto-imports.ts"
 import_map=".dx/imports/import-map.json"
 declarations=".dx/imports/imports.d.ts"

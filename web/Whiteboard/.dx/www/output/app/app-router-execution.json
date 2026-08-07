@@ -12,7 +12,7 @@
   },
   "source_owned_files": true,
   "node_modules_required": false,
-  "node_modules_present": true,
+  "node_modules_present": false,
   "route_groups": [],
   "visible_segments": [],
   "dynamic_segments": [],

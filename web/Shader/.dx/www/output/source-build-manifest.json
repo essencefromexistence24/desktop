@@ -1,7 +1,7 @@
 {
   "schema": "dx.www.sourceBuildManifest",
   "schema_revision": 1,
-  "project_root": "G:/Dx/code/web/Shader",
+  "project_root": "G:/Dx/desktop/web/Shader",
   "routes": [
     {
       "route": "/",
@@ -430,9 +430,9 @@
   "assets": [
     {
       "path": "public/agent-cursor.js",
-      "output": ".dx/www/output/public/agent-cursor-7cbbde833ae1eff0.js",
-      "hash": "7cbbde833ae1eff0",
-      "size": 11677,
+      "output": ".dx/www/output/public/agent-cursor-b383c71fb0eaf48f.js",
+      "hash": "b383c71fb0eaf48f",
+      "size": 14674,
       "node_modules_required": false,
       "lifecycle_scripts_executed": false,
       "source_owned_contract": true,
@@ -441,9 +441,9 @@
     },
     {
       "path": "public/canvas-export.js",
-      "output": ".dx/www/output/public/canvas-export-b2b11c06ceed2815.js",
-      "hash": "b2b11c06ceed2815",
-      "size": 6413,
+      "output": ".dx/www/output/public/canvas-export-85222fce691117f3.js",
+      "hash": "85222fce691117f3",
+      "size": 8268,
       "node_modules_required": false,
       "lifecycle_scripts_executed": false,
       "source_owned_contract": true,
@@ -843,9 +843,9 @@
     },
     {
       "path": "public/favicon.svg",
-      "output": ".dx/www/output/public/favicon-41e6192dfae92ec1.svg",
-      "hash": "41e6192dfae92ec1",
-      "size": 1072,
+      "output": ".dx/www/output/public/favicon-4ef4b7a78017f8f9.svg",
+      "hash": "4ef4b7a78017f8f9",
+      "size": 1100,
       "node_modules_required": false,
       "lifecycle_scripts_executed": false,
       "source_owned_contract": true,

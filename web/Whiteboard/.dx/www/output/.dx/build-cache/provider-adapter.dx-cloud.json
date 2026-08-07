@@ -6,7 +6,7 @@
   "account_bound": false,
   "network_required": false,
   "secrets_required": false,
-  "deployment_id": "dxlocal-3a2149c1757e00dc",
+  "deployment_id": "dxlocal-3b908fbdb74b3c64",
   "deploy_adapter_path": ".dx/build-cache/deploy-adapter.json",
   "no_node_modules_required": true,
   "runtime": {
@@ -17,7 +17,7 @@
   },
   "build_manifest": {
     "path": ".dx/build-cache/manifest.json",
-    "hash": "blake3:3a2149c1757e00dcaafb3af528d9093d5fb111b79e59d33c8209e2837418cee8",
+    "hash": "blake3:3b908fbdb74b3c64f1eb20e1c172a9454bdc4bc35eafb439418c169da7de7140",
     "signed": false,
     "signature_required_for_release": true,
     "signature_policy": "sign manifest before hosted promotion"
@@ -173,67 +173,67 @@
       "encoded_from": "icon.svg"
     },
     {
-      "path": "public/agent-cursor-7cbbde833ae1eff0.js",
+      "path": "public/agent-cursor-b383c71fb0eaf48f.js",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": null,
       "encoded_from": null
     },
     {
-      "path": "public/agent-cursor-7cbbde833ae1eff0.js.br",
+      "path": "public/agent-cursor-b383c71fb0eaf48f.js.br",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "br",
-      "encoded_from": "public/agent-cursor-7cbbde833ae1eff0.js"
+      "encoded_from": "public/agent-cursor-b383c71fb0eaf48f.js"
     },
     {
-      "path": "public/agent-cursor-7cbbde833ae1eff0.js.gz",
+      "path": "public/agent-cursor-b383c71fb0eaf48f.js.gz",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "gzip",
-      "encoded_from": "public/agent-cursor-7cbbde833ae1eff0.js"
+      "encoded_from": "public/agent-cursor-b383c71fb0eaf48f.js"
     },
     {
-      "path": "public/canvas-export-b2b11c06ceed2815.js",
+      "path": "public/canvas-export-85222fce691117f3.js",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": null,
       "encoded_from": null
     },
     {
-      "path": "public/canvas-export-b2b11c06ceed2815.js.br",
+      "path": "public/canvas-export-85222fce691117f3.js.br",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "br",
-      "encoded_from": "public/canvas-export-b2b11c06ceed2815.js"
+      "encoded_from": "public/canvas-export-85222fce691117f3.js"
     },
     {
-      "path": "public/canvas-export-b2b11c06ceed2815.js.gz",
+      "path": "public/canvas-export-85222fce691117f3.js.gz",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "gzip",
-      "encoded_from": "public/canvas-export-b2b11c06ceed2815.js"
+      "encoded_from": "public/canvas-export-85222fce691117f3.js"
     },
     {
-      "path": "public/favicon-b79469898e890b32.svg",
+      "path": "public/favicon-8ef8e37dd36b0f62.svg",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": null,
       "encoded_from": null
     },
     {
-      "path": "public/favicon-b79469898e890b32.svg.br",
+      "path": "public/favicon-8ef8e37dd36b0f62.svg.br",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "br",
-      "encoded_from": "public/favicon-b79469898e890b32.svg"
+      "encoded_from": "public/favicon-8ef8e37dd36b0f62.svg"
     },
     {
-      "path": "public/favicon-b79469898e890b32.svg.gz",
+      "path": "public/favicon-8ef8e37dd36b0f62.svg.gz",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "gzip",
-      "encoded_from": "public/favicon-b79469898e890b32.svg"
+      "encoded_from": "public/favicon-8ef8e37dd36b0f62.svg"
     },
     {
       "path": "public/icon-1f5e3f2581bd66f8.svg",
@@ -257,25 +257,25 @@
       "encoded_from": "public/icon-1f5e3f2581bd66f8.svg"
     },
     {
-      "path": "public/whiteboard-runtime-e47c4c795307d776.js",
+      "path": "public/whiteboard-runtime-44f069aa63b41fee.js",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": null,
       "encoded_from": null
     },
     {
-      "path": "public/whiteboard-runtime-e47c4c795307d776.js.br",
+      "path": "public/whiteboard-runtime-44f069aa63b41fee.js.br",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "br",
-      "encoded_from": "public/whiteboard-runtime-e47c4c795307d776.js"
+      "encoded_from": "public/whiteboard-runtime-44f069aa63b41fee.js"
     },
     {
-      "path": "public/whiteboard-runtime-e47c4c795307d776.js.gz",
+      "path": "public/whiteboard-runtime-44f069aa63b41fee.js.gz",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "gzip",
-      "encoded_from": "public/whiteboard-runtime-e47c4c795307d776.js"
+      "encoded_from": "public/whiteboard-runtime-44f069aa63b41fee.js"
     },
     {
       "path": "styles/generated.css",
@@ -546,7 +546,7 @@
   "readiness": {
     "schema": "dx.www.readiness.deploy_contract",
     "schema_revision": 1,
-    "manifest_hash": "blake3:3a2149c1757e00dcaafb3af528d9093d5fb111b79e59d33c8209e2837418cee8",
+    "manifest_hash": "blake3:3b908fbdb74b3c64f1eb20e1c172a9454bdc4bc35eafb439418c169da7de7140",
     "target_score": 99,
     "current_honest_score": 99,
     "fastest_world_claim": false,
@@ -1405,9 +1405,9 @@
       "proof_graph"
     ],
     "output_hashes": {
-      "manifest_hash": "blake3:3a2149c1757e00dcaafb3af528d9093d5fb111b79e59d33c8209e2837418cee8",
-      "serializer_source_blake3": "4eb9eecdc1367b520b47c3251b2a5ddef5a13473682cda298936a8ac61e38c77",
-      "serializer_machine_blake3": "a8f8f5a2d16bb191d6aa65abf11113630348e0f4213dd93ac9488517d6e2bdbd"
+      "manifest_hash": "blake3:3b908fbdb74b3c64f1eb20e1c172a9454bdc4bc35eafb439418c169da7de7140",
+      "serializer_source_blake3": "2494180b4e150c80f631ae83d6b1b748d28aaf0b7659a395ff42a98a23c245e8",
+      "serializer_machine_blake3": "1865069498a9966efaf4e2904a0ad1c8759d9368bf01256a9a3149ee136c8035"
     },
     "receipt_freshness": "written-by-dx-build-not-release-proof",
     "stale_reasons": [
@@ -1640,7 +1640,7 @@
     "machine_path_within_root": true,
     "serializer_machine_generated": true,
     "release_ready": false,
-    "manifest_hash": "blake3:3a2149c1757e00dcaafb3af528d9093d5fb111b79e59d33c8209e2837418cee8"
+    "manifest_hash": "blake3:3b908fbdb74b3c64f1eb20e1c172a9454bdc4bc35eafb439418c169da7de7140"
   },
   "bundle_partition": {
     "schema": "dx.www.deploy.bundle_partition",
@@ -1803,7 +1803,7 @@
           "encoded_from": "icon.svg"
         },
         {
-          "path": "public/agent-cursor-7cbbde833ae1eff0.js",
+          "path": "public/agent-cursor-b383c71fb0eaf48f.js",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "application/javascript; charset=utf-8",
@@ -1811,23 +1811,23 @@
           "encoded_from": null
         },
         {
-          "path": "public/agent-cursor-7cbbde833ae1eff0.js.br",
+          "path": "public/agent-cursor-b383c71fb0eaf48f.js.br",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "application/javascript; charset=utf-8",
           "content_encoding": "br",
-          "encoded_from": "public/agent-cursor-7cbbde833ae1eff0.js"
+          "encoded_from": "public/agent-cursor-b383c71fb0eaf48f.js"
         },
         {
-          "path": "public/agent-cursor-7cbbde833ae1eff0.js.gz",
+          "path": "public/agent-cursor-b383c71fb0eaf48f.js.gz",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "application/javascript; charset=utf-8",
           "content_encoding": "gzip",
-          "encoded_from": "public/agent-cursor-7cbbde833ae1eff0.js"
+          "encoded_from": "public/agent-cursor-b383c71fb0eaf48f.js"
         },
         {
-          "path": "public/canvas-export-b2b11c06ceed2815.js",
+          "path": "public/canvas-export-85222fce691117f3.js",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "application/javascript; charset=utf-8",
@@ -1835,23 +1835,23 @@
           "encoded_from": null
         },
         {
-          "path": "public/canvas-export-b2b11c06ceed2815.js.br",
+          "path": "public/canvas-export-85222fce691117f3.js.br",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "application/javascript; charset=utf-8",
           "content_encoding": "br",
-          "encoded_from": "public/canvas-export-b2b11c06ceed2815.js"
+          "encoded_from": "public/canvas-export-85222fce691117f3.js"
         },
         {
-          "path": "public/canvas-export-b2b11c06ceed2815.js.gz",
+          "path": "public/canvas-export-85222fce691117f3.js.gz",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "application/javascript; charset=utf-8",
           "content_encoding": "gzip",
-          "encoded_from": "public/canvas-export-b2b11c06ceed2815.js"
+          "encoded_from": "public/canvas-export-85222fce691117f3.js"
         },
         {
-          "path": "public/favicon-b79469898e890b32.svg",
+          "path": "public/favicon-8ef8e37dd36b0f62.svg",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "image/svg+xml",
@@ -1859,20 +1859,20 @@
           "encoded_from": null
         },
         {
-          "path": "public/favicon-b79469898e890b32.svg.br",
+          "path": "public/favicon-8ef8e37dd36b0f62.svg.br",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "image/svg+xml",
           "content_encoding": "br",
-          "encoded_from": "public/favicon-b79469898e890b32.svg"
+          "encoded_from": "public/favicon-8ef8e37dd36b0f62.svg"
         },
         {
-          "path": "public/favicon-b79469898e890b32.svg.gz",
+          "path": "public/favicon-8ef8e37dd36b0f62.svg.gz",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "image/svg+xml",
           "content_encoding": "gzip",
-          "encoded_from": "public/favicon-b79469898e890b32.svg"
+          "encoded_from": "public/favicon-8ef8e37dd36b0f62.svg"
         },
         {
           "path": "public/icon-1f5e3f2581bd66f8.svg",
@@ -1899,7 +1899,7 @@
           "encoded_from": "public/icon-1f5e3f2581bd66f8.svg"
         },
         {
-          "path": "public/whiteboard-runtime-e47c4c795307d776.js",
+          "path": "public/whiteboard-runtime-44f069aa63b41fee.js",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "application/javascript; charset=utf-8",
@@ -1907,20 +1907,20 @@
           "encoded_from": null
         },
         {
-          "path": "public/whiteboard-runtime-e47c4c795307d776.js.br",
+          "path": "public/whiteboard-runtime-44f069aa63b41fee.js.br",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "application/javascript; charset=utf-8",
           "content_encoding": "br",
-          "encoded_from": "public/whiteboard-runtime-e47c4c795307d776.js"
+          "encoded_from": "public/whiteboard-runtime-44f069aa63b41fee.js"
         },
         {
-          "path": "public/whiteboard-runtime-e47c4c795307d776.js.gz",
+          "path": "public/whiteboard-runtime-44f069aa63b41fee.js.gz",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "application/javascript; charset=utf-8",
           "content_encoding": "gzip",
-          "encoded_from": "public/whiteboard-runtime-e47c4c795307d776.js"
+          "encoded_from": "public/whiteboard-runtime-44f069aa63b41fee.js"
         },
         {
           "path": "styles/generated.css",
@@ -2788,7 +2788,7 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/agent-cursor-7cbbde833ae1eff0.js",
+      "path": "public/agent-cursor-b383c71fb0eaf48f.js",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
@@ -2801,13 +2801,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/agent-cursor-7cbbde833ae1eff0.js.br",
+      "path": "public/agent-cursor-b383c71fb0eaf48f.js.br",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "br",
-      "encoded_from": "public/agent-cursor-7cbbde833ae1eff0.js",
+      "encoded_from": "public/agent-cursor-b383c71fb0eaf48f.js",
       "cdn_headers": {
         "Content-Encoding": "br",
         "Vary": "Accept-Encoding",
@@ -2818,13 +2818,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/agent-cursor-7cbbde833ae1eff0.js.gz",
+      "path": "public/agent-cursor-b383c71fb0eaf48f.js.gz",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "gzip",
-      "encoded_from": "public/agent-cursor-7cbbde833ae1eff0.js",
+      "encoded_from": "public/agent-cursor-b383c71fb0eaf48f.js",
       "cdn_headers": {
         "Content-Encoding": "gzip",
         "Vary": "Accept-Encoding",
@@ -2835,7 +2835,7 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/canvas-export-b2b11c06ceed2815.js",
+      "path": "public/canvas-export-85222fce691117f3.js",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
@@ -2848,13 +2848,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/canvas-export-b2b11c06ceed2815.js.br",
+      "path": "public/canvas-export-85222fce691117f3.js.br",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "br",
-      "encoded_from": "public/canvas-export-b2b11c06ceed2815.js",
+      "encoded_from": "public/canvas-export-85222fce691117f3.js",
       "cdn_headers": {
         "Content-Encoding": "br",
         "Vary": "Accept-Encoding",
@@ -2865,13 +2865,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/canvas-export-b2b11c06ceed2815.js.gz",
+      "path": "public/canvas-export-85222fce691117f3.js.gz",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "gzip",
-      "encoded_from": "public/canvas-export-b2b11c06ceed2815.js",
+      "encoded_from": "public/canvas-export-85222fce691117f3.js",
       "cdn_headers": {
         "Content-Encoding": "gzip",
         "Vary": "Accept-Encoding",
@@ -2882,7 +2882,7 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/favicon-b79469898e890b32.svg",
+      "path": "public/favicon-8ef8e37dd36b0f62.svg",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
@@ -2895,13 +2895,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/favicon-b79469898e890b32.svg.br",
+      "path": "public/favicon-8ef8e37dd36b0f62.svg.br",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "br",
-      "encoded_from": "public/favicon-b79469898e890b32.svg",
+      "encoded_from": "public/favicon-8ef8e37dd36b0f62.svg",
       "cdn_headers": {
         "Content-Encoding": "br",
         "Vary": "Accept-Encoding",
@@ -2912,13 +2912,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/favicon-b79469898e890b32.svg.gz",
+      "path": "public/favicon-8ef8e37dd36b0f62.svg.gz",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "gzip",
-      "encoded_from": "public/favicon-b79469898e890b32.svg",
+      "encoded_from": "public/favicon-8ef8e37dd36b0f62.svg",
       "cdn_headers": {
         "Content-Encoding": "gzip",
         "Vary": "Accept-Encoding",
@@ -2976,7 +2976,7 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/whiteboard-runtime-e47c4c795307d776.js",
+      "path": "public/whiteboard-runtime-44f069aa63b41fee.js",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
@@ -2989,13 +2989,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/whiteboard-runtime-e47c4c795307d776.js.br",
+      "path": "public/whiteboard-runtime-44f069aa63b41fee.js.br",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "br",
-      "encoded_from": "public/whiteboard-runtime-e47c4c795307d776.js",
+      "encoded_from": "public/whiteboard-runtime-44f069aa63b41fee.js",
       "cdn_headers": {
         "Content-Encoding": "br",
         "Vary": "Accept-Encoding",
@@ -3006,13 +3006,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/whiteboard-runtime-e47c4c795307d776.js.gz",
+      "path": "public/whiteboard-runtime-44f069aa63b41fee.js.gz",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "gzip",
-      "encoded_from": "public/whiteboard-runtime-e47c4c795307d776.js",
+      "encoded_from": "public/whiteboard-runtime-44f069aa63b41fee.js",
       "cdn_headers": {
         "Content-Encoding": "gzip",
         "Vary": "Accept-Encoding",

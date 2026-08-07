@@ -932,7 +932,7 @@ export const dxAutoImportMap = {
       "importPath": "@/styles/theme.css"
     }
   ],
-  "sourceHash": "blake3:9934975391230548b51ab63f21f19b9d91cc46b451bd28b442457ad5039acb8f"
+  "sourceHash": "blake3:0bca694f181ee0b377eeaa0691c51359f5373903d491ab9c608081001eaab6f4"
 } as const;
 
 export type DxAutoImportComponent = typeof dxAutoImportMap.components[number]["name"];

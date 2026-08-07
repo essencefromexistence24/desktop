@@ -2,7 +2,7 @@
   "schema": "dx.build.readiness",
   "schema_revision": 1,
   "status": "source-ready-runtime-governed",
-  "project_root": "G:/Dx/code/web/Shader",
+  "project_root": "G:/Dx/desktop/web/Shader",
   "source_ready": true,
   "source_score": 100,
   "product_ready": false,

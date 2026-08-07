@@ -2,8 +2,8 @@
   "tool": "dx imports",
   "version": 2,
   "generated_by": "dx imports sync",
-  "project": "G:/Dx/code/web/Whiteboard",
-  "source_hash": "blake3:9934975391230548b51ab63f21f19b9d91cc46b451bd28b442457ad5039acb8f",
+  "project": "G:/Dx/desktop/web/Whiteboard",
+  "source_hash": "blake3:0bca694f181ee0b377eeaa0691c51359f5373903d491ab9c608081001eaab6f4",
   "policy": "generated-import-maps-no-runtime-magic",
   "used_only": true,
   "scan_roots": [
@@ -19,8 +19,8 @@
     "styles"
   ],
   "aliases": [
-    "#components",
-    "#imports"
+    "#imports",
+    "#components"
   ],
   "files": {
     "barrel": "components/auto-imports.ts",

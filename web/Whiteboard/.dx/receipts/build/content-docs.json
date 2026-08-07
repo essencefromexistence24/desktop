@@ -1,8 +1,8 @@
 {
   "schema": "dx.www.contentDocsReceipt",
   "schema_revision": 1,
-  "generatedAt": "2026-06-26T14:29:07.142057400+00:00",
-  "projectRoot": "G:/Dx/code/web/Whiteboard",
+  "generatedAt": "2026-08-07T06:01:33.884856600+00:00",
+  "projectRoot": "G:/Dx/desktop/web/Whiteboard",
   "receiptPath": ".dx/receipts/build/content-docs.json",
   "summary": {
     "document_count": 0,

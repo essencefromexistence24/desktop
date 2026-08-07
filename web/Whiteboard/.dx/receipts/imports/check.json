@@ -1,11 +1,11 @@
 {
   "tool": "dx imports check",
   "version": 2,
-  "generated_at": "2026-06-26T14:29:05.418944+00:00",
-  "project": "G:/Dx/code/web/Whiteboard",
+  "generated_at": "2026-08-07T06:01:33.030589900+00:00",
+  "project": "G:/Dx/desktop/web/Whiteboard",
   "passed": true,
   "wrote_files": false,
-  "source_hash": "blake3:9934975391230548b51ab63f21f19b9d91cc46b451bd28b442457ad5039acb8f",
+  "source_hash": "blake3:0bca694f181ee0b377eeaa0691c51359f5373903d491ab9c608081001eaab6f4",
   "entry_count": 51,
   "public_barrel_entry_count": 25,
   "used_symbol_count": 28,
@@ -25,8 +25,8 @@
     "styles"
   ],
   "aliases": [
-    "#components",
-    "#imports"
+    "#imports",
+    "#components"
   ],
   "used_only": true,
   "files": {

@@ -2,7 +2,7 @@
   "schema": "dx.build.zedHandoff",
   "schema_revision": 1,
   "status": "source-route-shell-and-module-graph-ready",
-  "project_root": "G:/Dx/code/web/Shader",
+  "project_root": "G:/Dx/desktop/web/Shader",
   "source_build_manifest": ".dx/www/output/source-build-manifest.json",
   "source_build_receipt": ".dx/www/output/.dx/build-cache/source-build-receipt.json",
   "canonical_build_receipt": ".dx/receipts/build/latest.json",

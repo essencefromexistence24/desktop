@@ -6,7 +6,7 @@
   "account_bound": false,
   "network_required": false,
   "secrets_required": false,
-  "deployment_id": "dxlocal-7c568648487021d2",
+  "deployment_id": "dxlocal-3271412f6b406cd2",
   "deploy_adapter_path": ".dx/build-cache/deploy-adapter.json",
   "no_node_modules_required": true,
   "runtime": {
@@ -17,7 +17,7 @@
   },
   "build_manifest": {
     "path": ".dx/build-cache/manifest.json",
-    "hash": "blake3:7c568648487021d2b4cb3cb7fb7f53eea0b323ed4b6b9ee72a637697b95b5531",
+    "hash": "blake3:3271412f6b406cd2865bd5b8f230d4ab31d2e364df5288a6a9da24b57509dc84",
     "signed": false,
     "signature_required_for_release": true,
     "signature_policy": "sign manifest before hosted promotion"
@@ -530,46 +530,46 @@
       "encoded_from": "logo.svg"
     },
     {
-      "path": "public/agent-cursor-7cbbde833ae1eff0.js",
+      "path": "public/agent-cursor-b383c71fb0eaf48f.js",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": null,
       "encoded_from": null
     },
     {
-      "path": "public/agent-cursor-7cbbde833ae1eff0.js.br",
+      "path": "public/agent-cursor-b383c71fb0eaf48f.js.br",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "br",
-      "encoded_from": "public/agent-cursor-7cbbde833ae1eff0.js"
+      "encoded_from": "public/agent-cursor-b383c71fb0eaf48f.js"
     },
     {
-      "path": "public/agent-cursor-7cbbde833ae1eff0.js.gz",
+      "path": "public/agent-cursor-b383c71fb0eaf48f.js.gz",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "gzip",
-      "encoded_from": "public/agent-cursor-7cbbde833ae1eff0.js"
+      "encoded_from": "public/agent-cursor-b383c71fb0eaf48f.js"
     },
     {
-      "path": "public/canvas-export-b2b11c06ceed2815.js",
+      "path": "public/canvas-export-85222fce691117f3.js",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": null,
       "encoded_from": null
     },
     {
-      "path": "public/canvas-export-b2b11c06ceed2815.js.br",
+      "path": "public/canvas-export-85222fce691117f3.js.br",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "br",
-      "encoded_from": "public/canvas-export-b2b11c06ceed2815.js"
+      "encoded_from": "public/canvas-export-85222fce691117f3.js"
     },
     {
-      "path": "public/canvas-export-b2b11c06ceed2815.js.gz",
+      "path": "public/canvas-export-85222fce691117f3.js.gz",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "gzip",
-      "encoded_from": "public/canvas-export-b2b11c06ceed2815.js"
+      "encoded_from": "public/canvas-export-85222fce691117f3.js"
     },
     {
       "path": "public/dx-shader/assets/apple-touch-icon-5b757a6d04d4be18.png",
@@ -901,25 +901,25 @@
       "encoded_from": "public/dx-shader/styles-7e4d75e5137b2964.css"
     },
     {
-      "path": "public/favicon-41e6192dfae92ec1.svg",
+      "path": "public/favicon-4ef4b7a78017f8f9.svg",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": null,
       "encoded_from": null
     },
     {
-      "path": "public/favicon-41e6192dfae92ec1.svg.br",
+      "path": "public/favicon-4ef4b7a78017f8f9.svg.br",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "br",
-      "encoded_from": "public/favicon-41e6192dfae92ec1.svg"
+      "encoded_from": "public/favicon-4ef4b7a78017f8f9.svg"
     },
     {
-      "path": "public/favicon-41e6192dfae92ec1.svg.gz",
+      "path": "public/favicon-4ef4b7a78017f8f9.svg.gz",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "gzip",
-      "encoded_from": "public/favicon-41e6192dfae92ec1.svg"
+      "encoded_from": "public/favicon-4ef4b7a78017f8f9.svg"
     },
     {
       "path": "public/icon-c592869c9c233ec1.svg",
@@ -1295,7 +1295,7 @@
   "readiness": {
     "schema": "dx.www.readiness.deploy_contract",
     "schema_revision": 1,
-    "manifest_hash": "blake3:7c568648487021d2b4cb3cb7fb7f53eea0b323ed4b6b9ee72a637697b95b5531",
+    "manifest_hash": "blake3:3271412f6b406cd2865bd5b8f230d4ab31d2e364df5288a6a9da24b57509dc84",
     "target_score": 99,
     "current_honest_score": 99,
     "fastest_world_claim": false,
@@ -2154,9 +2154,9 @@
       "proof_graph"
     ],
     "output_hashes": {
-      "manifest_hash": "blake3:7c568648487021d2b4cb3cb7fb7f53eea0b323ed4b6b9ee72a637697b95b5531",
-      "serializer_source_blake3": "5d6d568116b988784a25814ba98795b2aeb2046324e0c6f9342d320af003b85a",
-      "serializer_machine_blake3": "5a8f4f60ba2c77dea8e5b8e34f02275400c7735e9f1e48914ff093574b43e2cd"
+      "manifest_hash": "blake3:3271412f6b406cd2865bd5b8f230d4ab31d2e364df5288a6a9da24b57509dc84",
+      "serializer_source_blake3": "94adfc605438d89bc35df18b38c2eb29e080c23e72b6a1e2712442576871fa37",
+      "serializer_machine_blake3": "92f9ccc2cb263718de20a5fdeca84bcfdfbb0141e568fd0a0586378ddf80d4b6"
     },
     "receipt_freshness": "written-by-dx-build-not-release-proof",
     "stale_reasons": [
@@ -2389,7 +2389,7 @@
     "machine_path_within_root": true,
     "serializer_machine_generated": true,
     "release_ready": false,
-    "manifest_hash": "blake3:7c568648487021d2b4cb3cb7fb7f53eea0b323ed4b6b9ee72a637697b95b5531"
+    "manifest_hash": "blake3:3271412f6b406cd2865bd5b8f230d4ab31d2e364df5288a6a9da24b57509dc84"
   },
   "bundle_partition": {
     "schema": "dx.www.deploy.bundle_partition",
@@ -2928,7 +2928,7 @@
           "encoded_from": "logo.svg"
         },
         {
-          "path": "public/agent-cursor-7cbbde833ae1eff0.js",
+          "path": "public/agent-cursor-b383c71fb0eaf48f.js",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "application/javascript; charset=utf-8",
@@ -2936,23 +2936,23 @@
           "encoded_from": null
         },
         {
-          "path": "public/agent-cursor-7cbbde833ae1eff0.js.br",
+          "path": "public/agent-cursor-b383c71fb0eaf48f.js.br",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "application/javascript; charset=utf-8",
           "content_encoding": "br",
-          "encoded_from": "public/agent-cursor-7cbbde833ae1eff0.js"
+          "encoded_from": "public/agent-cursor-b383c71fb0eaf48f.js"
         },
         {
-          "path": "public/agent-cursor-7cbbde833ae1eff0.js.gz",
+          "path": "public/agent-cursor-b383c71fb0eaf48f.js.gz",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "application/javascript; charset=utf-8",
           "content_encoding": "gzip",
-          "encoded_from": "public/agent-cursor-7cbbde833ae1eff0.js"
+          "encoded_from": "public/agent-cursor-b383c71fb0eaf48f.js"
         },
         {
-          "path": "public/canvas-export-b2b11c06ceed2815.js",
+          "path": "public/canvas-export-85222fce691117f3.js",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "application/javascript; charset=utf-8",
@@ -2960,20 +2960,20 @@
           "encoded_from": null
         },
         {
-          "path": "public/canvas-export-b2b11c06ceed2815.js.br",
+          "path": "public/canvas-export-85222fce691117f3.js.br",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "application/javascript; charset=utf-8",
           "content_encoding": "br",
-          "encoded_from": "public/canvas-export-b2b11c06ceed2815.js"
+          "encoded_from": "public/canvas-export-85222fce691117f3.js"
         },
         {
-          "path": "public/canvas-export-b2b11c06ceed2815.js.gz",
+          "path": "public/canvas-export-85222fce691117f3.js.gz",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "application/javascript; charset=utf-8",
           "content_encoding": "gzip",
-          "encoded_from": "public/canvas-export-b2b11c06ceed2815.js"
+          "encoded_from": "public/canvas-export-85222fce691117f3.js"
         },
         {
           "path": "public/dx-shader/assets/apple-touch-icon-5b757a6d04d4be18.png",
@@ -3352,7 +3352,7 @@
           "encoded_from": "public/dx-shader/styles-7e4d75e5137b2964.css"
         },
         {
-          "path": "public/favicon-41e6192dfae92ec1.svg",
+          "path": "public/favicon-4ef4b7a78017f8f9.svg",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "image/svg+xml",
@@ -3360,20 +3360,20 @@
           "encoded_from": null
         },
         {
-          "path": "public/favicon-41e6192dfae92ec1.svg.br",
+          "path": "public/favicon-4ef4b7a78017f8f9.svg.br",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "image/svg+xml",
           "content_encoding": "br",
-          "encoded_from": "public/favicon-41e6192dfae92ec1.svg"
+          "encoded_from": "public/favicon-4ef4b7a78017f8f9.svg"
         },
         {
-          "path": "public/favicon-41e6192dfae92ec1.svg.gz",
+          "path": "public/favicon-4ef4b7a78017f8f9.svg.gz",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "image/svg+xml",
           "content_encoding": "gzip",
-          "encoded_from": "public/favicon-41e6192dfae92ec1.svg"
+          "encoded_from": "public/favicon-4ef4b7a78017f8f9.svg"
         },
         {
           "path": "public/icon-c592869c9c233ec1.svg",
@@ -5168,7 +5168,7 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/agent-cursor-7cbbde833ae1eff0.js",
+      "path": "public/agent-cursor-b383c71fb0eaf48f.js",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
@@ -5181,13 +5181,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/agent-cursor-7cbbde833ae1eff0.js.br",
+      "path": "public/agent-cursor-b383c71fb0eaf48f.js.br",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "br",
-      "encoded_from": "public/agent-cursor-7cbbde833ae1eff0.js",
+      "encoded_from": "public/agent-cursor-b383c71fb0eaf48f.js",
       "cdn_headers": {
         "Content-Encoding": "br",
         "Vary": "Accept-Encoding",
@@ -5198,13 +5198,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/agent-cursor-7cbbde833ae1eff0.js.gz",
+      "path": "public/agent-cursor-b383c71fb0eaf48f.js.gz",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "gzip",
-      "encoded_from": "public/agent-cursor-7cbbde833ae1eff0.js",
+      "encoded_from": "public/agent-cursor-b383c71fb0eaf48f.js",
       "cdn_headers": {
         "Content-Encoding": "gzip",
         "Vary": "Accept-Encoding",
@@ -5215,7 +5215,7 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/canvas-export-b2b11c06ceed2815.js",
+      "path": "public/canvas-export-85222fce691117f3.js",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
@@ -5228,13 +5228,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/canvas-export-b2b11c06ceed2815.js.br",
+      "path": "public/canvas-export-85222fce691117f3.js.br",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "br",
-      "encoded_from": "public/canvas-export-b2b11c06ceed2815.js",
+      "encoded_from": "public/canvas-export-85222fce691117f3.js",
       "cdn_headers": {
         "Content-Encoding": "br",
         "Vary": "Accept-Encoding",
@@ -5245,13 +5245,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/canvas-export-b2b11c06ceed2815.js.gz",
+      "path": "public/canvas-export-85222fce691117f3.js.gz",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "gzip",
-      "encoded_from": "public/canvas-export-b2b11c06ceed2815.js",
+      "encoded_from": "public/canvas-export-85222fce691117f3.js",
       "cdn_headers": {
         "Content-Encoding": "gzip",
         "Vary": "Accept-Encoding",
@@ -5985,7 +5985,7 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/favicon-41e6192dfae92ec1.svg",
+      "path": "public/favicon-4ef4b7a78017f8f9.svg",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
@@ -5998,13 +5998,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/favicon-41e6192dfae92ec1.svg.br",
+      "path": "public/favicon-4ef4b7a78017f8f9.svg.br",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "br",
-      "encoded_from": "public/favicon-41e6192dfae92ec1.svg",
+      "encoded_from": "public/favicon-4ef4b7a78017f8f9.svg",
       "cdn_headers": {
         "Content-Encoding": "br",
         "Vary": "Accept-Encoding",
@@ -6015,13 +6015,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/favicon-41e6192dfae92ec1.svg.gz",
+      "path": "public/favicon-4ef4b7a78017f8f9.svg.gz",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "gzip",
-      "encoded_from": "public/favicon-41e6192dfae92ec1.svg",
+      "encoded_from": "public/favicon-4ef4b7a78017f8f9.svg",
       "cdn_headers": {
         "Content-Encoding": "gzip",
         "Vary": "Accept-Encoding",

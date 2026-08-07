@@ -1,8 +1,8 @@
 {
   "schema": "dx.www.imageMetadataReceipt",
   "schema_revision": 1,
-  "generatedAt": "2026-06-26T14:29:07.140768200+00:00",
-  "projectRoot": "G:/Dx/code/web/Whiteboard",
+  "generatedAt": "2026-08-07T06:01:33.883905300+00:00",
+  "projectRoot": "G:/Dx/desktop/web/Whiteboard",
   "receiptPath": ".dx/receipts/build/image-metadata.json",
   "summary": {
     "image_assets": 2,
@@ -38,9 +38,9 @@
   "assets": [
     {
       "path": "public/favicon.svg",
-      "output": ".dx/www/output/public/favicon-b79469898e890b32.svg",
-      "hash": "b79469898e890b32",
-      "bytes": 1160,
+      "output": ".dx/www/output/public/favicon-8ef8e37dd36b0f62.svg",
+      "hash": "8ef8e37dd36b0f62",
+      "bytes": 1188,
       "image_metadata": {
         "format": "svg",
         "mime_type": "image/svg+xml",

@@ -1,0 +1,12 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <title>DX root light transparent logo dx-ecosystem-logos</title>
+  <desc>DX root light monochrome symbol with transparent background.</desc>
+  <metadata><![CDATA[{"kind":"light-transparent","tool":"dx","label":"DX","letter":"D","asset_family":"dx-ecosystem-logos","brand":"DX pure symbol logo family: transparent smooth rainbow marks plus monochrome background and transparent light/dark variants"}]]></metadata>
+  <defs>
+    <path id="dx-root-d-shape" d="M248 128H514C723.316 128 888 296.517 888 512C888 727.483 723.316 896 514 896H248V128Z"/>
+    <path id="dx-root-x-shape" d="M344 312L744 712M744 312L344 712"/>
+  </defs>
+
+  <use href="#dx-root-d-shape" fill="#000000"/>
+  <use href="#dx-root-x-shape" stroke="#000000" stroke-width="118" stroke-linecap="butt" stroke-linejoin="miter"/>
+</svg>

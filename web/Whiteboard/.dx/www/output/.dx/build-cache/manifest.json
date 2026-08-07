@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "generated": "2026-06-26T14:29:07.154815700+00:00",
+  "generated": "2026-08-07T06:01:33.902432100+00:00",
   "files_compiled": 1,
   "app_routes_compiled": 1,
   "tsx_app_router_entrypoint": true,
@@ -84,7 +84,7 @@
   "server_contracts_compiled": 0,
   "route_handler_receipts_compiled": 0,
   "server_action_protocols_compiled": 0,
-  "import_resolutions_compiled": 137,
+  "import_resolutions_compiled": 136,
   "next_adapter_fixtures_emitted": false,
   "next_migration_proof_emitted": false,
   "next_familiar_compatibility_evidence_emitted": false,
