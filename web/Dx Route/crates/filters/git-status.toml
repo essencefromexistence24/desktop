@@ -1,0 +1,18 @@
+[filter]
+command = "git status"
+description = "Collapse status boilerplate, keep file changes"
+
+[[drop]]
+pattern = "^#\\s+"
+
+[[drop]]
+pattern = "^On branch"
+
+[[drop]]
+pattern = "^Your branch is"
+
+[[drop]]
+pattern = "^nothing to commit"
+
+[preserve]
+error_patterns = ["modified:", "new file:", "deleted:", "renamed:", "^\\?", "^!!"]

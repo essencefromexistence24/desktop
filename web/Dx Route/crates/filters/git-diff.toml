@@ -1,0 +1,18 @@
+[filter]
+command = "git diff"
+description = "Drop diff metadata, preserve hunk headers and content"
+
+[[drop]]
+pattern = "^index [0-9a-f]+\\.\\.[0-9a-f]+.*$"
+
+[[drop]]
+pattern = "^--- a/"
+
+[[drop]]
+pattern = "^\\+\\+\\+ b/"
+
+[preserve]
+error_patterns = ["^diff --git ", "^@@ ", "^[+-](?![+-]{2})"]
+
+[collapse]
+pattern = "^\\s*$"

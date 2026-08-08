@@ -1,0 +1,18 @@
+[filter]
+command = "tsc"
+description = "Drop at-lines and timestamps from tsc output, keep errors"
+
+[[drop]]
+pattern = "^\\s+at "
+
+[[drop]]
+pattern = "^\\[\\d+:\\d+:\\d+\\]"
+
+[preserve]
+error_patterns = [
+  "^src/.*\\.ts\\(\\d+,\\d+\\)",
+  "error TS",
+  "warning TS",
+  "Found \\d+ error",
+  "TypeScript compilation failed"
+]

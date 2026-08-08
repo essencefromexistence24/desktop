@@ -1,0 +1,11 @@
+edition = "2024"
+max_width = 100
+tab_spaces = 2
+newline_style = "Auto"
+fn_single_line = true
+imports_granularity = "Crate"
+reorder_imports = true
+reorder_modules = true
+trailing_semicolon = true
+use_field_init_shorthand = true
+use_try_shorthand = false

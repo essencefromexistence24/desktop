@@ -1,0 +1,17 @@
+name: Deploy Native
+on:
+  push:
+    tags: ["v*"]
+jobs:
+  matrix:
+    strategy:
+      matrix:
+        target: [android, ios, desktop]
+    runs-on: ${{ matrix.target == 'ios' && 'macos-latest' || 'ubuntu-latest' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - uses: Swatinem/rust-cache@v2
+      - run: bun install
+      - run: bun run build --filter=@dx/native
+      - run: bun run tauri build --target ${{ matrix.target }}

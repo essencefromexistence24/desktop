@@ -1,0 +1,27 @@
+[filter]
+command = "npm install"
+description = "Drop progress lines, preserve warnings and errors"
+
+[[drop]]
+pattern = "^\\s+node_modules/"
+
+[[drop]]
+pattern = "^\\s+\\[\\s*[=# ]+\\]"
+
+[[drop]]
+pattern = "^npm (notice|warn).*prefer"
+
+[[drop]]
+pattern = "^added \\d+ package"
+
+[[drop]]
+pattern = "^\\d+ packages? are? looking"
+
+[[drop]]
+pattern = "^npm http fetch"
+
+[[drop]]
+pattern = "^\\s+\\d+/\\d+"
+
+[preserve]
+error_patterns = ["^ERR!", "^npm ERR!", "error", "failed"]

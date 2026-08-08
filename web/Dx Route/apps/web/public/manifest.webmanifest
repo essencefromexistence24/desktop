@@ -1,0 +1,8 @@
+{
+  "name": "DX Platform",
+  "short_name": "DX",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000"
+}

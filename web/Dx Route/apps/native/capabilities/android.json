@@ -1,0 +1,6 @@
+{
+  "identifier": "android-capability",
+  "windows": ["main"],
+  "platforms": ["android"],
+  "permissions": ["core:default", "shell:allow-open"]
+}

@@ -1,0 +1,30 @@
+[filter]
+command = "cargo test"
+description = "Collapse test run output, keep failures and summary"
+
+[[drop]]
+pattern = "^  (?:✓|✗|·|pass|FAIL)\\s"
+
+[[drop]]
+pattern = "^\\s+at "
+
+[[drop]]
+pattern = "^test .* \\.\\.\\. ok$"
+
+[[drop]]
+pattern = "^running \\d+ test"
+
+[[drop]]
+pattern = "^test result: ok"
+
+[preserve]
+error_patterns = [
+  "^test .* FAILED",
+  "panicked",
+  "thread '",
+  "stack backtrace",
+  "error\\[",
+  "assertion failed",
+  "expected",
+  "received"
+]

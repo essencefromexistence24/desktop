@@ -1,0 +1,21 @@
+[filter]
+command = "docker build"
+description = "Drop intermediate build steps, keep errors"
+
+[[drop]]
+pattern = "^Step \\d+/\\d+ :"
+
+[[drop]]
+pattern = "^ ---> [0-9a-f]+"
+
+[[drop]]
+pattern = "^ ---> Using cache"
+
+[[drop]]
+pattern = "^Successfully built"
+
+[[drop]]
+pattern = "^Successfully tagged"
+
+[preserve]
+error_patterns = ["^ERROR", "failed", "error during", "returned a non-zero code"]
