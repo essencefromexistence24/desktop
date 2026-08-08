@@ -1319,7 +1319,7 @@ const ThreadWelcome: FC<{
     setWelcome(buildWelcome(new Date().getHours(), name));
   }, [displayName, nickname]);
 
-  const currentEmojiSrc = `dx-icon.svg`;
+  const currentEmojiSrc = `favicon.svg`;
 
   return (
     <div className="aui-thread-welcome-root mx-auto my-auto flex w-full max-w-(--thread-max-width) grow flex-col">
@@ -1328,7 +1328,7 @@ const ThreadWelcome: FC<{
           {/* Center the greeting (dx icon + title) over the composer. */}
           <div className="flex flex-row items-center justify-center gap-[15px]">
             <img
-              src="/dx-icon.svg"
+              src="/favicon.svg"
               alt="Train"
               className="size-[44px] -translate-y-[2px] rounded-full"
             />

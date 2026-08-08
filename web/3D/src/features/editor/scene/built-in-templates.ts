@@ -116,7 +116,7 @@ function createProductPodium() {
   setMaterial(hero, { color: "#b38cff", metalness: 0.16, roughness: 0.24 });
 
   const label = attach(createSceneObject("text", "Product Label"), group.id);
-  label.text = { content: "Essence", fontSize: 0.24, maxWidth: 2.4 };
+  label.text = { content: "3D", fontSize: 0.24, maxWidth: 2.4 };
   setTransform(label, [0, 0.86, 1.17], [1, 1, 1], [-0.18, 0, 0]);
   setMaterial(label, { color: "#f8fafc", roughness: 0.2 });
 

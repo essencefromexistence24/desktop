@@ -409,7 +409,7 @@ export function TopBar({ cloudEnabled = true }: TopBarProps) {
       const installed = await installDesktopUpdate();
 
       if (!installed) {
-        toast.success("Essence Spline is up to date");
+        toast.success("3D is up to date");
       }
     } catch (error) {
       toast.error(

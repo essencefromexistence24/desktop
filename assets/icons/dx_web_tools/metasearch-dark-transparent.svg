@@ -1,0 +1,13 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <title>DX Metasearch dark transparent logo dx-ecosystem-logos</title>
+  <desc>dark monochrome geometric symbol with transparent background for DX Metasearch.</desc>
+  <metadata><![CDATA[{"kind":"dark-transparent","tool":"metasearch","label":"DX Metasearch","letter":"M","primary_repo":"millercarla211-ctrl/dx-metasearch","legacy_repo":"manfromexistence/dx-metasearch","collection":"dx-tools","asset_family":"dx-ecosystem-logos","brand":"DX pure symbol logo family: transparent smooth rainbow marks plus monochrome background and transparent light/dark variants"}]]></metadata>
+  <g color="#FFFFFF">
+    <g color="currentColor" fill="none" stroke="currentColor" stroke-width="120" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M238 812V190L512 594L786 190V812"/>
+      <circle cx="454" cy="454" r="186"/>
+        <path d="M596 596L758 758" stroke-width="74"/>
+        <circle cx="454" cy="454" r="60" fill="currentColor"/>
+    </g>
+  </g>
+</svg>

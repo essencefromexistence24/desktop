@@ -1,0 +1,1 @@
+import{a as e,c as t,i as n,l as r,n as i,o as a,r as o,s,t as c,u as l}from"./plugin-host-hooks-D1dcam7a.js";i();export{c as CANVAS_OVERLAY_LAYER_ATTRIBUTE,l as PluginContext,o as useCanvasNodeRect,n as useCanvasViewport,e as useEditorCommand,a as useEditorStore,s as usePluginContext,t as usePluginRoutes,r as usePluginSettings};

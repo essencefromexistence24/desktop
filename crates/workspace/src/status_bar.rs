@@ -3,8 +3,8 @@ use crate::{
     sidebar_side_context_menu,
 };
 use gpui::{
-    Anchor, AnyView, App, Context, Decorations, Entity, IntoElement, ParentElement,
-    Render, SharedString, Styled, Subscription, WeakEntity, Window,
+    Anchor, AnyView, App, Context, Decorations, Entity, IntoElement, ParentElement, Render,
+    SharedString, Styled, Subscription, WeakEntity, Window,
 };
 use settings::{SettingsContent, update_settings_file};
 use std::{any::TypeId, sync::Arc};
@@ -159,7 +159,12 @@ impl StatusBar {
             ("presentations", "Presentations"),
             ("spreadsheets", "Spreadsheets"),
             ("video", "Video"),
-            ("music", "Music"),
+            ("cms", "CMS"),
+            ("graph", "Graph"),
+            ("media", "Media"),
+            ("train", "Train"),
+            ("metasearch", "Metasearch"),
+            ("route", "Route"),
             ("3d", "3D"),
             ("shader", "Shader"),
         ];

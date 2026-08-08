@@ -40,8 +40,8 @@ const verticalAlignments = new Set<NonNullable<CellStyle["verticalAlign"]>>([
 
 export const workbookThemePresets = [
   {
-    id: "essence",
-    name: "Essence",
+    id: "Spreadsheets",
+    name: "Spreadsheets",
     colors: {
       accent1: "#2563eb",
       accent2: "#16a34a",

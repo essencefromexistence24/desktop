@@ -762,16 +762,46 @@ const DX_WEB_TOOL_LOGOS: &[DxWebToolLogo] = &[
         dark_path: "icons/dx_web_tools/video-dark-transparent.svg",
     },
     DxWebToolLogo {
-        id: "music",
-        label: "Music",
-        light_path: "icons/dx_web_tools/music-light-transparent.svg",
-        dark_path: "icons/dx_web_tools/music-dark-transparent.svg",
-    },
-    DxWebToolLogo {
         id: "whiteboard",
         label: "Whiteboard",
         light_path: "icons/dx_web_tools/whiteboard-light-transparent.svg",
         dark_path: "icons/dx_web_tools/whiteboard-dark-transparent.svg",
+    },
+    DxWebToolLogo {
+        id: "cms",
+        label: "CMS",
+        light_path: "icons/dx_web_tools/cms-light-transparent.svg",
+        dark_path: "icons/dx_web_tools/cms-dark-transparent.svg",
+    },
+    DxWebToolLogo {
+        id: "graph",
+        label: "Graph",
+        light_path: "icons/dx_web_tools/graph-light-transparent.svg",
+        dark_path: "icons/dx_web_tools/graph-dark-transparent.svg",
+    },
+    DxWebToolLogo {
+        id: "media",
+        label: "Media",
+        light_path: "icons/dx_web_tools/media-light-transparent.svg",
+        dark_path: "icons/dx_web_tools/media-dark-transparent.svg",
+    },
+    DxWebToolLogo {
+        id: "train",
+        label: "Train",
+        light_path: "icons/dx_web_tools/train-light-transparent.svg",
+        dark_path: "icons/dx_web_tools/train-dark-transparent.svg",
+    },
+    DxWebToolLogo {
+        id: "metasearch",
+        label: "Metasearch",
+        light_path: "icons/dx_web_tools/metasearch-light-transparent.svg",
+        dark_path: "icons/dx_web_tools/metasearch-dark-transparent.svg",
+    },
+    DxWebToolLogo {
+        id: "route",
+        label: "Route",
+        light_path: "icons/dx_web_tools/route-light-transparent.svg",
+        dark_path: "icons/dx_web_tools/route-dark-transparent.svg",
     },
     DxWebToolLogo {
         id: "3d",
@@ -6296,10 +6326,11 @@ impl ThreadView {
             strip = strip.child(div().w_px().h_3().bg(cx.theme().colors().border));
         }
 
-        // TODO(dx-threadview): Commented out the 9-icon strip rendering. The 9 DX web tool
-        // icons (Design/3D/Video/Music/Presentations/Spreadsheets/Graphics/Whiteboard/Shader)
-        // now live in the sidebar bottom 12-cell grid and only the DX Web entry remains in
-        // DX_WEB_TOOL_LOGOS, so this strip is a no-op pass-through for the single DX Web entry.
+        // TODO(dx-threadview): Commented out the 13-icon strip rendering. The 13 DX web tool
+        // icons (Whiteboard/Design/Graphics/Presentations/Spreadsheets/Video/CMS/Graph/Media/
+        // Train/Metasearch/3D/Shader) now live in the sidebar bottom 16-cell grid and only the
+        // DX Web entry remains in DX_WEB_TOOL_LOGOS, so this strip is a no-op pass-through for
+        // the single DX Web entry.
         strip.children(
             DX_WEB_TOOL_LOGOS
                 .iter()

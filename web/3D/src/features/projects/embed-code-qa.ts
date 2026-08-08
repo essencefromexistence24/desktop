@@ -52,7 +52,7 @@ interface EmbedCodeQaCase {
 }
 
 const sampleShareId = "qa-scene";
-const sampleSceneName = "Essence Spline QA Scene";
+const sampleSceneName = "3D QA Scene";
 
 function compactPreview(code: string) {
   return code.replace(/\s+/g, " ").trim().slice(0, 180);

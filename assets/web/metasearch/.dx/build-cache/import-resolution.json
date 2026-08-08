@@ -1,0 +1,266 @@
+[
+  {
+    "importer_path": "app/api/search/route.ts",
+    "specifier": "../../../../server/metasearch/search-route",
+    "kind": "relative-local",
+    "resolved_path": "server/metasearch/search-route",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "app/layout.tsx",
+    "specifier": "../styles/globals.css",
+    "kind": "relative-local",
+    "resolved_path": "styles/globals.css",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "app/media/page.tsx",
+    "specifier": "../../components/metasearch/search-controls",
+    "kind": "relative-local",
+    "resolved_path": "components/metasearch/search-controls",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "app/media/page.tsx",
+    "specifier": "../../components/metasearch/search-toolbar",
+    "kind": "relative-local",
+    "resolved_path": "components/metasearch/search-toolbar",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "app/page.tsx",
+    "specifier": "../components/metasearch/search-controls",
+    "kind": "relative-local",
+    "resolved_path": "components/metasearch/search-controls",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "app/page.tsx",
+    "specifier": "../components/metasearch/search-toolbar",
+    "kind": "relative-local",
+    "resolved_path": "components/metasearch/search-toolbar",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/icons/activity.tsx",
+    "specifier": "./icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/icons/alert.tsx",
+    "specifier": "./icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/icons/chevron-down.tsx",
+    "specifier": "./icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/icons/code.tsx",
+    "specifier": "./icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/icons/details.tsx",
+    "specifier": "./icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/icons/engine.tsx",
+    "specifier": "./icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/icons/files.tsx",
+    "specifier": "./icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/icons/filter.tsx",
+    "specifier": "./icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/icons/image.tsx",
+    "specifier": "./icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/icons/map.tsx",
+    "specifier": "./icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/icons/music.tsx",
+    "specifier": "./icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/icons/news.tsx",
+    "specifier": "./icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/icons/package-check.tsx",
+    "specifier": "./icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/icons/palette.tsx",
+    "specifier": "./icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/icons/play.tsx",
+    "specifier": "./icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/icons/science.tsx",
+    "specifier": "./icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/icons/search.tsx",
+    "specifier": "./icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/icons/shield.tsx",
+    "specifier": "./icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/icons/social.tsx",
+    "specifier": "./icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/ui/collapse.tsx",
+    "specifier": "../icons/icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/ui/collapse.tsx",
+    "specifier": "./icon-label",
+    "kind": "relative-local",
+    "resolved_path": "components/ui/icon-label",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/ui/dropdown.tsx",
+    "specifier": "../icons/icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/ui/dropdown.tsx",
+    "specifier": "./icon-label",
+    "kind": "relative-local",
+    "resolved_path": "components/ui/icon-label",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/ui/icon-label.tsx",
+    "specifier": "../icons/icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/ui/segmented-select.tsx",
+    "specifier": "../icons/icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "components/ui/text-field.tsx",
+    "specifier": "../icons/icon",
+    "kind": "relative-local",
+    "resolved_path": "components/icons/icon",
+    "package_id": null,
+    "requires_node_modules": false
+  },
+  {
+    "importer_path": "server/metasearch/manifest.ts",
+    "specifier": "../../lib/metasearch/routes",
+    "kind": "relative-local",
+    "resolved_path": "lib/metasearch/routes",
+    "package_id": null,
+    "requires_node_modules": false
+  }
+]

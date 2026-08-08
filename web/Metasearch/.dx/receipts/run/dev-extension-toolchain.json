@@ -1,0 +1,25 @@
+{
+  "schema": "dx.dev.extension_toolchain",
+  "version": 2,
+  "generated_at": "2026-07-05T08:08:50.533358200+00:00",
+  "config_source": "dx",
+  "serializer_cache": ".dx/serializer",
+  "triggered_paths": [
+    ".dx/imports/check.sr"
+  ],
+  "commands": [
+    {
+      "name": "serializer",
+      "command": "dx serializer .dx/imports/check.sr",
+      "passed": true,
+      "source": ".dx/imports/check.sr",
+      "machine": ".dx/serializer/imports-check.machine",
+      "machine_size": 607
+    }
+  ],
+  "planned_commands": [
+    "serializer"
+  ],
+  "passed": true,
+  "policy": "dx config driven TSX/.sr/dx changes run the minimum serializer, imports, style, and icon tools before the hot reload event is published"
+}

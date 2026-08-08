@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "strategy": "manifest-pinned-asset-rollback",
+  "manifest_hash": "blake3:b7e17c90c6feb9eb86914f177ce0c712693b603a2c9981c123b3a63f290bfca6",
+  "previous_release_required": true,
+  "restore_order": [
+    "immutable_assets",
+    ".dx/build-cache/manifest.json",
+    ".dx/build-cache/deploy-adapter.json"
+  ]
+}

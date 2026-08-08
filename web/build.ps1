@@ -1,46 +1,75 @@
-# Build all 9 web projects (7 Next.js + 2 dx-www) and publish their static
-# outputs to the assets/web folder, replacing old outputs.
+# Build all web projects (Next.js, Vite, pnpm-monorepo, dx-www) and publish their
+# static outputs to the desktop assets/web folder, replacing old outputs.
 #
 # Usage:
-#   pwsh -File web\build.ps1                 # build all + copy to G:\Dx\assets\web
-#   pwsh -File web\build.ps1 -SkipBuild      # only copy existing outputs
-#   pwsh -File web\build.ps1 -Target C:\web  # custom assets root
+#   pwsh -File web\build.ps1                       # build all + publish to G:\Dx\desktop\assets\web
+#   pwsh -File web\build.ps1 -SkipBuild            # only copy existing outputs
+#   pwsh -File web\build.ps1 -Only cms             # build + publish a single project
+#   pwsh -File web\build.ps1 -Target C:\web        # custom assets root
 param(
     [switch]$SkipBuild,
-    [string]$Target = "G:\Dx\assets\web"
+    [string]$Target = "G:\Dx\desktop\assets\web",
+    [string]$Only
 )
 
 $ErrorActionPreference = "Stop"
 $webRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 
-# tool-id -> published folder name (must match web_preview::project_dir_name)
+# tool-id-folder -> published folder name (must match web_preview::project_dir_name)
 $projects = [ordered]@{
     "3D"            = "3d"
     "Design"        = "Design"
     "Graphics"      = "Graphics"
-    "Music"         = "Music"
     "Presentations" = "Presentations"
     "Spreadsheets"  = "Spreadsheets"
     "Video"         = "Video"
     "Whiteboard"    = "whiteboard"
     "Shader"        = "shader"
+    "cms"           = "cms"
+    "graph"         = "graph"
+    "media"         = "media"
+    "Train"         = "Train"
+    "Metasearch"    = "metasearch"
 }
 
-# tool-id -> source build output directory (relative to project folder)
+# tool-id-folder -> source build output directory (relative to project folder)
 $outputDirs = @{
     "3D"            = "out"
     "Design"        = "out"
     "Graphics"      = "out"
-    "Music"         = "out"
     "Presentations" = "out"
     "Spreadsheets"  = "out"
     "Video"         = "out"
     "Whiteboard"    = ".dx\www\output"
     "Shader"        = ".dx\www\output"
+    "cms"           = "dist"
+    "graph"         = "understand-anything-plugin\packages\dashboard\dist"
+    "media"         = "dist"
+    "Train"         = "dist"
+    "Metasearch"    = ".dx\www\output"
+}
+
+# Override the default "build" npm script per project.
+$buildScripts = @{
+    "media" = "vite:build"
 }
 
 $projectsRoot = $webRoot
 $targetRoot = $Target
+
+# Pick the package manager from the project's lockfile.
+function Get-PackageManager([string]$dir) {
+    if (Test-Path (Join-Path $dir "pnpm-lock.yaml")) { return "pnpm" }
+    if (Test-Path (Join-Path $dir "package-lock.json")) { return "npm.cmd" }
+    if (Test-Path (Join-Path $dir "yarn.lock")) { return "yarn" }
+    if (Test-Path (Join-Path $dir "bun.lock")) { return "bun" }
+    return "npm.cmd"
+}
+
+function Get-BuildScript([string]$name) {
+    if ($buildScripts.ContainsKey($name)) { return $buildScripts[$name] }
+    return "build"
+}
 
 function Invoke-Build([string]$name, [string]$dir, [string[]]$command) {
     Write-Host ""
@@ -56,12 +85,12 @@ function Invoke-Build([string]$name, [string]$dir, [string[]]$command) {
     }
 }
 
-function Invoke-Install([string]$name, [string]$dir) {
+function Invoke-Install([string]$name, [string]$dir, [string]$pm) {
     Write-Host ""
-    Write-Host "=== Installing deps $name (npm.cmd install) ===" -ForegroundColor Cyan
+    Write-Host "=== Installing deps $name ($pm install) ===" -ForegroundColor Cyan
     Push-Location $dir
     try {
-        & npm.cmd install
+        & $pm install
         if ($LASTEXITCODE -ne 0) {
             throw "$name install failed with exit code $LASTEXITCODE"
         }
@@ -72,18 +101,29 @@ function Invoke-Install([string]$name, [string]$dir) {
 
 if (-not $SkipBuild) {
     foreach ($name in $projects.Keys) {
+        if ($Only -and $name -ne $Only) { continue }
         $projDir = Join-Path $projectsRoot $name
         if (-not (Test-Path -LiteralPath $projDir)) {
             Write-Warning "Project dir not found: $projDir (skipping)"
             continue
         }
-        if ($outputDirs[$name] -eq "out") {
-            if (-not (Test-Path -LiteralPath (Join-Path $projDir "node_modules"))) {
-                Invoke-Install $name $projDir
-            }
-            Invoke-Build $name $projDir @("npm.cmd", "run", "build")
-        } else {
+        $outDir = $outputDirs[$name]
+        $pm = Get-PackageManager $projDir
+        # dx-www projects are built with `dx build` and publish to .dx\www\output.
+        if ($outDir -like ".dx*") {
             Invoke-Build $name $projDir @("dx", "build")
+        } else {
+            if (-not (Test-Path -LiteralPath (Join-Path $projDir "node_modules"))) {
+                Invoke-Install $name $projDir $pm
+            }
+            $scriptName = Get-BuildScript $name
+            # pnpm shim misparses "pnpm run X" under PS7's @(...) splatting;
+            # `pnpm X` is equivalent and works reliably.
+            if ($pm -eq "pnpm") {
+                Invoke-Build $name $projDir @($pm, $scriptName)
+            } else {
+                Invoke-Build $name $projDir @($pm, "run", $scriptName)
+            }
         }
     }
 }
@@ -93,6 +133,7 @@ Write-Host "=== Publishing outputs to $targetRoot ===" -ForegroundColor Cyan
 New-Item -ItemType Directory -Path $targetRoot -Force | Out-Null
 
 foreach ($name in $projects.Keys) {
+    if ($Only -and $name -ne $Only) { continue }
     $projDir = Join-Path $projectsRoot $name
     $src = Join-Path $projDir $outputDirs[$name]
     $dst = Join-Path $targetRoot $projects[$name]

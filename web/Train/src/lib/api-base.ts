@@ -14,7 +14,10 @@ function detectTauri(): boolean {
 const isTauri = detectTauri()
 const isViteDev = import.meta.env.DEV
 
-if (isTauri && !isViteDev) {
+// The desktop preview serves this app as a static SPA (not inside Tauri), so
+// point API calls at the local train backend. The backend is expected on the
+// canonical port (8888); `setApiBase`/`use-tauri-backend` can override it.
+if (!isViteDev) {
   apiBase = 'http://127.0.0.1:8888'
 }
 

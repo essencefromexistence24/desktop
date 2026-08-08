@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BYbx6iT9.js";var t,n=e((()=>{t=`useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict`})),r,i=e((()=>{n(),r=(e=21)=>{let n=``,r=crypto.getRandomValues(new Uint8Array(e|=0));for(;e--;)n+=t[r[e]&63];return n}}));export{r as n,i as t};

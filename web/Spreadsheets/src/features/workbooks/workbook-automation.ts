@@ -187,7 +187,7 @@ export function createImportedVbaProject({
     importedAt: nowIso(),
     disabled: true,
     disabledReason:
-      "Preserved for XLSM round-tripping only. Essence Excel never runs imported VBA.",
+      "Preserved for XLSM round-tripping only. Spreadsheets never runs imported VBA.",
     binarySize: Math.max(0, Math.floor(binarySize)),
     vbaProjectBase64,
     sheetCodeNames,

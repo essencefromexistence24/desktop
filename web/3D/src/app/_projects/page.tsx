@@ -2555,7 +2555,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
               <Box className="size-4" />
             </div>
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold">Essence Spline</p>
+              <p className="truncate text-sm font-semibold">3D</p>
               <p className="truncate text-xs text-muted-foreground">{session.user.email}</p>
             </div>
           </div>

@@ -167,7 +167,7 @@ function createEncryptedRecoveryDocument({
     version: 1,
     metadata: {
       description:
-        "This file is encrypted or password-protected. Essence Excel preserved the protection metadata, but the sheet contents require the original password in Excel-compatible software.",
+        "This file is encrypted or password-protected. Spreadsheets preserved the protection metadata, but the sheet contents require the original password in Excel-compatible software.",
       favorite: false,
       folderName: "Recovered imports",
       isTemplate: sourceFormat === "xltx" || sourceFormat === "xltm",

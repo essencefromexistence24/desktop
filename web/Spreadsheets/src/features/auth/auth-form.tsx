@@ -242,7 +242,7 @@ export function AuthForm() {
           {mode === "sign-up" ? (
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
-              <Input id="name" name="name" autoComplete="name" placeholder="essencefromexistence" />
+              <Input id="name" name="name" autoComplete="name" placeholder="yourname" />
             </div>
           ) : null}
           <div className="space-y-2">

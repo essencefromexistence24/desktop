@@ -6,7 +6,7 @@ export function getDesktopReleaseMetadata() {
   const version = process.env.DESKTOP_UPDATE_VERSION?.trim() || "0.0.0";
 
   return {
-    notes: process.env.DESKTOP_UPDATE_NOTES?.trim() || `Essence Spline ${version}`,
+    notes: process.env.DESKTOP_UPDATE_NOTES?.trim() || `3D ${version}`,
     pubDate: process.env.DESKTOP_UPDATE_PUB_DATE?.trim() || new Date().toISOString(),
     version,
   };

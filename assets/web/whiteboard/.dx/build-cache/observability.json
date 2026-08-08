@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated": "2026-06-26T14:29:10.804417500+00:00",
-  "manifest_hash": "blake3:3a2149c1757e00dcaafb3af528d9093d5fb111b79e59d33c8209e2837418cee8",
+  "generated": "2026-08-08T12:10:49.186677300+00:00",
+  "manifest_hash": "blake3:9fce00726390d6639885db57505805f5ac6ce90e07272011b0f90024ef75e5df",
   "runtime": "dx-www-production-contract",
   "secret_fields_collected": false,
   "privacy": {
@@ -76,21 +76,21 @@
     {
       "path": "agent-cursor.js",
       "metric": "packet.bytes",
-      "bytes": 11677,
+      "bytes": 14674,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "agent-cursor.js.br",
       "metric": "packet.bytes",
-      "bytes": 2979,
+      "bytes": 3446,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "agent-cursor.js.gz",
       "metric": "packet.bytes",
-      "bytes": 3441,
+      "bytes": 3980,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
@@ -118,42 +118,42 @@
     {
       "path": "canvas-export.js",
       "metric": "packet.bytes",
-      "bytes": 6413,
+      "bytes": 8268,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "canvas-export.js.br",
       "metric": "packet.bytes",
-      "bytes": 1611,
+      "bytes": 1978,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "canvas-export.js.gz",
       "metric": "packet.bytes",
-      "bytes": 1809,
+      "bytes": 2269,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "favicon.svg",
       "metric": "packet.bytes",
-      "bytes": 1160,
+      "bytes": 1188,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "favicon.svg.br",
       "metric": "packet.bytes",
-      "bytes": 500,
+      "bytes": 509,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "favicon.svg.gz",
       "metric": "packet.bytes",
-      "bytes": 605,
+      "bytes": 617,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
@@ -179,65 +179,65 @@
       "collects_content": false
     },
     {
-      "path": "public/agent-cursor-7cbbde833ae1eff0.js",
+      "path": "public/agent-cursor-b383c71fb0eaf48f.js",
       "metric": "packet.bytes",
-      "bytes": 11677,
+      "bytes": 14674,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/agent-cursor-7cbbde833ae1eff0.js.br",
+      "path": "public/agent-cursor-b383c71fb0eaf48f.js.br",
       "metric": "packet.bytes",
-      "bytes": 2979,
+      "bytes": 3446,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/agent-cursor-7cbbde833ae1eff0.js.gz",
+      "path": "public/agent-cursor-b383c71fb0eaf48f.js.gz",
       "metric": "packet.bytes",
-      "bytes": 3441,
+      "bytes": 3980,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/canvas-export-b2b11c06ceed2815.js",
+      "path": "public/canvas-export-85222fce691117f3.js",
       "metric": "packet.bytes",
-      "bytes": 6413,
+      "bytes": 8268,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/canvas-export-b2b11c06ceed2815.js.br",
+      "path": "public/canvas-export-85222fce691117f3.js.br",
       "metric": "packet.bytes",
-      "bytes": 1611,
+      "bytes": 1978,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/canvas-export-b2b11c06ceed2815.js.gz",
+      "path": "public/canvas-export-85222fce691117f3.js.gz",
       "metric": "packet.bytes",
-      "bytes": 1809,
+      "bytes": 2269,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/favicon-b79469898e890b32.svg",
+      "path": "public/favicon-8ef8e37dd36b0f62.svg",
       "metric": "packet.bytes",
-      "bytes": 1160,
+      "bytes": 1188,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/favicon-b79469898e890b32.svg.br",
+      "path": "public/favicon-8ef8e37dd36b0f62.svg.br",
       "metric": "packet.bytes",
-      "bytes": 500,
+      "bytes": 509,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/favicon-b79469898e890b32.svg.gz",
+      "path": "public/favicon-8ef8e37dd36b0f62.svg.gz",
       "metric": "packet.bytes",
-      "bytes": 605,
+      "bytes": 617,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
@@ -263,23 +263,23 @@
       "collects_content": false
     },
     {
-      "path": "public/whiteboard-runtime-e47c4c795307d776.js",
+      "path": "public/whiteboard-runtime-44f069aa63b41fee.js",
       "metric": "packet.bytes",
-      "bytes": 113834,
+      "bytes": 116532,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/whiteboard-runtime-e47c4c795307d776.js.br",
+      "path": "public/whiteboard-runtime-44f069aa63b41fee.js.br",
       "metric": "packet.bytes",
-      "bytes": 20805,
+      "bytes": 21281,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/whiteboard-runtime-e47c4c795307d776.js.gz",
+      "path": "public/whiteboard-runtime-44f069aa63b41fee.js.gz",
       "metric": "packet.bytes",
-      "bytes": 24483,
+      "bytes": 25035,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
@@ -370,26 +370,26 @@
     {
       "path": "whiteboard-runtime.js",
       "metric": "packet.bytes",
-      "bytes": 113834,
+      "bytes": 116532,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "whiteboard-runtime.js.br",
       "metric": "packet.bytes",
-      "bytes": 20805,
+      "bytes": 21281,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "whiteboard-runtime.js.gz",
       "metric": "packet.bytes",
-      "bytes": 24483,
+      "bytes": 25035,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     }
   ],
-  "packet_bytes_total": 598918,
+  "packet_bytes_total": 619838,
   "server_action_receipts": [],
   "hooks": {
     "health": [],

@@ -368,7 +368,7 @@ export function createExportManifest(document: SceneDocument): ExportManifest {
     optimization,
     readiness: {
       glb: createReadiness(glbUnsupportedObjectKinds, glbUnsupportedObjectKinds.length ? ["Some runtime or externally loaded object types are preserved in JSON but omitted or simplified in generated GLB."] : []),
-      json: createReadiness([], ["Scene JSON preserves the complete Essence Spline document."]),
+      json: createReadiness([], ["Scene JSON preserves the complete 3D document."]),
       stl: createReadiness(stlUnsupportedObjectKinds, stlUnsupportedObjectKinds.length ? ["STL is geometry-only; non-mesh, media, light, camera, and runtime objects are not represented."] : []),
       usdz: createReadiness(usdzUnsupportedObjectKinds, usdzUnsupportedObjectKinds.length ? ["Some runtime or externally loaded object types are preserved in JSON but omitted or simplified in generated USDZ."] : []),
       web: createReadiness([], hasDangerIssue ? ["Optimization report contains danger-level issues; review before publishing."] : ["Web export supports the complete scene document."], hasDangerIssue),

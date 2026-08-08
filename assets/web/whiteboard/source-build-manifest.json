@@ -1,7 +1,7 @@
 {
   "schema": "dx.www.sourceBuildManifest",
   "schema_revision": 1,
-  "project_root": "G:/Dx/code/web/Whiteboard",
+  "project_root": "G:/Dx/desktop/web/Whiteboard",
   "routes": [
     {
       "route": "/",
@@ -429,9 +429,9 @@
   "assets": [
     {
       "path": "public/agent-cursor.js",
-      "output": ".dx/www/output/public/agent-cursor-7cbbde833ae1eff0.js",
-      "hash": "7cbbde833ae1eff0",
-      "size": 11677,
+      "output": ".dx/www/output/public/agent-cursor-b383c71fb0eaf48f.js",
+      "hash": "b383c71fb0eaf48f",
+      "size": 14674,
       "node_modules_required": false,
       "lifecycle_scripts_executed": false,
       "source_owned_contract": true,
@@ -440,9 +440,9 @@
     },
     {
       "path": "public/canvas-export.js",
-      "output": ".dx/www/output/public/canvas-export-b2b11c06ceed2815.js",
-      "hash": "b2b11c06ceed2815",
-      "size": 6413,
+      "output": ".dx/www/output/public/canvas-export-85222fce691117f3.js",
+      "hash": "85222fce691117f3",
+      "size": 8268,
       "node_modules_required": false,
       "lifecycle_scripts_executed": false,
       "source_owned_contract": true,
@@ -451,9 +451,9 @@
     },
     {
       "path": "public/favicon.svg",
-      "output": ".dx/www/output/public/favicon-b79469898e890b32.svg",
-      "hash": "b79469898e890b32",
-      "size": 1160,
+      "output": ".dx/www/output/public/favicon-8ef8e37dd36b0f62.svg",
+      "hash": "8ef8e37dd36b0f62",
+      "size": 1188,
       "node_modules_required": false,
       "lifecycle_scripts_executed": false,
       "source_owned_contract": true,
@@ -537,9 +537,9 @@
     },
     {
       "path": "public/whiteboard-runtime.js",
-      "output": ".dx/www/output/public/whiteboard-runtime-e47c4c795307d776.js",
-      "hash": "e47c4c795307d776",
-      "size": 113834,
+      "output": ".dx/www/output/public/whiteboard-runtime-44f069aa63b41fee.js",
+      "hash": "44f069aa63b41fee",
+      "size": 116532,
       "node_modules_required": false,
       "lifecycle_scripts_executed": false,
       "source_owned_contract": true,

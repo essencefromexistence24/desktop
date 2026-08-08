@@ -223,7 +223,7 @@ export function getWorkbookCompatibilityIssues(document: WorkbookDocument) {
     id: "xlsm-vba-projects",
     title: "VBA projects are preserved but disabled",
     details:
-      "Imported VBA binaries are stored for XLSM round-tripping and reattached on XLSM export. Essence Excel never executes imported macros.",
+      "Imported VBA binaries are stored for XLSM round-tripping and reattached on XLSM export. Spreadsheets never executes imported macros.",
     severity: "info",
     category: "Round trip",
     formats: ["XLSM"],
@@ -361,7 +361,7 @@ export function getWorkbookCompatibilityIssues(document: WorkbookDocument) {
     id: "notes-history-views",
     title: "Review state and version history are app-only",
     details:
-      "Cell comment threads, saved versions, restore history, and custom worksheet views are preserved in Essence JSON but not in spreadsheet file exports.",
+      "Cell comment threads, saved versions, restore history, and custom worksheet views are preserved in Spreadsheets JSON but not in spreadsheet file exports.",
     severity: "info",
     category: "Export loss",
     formats: ALL_NON_JSON_FORMATS,
@@ -372,7 +372,7 @@ export function getWorkbookCompatibilityIssues(document: WorkbookDocument) {
     id: "protection-settings",
     title: "Protection settings are not exported",
     details:
-      "Sheet and workbook protection settings affect editing inside Essence Excel, but current file exports do not write native protection records.",
+      "Sheet and workbook protection settings affect editing inside Spreadsheets, but current file exports do not write native protection records.",
     severity: "warning",
     category: "Round trip",
     formats: WORKBOOK_FORMATS,
@@ -394,7 +394,7 @@ export function getWorkbookCompatibilityIssues(document: WorkbookDocument) {
     id: "cell-links",
     title: "Cell links are not native hyperlinks on export",
     details:
-      "Essence cell links are stored as workbook annotations and are not emitted as native Excel hyperlinks in current workbook exports.",
+      "Spreadsheets cell links are stored as workbook annotations and are not emitted as native Excel hyperlinks in current workbook exports.",
     severity: "warning",
     category: "Round trip",
     formats: ALL_NON_JSON_FORMATS,
@@ -403,9 +403,9 @@ export function getWorkbookCompatibilityIssues(document: WorkbookDocument) {
 
   addIssue(issues, {
     id: "automation-scripts",
-    title: "Recorded scripts are Essence-only",
+    title: "Recorded scripts are Spreadsheets-only",
     details:
-      "Safe script recordings capture repeatable workbook actions and run only through Essence permissions. They are not exported as native Excel macros.",
+      "Safe script recordings capture repeatable workbook actions and run only through Spreadsheets permissions. They are not exported as native Excel macros.",
     severity: "info",
     category: "Export loss",
     formats: ALL_NON_JSON_FORMATS,
@@ -414,9 +414,9 @@ export function getWorkbookCompatibilityIssues(document: WorkbookDocument) {
 
   addIssue(issues, {
     id: "automation-extensions",
-    title: "Automation extensions are Essence-only",
+    title: "Automation extensions are Spreadsheets-only",
     details:
-      "Workbook custom functions and add-in manifests are preserved in Essence JSON backups but are not emitted as native Excel add-ins.",
+      "Workbook custom functions and add-in manifests are preserved in Spreadsheets JSON backups but are not emitted as native Excel add-ins.",
     severity: "info",
     category: "Export loss",
     formats: ALL_NON_JSON_FORMATS,

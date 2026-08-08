@@ -137,7 +137,7 @@ export function createPostDeploySyntheticSmokeChecks(config: PostDeploySynthetic
       label: "Public viewer",
       method: "GET",
       requiredAuthCookie: false,
-      requiredText: ["Shared Essence Spline scene"],
+      requiredText: ["Shared 3D scene"],
       url: absoluteUrl(baseUrl, getSharePath(config.shareId, config.sceneId)),
     },
     {

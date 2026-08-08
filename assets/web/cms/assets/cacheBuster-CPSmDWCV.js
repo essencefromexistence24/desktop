@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BYbx6iT9.js";function t(e){return`${e.version}-${e.updatedAt}`}function n(e,t){return t?`${e}${e.includes(`?`)?`&`:`?`}v=${encodeURIComponent(t)}`:e}var r=e((()=>{}));export{t as n,n as r,r as t};

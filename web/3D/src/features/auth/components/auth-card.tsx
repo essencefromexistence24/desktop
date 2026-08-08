@@ -135,7 +135,7 @@ export function AuthCard() {
         <div className="mb-2 flex size-10 items-center justify-center rounded-md bg-primary text-primary-foreground">
           {step === "verification" ? <MailCheck className="size-5" /> : <Box className="size-5" />}
         </div>
-        <CardTitle>{step === "verification" ? "Confirm your email" : "Essence Spline"}</CardTitle>
+        <CardTitle>{step === "verification" ? "Confirm your email" : "3D"}</CardTitle>
         <CardDescription>{step === "verification" ? `Enter the 6-digit code sent to ${verificationEmail}.` : "Sign in to manage scenes, publishing, and shared projects."}</CardDescription>
       </CardHeader>
       <CardContent>

@@ -1,6 +1,7 @@
 import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter.js";
 import * as THREE from "three";
 import { resolveMaterial } from "../materials/resolve-material";
+import { invertPivot, resolvePivot } from "../scene/object-pivot";
 import { createEvaluatedBooleanGeometry, createPathBufferGeometry, createPrimitiveBufferGeometry } from "../scene/three-primitive-geometry";
 import type { Material, SceneDocument, SceneObject, Transform } from "../types";
 
@@ -140,56 +141,64 @@ async function createNode(object: SceneObject, objects: SceneObject[]) {
     return null;
   }
 
-  let node: THREE.Object3D | null = null;
+  let geometryNode: THREE.Object3D | null = null;
   const geometry = createEvaluatedBooleanGeometry(object, objects) ?? createPrimitiveBufferGeometry(object, objects) ?? (object.kind === "path" ? createPathBufferGeometry(object) : null);
 
   if (geometry) {
-    node = new THREE.Mesh(geometry, await createExportMaterial(object.material));
+    geometryNode = new THREE.Mesh(geometry, await createExportMaterial(object.material));
   } else if (object.kind === "text") {
-    node = await createTextMesh(object);
+    geometryNode = await createTextMesh(object);
   } else if (object.kind === "image" || object.kind === "svg") {
-    node = await createImageMesh(object);
+    geometryNode = await createImageMesh(object);
   } else if (object.kind === "camera") {
-    node = createCamera(object);
+    geometryNode = createCamera(object);
   } else if (object.kind === "pointLight" || object.kind === "directionalLight" || object.kind === "spotLight") {
-    node = createLight(object);
+    geometryNode = createLight(object);
   } else if (object.kind === "group") {
-    node = new THREE.Group();
+    geometryNode = new THREE.Group();
   }
 
-  if (!node) {
+  if (!geometryNode) {
     return null;
   }
 
+  const pivotGroup = new THREE.Group();
+  const pivotOffset = invertPivot(resolvePivot(object));
+  pivotGroup.position.set(...pivotOffset);
+  pivotGroup.add(geometryNode);
+
+  const node = new THREE.Group();
   node.name = object.name;
   node.userData.essenceSplineId = object.id;
+  node.add(pivotGroup);
+  
   applyTransform(node, object.transform);
-  return node;
+  return { node, pivotGroup };
 }
 
 export async function createThreeExportScene(document: SceneDocument) {
   const scene = new THREE.Scene();
   scene.name = document.name;
 
-  const nodes = new Map<string, THREE.Object3D>();
+  const nodes = new Map<string, { node: THREE.Object3D; pivotGroup: THREE.Object3D }>();
 
   for (const object of document.objects) {
-    const node = await createNode(object, document.objects);
+    const created = await createNode(object, document.objects);
 
-    if (node) {
-      nodes.set(object.id, node);
+    if (created) {
+      nodes.set(object.id, created);
     }
   }
 
   for (const object of document.objects) {
-    const node = nodes.get(object.id);
+    const created = nodes.get(object.id);
 
-    if (!node) {
+    if (!created) {
       continue;
     }
 
     const parent = object.parentId ? nodes.get(object.parentId) : null;
-    (parent ?? scene).add(node);
+    (parent ? parent.pivotGroup : scene).add(created.node);
   }
 
   return scene;

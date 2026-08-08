@@ -218,7 +218,7 @@ function readme(options: AppPackageOptions, preset: AppPackagePresetId) {
 
   return `# ${options.sceneName}
 
-This package wraps the published Essence Spline scene as a standalone ${preset} app shell.
+This package wraps the published 3D scene as a standalone ${preset} app shell.
 
 - Share URL: ${options.shareUrl}
 - Embed URL: ${options.embedUrl}
@@ -236,7 +236,7 @@ function androidReadme(options: AppPackageOptions, artifact: "apk" | "aab") {
 
   return `# ${options.sceneName} Android ${artifact.toUpperCase()}
 
-This package builds the published Essence Spline scene into an Android ${artifact.toUpperCase()} using Capacitor and the local Android Gradle toolchain.
+This package builds the published 3D scene into an Android ${artifact.toUpperCase()} using Capacitor and the local Android Gradle toolchain.
 
 - Share URL: ${options.shareUrl}
 - Embed URL: ${options.embedUrl}
@@ -325,7 +325,7 @@ export default defineConfig({
 
 function tauriFiles(options: AppPackageOptions): AppPackageFile[] {
   const files = webFiles(options);
-  const productName = options.sceneName.slice(0, 64) || "Essence Spline Scene";
+  const productName = options.sceneName.slice(0, 64) || "3D Scene";
 
   return [
     ...files,
@@ -348,7 +348,7 @@ tauri-build = { version = "2", features = [] }
       content: `fn main() {
     tauri::Builder::default()
         .run(tauri::generate_context!())
-        .expect("failed to run Essence Spline scene app");
+        .expect("failed to run 3D scene app");
 }
 `,
     },
@@ -385,7 +385,7 @@ tauri-build = { version = "2", features = [] }
 
 function capacitorFiles(options: AppPackageOptions): AppPackageFile[] {
   const files = webFiles(options);
-  const appName = options.sceneName.slice(0, 64) || "Essence Spline Scene";
+  const appName = options.sceneName.slice(0, 64) || "3D Scene";
 
   return [
     ...files,

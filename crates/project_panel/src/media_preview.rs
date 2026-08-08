@@ -260,11 +260,7 @@ pub(crate) fn render_folder_media_shelf(
         })
         .collect::<Vec<_>>();
     if has_overflow {
-        shelf_cards.push(render_media_shelf_overflow_card(
-            preview,
-            focus_handle,
-            cx,
-        ));
+        shelf_cards.push(render_media_shelf_overflow_card(preview, focus_handle, cx));
     }
     let header_count_label = media_preview_count_label(visible_media_count, preview);
     let header_controls = h_flex()

@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
+  GizmoHelper,
+  GizmoViewport,
   Grid,
   OrbitControls,
   OrthographicCamera,
@@ -366,6 +368,11 @@ export function EditorViewport({
         return;
       }
 
+      const state = useEditorStore.getState();
+      if ((event.key === "Delete" || event.key === "Backspace") && state.selectedObjectId && !state.playModeEnabled) {
+        state.deleteObject(state.selectedObjectId);
+      }
+
       recordViewportInteractionEvent({
         at: new Date().toISOString(),
         key: event.key,
@@ -587,22 +594,27 @@ export function EditorViewport({
             ))}
             {collaborationEnabled && !playModeEnabled ? <CommentPins /> : null}
             {orbitControlsEnabled ? (
-              <OrbitControls
-                enableDamping
-                enableRotate={surfaceMode !== "2d"}
-                makeDefault
-                onChange={() => {
-                  emitControlsEvent("change");
-                }}
-                onEnd={() => {
-                  emitControlsEvent("end");
-                  recordCameraEvent("orbit-end");
-                }}
-                onStart={() => {
-                  emitControlsEvent("start");
-                  recordCameraEvent("orbit-start");
-                }}
-              />
+              <>
+                <OrbitControls
+                  enableDamping
+                  enableRotate={surfaceMode !== "2d"}
+                  makeDefault
+                  onChange={() => {
+                    emitControlsEvent("change");
+                  }}
+                  onEnd={() => {
+                    emitControlsEvent("end");
+                    recordCameraEvent("orbit-end");
+                  }}
+                  onStart={() => {
+                    emitControlsEvent("start");
+                    recordCameraEvent("orbit-start");
+                  }}
+                />
+                <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
+                  <GizmoViewport axisColors={["#ff3653", "#8adb00", "#2c8fff"]} labelColor="black" />
+                </GizmoHelper>
+              </>
             ) : null}
           </MediaActionProvider>
         </Canvas>

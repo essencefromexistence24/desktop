@@ -1,7 +1,7 @@
 {
   "schema": "dx.build.graph",
   "format": 1,
-  "generatedAt": "2026-08-07T06:01:36.438582100+00:00",
+  "generatedAt": "2026-08-08T18:09:28.009410100+00:00",
   "projectRoot": "G:/Dx/desktop/web/Shader",
   "receiptPath": "G:/Dx/desktop/web/Shader/.dx/receipts/graph/latest.json",
   "names": {
@@ -392,44 +392,19 @@
         "full_pipeline_parity": false
       },
       {
-        "id": "image-placeholder-asset:.dx/www/output/.dx/build-cache/image-placeholders/public/icon-95cdf2c6b75c0830.placeholder.svg",
+        "id": "image-placeholder-asset:.dx/www/output/.dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg",
         "kind": "image-placeholder-asset",
-        "path": ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-95cdf2c6b75c0830.placeholder.svg",
+        "path": ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg",
         "contract": "dx.build.graph",
         "source_image": "public/icon.svg",
         "source_asset": "public-asset:public/icon.svg",
         "placeholder_kind": "svg-placeholder-data-url",
         "source": "dx-source-owned-svg-placeholder",
-        "width": 64,
-        "height": 64,
-        "data_url_bytes": 286,
-        "hash": "95cdf2c6b75c0830",
-        "bytes": 165,
-        "node_modules_required": false,
-        "lifecycle_scripts_executed": false,
-        "source_owned_contract": true,
-        "external_runtime_required": false,
-        "external_runtime_executed": false,
-        "optimizer_invoked": false,
-        "resize_emitted": false,
-        "encoding_emitted": false,
-        "blur_placeholder_emitted": false,
-        "full_pipeline_parity": false
-      },
-      {
-        "id": "image-placeholder-asset:.dx/www/output/.dx/build-cache/image-placeholders/public/logo-95cdf2c6b75c0830.placeholder.svg",
-        "kind": "image-placeholder-asset",
-        "path": ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-95cdf2c6b75c0830.placeholder.svg",
-        "contract": "dx.build.graph",
-        "source_image": "public/logo.svg",
-        "source_asset": "public-asset:public/logo.svg",
-        "placeholder_kind": "svg-placeholder-data-url",
-        "source": "dx-source-owned-svg-placeholder",
-        "width": 64,
-        "height": 64,
-        "data_url_bytes": 286,
-        "hash": "95cdf2c6b75c0830",
-        "bytes": 165,
+        "width": 1024,
+        "height": 1024,
+        "data_url_bytes": 294,
+        "hash": "b0698a08bf67b748",
+        "bytes": 173,
         "node_modules_required": false,
         "lifecycle_scripts_executed": false,
         "source_owned_contract": true,
@@ -969,10 +944,10 @@
         "id": "public-asset:public/icon.svg",
         "kind": "public-asset",
         "path": "public/icon.svg",
-        "output": ".dx/www/output/public/icon-c592869c9c233ec1.svg",
+        "output": ".dx/www/output/public/icon-4ef4b7a78017f8f9.svg",
         "contract": "dx.build.graph",
-        "hash": "c592869c9c233ec1",
-        "bytes": 259,
+        "hash": "4ef4b7a78017f8f9",
+        "bytes": 1100,
         "node_modules_required": false,
         "lifecycle_scripts_executed": false,
         "source_owned_contract": true,
@@ -981,9 +956,9 @@
         "image_metadata": {
           "format": "svg",
           "mime_type": "image/svg+xml",
-          "width": 64,
-          "height": 64,
-          "dimension_source": "svg-viewbox",
+          "width": 1024,
+          "height": 1024,
+          "dimension_source": "svg-root-attributes",
           "status": "metadata-read",
           "optimization": {
             "status": "metadata-plus-svg-placeholder",
@@ -994,62 +969,14 @@
             "blur_placeholder_emitted": false,
             "placeholder": {
               "kind": "svg-placeholder-data-url",
-              "data_url": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%20viewBox%3D%220%200%2064%2064%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f3f4f6%22%2F%3E%3C%2Fsvg%3E",
-              "width": 64,
-              "height": 64,
-              "bytes": 286,
+              "data_url": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221024%22%20height%3D%221024%22%20viewBox%3D%220%200%201024%201024%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f3f4f6%22%2F%3E%3C%2Fsvg%3E",
+              "width": 1024,
+              "height": 1024,
+              "bytes": 294,
               "source": "dx-source-owned-svg-placeholder",
-              "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-95cdf2c6b75c0830.placeholder.svg",
-              "hash": "95cdf2c6b75c0830",
-              "artifact_bytes": 165
-            },
-            "boundary": "metadata-plus-svg-placeholder-no-resize-or-encoding",
-            "informed_by": [
-              "turbopack-image::process::get_meta_data",
-              "turbopack-image::process::svg"
-            ]
-          }
-        },
-        "referenced_by_routes": [],
-        "referenced_by_styles": []
-      },
-      {
-        "id": "public-asset:public/logo.svg",
-        "kind": "public-asset",
-        "path": "public/logo.svg",
-        "output": ".dx/www/output/public/logo-c592869c9c233ec1.svg",
-        "contract": "dx.build.graph",
-        "hash": "c592869c9c233ec1",
-        "bytes": 259,
-        "node_modules_required": false,
-        "lifecycle_scripts_executed": false,
-        "source_owned_contract": true,
-        "external_runtime_required": false,
-        "external_runtime_executed": false,
-        "image_metadata": {
-          "format": "svg",
-          "mime_type": "image/svg+xml",
-          "width": 64,
-          "height": 64,
-          "dimension_source": "svg-viewbox",
-          "status": "metadata-read",
-          "optimization": {
-            "status": "metadata-plus-svg-placeholder",
-            "variants_emitted": 0,
-            "optimizer_invoked": false,
-            "resize_emitted": false,
-            "encoding_emitted": false,
-            "blur_placeholder_emitted": false,
-            "placeholder": {
-              "kind": "svg-placeholder-data-url",
-              "data_url": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%20viewBox%3D%220%200%2064%2064%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f3f4f6%22%2F%3E%3C%2Fsvg%3E",
-              "width": 64,
-              "height": 64,
-              "bytes": 286,
-              "source": "dx-source-owned-svg-placeholder",
-              "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-95cdf2c6b75c0830.placeholder.svg",
-              "hash": "95cdf2c6b75c0830",
-              "artifact_bytes": 165
+              "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg",
+              "hash": "b0698a08bf67b748",
+              "artifact_bytes": 173
             },
             "boundary": "metadata-plus-svg-placeholder-no-resize-or-encoding",
             "informed_by": [
@@ -1090,12 +1017,12 @@
         "external_runtime_executed": false
       },
       {
-        "id": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-9b3651610ca917aa.mjs",
+        "id": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-b20b95524c883535.mjs",
         "kind": "route-shell-chunk",
-        "path": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-9b3651610ca917aa.mjs",
+        "path": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-b20b95524c883535.mjs",
         "route": "/",
         "contract": "dx.www.moduleGraph",
-        "fallback_hash": "9b3651610ca917aa",
+        "fallback_hash": "b20b95524c883535",
         "node_modules_required": false
       },
       {
@@ -1126,14 +1053,14 @@
         "external_runtime_executed": false
       },
       {
-        "id": "source-module-chunk:.dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-49eb7925527ddf1a.mjs",
+        "id": "source-module-chunk:.dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-73adb3f448b1af68.mjs",
         "kind": "source-module-chunk",
-        "path": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-49eb7925527ddf1a.mjs",
+        "path": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-73adb3f448b1af68.mjs",
         "source_path": "app/page.tsx",
         "route": "/",
         "source_kind": "tsx",
         "contract": "dx.www.moduleGraph",
-        "hash": "49eb7925527ddf1a",
+        "hash": "73adb3f448b1af68",
         "browser_executable": true,
         "source_transformed": false,
         "transform_kind": "metadata-only",
@@ -1274,7 +1201,7 @@
         "path": "app/page.tsx",
         "route": "/",
         "contract": "dx.www.moduleGraph",
-        "hash": "49eb7925527ddf1a",
+        "hash": "73adb3f448b1af68",
         "parser_backend": "oxc-parser",
         "ecmascript_analysis": {
           "schema": "dx.ecmascript.analysis",
@@ -1509,10 +1436,10 @@
       },
       {
         "from": "public-asset:public/icon.svg",
-        "to": "image-placeholder-asset:.dx/www/output/.dx/build-cache/image-placeholders/public/icon-95cdf2c6b75c0830.placeholder.svg",
+        "to": "image-placeholder-asset:.dx/www/output/.dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg",
         "kind": "emits-placeholder",
         "source_image": "public/icon.svg",
-        "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-95cdf2c6b75c0830.placeholder.svg",
+        "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg",
         "placeholder_kind": "svg-placeholder-data-url",
         "node_modules_required": false,
         "lifecycle_scripts_executed": false,
@@ -1526,25 +1453,7 @@
         "full_pipeline_parity": false
       },
       {
-        "from": "public-asset:public/logo.svg",
-        "to": "image-placeholder-asset:.dx/www/output/.dx/build-cache/image-placeholders/public/logo-95cdf2c6b75c0830.placeholder.svg",
-        "kind": "emits-placeholder",
-        "source_image": "public/logo.svg",
-        "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-95cdf2c6b75c0830.placeholder.svg",
-        "placeholder_kind": "svg-placeholder-data-url",
-        "node_modules_required": false,
-        "lifecycle_scripts_executed": false,
-        "source_owned_contract": true,
-        "external_runtime_required": false,
-        "external_runtime_executed": false,
-        "optimizer_invoked": false,
-        "resize_emitted": false,
-        "encoding_emitted": false,
-        "blur_placeholder_emitted": false,
-        "full_pipeline_parity": false
-      },
-      {
-        "from": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-9b3651610ca917aa.mjs",
+        "from": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-b20b95524c883535.mjs",
         "to": "server-data-route:.dx/www/output/source-routes/root/server-data.json",
         "kind": "links-server-data",
         "route": "/",
@@ -1557,12 +1466,12 @@
         "external_runtime_executed": false
       },
       {
-        "from": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-9b3651610ca917aa.mjs",
-        "to": "source-module-chunk:.dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-49eb7925527ddf1a.mjs",
+        "from": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-b20b95524c883535.mjs",
+        "to": "source-module-chunk:.dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-73adb3f448b1af68.mjs",
         "kind": "links-entry-module"
       },
       {
-        "from": "source-module-chunk:.dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-49eb7925527ddf1a.mjs",
+        "from": "source-module-chunk:.dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-73adb3f448b1af68.mjs",
         "to": "source-module-chunk:.dx/www/output/.dx/build-cache/source-routes/root/modules/components-icons-icon-tsx-8db49bf807790749.mjs",
         "kind": "imports-source-module",
         "specifier": "../components/icons/icon",
@@ -1570,7 +1479,7 @@
       },
       {
         "from": "tsx-route:app/page.tsx",
-        "to": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-9b3651610ca917aa.mjs",
+        "to": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-b20b95524c883535.mjs",
         "kind": "emits"
       },
       {
@@ -1588,7 +1497,7 @@
       },
       {
         "from": "tsx-route:app/page.tsx",
-        "to": "source-module-chunk:.dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-49eb7925527ddf1a.mjs",
+        "to": "source-module-chunk:.dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-73adb3f448b1af68.mjs",
         "kind": "imports-source-module"
       }
     ]

@@ -1806,7 +1806,7 @@ export function SpreadsheetShell({
         });
       }, 0);
     } catch {
-      setImportError("Could not open this local Essence Excel workbook.");
+      setImportError("Could not open this local Spreadsheets workbook.");
     }
   }
 

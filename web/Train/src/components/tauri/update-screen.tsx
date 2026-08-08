@@ -21,9 +21,9 @@ const EASE_OUT_QUART: [number, number, number, number] = [0.165, 0.84, 0.44, 1];
 function Logo() {
   return (
     <div className="flex flex-col items-center gap-4">
-      <img src="/dx-icon.svg" alt="Train" className="h-[72px] w-[72px] object-contain" />
-      <img src="/dx-logo-light.svg" alt="Train" className="h-auto w-[250px] object-contain dark:hidden" />
-      <img src="/dx-logo-dark.svg" alt="Train" className="hidden h-auto w-[250px] object-contain dark:block" />
+      <img src="/favicon.svg" alt="Train" className="h-[72px] w-[72px] object-contain" />
+      <img src="/train-logo-light.svg" alt="Train" className="h-auto w-[250px] object-contain dark:hidden" />
+      <img src="/train-logo-dark.svg" alt="Train" className="hidden h-auto w-[250px] object-contain dark:block" />
     </div>
   );
 }

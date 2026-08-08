@@ -2,7 +2,7 @@ type VerificationOtpType = "email-verification" | "sign-in" | "forget-password" 
 
 const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
 const DEFAULT_SENDER_EMAIL = "ajju40959@gmail.com";
-const DEFAULT_SENDER_NAME = "Essence Spline";
+const DEFAULT_SENDER_NAME = "3D";
 
 export interface BrevoEmailRecipient {
   email: string;
@@ -34,14 +34,14 @@ function escapeHtml(value: string) {
 function getSubject(type: VerificationOtpType) {
   switch (type) {
     case "forget-password":
-      return "Reset your Essence Spline password";
+      return "Reset your 3D password";
     case "sign-in":
-      return "Your Essence Spline sign-in code";
+      return "Your 3D sign-in code";
     case "change-email":
-      return "Confirm your new Essence Spline email";
+      return "Confirm your new 3D email";
     case "email-verification":
     default:
-      return "Confirm your Essence Spline email";
+      return "Confirm your 3D email";
   }
 }
 

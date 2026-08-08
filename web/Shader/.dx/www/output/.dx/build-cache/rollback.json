@@ -1,7 +1,7 @@
 {
   "version": 1,
   "strategy": "manifest-pinned-asset-rollback",
-  "manifest_hash": "blake3:3271412f6b406cd2865bd5b8f230d4ab31d2e364df5288a6a9da24b57509dc84",
+  "manifest_hash": "blake3:f528e7943239036146fe65ad31bfaed829e91a2bdba1a3b7d323d2a6c3c39da1",
   "previous_release_required": true,
   "restore_order": [
     "immutable_assets",

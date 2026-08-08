@@ -2492,14 +2492,13 @@ impl AgentPanel {
         cx.spawn_in(window, async move |this, cx| {
             loop {
                 let registered = project.upgrade().is_some_and(|project| {
-                    project
-                        .read_with(cx, |project, cx| {
-                            project
-                                .agent_server_store()
-                                .read(cx)
-                                .external_agents()
-                                .any(|known| known == &agent_id)
-                        })
+                    project.read_with(cx, |project, cx| {
+                        project
+                            .agent_server_store()
+                            .read(cx)
+                            .external_agents()
+                            .any(|known| known == &agent_id)
+                    })
                 });
                 if registered || Instant::now() >= deadline {
                     break;

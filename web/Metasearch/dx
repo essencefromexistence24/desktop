@@ -1,0 +1,16 @@
+project (
+  name    = metasearch
+  version = 1.0.0
+  kind    = www
+)
+
+www(
+   app_dir=app
+   output_dir=.dx/www/output
+)
+
+companion (
+  binary    = "dx-metasearch"
+  cwd       = ../../../metasearch
+  ready_url = "http://127.0.0.1:8888/api/search?q=ping"
+)

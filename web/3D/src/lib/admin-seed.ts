@@ -10,7 +10,7 @@ type SeedEnv = Record<string, string | undefined>;
 
 export const defaultAdminSeedAccount: AdminSeedAccount = {
   email: "admin@mail.com",
-  name: "Essence Admin",
+  name: "3D Admin",
   password: "password",
 };
 

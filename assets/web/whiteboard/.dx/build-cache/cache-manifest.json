@@ -1,7 +1,7 @@
 {
   "schema": "dx.www.deploy.cache_manifest",
   "schema_revision": 1,
-  "manifest_hash": "blake3:3a2149c1757e00dcaafb3af528d9093d5fb111b79e59d33c8209e2837418cee8",
+  "manifest_hash": "blake3:9fce00726390d6639885db57505805f5ac6ce90e07272011b0f90024ef75e5df",
   "public_runtime_artifacts": [
     {
       "path": "_dx/styles/react-route-cacdba51273ec77f.css",
@@ -223,7 +223,7 @@
       }
     },
     {
-      "path": "public/agent-cursor-7cbbde833ae1eff0.js",
+      "path": "public/agent-cursor-b383c71fb0eaf48f.js",
       "kind": "immutable-asset",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
@@ -232,12 +232,12 @@
       "cdn_headers": {}
     },
     {
-      "path": "public/agent-cursor-7cbbde833ae1eff0.js.br",
+      "path": "public/agent-cursor-b383c71fb0eaf48f.js.br",
       "kind": "immutable-asset",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "br",
-      "encoded_from": "public/agent-cursor-7cbbde833ae1eff0.js",
+      "encoded_from": "public/agent-cursor-b383c71fb0eaf48f.js",
       "cdn_headers": {
         "Content-Encoding": "br",
         "Vary": "Accept-Encoding",
@@ -245,12 +245,12 @@
       }
     },
     {
-      "path": "public/agent-cursor-7cbbde833ae1eff0.js.gz",
+      "path": "public/agent-cursor-b383c71fb0eaf48f.js.gz",
       "kind": "immutable-asset",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "gzip",
-      "encoded_from": "public/agent-cursor-7cbbde833ae1eff0.js",
+      "encoded_from": "public/agent-cursor-b383c71fb0eaf48f.js",
       "cdn_headers": {
         "Content-Encoding": "gzip",
         "Vary": "Accept-Encoding",
@@ -258,7 +258,7 @@
       }
     },
     {
-      "path": "public/canvas-export-b2b11c06ceed2815.js",
+      "path": "public/canvas-export-85222fce691117f3.js",
       "kind": "immutable-asset",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
@@ -267,12 +267,12 @@
       "cdn_headers": {}
     },
     {
-      "path": "public/canvas-export-b2b11c06ceed2815.js.br",
+      "path": "public/canvas-export-85222fce691117f3.js.br",
       "kind": "immutable-asset",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "br",
-      "encoded_from": "public/canvas-export-b2b11c06ceed2815.js",
+      "encoded_from": "public/canvas-export-85222fce691117f3.js",
       "cdn_headers": {
         "Content-Encoding": "br",
         "Vary": "Accept-Encoding",
@@ -280,12 +280,12 @@
       }
     },
     {
-      "path": "public/canvas-export-b2b11c06ceed2815.js.gz",
+      "path": "public/canvas-export-85222fce691117f3.js.gz",
       "kind": "immutable-asset",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "gzip",
-      "encoded_from": "public/canvas-export-b2b11c06ceed2815.js",
+      "encoded_from": "public/canvas-export-85222fce691117f3.js",
       "cdn_headers": {
         "Content-Encoding": "gzip",
         "Vary": "Accept-Encoding",
@@ -293,7 +293,7 @@
       }
     },
     {
-      "path": "public/favicon-b79469898e890b32.svg",
+      "path": "public/favicon-8ef8e37dd36b0f62.svg",
       "kind": "immutable-asset",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
@@ -302,12 +302,12 @@
       "cdn_headers": {}
     },
     {
-      "path": "public/favicon-b79469898e890b32.svg.br",
+      "path": "public/favicon-8ef8e37dd36b0f62.svg.br",
       "kind": "immutable-asset",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "br",
-      "encoded_from": "public/favicon-b79469898e890b32.svg",
+      "encoded_from": "public/favicon-8ef8e37dd36b0f62.svg",
       "cdn_headers": {
         "Content-Encoding": "br",
         "Vary": "Accept-Encoding",
@@ -315,12 +315,12 @@
       }
     },
     {
-      "path": "public/favicon-b79469898e890b32.svg.gz",
+      "path": "public/favicon-8ef8e37dd36b0f62.svg.gz",
       "kind": "immutable-asset",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "gzip",
-      "encoded_from": "public/favicon-b79469898e890b32.svg",
+      "encoded_from": "public/favicon-8ef8e37dd36b0f62.svg",
       "cdn_headers": {
         "Content-Encoding": "gzip",
         "Vary": "Accept-Encoding",
@@ -363,7 +363,7 @@
       }
     },
     {
-      "path": "public/whiteboard-runtime-e47c4c795307d776.js",
+      "path": "public/whiteboard-runtime-44f069aa63b41fee.js",
       "kind": "immutable-asset",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
@@ -372,12 +372,12 @@
       "cdn_headers": {}
     },
     {
-      "path": "public/whiteboard-runtime-e47c4c795307d776.js.br",
+      "path": "public/whiteboard-runtime-44f069aa63b41fee.js.br",
       "kind": "immutable-asset",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "br",
-      "encoded_from": "public/whiteboard-runtime-e47c4c795307d776.js",
+      "encoded_from": "public/whiteboard-runtime-44f069aa63b41fee.js",
       "cdn_headers": {
         "Content-Encoding": "br",
         "Vary": "Accept-Encoding",
@@ -385,12 +385,12 @@
       }
     },
     {
-      "path": "public/whiteboard-runtime-e47c4c795307d776.js.gz",
+      "path": "public/whiteboard-runtime-44f069aa63b41fee.js.gz",
       "kind": "immutable-asset",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "gzip",
-      "encoded_from": "public/whiteboard-runtime-e47c4c795307d776.js",
+      "encoded_from": "public/whiteboard-runtime-44f069aa63b41fee.js",
       "cdn_headers": {
         "Content-Encoding": "gzip",
         "Vary": "Accept-Encoding",

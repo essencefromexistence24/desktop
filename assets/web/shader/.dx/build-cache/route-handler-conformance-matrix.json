@@ -1,7 +1,7 @@
 {
   "schema": "dx.www.deploy.route_handler_conformance_matrix",
   "schema_revision": 1,
-  "manifest_hash": "blake3:7c568648487021d2b4cb3cb7fb7f53eea0b323ed4b6b9ee72a637697b95b5531",
+  "manifest_hash": "blake3:f528e7943239036146fe65ad31bfaed829e91a2bdba1a3b7d323d2a6c3c39da1",
   "path": ".dx/build-cache/route-handler-conformance-matrix.json",
   "release_ready": false,
   "hosted_provider_proof": false,

@@ -54,7 +54,7 @@ export function parseWorkbookBackup(value: string) {
     parsed.version !== BACKUP_VERSION ||
     !parsed.document
   ) {
-    throw new Error("Invalid Essence Excel backup.");
+    throw new Error("Invalid Spreadsheets backup.");
   }
 
   return {

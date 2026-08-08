@@ -471,9 +471,7 @@ impl RenderOnce for ThreadItem {
                     })
                     .when(
                         self.is_truncated && opaque_window && !self.hovered && !self.focused,
-                        |this| {
-                            this.child(gradient_overlay)
-                        },
+                        |this| this.child(gradient_overlay),
                     )
                     .when(self.hovered || self.focused, |this| {
                         this.when_some(self.action_slot, |this, slot| {

@@ -22,7 +22,7 @@ function getRequiredEnv(name: string) {
 }
 
 export const auth = betterAuth({
-  appName: "Essence Spline",
+  appName: "3D",
   secret: getRequiredEnv("BETTER_AUTH_SECRET"),
   baseURL: cleanEnvValue(process.env.BETTER_AUTH_URL),
   database: drizzleAdapter(getDb(), {

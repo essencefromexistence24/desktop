@@ -48,7 +48,6 @@ import {
   shouldUseNativeMacWindowTitlebar,
 } from "@/components/tauri/window-titlebar";
 import { cn } from "@/lib/utils";
-import { isTauri } from "@/lib/api-base";
 import { useWebUpdateCheck } from "@/hooks/use-web-update-check";
 import {
   Archive03Icon,
@@ -66,13 +65,11 @@ import {
   Folder01Icon,
   Globe02Icon,
   HelpCircleIcon,
-  Logout05Icon,
   MoreVerticalIcon,
   Search01Icon,
   PinIcon,
   PinOffIcon,
   PlusSignIcon,
-  PowerIcon,
   PencilEdit02Icon,
   LayoutAlignLeftIcon,
   Settings02Icon,
@@ -114,15 +111,12 @@ import {
   type SidebarItem,
 } from "@/features/chat";
 import { useSettingsDialogStore } from "@/features/settings";
-import { useEffectiveProfile, UserAvatar } from "@/features/profile";
 import { fetchDeviceType, usePlatformStore } from "@/config/env";
-import { clearAuthTokens, logout } from "@/features/auth";
 import { TOUR_OPEN_EVENT } from "@/features/tour";
 import {
   deleteTrainingRun,
   emitTrainingRunDeleted,
   emitTrainingRunUpdated,
-  removeTrainingUnloadGuard,
   renameTrainingRun,
   useTrainingCompletionWatch,
   useTrainingHistorySidebarItems,
@@ -132,7 +126,6 @@ import type { TrainingRunSummary } from "@/features/training";
 import { useExportRuntimeStore } from "@/features/export";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { toast } from "@/lib/toast";
-import { ShutdownDialog } from "@/components/shutdown-dialog";
 import { translate, useT, type TranslationKey } from "@/i18n";
 
 const EMPHASIS_MARKER = "__UNSLOTH_I18N_EMPHASIS_MARKER__";
@@ -330,8 +323,6 @@ export function AppSidebar() {
     return () => window.clearInterval(id);
   }, [chatOnly, chatOnlyReason]);
 
-  const [shutdownOpen, setShutdownOpen] = useState(false);
-
   const isChatRoute = pathname.startsWith("/chat");
   const isStudioRoute = pathname === "/studio" || pathname.startsWith("/studio/");
   const [chatOpen, setChatOpen] = useState(true);
@@ -368,7 +359,6 @@ export function AppSidebar() {
 
   const isRecipesRoute = pathname.startsWith("/data-recipes");
   const isExportRoute = pathname === "/export" || pathname.startsWith("/export/");
-  const { displayTitle, avatarDataUrl } = useEffectiveProfile();
 
   const { projects } = useChatProjects();
   const activeProjectId = isChatRoute
@@ -1037,7 +1027,7 @@ export function AppSidebar() {
                   tabIndex={chatDisabled ? -1 : undefined}
                 >
                   <img
-                    src="/dx-icon.svg"
+                    src="/favicon.svg"
                     alt="Train"
                     className="h-[34px] w-[34px] rounded-full object-cover"
                   />
@@ -1506,19 +1496,23 @@ export function AppSidebar() {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  aria-label={t("shell.accountMenu", { name: displayTitle })}
+                  aria-label={t("shell.navigation.settings")}
                   className="sidebar-nav-btn !h-[44px] -my-[3px] gap-[9px] px-2 py-[3px] rounded-[14px] group-data-[collapsible=icon]:!size-[34px] group-data-[collapsible=icon]:!rounded-full group-data-[collapsible=icon]:!p-0 group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:justify-center"
                 >
-                  <div className="flex shrink-0 items-center">
-                    <UserAvatar
-                      name={displayTitle}
-                      imageUrl={avatarDataUrl}
-                      size="sm"
-                      className="!size-[32px] group-data-[collapsible=icon]:!rounded-full"
+                  <span
+                    aria-hidden="true"
+                    className="flex size-[32px] shrink-0 items-center justify-center text-nav-fg group-data-[collapsible=icon]:!size-full"
+                  >
+                    <HugeiconsIcon
+                      icon={Settings02Icon}
+                      strokeWidth={1.5}
+                      className="!size-[20px]"
                     />
-                  </div>
+                  </span>
                   <div className="flex flex-col gap-px leading-tight group-data-[collapsible=icon]:hidden">
-                    <span className="truncate font-heading text-[13.5px] tracking-[0.025em] dark:tracking-[0.04em] font-semibold text-nav-fg">{displayTitle}</span>
+                    <span className="truncate font-heading text-[13.5px] tracking-[0.025em] dark:tracking-[0.04em] font-semibold text-nav-fg">
+                      {t("shell.navigation.settings")}
+                    </span>
                     <span className="truncate text-[11.5px] tracking-nav text-muted-foreground">Train</span>
                   </div>
                   {/* settings cog (replaces the up/down chevron) */}
@@ -1592,29 +1586,6 @@ export function AppSidebar() {
                   <HugeiconsIcon icon={HelpCircleIcon} strokeWidth={1.75} className="size-icon" />
                   <span>{t("common.help")}</span>
                 </DropdownMenuItem>
-                {!isTauri && (
-                  <DropdownMenuItem
-                    onSelect={async () => {
-                      // Best-effort server revocation; ignore network errors so
-                      // the local clear still runs and the user lands on /login.
-                      try {
-                        await logout();
-                      } catch {
-                        clearAuthTokens();
-                      }
-                      void navigate({ to: "/" });
-                    }}
-                  >
-                    <HugeiconsIcon icon={Logout05Icon} strokeWidth={1.75} className="size-icon" />
-                    <span>{t("shell.navigation.logOut")}</span>
-                  </DropdownMenuItem>
-                )}
-                {!isTauri && (
-                  <DropdownMenuItem onSelect={() => setShutdownOpen(true)}>
-                    <HugeiconsIcon icon={PowerIcon} strokeWidth={1.75} className="size-icon" />
-                    <span>{t("common.shutdown")}</span>
-                  </DropdownMenuItem>
-                )}
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>
@@ -1622,13 +1593,6 @@ export function AppSidebar() {
       </SidebarFooter>
     </Sidebar>
     <ChatSearchDialog />
-    {!isTauri && (
-      <ShutdownDialog
-        open={shutdownOpen}
-        onOpenChange={setShutdownOpen}
-        onAfterShutdown={removeTrainingUnloadGuard}
-      />
-    )}
     <Dialog
       open={confirmingDelete !== null}
       onOpenChange={(open) => {

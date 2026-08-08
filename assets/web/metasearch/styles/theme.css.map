@@ -1,0 +1,34 @@
+{
+  "version": 3,
+  "file": "styles/theme.css",
+  "sources": [
+    "styles/theme.css"
+  ],
+  "sourcesContent": [
+    ":root {\r\n  color-scheme: light;\r\n  --background: 0 0% 100%;\r\n  --foreground: 0 0% 4%;\r\n  --surface: 0 0% 98%;\r\n  --surface-strong: 0 0% 94%;\r\n  --muted: 0 0% 91%;\r\n  --muted-foreground: 0 0% 39%;\r\n  --border: 0 0% 88%;\r\n  --card: 0 0% 100%;\r\n  --accent: 0 0% 4%;\r\n  --accent-foreground: 0 0% 98%;\r\n  --warning: 38 92% 50%;\r\n  --warning-text: 35 92% 32%;\r\n  --success: 0 0% 18%;\r\n  --success-text: 0 0% 14%;\r\n  --danger: 0 72% 42%;\r\n  --destructive: var(--danger);\r\n  --primary: 0 0% 4%;\r\n  --primary-foreground: 0 0% 98%;\r\n  --ring: 0 0% 4%;\r\n  --spacing: 0.25rem;\r\n  --font-sans: \"JetBrains Mono\", \"JetBrains Mono NL\", ui-monospace, SFMono-Regular, Consolas, \"Liberation Mono\", monospace;\r\n  --font-mono: \"JetBrains Mono\", \"JetBrains Mono NL\", ui-monospace, SFMono-Regular, Consolas, \"Liberation Mono\", monospace;\r\n  --motion-fast: 150ms;\r\n  --motion-medium: 240ms;\r\n  --motion-spring: cubic-bezier(0.34, 1.56, 0.64, 1);\r\n  --motion-standard: cubic-bezier(0.2, 0, 0, 1);\r\n}\r\n\r\n@media (prefers-color-scheme: dark) {\r\n  :root {\r\n    color-scheme: dark;\r\n    --background: 0 0% 3%;\r\n    --foreground: 0 0% 96%;\r\n    --surface: 0 0% 6%;\r\n    --surface-strong: 0 0% 10%;\r\n    --muted: 0 0% 15%;\r\n    --muted-foreground: 0 0% 66%;\r\n    --border: 0 0% 17%;\r\n    --card: 0 0% 7%;\r\n    --accent: 0 0% 98%;\r\n    --accent-foreground: 0 0% 4%;\r\n    --success: 0 0% 86%;\r\n    --success-text: 0 0% 88%;\r\n    --primary: 0 0% 98%;\r\n    --primary-foreground: 0 0% 4%;\r\n    --ring: 0 0% 98%;\r\n    --warning-text: 38 92% 62%;\r\n  }\r\n}\r\n\r\n.theme-light,\r\n.theme-dark {\r\n  background: hsl(var(--background));\r\n  color: hsl(var(--foreground));\r\n}\r\n\r\n.theme-light {\r\n  color-scheme: light;\r\n  --background: 0 0% 100%;\r\n  --foreground: 0 0% 4%;\r\n  --surface: 0 0% 98%;\r\n  --surface-strong: 0 0% 94%;\r\n  --muted: 0 0% 91%;\r\n  --muted-foreground: 0 0% 39%;\r\n  --border: 0 0% 88%;\r\n  --card: 0 0% 100%;\r\n  --accent: 0 0% 4%;\r\n  --accent-foreground: 0 0% 98%;\r\n  --primary: 0 0% 4%;\r\n  --primary-foreground: 0 0% 98%;\r\n  --ring: 0 0% 4%;\r\n  --success: 0 0% 18%;\r\n  --success-text: 0 0% 14%;\r\n  --danger: 0 72% 42%;\r\n  --warning-text: 35 92% 32%;\r\n}\r\n\r\n.theme-dark {\r\n  color-scheme: dark;\r\n  --background: 0 0% 3%;\r\n  --foreground: 0 0% 96%;\r\n  --surface: 0 0% 6%;\r\n  --surface-strong: 0 0% 10%;\r\n  --muted: 0 0% 15%;\r\n  --muted-foreground: 0 0% 66%;\r\n  --border: 0 0% 17%;\r\n  --card: 0 0% 7%;\r\n  --accent: 0 0% 98%;\r\n  --accent-foreground: 0 0% 4%;\r\n  --primary: 0 0% 98%;\r\n  --primary-foreground: 0 0% 4%;\r\n  --ring: 0 0% 98%;\r\n  --success: 0 0% 86%;\r\n  --success-text: 0 0% 88%;\r\n  --warning-text: 38 92% 62%;\r\n}\r\n"
+  ],
+  "names": [],
+  "mappings": "",
+  "x_dx_css_pipeline": {
+    "owner": "dx-style",
+    "generated_by": "dx-source-css-adapter",
+    "reference": "turbopack-css-source-map-asset",
+    "mapping_status": "source-list-hash-evidence-no-segments",
+    "segment_mapping_available": false,
+    "segment_count": 0,
+    "source_evidence_only": true,
+    "parity_status": "compatibility-evidence-only",
+    "runtime_boundary": "dx-style-owned-no-next-runtime",
+    "requires_node_modules": false,
+    "full_lightning_css_parity": false,
+    "turbopack_public_architecture": false,
+    "source_count": 1,
+    "source_hashes": [
+      {
+        "source": "styles/theme.css",
+        "role": "entry-style",
+        "hash": "c3cd8a22d398e3c9"
+      }
+    ]
+  }
+}

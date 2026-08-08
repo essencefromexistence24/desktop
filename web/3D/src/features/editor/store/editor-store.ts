@@ -429,7 +429,7 @@ function upsertAnimationKeyframe(track: AnimationTrack, value: AnimationKeyframe
   };
 }
 
-const defaultEditorDocument = ensureDocumentScenes(createDefaultDocument("Essence Spline Scene"));
+const defaultEditorDocument = ensureDocumentScenes(createDefaultDocument("3D Scene"));
 
 export const useEditorStore = create<EditorState>()(
   persist(
@@ -1834,7 +1834,7 @@ export const useEditorStore = create<EditorState>()(
         }),
       resetDocument: () =>
         set((state) => ({
-          ...commit(state, createDefaultDocument("Essence Spline Scene"), null),
+          ...commit(state, createDefaultDocument("3D Scene"), null),
           activeProjectId: null,
           lastSavedAt: null,
           lastSavedDocument: null,
@@ -1855,7 +1855,7 @@ export const useEditorStore = create<EditorState>()(
         const parsed = sceneDocumentSchema.safeParse(document);
 
         if (!parsed.success) {
-          throw new Error("The selected file is not a valid Essence Spline scene.");
+          throw new Error("The selected file is not a valid 3D scene.");
         }
 
         const hydratedDocument = getPreparedDocument(parsed.data);
@@ -1914,7 +1914,7 @@ export const useEditorStore = create<EditorState>()(
         const parsed = sceneDocumentSchema.safeParse(document);
 
         if (!parsed.success) {
-          throw new Error("The updated scene is not a valid Essence Spline document.");
+          throw new Error("The updated scene is not a valid 3D document.");
         }
 
         const hydratedDocument = getPreparedDocument(parsed.data);

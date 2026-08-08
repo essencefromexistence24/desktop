@@ -1,0 +1,1 @@
+import{n as e,r as t}from"./adminUi-D_0mF6bA.js";e();export{t as useAdminUi};

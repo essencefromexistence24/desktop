@@ -54,7 +54,7 @@ This package contains a Vite web companion app plus SwiftUI source files for a v
 
 - Bun
 - Xcode with the visionOS SDK
-- A reachable HTTPS Essence Spline share or embed URL
+- A reachable HTTPS 3D share or embed URL
 
 ## Web Companion
 
@@ -67,7 +67,7 @@ This package contains a Vite web companion app plus SwiftUI source files for a v
 1. Create a new visionOS App project in Xcode.
 2. Copy the files from \`visionOS/Sources/EssenceSplineVisionPreview\` into the app target.
 3. Replace the starter \`App\` file Xcode created with \`EssenceSplineVisionPreviewApp.swift\`.
-4. Keep \`SceneMetadata.swift\` pointed at the published Essence Spline URLs, or replace those URLs with your own hosted build.
+4. Keep \`SceneMetadata.swift\` pointed at the published 3D URLs, or replace those URLs with your own hosted build.
 5. Run the app on Apple Vision Pro or the visionOS simulator.
 
 The windowed scene uses WKWebView for the interactive WebGL embed. The immersive space adds a lightweight RealityKit spatial preview panel and quick link back to the shared scene, so the package can be extended later with native RealityKit mesh conversion.

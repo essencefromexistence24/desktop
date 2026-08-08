@@ -48,7 +48,7 @@ export default async function SharedScenePage({ params, searchParams }: SharedSc
           <div className="min-w-0">
             <div className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
               <Box className="size-4" />
-              Shared Essence Spline scene
+              Shared 3D scene
             </div>
             <h1 className="truncate text-2xl font-semibold tracking-normal">{sharedScene.project.name}</h1>
             <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">

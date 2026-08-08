@@ -15,7 +15,7 @@ export default async function AuthPage() {
       <section className="w-full max-w-md rounded-lg border bg-card p-6 shadow-sm">
         <div className="mb-6 space-y-3">
           <Badge variant="secondary" className="font-mono">
-            Essence Excel
+            Spreadsheets
           </Badge>
           <div className="space-y-2">
             <h1 className="text-2xl font-semibold tracking-normal">

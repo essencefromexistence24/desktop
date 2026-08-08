@@ -78,7 +78,7 @@ function escapeKotlinString(value: string) {
   return value.replaceAll("\\", "\\\\").replaceAll('"', '\\"');
 }
 
-export function getEmbedCode(embedUrl: string, title = "Essence Spline scene", options?: EmbedDisplayOptionInput) {
+export function getEmbedCode(embedUrl: string, title = "3D scene", options?: EmbedDisplayOptionInput) {
   const display = resolveEmbedDisplayOptions(options);
   const escapedTitle = escapeHtmlAttribute(title);
   const escapedUrl = escapeHtmlAttribute(embedUrl);
@@ -103,7 +103,7 @@ export function getReactEmbedCode(embedUrl: string, options?: EmbedDisplayOption
   title?: string;
 };
 
-export function EssenceSplineScene({ className, title = "Essence Spline scene" }: EssenceSplineSceneProps) {
+export function EssenceSplineScene({ className, title = "3D scene" }: EssenceSplineSceneProps) {
   return (
     <div
       className={className}
@@ -140,7 +140,7 @@ export function EssenceSplineScene({ className, title = "Essence Spline scene" }
   title?: string;
 };
 
-export function EssenceSplineScene({ className, title = "Essence Spline scene" }: EssenceSplineSceneProps) {
+export function EssenceSplineScene({ className, title = "3D scene" }: EssenceSplineSceneProps) {
   return (
     <iframe
       src="${embedUrl}"
@@ -168,7 +168,7 @@ export function getRuntimeApiCode(embedUrl: string, options?: EmbedDisplayOption
   return `<iframe
   id="essence-spline-scene"
   src="${escapeHtmlAttribute(embedUrl)}"
-  title="Essence Spline scene"
+  title="3D scene"
   style="width:100%;height:${display.height}px;border:0;border-radius:${display.radius}px;overflow:hidden;${background}"
   allow="fullscreen; xr-spatial-tracking"
 ></iframe>
@@ -195,7 +195,7 @@ export function getRuntimeApiCode(embedUrl: string, options?: EmbedDisplayOption
     }
 
     if (event.data?.type === "essence-spline:runtime-response") {
-      console.log("Essence Spline runtime response", event.data);
+      console.log("3D runtime response", event.data);
     }
   });
 </script>`;
@@ -345,7 +345,7 @@ fun fetchEssenceSplineSceneJson(): JSONObject {
     return try {
         val statusCode = connection.responseCode
         if (statusCode !in 200..299) {
-            throw IOException("Essence Spline scene request failed with HTTP $statusCode")
+            throw IOException("3D scene request failed with HTTP $statusCode")
         }
 
         val body = connection.inputStream.bufferedReader().use { reader -> reader.readText() }
@@ -365,7 +365,7 @@ export function getSceneFetchCode(apiUrl: string) {
   });
 
   if (!response.ok) {
-    throw new Error("Essence Spline scene request failed");
+    throw new Error("3D scene request failed");
   }
 
   return response.json() as Promise<{

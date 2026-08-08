@@ -1,0 +1,18 @@
+[
+  {
+    "kind": "route-handler",
+    "source_path": "app/api/search/route.ts",
+    "endpoint": "/api/search",
+    "exports": [
+      {
+        "name": "GET",
+        "http_method": "GET",
+        "async_export": true,
+        "request_serialization": "web-request",
+        "response_serialization": "json-value"
+      }
+    ],
+    "execution_model": "analyze-only",
+    "lifecycle_scripts_executed": false
+  }
+]

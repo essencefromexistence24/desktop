@@ -1,24 +1,24 @@
 {
   "schema": "dx.www.imageMetadataReceipt",
   "schema_revision": 1,
-  "generatedAt": "2026-08-07T06:01:36.436366500+00:00",
+  "generatedAt": "2026-08-08T18:09:28.007570800+00:00",
   "projectRoot": "G:/Dx/desktop/web/Shader",
   "receiptPath": ".dx/receipts/build/image-metadata.json",
   "summary": {
-    "image_assets": 7,
-    "metadata_assets": 7,
+    "image_assets": 6,
+    "metadata_assets": 6,
     "optimized_variants_emitted": 0,
-    "placeholders_emitted": 7,
-    "route_references": 2,
+    "placeholders_emitted": 6,
+    "route_references": 10,
     "style_references": 2,
     "formats": {
       "png": 3,
-      "svg": 4
+      "svg": 3
     },
     "dimension_sources": {
       "png-ihdr": 3,
-      "svg-root-attributes": 1,
-      "svg-viewbox": 3
+      "svg-root-attributes": 2,
+      "svg-viewbox": 1
     },
     "node_modules_required": false
   },
@@ -249,15 +249,15 @@
     },
     {
       "path": "public/icon.svg",
-      "output": ".dx/www/output/public/icon-c592869c9c233ec1.svg",
-      "hash": "c592869c9c233ec1",
-      "bytes": 259,
+      "output": ".dx/www/output/public/icon-4ef4b7a78017f8f9.svg",
+      "hash": "4ef4b7a78017f8f9",
+      "bytes": 1100,
       "image_metadata": {
         "format": "svg",
         "mime_type": "image/svg+xml",
-        "width": 64,
-        "height": 64,
-        "dimension_source": "svg-viewbox",
+        "width": 1024,
+        "height": 1024,
+        "dimension_source": "svg-root-attributes",
         "status": "metadata-read",
         "optimization": {
           "status": "metadata-plus-svg-placeholder",
@@ -268,55 +268,14 @@
           "blur_placeholder_emitted": false,
           "placeholder": {
             "kind": "svg-placeholder-data-url",
-            "data_url": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%20viewBox%3D%220%200%2064%2064%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f3f4f6%22%2F%3E%3C%2Fsvg%3E",
-            "width": 64,
-            "height": 64,
-            "bytes": 286,
+            "data_url": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221024%22%20height%3D%221024%22%20viewBox%3D%220%200%201024%201024%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f3f4f6%22%2F%3E%3C%2Fsvg%3E",
+            "width": 1024,
+            "height": 1024,
+            "bytes": 294,
             "source": "dx-source-owned-svg-placeholder",
-            "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-95cdf2c6b75c0830.placeholder.svg",
-            "hash": "95cdf2c6b75c0830",
-            "artifact_bytes": 165
-          },
-          "boundary": "metadata-plus-svg-placeholder-no-resize-or-encoding",
-          "informed_by": [
-            "turbopack-image::process::get_meta_data",
-            "turbopack-image::process::svg"
-          ]
-        }
-      },
-      "referenced_by_routes": [],
-      "referenced_by_styles": [],
-      "node_modules_required": false
-    },
-    {
-      "path": "public/logo.svg",
-      "output": ".dx/www/output/public/logo-c592869c9c233ec1.svg",
-      "hash": "c592869c9c233ec1",
-      "bytes": 259,
-      "image_metadata": {
-        "format": "svg",
-        "mime_type": "image/svg+xml",
-        "width": 64,
-        "height": 64,
-        "dimension_source": "svg-viewbox",
-        "status": "metadata-read",
-        "optimization": {
-          "status": "metadata-plus-svg-placeholder",
-          "variants_emitted": 0,
-          "optimizer_invoked": false,
-          "resize_emitted": false,
-          "encoding_emitted": false,
-          "blur_placeholder_emitted": false,
-          "placeholder": {
-            "kind": "svg-placeholder-data-url",
-            "data_url": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%20viewBox%3D%220%200%2064%2064%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f3f4f6%22%2F%3E%3C%2Fsvg%3E",
-            "width": 64,
-            "height": 64,
-            "bytes": 286,
-            "source": "dx-source-owned-svg-placeholder",
-            "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-95cdf2c6b75c0830.placeholder.svg",
-            "hash": "95cdf2c6b75c0830",
-            "artifact_bytes": 165
+            "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg",
+            "hash": "b0698a08bf67b748",
+            "artifact_bytes": 173
           },
           "boundary": "metadata-plus-svg-placeholder-no-resize-or-encoding",
           "informed_by": [

@@ -143,7 +143,7 @@ function renderTextContent(candidate: NotificationCandidate, member: WorkspaceNo
     candidate.message,
     "",
     `Action: ${candidate.actionLabel}`,
-    "Open Essence Spline to review this workspace notification.",
+    "Open 3D to review this workspace notification.",
   ].join("\n");
 }
 

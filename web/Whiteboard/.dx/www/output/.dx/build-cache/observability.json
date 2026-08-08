@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated": "2026-08-07T06:01:34.925787300+00:00",
-  "manifest_hash": "blake3:3b908fbdb74b3c64f1eb20e1c172a9454bdc4bc35eafb439418c169da7de7140",
+  "generated": "2026-08-08T12:10:49.186677300+00:00",
+  "manifest_hash": "blake3:9fce00726390d6639885db57505805f5ac6ce90e07272011b0f90024ef75e5df",
   "runtime": "dx-www-production-contract",
   "secret_fields_collected": false,
   "privacy": {

@@ -1,0 +1,21 @@
+import { dxSourceModule as dxRouteEntryModule } from "./modules/app-page-tsx-d63b123753599478.mjs";
+const fallbackHtml = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><link rel=\"icon\" href=\"./favicon.svg\" type=\"image/svg+xml\"><link rel=\"apple-touch-icon\" href=\"./icon.svg\"><meta name=\"description\" content=\"Search results served through DX WWW.\"><link rel=\"stylesheet\" href=\"./styles/base.css\"><link rel=\"stylesheet\" href=\"./styles/generated.css\"><link rel=\"stylesheet\" href=\"./styles/globals.css\"><link rel=\"stylesheet\" href=\"./styles/results.css\"><link rel=\"stylesheet\" href=\"./styles/theme.css\"><link rel=\"stylesheet\" href=\"./_dx/styles/react-route-eecaa997c1488809.css\" data-dx-generated=\"true\"><title>DX Metasearch</title></head><body><main class=\"starter-shell\" data-dx-runtime=\"static\" data-dx-output-mode=\"tiny-static\" data-dx-js=\"none\" data-dx-route=\"/\" data-dx-assets=\"/logo.svg,/public/metasearch/answer-common.ts,/public/metasearch/answer-controls.ts,/public/metasearch/answer-evidence.ts,/public/metasearch/answer-media.ts,/public/metasearch/answer-renderer.ts,/public/metasearch/answer-summary.ts,/public/metasearch/answer-tts.ts,/public/metasearch/i18n-languages.ts,/public/metasearch/result-cards.ts,/public/metasearch/result-common.ts,/public/metasearch/results-renderer.ts,/public/metasearch/runtime.ts,/public/metasearch/search-scheduler.ts,/public/metasearch/url-safety.ts\"><div class=\"site-shell\" data-metasearch-app=\"true\" data-api-origin=\"http://localhost:8888\" data-flow-tts-endpoint=\"http://127.0.0.1:8789/api/flow/tts\"><div class=\"sticky-headers\"><header class=\"site-header\"><a class=\"brand\" href=\"./\" aria-label=\"DX Metasearch\"><img class=\"brand-mark\" src=\"./logo.svg\" alt=\"DX\"><span class=\"brand-text\"><span>DX</span><strong>Metasearch</strong></span></a></header></div><main class=\"results-shell\" id=\"results\"><section class=\"results-main\" aria-label=\"Search results\"><div class=\"results-status\" data-results-status=\"true\" aria-live=\"polite\"></div><div class=\"result-list\" data-result-list=\"true\"></div></section><aside class=\"response-shell\"><div class=\"response-summary\" data-response-summary=\"true\" aria-live=\"polite\"></div><div class=\"response-details\" data-response-details=\"true\"></div><div class=\"engine-list\" data-engine-list=\"true\"></div><div class=\"failed-engine-panel\" data-failed-engine-panel=\"true\" hidden><div class=\"failed-engine-list\" data-failed-engine-list=\"true\"></div></div></aside></main><script src=\"./public/metasearch/url-safety.ts\" defer></script><script src=\"./public/metasearch/i18n-languages.ts\" defer></script><script src=\"./public/metasearch/answer-common.ts\" defer></script><script src=\"./public/metasearch/answer-tts.ts\" defer></script><script src=\"./public/metasearch/answer-controls.ts\" defer></script><script src=\"./public/metasearch/answer-summary.ts\" defer></script><script src=\"./public/metasearch/answer-evidence.ts\" defer></script><script src=\"./public/metasearch/answer-media.ts\" defer></script><script src=\"./public/metasearch/answer-renderer.ts\" defer></script><script src=\"./public/metasearch/result-common.ts\" defer></script><script src=\"./public/metasearch/result-cards.ts\" defer></script><script src=\"./public/metasearch/results-renderer.ts\" defer></script><script src=\"./public/metasearch/search-scheduler.ts\" defer></script><script src=\"./public/metasearch/runtime.ts\" defer></script></div></main></body></html>";
+
+export const dxRouteShell = Object.freeze({
+  route: "/",
+  fallbackHash: "3110742141b0864d",
+  fullReactHydration: false,
+  nodeModulesRequired: false,
+  sourceModuleEntry: dxRouteEntryModule
+});
+
+export function mount(target) {
+  const container = typeof target === "string" ? document.querySelector(target) : target;
+  if (!container) {
+    throw new Error(`DX route shell target not found for ${dxRouteShell.route}`);
+  }
+  container.innerHTML = fallbackHtml;
+  return dxRouteShell;
+}
+
+export default dxRouteShell;

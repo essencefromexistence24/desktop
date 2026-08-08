@@ -319,7 +319,7 @@ function workbookMetadataToProperties(
         : undefined,
     Comments: safeMetadataText(document.metadata.description, 1000),
     ModifiedDate: modifiedDate,
-    Application: "Essence Excel",
+    Application: "Spreadsheets",
   };
 }
 

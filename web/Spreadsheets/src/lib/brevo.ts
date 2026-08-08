@@ -11,20 +11,20 @@ type SendBrevoOtpEmailInput = {
 
 function otpSubject(type: SendBrevoOtpEmailInput["type"]) {
   if (type === "change-email") {
-    return "Confirm your new Essence Excel email";
+    return "Confirm your new Spreadsheets email";
   }
 
   if (type === "forget-password") {
-    return "Reset your Essence Excel password";
+    return "Reset your Spreadsheets password";
   }
 
-  return "Your Essence Excel confirmation code";
+  return "Your Spreadsheets confirmation code";
 }
 
 function otpHtml(otp: string) {
   return `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #18181b;">
-      <h1 style="font-size: 20px; margin: 0 0 12px;">Essence Excel confirmation</h1>
+      <h1 style="font-size: 20px; margin: 0 0 12px;">Spreadsheets confirmation</h1>
       <p style="margin: 0 0 16px;">Use this code to finish signing in:</p>
       <p style="font-size: 28px; letter-spacing: 8px; font-weight: 700; margin: 0 0 16px;">${otp}</p>
       <p style="margin: 0; color: #52525b;">The code expires in ${OTP_EXPIRY_MINUTES} minutes.</p>
@@ -35,7 +35,7 @@ function otpHtml(otp: string) {
 export async function sendBrevoOtpEmail(input: SendBrevoOtpEmailInput) {
   const apiKey = requireServerEnv("BREVO_API_KEY");
   const senderEmail = process.env.BREVO_SENDER_EMAIL ?? "ajju40959@gmail.com";
-  const senderName = process.env.BREVO_SENDER_NAME ?? "Essence Excel";
+  const senderName = process.env.BREVO_SENDER_NAME ?? "Spreadsheets";
 
   const response = await fetch(BREVO_EMAIL_ENDPOINT, {
     method: "POST",
@@ -52,7 +52,7 @@ export async function sendBrevoOtpEmail(input: SendBrevoOtpEmailInput) {
       to: [{ email: input.email }],
       subject: otpSubject(input.type),
       htmlContent: otpHtml(input.otp),
-      textContent: `Your Essence Excel confirmation code is ${input.otp}. It expires in ${OTP_EXPIRY_MINUTES} minutes.`,
+      textContent: `Your Spreadsheets confirmation code is ${input.otp}. It expires in ${OTP_EXPIRY_MINUTES} minutes.`,
     }),
   });
 

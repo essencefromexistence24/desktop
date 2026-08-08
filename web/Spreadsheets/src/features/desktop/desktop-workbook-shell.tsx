@@ -273,7 +273,7 @@ export function DesktopWorkbookShell() {
               }
 
               openLocalWorkbook(file).catch(() => {
-                setNotice("Could not open this Essence Excel backup.");
+                setNotice("Could not open this Spreadsheets backup.");
               });
             }}
           />

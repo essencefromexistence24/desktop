@@ -1,0 +1,51 @@
+import{a as e,n as t}from"./rolldown-runtime-BYbx6iT9.js";import{n,o as r,r as i}from"./react-vendor-CVdEZaD5.js";import{n as a,t as o}from"./errorMessage-_0eQvOhl.js";import{l as s,m as c}from"./cmsData-BiZjOwwV.js";import{i as l,n as u,r as d}from"./markdownDocument-VR1MxXAJ.js";import{r as ee,t as f}from"./Skeleton-CadQLqlK.js";import{M as p,O as te,S as m,_ as ne,a as re,b as h,c as g,d as _,f as v,g as y,h as b,i as x,k as S,l as ie,m as ae,n as C,o as w,p as T,r as E,s as oe,t as se,u as D,v as O,x as ce,y as le}from"./MediaNodeToolbar-Bd41SnS6.js";var k,A,j,M,N,P,F=t((()=>{k=`_shell_16yfh_1`,A=`_frame_16yfh_27`,j=`_loading_16yfh_43`,M=`_errorState_16yfh_57`,N=`_errorHint_16yfh_105`,P={shell:k,frame:A,loading:j,errorState:M,errorHint:N}}));function I(e){for(let t of Array.from(e.styleSheets)){let e;try{e=t.cssRules}catch{continue}let n=[];for(let t of Array.from(e))t.type===1&&n.push(t);for(let e of n){let n=e.selectorText.split(`,`).map(e=>e.trim()).map(L).filter(e=>e!==null);if(n.length===0)continue;let r=n.join(`, `),i=e.style.cssText;if(i)try{t.insertRule(`${r} { ${i} }`,t.cssRules.length)}catch{}}}}function L(e){let t=e.lastIndexOf(`>`);if(t===-1)return null;let n=t;for(;n>0&&e[n-1]===` `;)n--;let r=t+1;for(;r<e.length&&e[r]===` `;)r++;return`${e.slice(0,n)} ${e.slice(r)}`}function R(e){let t=(0,B.c)(42),{entry:n,title:r,body:i,readOnly:a,editorRef:s,onBodyChange:u,onPickMedia:f}=e,[p,m]=(0,V.useState)(null),[h,g]=(0,V.useState)(null),_=(0,V.useRef)(u),v=(0,V.useRef)(i),x=(0,V.useRef)(i),S,C;t[0]===u?(S=t[1],C=t[2]):(S=()=>{_.current=u},C=[u],t[0]=u,t[1]=S,t[2]=C),(0,V.useEffect)(S,C);let w,T;t[3]===i?(w=t[4],T=t[5]):(w=()=>{v.current=i},T=[i],t[3]=i,t[4]=w,t[5]=T),(0,V.useEffect)(w,T);let D;t[6]===Symbol.for(`react.memo_cache_sentinel`)?(D={status:`loading`,html:``,error:null},t[6]=D):D=t[6];let[O,k]=(0,V.useState)(D),A=(0,V.useRef)(null),j=(0,V.useRef)(null),M,N;t[7]!==n.cells||t[8]!==n.id||t[9]!==r?(M=()=>(A.current!==null&&window.clearTimeout(A.current),A.current=window.setTimeout(()=>{let e=new AbortController;j.current?.abort(),j.current=e;let t={...n.cells,title:r,body:v.current};c(n.id,{cells:t,signal:e.signal}).then(t=>{e.signal.aborted||k({status:`ready`,html:t,error:null})}).catch(e=>{e instanceof DOMException&&e.name===`AbortError`||k({status:`error`,html:``,error:o(e,`Preview failed`)})})},U),()=>{A.current!==null&&window.clearTimeout(A.current)}),N=[n.id,n.cells,r],t[7]=n.cells,t[8]=n.id,t[9]=r,t[10]=M,t[11]=N):(M=t[10],N=t[11]),(0,V.useEffect)(M,N);let F;t[12]!==O.status||t[13]!==a?(F=e=>{let t=e.currentTarget;if(!t||!t.contentDocument||O.status!==`ready`)return;g(he);let n=t.contentDocument.querySelector(`[data-instatic-content-region]`);if(!n)return;let r=t.contentDocument.createElement(`style`);r.setAttribute(`data-instatic-live-editor`,`true`),r.textContent=W,t.contentDocument.head.appendChild(r),I(t.contentDocument),t.contentDocument.querySelectorAll(`a[href]`).forEach(me),t.contentDocument.querySelectorAll(`form`).forEach(pe);let i=fe;t.contentDocument.addEventListener(`click`,i,!0),t.contentDocument.addEventListener(`auxclick`,i,!0),t.contentDocument.addEventListener(`submit`,de,!0),n.innerHTML=``;let o=new te({element:n,editable:!a,extensions:[le.configure({heading:{levels:[2,3,4]},link:{openOnClick:!1,autolink:!0,linkOnPaste:!0}}),ce.configure({placeholder:ue,showOnlyCurrent:!0}),ae.configure({resizable:!0}),ne,y,b,ie.configure({types:[`paragraph`,`heading`],alignments:[`left`,`center`,`right`,`justify`],defaultAlignment:null}),oe,G],content:d(v.current),editorProps:{attributes:{"data-testid":`content-live-body-editor`,"aria-label":`Post body (live preview)`}},onUpdate(e){let{editor:t}=e,n=l(t.getJSON());x.current=n,_.current(n)}});x.current=v.current;let s=o.view.dom;t.contentDocument.addEventListener(`mousedown`,e=>{let n=e.target;n instanceof Node&&s.contains(n)&&t.contentDocument?.activeElement!==s&&s.focus({preventScroll:!0})},!0),t.contentDocument.addEventListener(`keydown`,e=>{if(e.key!==`Enter`)return;let n=t.contentDocument;if(!n||n.activeElement===s)return;let r=n.getSelection()?.anchorNode;!r||!s.contains(r)||(e.preventDefault(),e.stopPropagation(),e.shiftKey?o.chain().focus().setHardBreak().run():o.chain().focus().splitBlock().run())},!0),g(o)},t[12]=O.status,t[13]=a,t[14]=F):F=t[14];let L=F,R,K;t[15]===Symbol.for(`react.memo_cache_sentinel`)?(K=()=>()=>{g(z)},R=[],t[15]=R,t[16]=K):(R=t[15],K=t[16]),(0,V.useEffect)(K,R);let q,J;t[17]!==i||t[18]!==h?(q=()=>{if(!(!h||h.isDestroyed)&&i!==x.current){if(l(h.getJSON())===i){x.current=i;return}x.current=i,h.commands.setContent(d(i),{emitUpdate:!1})}},J=[i,h],t[17]=i,t[18]=h,t[19]=q,t[20]=J):(q=t[19],J=t[20]),(0,V.useEffect)(q,J);let Y,X;if(t[21]===h?(Y=t[22],X=t[23]):(Y=()=>({focusStart:()=>h?.commands.focus(`start`),insertText:e=>h?.chain().focus().insertContent(e).run(),insertMedia:e=>{h&&(h.isActive(`media`)?h.chain().focus().updateAttributes(`media`,e).run():h.chain().focus().insertContent({type:`media`,attrs:e}).run())},appendBlock:e=>{if(!h)return;let t=e===`heading`?{type:`heading`,attrs:{level:2},content:[{type:`text`,text:`Heading`}]}:{type:`paragraph`};h.chain().focus(`end`).insertContent(t).run()}}),X=[h],t[21]=h,t[22]=Y,t[23]=X),(0,V.useImperativeHandle)(s,Y,X),O.status===`error`){let e;t[24]===Symbol.for(`react.memo_cache_sentinel`)?(e=(0,H.jsx)(`h2`,{children:`Live preview unavailable`}),t[24]=e):e=t[24];let n=O.error??`The preview pipeline could not render this entry.`,r;t[25]===n?r=t[26]:(r=(0,H.jsx)(`p`,{children:n}),t[25]=n,t[26]=r);let i;t[27]===Symbol.for(`react.memo_cache_sentinel`)?(i=(0,H.jsx)(`p`,{className:P.errorHint,children:`Live mode needs at least one published version of the site so it can resolve the entry template. Publish the site once and try again.`}),t[27]=i):i=t[27];let a;return t[28]===r?a=t[29]:(a=(0,H.jsx)(`div`,{className:P.shell,"data-testid":`content-live-canvas`,children:(0,H.jsxs)(`div`,{className:P.errorState,role:`alert`,children:[e,r,i]})}),t[28]=r,t[29]=a),a}if(O.status===`loading`&&O.html===``){let e;return t[30]===Symbol.for(`react.memo_cache_sentinel`)?(e=(0,H.jsx)(`div`,{className:P.shell,"data-testid":`content-live-canvas`,children:(0,H.jsx)(`div`,{className:P.loading,children:(0,H.jsx)(ee,{minHeight:400})})}),t[30]=e):e=t[30],e}let Z;t[31]!==L||t[32]!==O.html?(Z=(0,H.jsx)(`iframe`,{ref:m,srcDoc:O.html,className:P.frame,title:`Live preview`,sandbox:`allow-scripts allow-same-origin`,onLoad:L}),t[31]=L,t[32]=O.html,t[33]=Z):Z=t[33];let Q;t[34]!==h||t[35]!==p||t[36]!==f||t[37]!==a?(Q=h&&!a&&(0,H.jsxs)(H.Fragment,{children:[(0,H.jsx)(re,{editor:h,iframeEl:p}),(0,H.jsx)(E,{editor:h,onPickMedia:f,iframeEl:p}),(0,H.jsx)(se,{editor:h,onPickMedia:f,iframeEl:p})]}),t[34]=h,t[35]=p,t[36]=f,t[37]=a,t[38]=Q):Q=t[38];let $;return t[39]!==Z||t[40]!==Q?($=(0,H.jsxs)(`div`,{className:P.shell,"data-testid":`content-live-canvas`,children:[Z,Q]}),t[39]=Z,t[40]=Q,t[41]=$):$=t[41],$}function z(e){return e?.destroy(),null}function ue(e){let{node:t}=e;return t.type.name===`heading`?`Heading`:`Start writing…`}function de(e){e.preventDefault(),e.stopPropagation()}function fe(e){let t=e.target;t instanceof Element&&t.closest(`a, button, [role="button"], [role="link"], input[type="submit"], input[type="button"]`)&&(e.preventDefault(),e.stopPropagation())}function pe(e){e.removeAttribute(`action`)}function me(e){e.setAttribute(`data-instatic-href-original`,e.getAttribute(`href`)??``),e.setAttribute(`href`,`javascript:void(0)`)}function he(e){return e?.destroy(),null}var B,V,H,U,W,G;t((()=>{B=i(),V=e(r(),1),p(),h(),m(),O(),T(),v(),_(),D(),f(),u(),g(),s(),w(),x(),C(),F(),a(),H=n(),U=350,W=`
+  [data-instatic-content-region]:focus,
+  [data-instatic-content-region]:focus-visible,
+  [data-instatic-content-region] *:focus,
+  [data-instatic-content-region] *:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  /* The trailing-break sentinel is what ProseMirror inserts at the
+   * end of every empty block so the caret has somewhere to land —
+   * AND, critically, so view.coordsAtPos can return real coords for
+   * that block. We must NOT hide it: the gutter "+" button reads
+   * those coords, and a hidden sentinel returns {0,0,0,0} which
+   * puts the button in the page top-left corner. We just neutralise
+   * its layout impact instead. */
+  [data-instatic-content-region] .ProseMirror-trailingBreak {
+    user-select: none;
+  }
+
+  /* The published site's CSS doesn't model empty editable blocks —
+   * an empty <p>, <h2>, <h3>, or <h4> collapses to height 0 and the
+   * user sees nothing. Force a visible min-height so blocks newly
+   * inserted via the bubble menu (paragraph / heading) show up with
+   * a clickable space the cursor can land in. The values are derived
+   * from each tag's typical line-height; tweaking them in absolute em
+   * keeps us font-size agnostic. */
+  [data-instatic-content-region] .ProseMirror p,
+  [data-instatic-content-region] .ProseMirror h1,
+  [data-instatic-content-region] .ProseMirror h2,
+  [data-instatic-content-region] .ProseMirror h3,
+  [data-instatic-content-region] .ProseMirror h4,
+  [data-instatic-content-region] .ProseMirror h5,
+  [data-instatic-content-region] .ProseMirror h6,
+  [data-instatic-content-region] .ProseMirror blockquote,
+  [data-instatic-content-region] .ProseMirror li {
+    min-height: 1em;
+  }
+
+  /* Placeholder shown by Tiptap's Placeholder extension on the empty
+   * block the caret is currently in. The extension marks that block
+   * with the is-empty class and data-placeholder attribute; we
+   * render the attribute via ::before so the user sees a hint
+   * (e.g., Heading, Start writing) inside the empty block. */
+  [data-instatic-content-region] .ProseMirror .is-empty::before {
+    content: attr(data-placeholder);
+    pointer-events: none;
+    float: left;
+    height: 0;
+    color: rgba(127, 127, 127, 0.55);
+  }
+`,G=S.create({name:`liveCanvasEnterForceSplit`,addKeyboardShortcuts(){return{Enter:({editor:e})=>e.chain().focus().splitBlock().run()}}})}))();export{R as LiveCanvas};

@@ -1,7 +1,7 @@
 {
   "schema": "dx.build.graph.consumerSnapshot",
   "sourceSchema": "dx.build.graph",
-  "generatedAt": "2026-08-07T06:01:36.441084100+00:00",
+  "generatedAt": "2026-08-08T18:09:28.011235500+00:00",
   "coreConceptMap": {
     "conceptCount": 9,
     "coveredNodeKinds": [
@@ -33,13 +33,13 @@
     "publicArchitecture": false
   },
   "graph": {
-    "nodeCount": 49,
-    "edgeCount": 19,
+    "nodeCount": 47,
+    "edgeCount": 18,
     "nodeKindCounts": {
       "dx-style-css": 4,
       "dx-style-source-map": 4,
-      "image-placeholder-asset": 7,
-      "public-asset": 29,
+      "image-placeholder-asset": 6,
+      "public-asset": 28,
       "route-shell-chunk": 1,
       "server-data-route": 1,
       "source-module-chunk": 2,
@@ -71,32 +71,31 @@
       "retainedImportAssetReferenceCount": 0
     },
     "imageOptimization": {
-      "imageAssetCount": 7,
-      "metadataAssetCount": 7,
+      "imageAssetCount": 6,
+      "metadataAssetCount": 6,
       "optimizedVariantCount": 0,
-      "placeholderCount": 7,
-      "placeholderArtifactCount": 7,
-      "placeholderArtifactBytes": 1167,
+      "placeholderCount": 6,
+      "placeholderArtifactCount": 6,
+      "placeholderArtifactBytes": 1010,
       "placeholderArtifactOutputs": [
         ".dx/www/output/.dx/build-cache/image-placeholders/public/dx-shader/assets/apple-touch-icon-653d1ed174ed39da.placeholder.svg",
         ".dx/www/output/.dx/build-cache/image-placeholders/public/dx-shader/assets/favicon-95cdf2c6b75c0830.placeholder.svg",
         ".dx/www/output/.dx/build-cache/image-placeholders/public/dx-shader/assets/favicon-95cdf2c6b75c0830.placeholder.svg",
         ".dx/www/output/.dx/build-cache/image-placeholders/public/dx-shader/favicon-95cdf2c6b75c0830.placeholder.svg",
         ".dx/www/output/.dx/build-cache/image-placeholders/public/favicon-b0698a08bf67b748.placeholder.svg",
-        ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-95cdf2c6b75c0830.placeholder.svg",
-        ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-95cdf2c6b75c0830.placeholder.svg"
+        ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg"
       ],
-      "placeholderArtifactEdgeCount": 7,
+      "placeholderArtifactEdgeCount": 6,
       "routeReferenceCount": 1,
       "styleReferenceCount": 0,
       "formatCounts": {
         "png": 3,
-        "svg": 4
+        "svg": 3
       },
       "dimensionSourceCounts": {
         "png-ihdr": 3,
-        "svg-root-attributes": 1,
-        "svg-viewbox": 3
+        "svg-root-attributes": 2,
+        "svg-viewbox": 1
       },
       "status": "metadata-plus-placeholder-artifacts-boundary",
       "fullPipelineParity": false

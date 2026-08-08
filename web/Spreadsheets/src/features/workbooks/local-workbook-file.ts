@@ -52,7 +52,7 @@ export async function saveWorkbookToLocalFile({
           accept: {
             "application/json": [".json", ".essence-backup.json"],
           },
-          description: "Essence Excel workbook backup",
+          description: "Spreadsheets workbook backup",
         },
       ],
     });

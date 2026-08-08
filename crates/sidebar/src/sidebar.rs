@@ -928,9 +928,15 @@ impl SidebarGridAction {
         match self {
             Self::AddFolderToProject => SerializedSidebarGridAction::AddFolderToProject,
             Self::OpenFile(path) => SerializedSidebarGridAction::OpenFile { path: path.clone() },
-            Self::OpenWebsite(url) => SerializedSidebarGridAction::OpenWebsite { url: url.to_string() },
-            Self::OpenTerminalFolder(path) => SerializedSidebarGridAction::OpenTerminalFolder { path: path.clone() },
-            Self::OpenThread(thread_id) => SerializedSidebarGridAction::OpenThread { thread_id: *thread_id },
+            Self::OpenWebsite(url) => SerializedSidebarGridAction::OpenWebsite {
+                url: url.to_string(),
+            },
+            Self::OpenTerminalFolder(path) => {
+                SerializedSidebarGridAction::OpenTerminalFolder { path: path.clone() }
+            }
+            Self::OpenThread(thread_id) => SerializedSidebarGridAction::OpenThread {
+                thread_id: *thread_id,
+            },
         }
     }
 
@@ -3263,20 +3269,19 @@ impl Sidebar {
                                 )
                             },
                         )
-                    })
-                    // Chevron disclosure icon commented out: the workspace row only
-                    // shows its path label now (collapse still works via row click).
-                    // .when(!has_filter, |this| {
-                    //     this.child(
-                    //         div()
-                    //             .when(!is_focused, |this| this.visible_on_hover(&group_name))
-                    //             .child(
-                    //                 Icon::new(disclosure_icon)
-                    //                     .size(IconSize::Small)
-                    //                     .color(Color::Muted),
-                    //             ),
-                    //     )
-                    // }),
+                    }), // Chevron disclosure icon commented out: the workspace row only
+                        // shows its path label now (collapse still works via row click).
+                        // .when(!has_filter, |this| {
+                        //     this.child(
+                        //         div()
+                        //             .when(!is_focused, |this| this.visible_on_hover(&group_name))
+                        //             .child(
+                        //                 Icon::new(disclosure_icon)
+                        //                     .size(IconSize::Small)
+                        //                     .color(Color::Muted),
+                        //             ),
+                        //     )
+                        // }),
             )
             .children(opaque_window.then(|| gradient_overlay()))
             .child(
@@ -8615,11 +8620,12 @@ impl Sidebar {
             }))
     }
 
-    /// 12-cell grid of DX web tool icons + 3 other sidebar actions shown at the bottom of the
-    /// sidebar. Cells 1-9 always show the 9 DX web tools (Design, Graphics, Presentations,
-    /// Spreadsheets, Video, Music, Whiteboard, 3D, Shader) regardless of which workspace screen
-    /// is active or whether the sidebar is expanded or collapsed. Cells 10-12 hold three other
-    /// icons: DX Web (top-level dx_web entry), the editor sounds toggle, and a settings button.
+    /// 16-cell grid of DX web tool icons + 3 other sidebar actions shown at the bottom of the
+    /// sidebar. Cells 1-13 always show the 13 DX web tools (Whiteboard, Design, Graphics,
+    /// Presentations, Spreadsheets, Video, CMS, Graph, Media, Train, Metasearch, 3D, Shader)
+    /// regardless of which workspace screen is active or whether the sidebar is expanded or
+    /// collapsed. Cells 14-16 hold three other icons: DX Web (top-level dx_web entry), the editor
+    /// sounds toggle, and a settings button.
     fn render_sidebar_dx_web_tool_grid(
         &self,
         chrome_width: Pixels,
@@ -8629,7 +8635,7 @@ impl Sidebar {
         let chrome_width_f32: f32 = chrome_width.into();
         let is_collapsed = chrome_width_f32 <= 0.0;
 
-        // 9 DX web tool icons shown in cells 1-9 (always, in both expanded and collapsed sidebar).
+        // 13 DX web tool icons shown in cells 1-13 (always, in both expanded and collapsed sidebar).
         let web_tool_cells: Vec<(&'static str, &'static str)> = vec![
             ("whiteboard", "Whiteboard"),
             ("design", "Design"),
@@ -8637,7 +8643,12 @@ impl Sidebar {
             ("presentations", "Presentations"),
             ("spreadsheets", "Spreadsheets"),
             ("video", "Video"),
-            ("music", "Music"),
+            ("cms", "CMS"),
+            ("graph", "Graph"),
+            ("media", "Media"),
+            ("train", "Train"),
+            ("metasearch", "Metasearch"),
+            ("route", "Route"),
             ("3d", "3D"),
             ("shader", "Shader"),
         ];
@@ -9248,36 +9259,37 @@ impl Sidebar {
         let panel_buttons =
             self.render_sidebar_panel_buttons(cx, "sidebar-activity", IconSize::Medium);
 
-        let primary_actions = vec![
-            button(
-                cx,
-                "sidebar-activity-new-chat",
-                IconName::Plus,
-                "New Chat",
-                |this, _, window, cx| {
-                    if let Some(workspace) = this.active_workspace(cx) {
-                        this.create_new_thread(&workspace, window, cx);
-                    }
-                },
-            )
-            .into_any_element(),
-            button(
-                cx,
-                "sidebar-activity-search",
-                dx_icon(DxUiIcon::Search),
-                "Search",
-                |this, _, window, cx| {
-                    this.activity_bar_expanded = true;
-                    this.show_thread_list(window, cx);
-                    this.focus_sidebar_filter(&FocusSidebarFilter, window, cx);
-                },
-            )
-            .into_any_element(),
-        ]
-        .into_iter()
-        .chain(panel_buttons)
-        // .chain(std::iter::once(self.render_sidebar_dx_web_tool_grid(px(0.0), cx).into_any_element()))
-        .chain([
+        let primary_actions =
+            vec![
+                button(
+                    cx,
+                    "sidebar-activity-new-chat",
+                    IconName::Plus,
+                    "New Chat",
+                    |this, _, window, cx| {
+                        if let Some(workspace) = this.active_workspace(cx) {
+                            this.create_new_thread(&workspace, window, cx);
+                        }
+                    },
+                )
+                .into_any_element(),
+                button(
+                    cx,
+                    "sidebar-activity-search",
+                    dx_icon(DxUiIcon::Search),
+                    "Search",
+                    |this, _, window, cx| {
+                        this.activity_bar_expanded = true;
+                        this.show_thread_list(window, cx);
+                        this.focus_sidebar_filter(&FocusSidebarFilter, window, cx);
+                    },
+                )
+                .into_any_element(),
+            ]
+            .into_iter()
+            .chain(panel_buttons)
+            // .chain(std::iter::once(self.render_sidebar_dx_web_tool_grid(px(0.0), cx).into_any_element()))
+            .chain([
             // TODO(dx-sidebar): Restored Mobile Preview button
             // button(
             //     cx,
@@ -9337,13 +9349,11 @@ impl Sidebar {
             // )
             // .into_any_element(),
         ])
-        .chain(
-            self.render_collapsed_thread_shortcuts(
+            .chain(self.render_collapsed_thread_shortcuts(
                 Self::collapsed_thread_shortcut_limit(window),
                 cx,
-            ),
-        )
-        .collect();
+            ))
+            .collect();
 
         let secondary_actions = vec![
             self.render_space_carousel(SpaceCarouselOrientation::Vertical, cx)
@@ -10021,9 +10031,7 @@ impl Sidebar {
                     workspace,
                     window,
                     cx,
-                    move |project: &mut Project, cx| {
-                        project.create_terminal_shell(Some(path), cx)
-                    },
+                    move |project: &mut Project, cx| project.create_terminal_shell(Some(path), cx),
                 )
                 .detach_and_log_err(cx);
             });
@@ -10071,9 +10079,16 @@ impl Sidebar {
         cx.notify();
     }
 
-    fn pin_grid_entry_shortcut(&mut self, dragged: &DraggedSidebarGridEntry, cx: &mut Context<Self>) {
+    fn pin_grid_entry_shortcut(
+        &mut self,
+        dragged: &DraggedSidebarGridEntry,
+        cx: &mut Context<Self>,
+    ) {
         let (_, _, context) = self.grid_context(cx);
-        let dragged_raw_id = dragged.id.trim_start_matches("sidebar-grid-pinned-").to_string();
+        let dragged_raw_id = dragged
+            .id
+            .trim_start_matches("sidebar-grid-pinned-")
+            .to_string();
         let is_pinned = dragged.id.starts_with("sidebar-grid-pinned-");
 
         if is_pinned {
@@ -10095,7 +10110,8 @@ impl Sidebar {
             else {
                 return;
             };
-            self.grid_shortcuts.retain(|existing| existing.id != dragged_raw_id);
+            self.grid_shortcuts
+                .retain(|existing| existing.id != dragged_raw_id);
             shortcut
         } else {
             SerializedSidebarGridShortcut {
@@ -10125,19 +10141,14 @@ impl Sidebar {
 
     fn delete_grid_shortcut(&mut self, entry_id: &str, cx: &mut Context<Self>) {
         let id = entry_id.trim_start_matches("sidebar-grid-pinned-");
-        self.grid_shortcuts
-            .retain(|existing| existing.id != id);
+        self.grid_shortcuts.retain(|existing| existing.id != id);
         self.grid_entry_cache.borrow_mut().clear();
         self.serialize(cx);
         cx.notify();
     }
 
     fn hide_grid_suggestion(&mut self, entry_id: &str, cx: &mut Context<Self>) {
-        if !self
-            .hidden_grid_entry_ids
-            .iter()
-            .any(|id| id == entry_id)
-        {
+        if !self.hidden_grid_entry_ids.iter().any(|id| id == entry_id) {
             self.hidden_grid_entry_ids.push(entry_id.to_string());
         }
         self.grid_entry_cache.borrow_mut().clear();
@@ -10180,8 +10191,13 @@ impl Sidebar {
             return;
         }
         let (_, _, context) = self.grid_context(cx);
-        let dragged_raw_id = dragged.id.trim_start_matches("sidebar-grid-pinned-").to_string();
-        let target_raw_id = target_id.trim_start_matches("sidebar-grid-pinned-").to_string();
+        let dragged_raw_id = dragged
+            .id
+            .trim_start_matches("sidebar-grid-pinned-")
+            .to_string();
+        let target_raw_id = target_id
+            .trim_start_matches("sidebar-grid-pinned-")
+            .to_string();
 
         let mut display = self.grid_entries(cx);
         let dragged_ix = display.iter().position(|entry| {
@@ -10225,7 +10241,10 @@ impl Sidebar {
         };
         let mut new_pinned: Vec<SerializedSidebarGridShortcut> = Vec::new();
         for (ix, entry) in display.iter().enumerate() {
-            let raw_id = entry.id.trim_start_matches("sidebar-grid-pinned-").to_string();
+            let raw_id = entry
+                .id
+                .trim_start_matches("sidebar-grid-pinned-")
+                .to_string();
             if let Some(shortcut) = self
                 .grid_shortcuts
                 .iter()

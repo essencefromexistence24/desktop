@@ -9,9 +9,9 @@ use editor::{Editor, EditorEvent};
 use futures::{StreamExt, channel::mpsc};
 use fuzzy::StringMatchCandidate;
 use gpui::{
-    Action, App, AsyncApp, ClipboardItem, Div, Entity, EventEmitter, FocusHandle, Focusable, Global,
-    KeyContext, ListState, ReadGlobal as _, ScrollHandle, Stateful, Subscription, Task, Tiling,
-    UniformListScrollHandle, WeakEntity, Window, WindowHandle, actions, div, list, point,
+    Action, App, AsyncApp, ClipboardItem, Div, Entity, EventEmitter, FocusHandle, Focusable,
+    Global, KeyContext, ListState, ReadGlobal as _, ScrollHandle, Stateful, Subscription, Task,
+    Tiling, UniformListScrollHandle, WeakEntity, Window, WindowHandle, actions, div, list, point,
     prelude::*, px, uniform_list,
 };
 
@@ -43,8 +43,7 @@ use ui::{
 
 use util::{ResultExt as _, paths::PathStyle, rel_path::RelPath};
 use workspace::{
-    AppState, MultiWorkspace, OpenOptions, OpenVisible, Workspace,
-    client_side_decorations,
+    AppState, MultiWorkspace, OpenOptions, OpenVisible, Workspace, client_side_decorations,
     item::{Item, ItemEvent},
 };
 use zed_actions::{
@@ -436,10 +435,7 @@ pub fn init(cx: &mut App) {
     });
     cx.on_action(|_: &zed_actions::assistant::CreateSkillFromUrl, cx| {
         let initial_url = pages::skill_url_from_clipboard(cx);
-        open_skill_creator_in_any_workspace(
-            pages::SkillCreatorOpenMode::Url { initial_url },
-            cx,
-        );
+        open_skill_creator_in_any_workspace(pages::SkillCreatorOpenMode::Url { initial_url }, cx);
     });
 
     cx.observe_new(|workspace: &mut workspace::Workspace, _, _| {
@@ -791,21 +787,12 @@ fn open_settings_in_any_workspace(
     let _ = mw.update(cx, |multi_workspace, window, cx| {
         let workspace = multi_workspace.workspace().clone();
         workspace.update(cx, |workspace, cx| {
-            open_settings_in_workspace(
-                workspace,
-                path.as_deref(),
-                target_file,
-                window,
-                cx,
-            );
+            open_settings_in_workspace(workspace, path.as_deref(), target_file, window, cx);
         });
     });
 }
 
-fn open_skill_creator_in_any_workspace(
-    open_mode: pages::SkillCreatorOpenMode,
-    cx: &mut App,
-) {
+fn open_skill_creator_in_any_workspace(open_mode: pages::SkillCreatorOpenMode, cx: &mut App) {
     let Some(mw) = cx
         .windows()
         .into_iter()
@@ -1814,11 +1801,7 @@ impl SettingsWindow {
     }
 
     /// Observers/subscriptions that must not run during `open_window` construction.
-    fn install_runtime_subscriptions(
-        &mut self,
-        window: &mut Window,
-        cx: &mut Context<Self>,
-    ) {
+    fn install_runtime_subscriptions(&mut self, window: &mut Window, cx: &mut Context<Self>) {
         cx.subscribe(&self.search_bar, |this, _, event: &EditorEvent, cx| {
             let EditorEvent::Edited { transaction_id: _ } = event else {
                 return;
@@ -5827,8 +5810,9 @@ pub mod test {
 
         cx.run_until_parked();
 
-        let (settings_window, cx) = cx
-            .add_window_view(|window, cx| SettingsWindow::new(Some(workspace2_handle), false, window, cx));
+        let (settings_window, cx) = cx.add_window_view(|window, cx| {
+            SettingsWindow::new(Some(workspace2_handle), false, window, cx)
+        });
 
         cx.run_until_parked();
 
@@ -5959,8 +5943,9 @@ pub mod test {
 
         cx.run_until_parked();
 
-        let (settings_window, cx) = cx
-            .add_window_view(|window, cx| SettingsWindow::new(Some(workspace1_handle), false, window, cx));
+        let (settings_window, cx) = cx.add_window_view(|window, cx| {
+            SettingsWindow::new(Some(workspace1_handle), false, window, cx)
+        });
 
         cx.run_until_parked();
 
@@ -6171,8 +6156,9 @@ pub mod test {
 
         cx.run_until_parked();
 
-        let (settings_window, cx) = cx
-            .add_window_view(|window, cx| SettingsWindow::new(Some(workspace_handle), false, window, cx));
+        let (settings_window, cx) = cx.add_window_view(|window, cx| {
+            SettingsWindow::new(Some(workspace_handle), false, window, cx)
+        });
 
         cx.run_until_parked();
 
@@ -6281,8 +6267,9 @@ pub mod test {
 
         cx.run_until_parked();
 
-        let (settings_window, cx) = cx
-            .add_window_view(|window, cx| SettingsWindow::new(Some(workspace_handle), false, window, cx));
+        let (settings_window, cx) = cx.add_window_view(|window, cx| {
+            SettingsWindow::new(Some(workspace_handle), false, window, cx)
+        });
 
         cx.run_until_parked();
 

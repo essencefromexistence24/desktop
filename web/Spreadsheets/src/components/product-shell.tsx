@@ -16,7 +16,7 @@ export function ProductShell({
           <span className="grid size-8 place-items-center rounded-md bg-primary text-primary-foreground">
             <Table2 className="size-4" />
           </span>
-          Essence Excel
+          Spreadsheets
         </Link>
         <div className="flex items-center gap-3">
           <span className="hidden text-sm text-muted-foreground sm:inline">{userName}</span>

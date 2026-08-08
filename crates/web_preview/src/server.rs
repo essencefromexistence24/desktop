@@ -1,6 +1,7 @@
 use std::{
     collections::HashMap,
     path::{Path, PathBuf},
+    process::{Command, Stdio},
     sync::atomic::{AtomicU16, AtomicU64, Ordering},
     sync::{Arc, OnceLock},
     thread,
@@ -14,7 +15,10 @@ use axum::{
         Path as AxumPath,
         ws::{Message, WebSocket, WebSocketUpgrade},
     },
-    http::{StatusCode, header::CONTENT_TYPE},
+    http::{
+        StatusCode,
+        header::{ACCEPT, CONTENT_TYPE},
+    },
     response::IntoResponse,
     routing::get,
 };
@@ -56,11 +60,218 @@ fn project_dir_name(tool_id: &str) -> &str {
         "presentations" => "Presentations",
         "spreadsheets" => "Spreadsheets",
         "video" => "Video",
-        "music" => "Music",
         "whiteboard" => "whiteboard",
         "shader" => "shader",
+        "dx-web" => "Metasearch",
         other => other,
     }
+}
+
+/// Stable per-tool preview ports. Fixed ports keep the tool on the same
+/// origin across desktop restarts, so the page's localStorage/sessionStorage
+/// (e.g. Graph access token, Train settings) survives.
+fn stable_port_for_tool(tool_id: &str) -> Option<u16> {
+    let base: u16 = 4200;
+    let index = match tool_id {
+        "design" => 1,
+        "graphics" => 2,
+        "presentations" => 3,
+        "spreadsheets" => 4,
+        "video" => 5,
+        "whiteboard" => 6,
+        "cms" => 7,
+        "graph" => 8,
+        "media" => 9,
+        "train" => 10,
+        "metasearch" => 11,
+        "3d" => 12,
+        "shader" => 13,
+        "dx-web" => 14,
+        "route" => 15,
+        _ => return None,
+    };
+    Some(base + index)
+}
+
+/// Backend ports for tools that ship a real server component. Kept distinct
+/// from the agent cursor WS relay (3001) and the preview port range (42xx).
+const CMS_BACKEND_PORT: u16 = 3002;
+const METASEARCH_BACKEND_PORT: u16 = 8888;
+const TRAIN_BACKEND_PORT: u16 = 8888;
+const ROUTE_BACKEND_PORT: u16 = 3004;
+
+/// Spawn the real backend for a tool that has one and return its origin.
+/// Returns `None` when the backend is unavailable (missing runtime/binary),
+/// in which case the caller falls back to the static preview server.
+fn spawn_backend_for_tool(tool_id: &str) -> Option<String> {
+    match tool_id {
+        "cms" => spawn_cms_backend(),
+        "metasearch" => spawn_metasearch_backend(),
+        "route" => spawn_route_backend(),
+        _ => None,
+    }
+}
+
+fn spawn_cms_backend() -> Option<String> {
+    let root = web_root()?;
+    let cms_dir = root.join("Cms");
+    if !cms_dir.join("dist").join("index.html").is_file() || !cms_dir.join("server").is_dir() {
+        return None;
+    }
+
+    // Check the port is free first — if something already answers on 3002
+    // with our API, reuse it instead of starting a second server.
+    if std::net::TcpListener::bind(("127.0.0.1", CMS_BACKEND_PORT)).is_err() {
+        info!(
+            port = CMS_BACKEND_PORT,
+            "CMS backend port already in use, reusing"
+        );
+        return Some(format!("http://127.0.0.1:{}/", CMS_BACKEND_PORT));
+    }
+
+    let bun = find_executable("bun")?;
+    let db_path = cms_dir.join(".tmp").join("dev.db");
+    let db_url = format!("sqlite:{}", db_path.to_string_lossy().replace('\\', "/"));
+
+    match Command::new(&bun)
+        .args(["run", "server/index.ts"])
+        .current_dir(&cms_dir)
+        .env("PORT", CMS_BACKEND_PORT.to_string())
+        .env("DATABASE_URL", &db_url)
+        .env("STATIC_DIR", "./dist")
+        .env("HOST", "127.0.0.1")
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .spawn()
+    {
+        Ok(_) => {
+            info!(port = CMS_BACKEND_PORT, "CMS backend spawned");
+            Some(format!("http://127.0.0.1:{}/", CMS_BACKEND_PORT))
+        }
+        Err(e) => {
+            warn!(%e, "failed to spawn CMS backend");
+            None
+        }
+    }
+}
+
+fn spawn_metasearch_backend() -> Option<String> {
+    let metasearch_root = std::env::var("DX_METASEARCH_ROOT")
+        .ok()
+        .map(PathBuf::from)
+        .or_else(|| {
+            let root = web_root()?;
+            // The `dx` project file in the web source points at the repo root.
+            let proj = root.join("Metasearch").join("dx");
+            std::fs::read_to_string(&proj)
+                .ok()
+                .and_then(|s| s.trim().strip_prefix("proj ").map(String::from))
+                .and_then(|s| std::fs::canonicalize(s).ok())
+        })?;
+
+    if std::net::TcpListener::bind(("127.0.0.1", METASEARCH_BACKEND_PORT)).is_err() {
+        info!(
+            port = METASEARCH_BACKEND_PORT,
+            "Metasearch backend port already in use, reusing"
+        );
+        return Some(format!("http://127.0.0.1:{}/", METASEARCH_BACKEND_PORT));
+    }
+
+    let binary = metasearch_root
+        .join("target")
+        .join("release")
+        .join(if cfg!(windows) {
+            "metasearch.exe"
+        } else {
+            "metasearch"
+        });
+    if !binary.is_file() {
+        return None;
+    }
+
+    match Command::new(&binary)
+        .current_dir(&metasearch_root)
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .spawn()
+    {
+        Ok(_) => {
+            info!(port = METASEARCH_BACKEND_PORT, "Metasearch backend spawned");
+            Some(format!("http://127.0.0.1:{}/", METASEARCH_BACKEND_PORT))
+        }
+        Err(e) => {
+            warn!(%e, "failed to spawn Metasearch backend");
+            None
+        }
+    }
+}
+
+/// Spawn the Route Next.js app (`npx node scripts/dev/run-next.mjs start`).
+/// Uses the production build under `<Route>/.build/next` with PORT overridden
+/// to the fixed backend port so the dashboard is reachable on the same origin
+/// as the other tools and its data dir resolves from the project `.env`.
+fn spawn_route_backend() -> Option<String> {
+    let route_root = std::env::var("DX_ROUTE_ROOT")
+        .ok()
+        .map(PathBuf::from)
+        .or_else(|| web_root().map(|r| r.join("Route")))?;
+
+    let build_dir = route_root.join(".build").join("next");
+    if !build_dir.is_dir() {
+        warn!(root = %route_root.display(), "Route build output missing (.build/next)");
+        return None;
+    }
+
+    if std::net::TcpListener::bind(("127.0.0.1", ROUTE_BACKEND_PORT)).is_err() {
+        info!(
+            port = ROUTE_BACKEND_PORT,
+            "Route backend port already in use, reusing"
+        );
+        return Some(format!("http://127.0.0.1:{}/", ROUTE_BACKEND_PORT));
+    }
+
+    let node = find_executable("node")?;
+    match Command::new(&node)
+        .args(["scripts/dev/run-next.mjs", "start"])
+        .current_dir(&route_root)
+        .env("PORT", ROUTE_BACKEND_PORT.to_string())
+        .env("HOST", "127.0.0.1")
+        .env("NODE_ENV", "production")
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .spawn()
+    {
+        Ok(_) => {
+            info!(port = ROUTE_BACKEND_PORT, "Route backend spawned");
+            Some(format!("http://127.0.0.1:{}/", ROUTE_BACKEND_PORT))
+        }
+        Err(e) => {
+            warn!(%e, "failed to spawn Route backend");
+            None
+        }
+    }
+}
+
+/// Find an executable on PATH (Windows: also with .exe appended).
+fn find_executable(name: &str) -> Option<PathBuf> {
+    let path_var = std::env::var_os("PATH")?;
+    for dir in std::env::split_paths(&path_var) {
+        let candidate = dir.join(name);
+        if candidate.is_file() {
+            return Some(candidate);
+        }
+        #[cfg(windows)]
+        {
+            let candidate = dir.join(format!("{name}.exe"));
+            if candidate.is_file() {
+                return Some(candidate);
+            }
+        }
+    }
+    None
 }
 
 /// Discover the DX web root: the directory that contains the bundled web tool
@@ -247,6 +458,15 @@ pub fn local_preview_url(tool_id: &str) -> Option<String> {
         return Some(format!("http://127.0.0.1:{}/", port));
     }
 
+    // Tools with a real backend are served from their backend origin so the
+    // app's own API calls work (same origin, no CORS).
+    if let Some(backend) = spawn_backend_for_tool(tool_id) {
+        servers
+            .ports
+            .insert(tool_id.to_string(), backend_origin_port(&backend)?);
+        return Some(backend);
+    }
+
     let root = match project_output_dir(tool_id) {
         Some(r) => r,
         None => {
@@ -266,6 +486,14 @@ pub fn local_preview_url(tool_id: &str) -> Option<String> {
     }
 }
 
+fn backend_origin_port(origin: &str) -> Option<u16> {
+    origin
+        .trim_end_matches('/')
+        .rsplit(':')
+        .next()
+        .and_then(|s| s.parse().ok())
+}
+
 pub fn ensure_dx_preview_server_running() {
     static STARTED: OnceLock<()> = OnceLock::new();
     STARTED.get_or_init(|| {
@@ -276,10 +504,15 @@ pub fn ensure_dx_preview_server_running() {
             "presentations",
             "spreadsheets",
             "video",
-            "music",
             "whiteboard",
+            "cms",
+            "graph",
+            "media",
+            "train",
+            "metasearch",
             "3d",
             "shader",
+            "route",
             "dx-web",
         ];
         for id in ids {
@@ -445,7 +678,15 @@ async fn handle_agent_cursor_ws(socket: WebSocket, tx: broadcast::Sender<String>
 }
 
 fn start_axum_static_server_for_tool(tool: String, root: PathBuf) -> Option<u16> {
-    let listener = std::net::TcpListener::bind("127.0.0.1:0").ok()?;
+    // Prefer the tool's stable port so localStorage persists across restarts;
+    // fall back to an ephemeral port if the stable one is taken.
+    let stable = stable_port_for_tool(&tool);
+    let listener = match stable {
+        Some(port) => std::net::TcpListener::bind(("127.0.0.1", port))
+            .or_else(|_| std::net::TcpListener::bind("127.0.0.1:0"))
+            .ok(),
+        None => std::net::TcpListener::bind("127.0.0.1:0").ok(),
+    }?;
     let port = listener.local_addr().ok()?.port();
 
     let root_arc = Arc::new(root);
@@ -456,8 +697,9 @@ fn start_axum_static_server_for_tool(tool: String, root: PathBuf) -> Option<u16>
             get({
                 let root = root_arc.clone();
                 let tool = tool.clone();
-                move || async move {
-                    serve_dx_file_direct(root, tool.clone(), "index.html".to_string()).await
+                move |headers: axum::http::HeaderMap| async move {
+                    serve_dx_file_direct(root, tool.clone(), "index.html".to_string(), headers)
+                        .await
                 }
             }),
         )
@@ -466,8 +708,8 @@ fn start_axum_static_server_for_tool(tool: String, root: PathBuf) -> Option<u16>
             get({
                 let root = root_arc;
                 let tool = tool.clone();
-                move |AxumPath(path): AxumPath<String>| async move {
-                    serve_dx_file_direct(root, tool.clone(), path).await
+                move |AxumPath(path): AxumPath<String>, headers: axum::http::HeaderMap| async move {
+                    serve_dx_file_direct(root, tool.clone(), path, headers).await
                 }
             }),
         )
@@ -495,6 +737,7 @@ async fn serve_dx_file_direct(
     root: Arc<PathBuf>,
     tool: String,
     mut req_path: String,
+    headers: axum::http::HeaderMap,
 ) -> impl axum::response::IntoResponse {
     if req_path.is_empty() || req_path == "/" {
         req_path = "index.html".to_string();
@@ -509,16 +752,23 @@ async fn serve_dx_file_direct(
     }
 
     if !target.is_file() {
-        let idx = root.join("index.html");
-        if idx.is_file() {
-            target = idx;
+        // SPA fallback: only for navigation requests (HTML accepts), never for
+        // JSON/API/asset fetches — serving index.html for those would return
+        // "Unexpected token '<'" errors to the page's own API calls.
+        if accepts_html(&headers) {
+            let idx = root.join("index.html");
+            if idx.is_file() {
+                target = idx;
+            } else {
+                let placeholder = placeholder_html(&tool);
+                return axum::http::Response::builder()
+                    .header(CONTENT_TYPE, "text/html; charset=utf-8")
+                    .body(Body::from(placeholder))
+                    .unwrap()
+                    .into_response();
+            }
         } else {
-            let placeholder = placeholder_html(&tool);
-            return axum::http::Response::builder()
-                .header(CONTENT_TYPE, "text/html; charset=utf-8")
-                .body(Body::from(placeholder))
-                .unwrap()
-                .into_response();
+            return (StatusCode::NOT_FOUND, "Not Found").into_response();
         }
     }
 
@@ -532,6 +782,18 @@ async fn serve_dx_file_direct(
                 .into_response()
         }
         Err(_) => (StatusCode::NOT_FOUND, "Not Found").into_response(),
+    }
+}
+
+/// True when the request's `Accept` header indicates a browser navigation
+/// (text/html accepted). Requests without an Accept header (or with `*/*`
+/// only, e.g. fetch()/XHR defaults) are NOT treated as navigations.
+fn accepts_html(headers: &axum::http::HeaderMap) -> bool {
+    match headers.get(ACCEPT).and_then(|v| v.to_str().ok()) {
+        Some(accept) => accept
+            .split(',')
+            .any(|part| part.trim().to_ascii_lowercase().starts_with("text/html")),
+        None => false,
     }
 }
 

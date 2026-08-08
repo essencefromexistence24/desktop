@@ -968,14 +968,6 @@
     "requires_node_modules": false
   },
   {
-    "importer_path": "server/agent-cursor-example.js",
-    "specifier": "ws",
-    "kind": "blocked-node-modules",
-    "resolved_path": null,
-    "package_id": null,
-    "requires_node_modules": true
-  },
-  {
     "importer_path": "server/whiteboard/agent-cursor-server.ts",
     "specifier": "ws",
     "kind": "blocked-node-modules",

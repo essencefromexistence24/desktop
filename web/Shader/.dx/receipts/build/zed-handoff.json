@@ -69,30 +69,29 @@
     "status": "source-metadata-only"
   },
   "image_pipeline": {
-    "image_asset_count": 7,
-    "metadata_asset_count": 7,
+    "image_asset_count": 6,
+    "metadata_asset_count": 6,
     "optimized_variant_count": 0,
-    "placeholder_count": 7,
-    "placeholder_artifact_count": 7,
-    "placeholder_artifact_bytes": 1167,
+    "placeholder_count": 6,
+    "placeholder_artifact_count": 6,
+    "placeholder_artifact_bytes": 1010,
     "placeholder_artifact_outputs": [
       ".dx/www/output/.dx/build-cache/image-placeholders/public/dx-shader/assets/apple-touch-icon-653d1ed174ed39da.placeholder.svg",
       ".dx/www/output/.dx/build-cache/image-placeholders/public/dx-shader/assets/favicon-95cdf2c6b75c0830.placeholder.svg",
       ".dx/www/output/.dx/build-cache/image-placeholders/public/dx-shader/assets/favicon-95cdf2c6b75c0830.placeholder.svg",
       ".dx/www/output/.dx/build-cache/image-placeholders/public/dx-shader/favicon-95cdf2c6b75c0830.placeholder.svg",
       ".dx/www/output/.dx/build-cache/image-placeholders/public/favicon-b0698a08bf67b748.placeholder.svg",
-      ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-95cdf2c6b75c0830.placeholder.svg",
-      ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-95cdf2c6b75c0830.placeholder.svg"
+      ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg"
     ],
-    "route_reference_count": 2,
+    "route_reference_count": 10,
     "formats": {
       "png": 3,
-      "svg": 4
+      "svg": 3
     },
     "dimension_sources": {
       "png-ihdr": 3,
-      "svg-root-attributes": 1,
-      "svg-viewbox": 3
+      "svg-root-attributes": 2,
+      "svg-viewbox": 1
     },
     "status": "metadata-plus-placeholder-artifacts-boundary",
     "full_pipeline_parity": false
@@ -102,14 +101,14 @@
       "route": "/",
       "source_path": "app/page.tsx",
       "html_output": ".dx/www/output/.dx/build-cache/source-routes/root/index.html",
-      "shell_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-9b3651610ca917aa.mjs",
-      "entry_module_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-49eb7925527ddf1a.mjs",
+      "shell_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-b20b95524c883535.mjs",
+      "entry_module_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-73adb3f448b1af68.mjs",
       "source_module_chunks": [
         {
           "source_path": "app/page.tsx",
-          "chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-49eb7925527ddf1a.mjs",
+          "chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-73adb3f448b1af68.mjs",
           "kind": "tsx",
-          "hash": "49eb7925527ddf1a"
+          "hash": "73adb3f448b1af68"
         },
         {
           "source_path": "components/icons/icon.tsx",
@@ -118,7 +117,7 @@
           "hash": "8db49bf807790749"
         }
       ],
-      "fallback_hash": "9b3651610ca917aa"
+      "fallback_hash": "b20b95524c883535"
     }
   ],
   "node_modules_required": false,

@@ -152,7 +152,7 @@ export function ProjectShareActions({ projectId, publishedAt, shareId, shareSett
     setPending("copy-embed");
 
     try {
-      await copyToClipboard(getEmbedCode(getEmbedUrl(nextShareId), "Essence Spline scene", resolvedShareSettings), "Embed code copied");
+      await copyToClipboard(getEmbedCode(getEmbedUrl(nextShareId), "3D scene", resolvedShareSettings), "Embed code copied");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Copy failed");
     } finally {
@@ -285,7 +285,7 @@ export function ProjectShareActions({ projectId, publishedAt, shareId, shareSett
         getPlatformEmbedPresetCode(presetId, {
           embedOptions: resolvedShareSettings,
           embedUrl: getEmbedUrl(nextShareId),
-          sceneName: "Essence Spline scene",
+          sceneName: "3D scene",
           shareUrl: getShareUrl(nextShareId),
         }),
         `${preset?.label ?? "Platform"} embed copied`,

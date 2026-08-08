@@ -287,7 +287,7 @@ function drawingAnchorXml(entry: GeneratedChartEntry, index: number) {
   <xdr:to><xdr:col>${fromColumn + widthInColumns}</xdr:col><xdr:colOff>0</xdr:colOff><xdr:row>${fromRow + heightInRows}</xdr:row><xdr:rowOff>0</xdr:rowOff></xdr:to>
   <xdr:graphicFrame macro="">
     <xdr:nvGraphicFramePr><xdr:cNvPr id="${2000 + index}" name="${escapeXml(
-      entry.chart.title || "Essence 3D chart",
+      entry.chart.title || "Spreadsheets 3D chart",
     )}"/><xdr:cNvGraphicFramePr/></xdr:nvGraphicFramePr>
     <xdr:xfrm><a:off x="0" y="0"/><a:ext cx="5486400" cy="3200400"/></xdr:xfrm>
     <a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/chart"><c:chart xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" r:id="${entry.drawingRelationshipId}"/></a:graphicData></a:graphic>

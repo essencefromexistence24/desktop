@@ -2292,7 +2292,7 @@ impl Render for WebPreviewView {
                                 .size(LabelSize::Small)
                                 .color(Color::Muted),
                         ),
-                        // Sumon Web Preview Loadning
+                    // Sumon Web Preview Loadning
                 )
         });
         #[cfg(target_os = "windows")]

@@ -48,7 +48,7 @@ export function createDefaultWorkbookDocument(): WorkbookDocument {
   const sheet = createBlankSheet();
 
   sheet.cells = {
-    [cellKey(0, 0)]: { raw: "Essence Excel" },
+    [cellKey(0, 0)]: { raw: "Spreadsheets" },
     [cellKey(1, 0)]: { raw: "Editable starter workbook" },
     [cellKey(3, 0)]: { raw: "Revenue" },
     [cellKey(3, 1)]: { raw: "Cost" },

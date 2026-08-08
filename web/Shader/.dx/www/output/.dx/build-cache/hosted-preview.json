@@ -3,7 +3,7 @@
   "deployment_kind": "dx-www-hosted-preview-bundle",
   "provider": "dx-www-cloud-local",
   "adapter_kind": "account-free-preview",
-  "generated": "2026-08-07T06:01:37.920949600+00:00",
+  "generated": "2026-08-08T18:09:28.953866800+00:00",
   "requires_provider_account": false,
   "account_bound": false,
   "network_required": false,
@@ -13,9 +13,9 @@
   "lifecycle_scripts_executed": false,
   "build": {
     "dir": ".dx/build",
-    "manifest_hash": "blake3:3271412f6b406cd2865bd5b8f230d4ab31d2e364df5288a6a9da24b57509dc84",
+    "manifest_hash": "blake3:f528e7943239036146fe65ad31bfaed829e91a2bdba1a3b7d323d2a6c3c39da1",
     "route_count": 1,
-    "immutable_asset_count": 157,
+    "immutable_asset_count": 153,
     "server_action_count": 0,
     "observability_path": ".dx/build-cache/observability.json"
   },
@@ -95,14 +95,7 @@
       "encoded_from": null
     },
     {
-      "path": ".dx/build-cache/image-placeholders/public/icon-95cdf2c6b75c0830.placeholder.svg",
-      "cache_control": "public, max-age=31536000, immutable",
-      "content_type": "image/svg+xml",
-      "content_encoding": null,
-      "encoded_from": null
-    },
-    {
-      "path": ".dx/build-cache/image-placeholders/public/logo-95cdf2c6b75c0830.placeholder.svg",
+      "path": ".dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": null,
@@ -149,6 +142,27 @@
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "gzip",
       "encoded_from": "agent-cursor.js"
+    },
+    {
+      "path": "app/index.dxpk",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "application/octet-stream",
+      "content_encoding": null,
+      "encoded_from": null
+    },
+    {
+      "path": "app/index.dxpk.br",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "application/octet-stream",
+      "content_encoding": "br",
+      "encoded_from": "app/index.dxpk"
+    },
+    {
+      "path": "app/index.dxpk.gz",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "application/octet-stream",
+      "content_encoding": "gzip",
+      "encoded_from": "app/index.dxpk"
     },
     {
       "path": "canvas-export.js",
@@ -543,27 +557,6 @@
       "encoded_from": "icon.svg"
     },
     {
-      "path": "logo.svg",
-      "cache_control": "public, max-age=31536000, immutable",
-      "content_type": "image/svg+xml",
-      "content_encoding": null,
-      "encoded_from": null
-    },
-    {
-      "path": "logo.svg.br",
-      "cache_control": "public, max-age=31536000, immutable",
-      "content_type": "image/svg+xml",
-      "content_encoding": "br",
-      "encoded_from": "logo.svg"
-    },
-    {
-      "path": "logo.svg.gz",
-      "cache_control": "public, max-age=31536000, immutable",
-      "content_type": "image/svg+xml",
-      "content_encoding": "gzip",
-      "encoded_from": "logo.svg"
-    },
-    {
       "path": "public/agent-cursor-b383c71fb0eaf48f.js",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
@@ -956,46 +949,25 @@
       "encoded_from": "public/favicon-4ef4b7a78017f8f9.svg"
     },
     {
-      "path": "public/icon-c592869c9c233ec1.svg",
+      "path": "public/icon-4ef4b7a78017f8f9.svg",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": null,
       "encoded_from": null
     },
     {
-      "path": "public/icon-c592869c9c233ec1.svg.br",
+      "path": "public/icon-4ef4b7a78017f8f9.svg.br",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "br",
-      "encoded_from": "public/icon-c592869c9c233ec1.svg"
+      "encoded_from": "public/icon-4ef4b7a78017f8f9.svg"
     },
     {
-      "path": "public/icon-c592869c9c233ec1.svg.gz",
+      "path": "public/icon-4ef4b7a78017f8f9.svg.gz",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "gzip",
-      "encoded_from": "public/icon-c592869c9c233ec1.svg"
-    },
-    {
-      "path": "public/logo-c592869c9c233ec1.svg",
-      "cache_control": "public, max-age=31536000, immutable",
-      "content_type": "image/svg+xml",
-      "content_encoding": null,
-      "encoded_from": null
-    },
-    {
-      "path": "public/logo-c592869c9c233ec1.svg.br",
-      "cache_control": "public, max-age=31536000, immutable",
-      "content_type": "image/svg+xml",
-      "content_encoding": "br",
-      "encoded_from": "public/logo-c592869c9c233ec1.svg"
-    },
-    {
-      "path": "public/logo-c592869c9c233ec1.svg.gz",
-      "cache_control": "public, max-age=31536000, immutable",
-      "content_type": "image/svg+xml",
-      "content_encoding": "gzip",
-      "encoded_from": "public/logo-c592869c9c233ec1.svg"
+      "encoded_from": "public/icon-4ef4b7a78017f8f9.svg"
     },
     {
       "path": "public/sw-ad0e3a10d1dc62b8.js",
@@ -1193,7 +1165,7 @@
   "bundle": {
     "format": "directory-manifest",
     "root": ".dx/build",
-    "artifact_count": 172,
+    "artifact_count": 168,
     "artifacts": [
       {
         "path": ".dx/build-cache/deploy-adapter.json",
@@ -1259,16 +1231,7 @@
         "lifecycle_scripts_executed": false
       },
       {
-        "path": ".dx/build-cache/image-placeholders/public/icon-95cdf2c6b75c0830.placeholder.svg",
-        "kind": "immutable-asset",
-        "cache_control": "public, max-age=31536000, immutable",
-        "account_required": false,
-        "network_required": false,
-        "package_installs_executed": false,
-        "lifecycle_scripts_executed": false
-      },
-      {
-        "path": ".dx/build-cache/image-placeholders/public/logo-95cdf2c6b75c0830.placeholder.svg",
+        "path": ".dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg",
         "kind": "immutable-asset",
         "cache_control": "public, max-age=31536000, immutable",
         "account_required": false,
@@ -1388,6 +1351,33 @@
         "path": "app/app-router-execution.json",
         "kind": "app-router-execution",
         "cache_control": "no-store",
+        "account_required": false,
+        "network_required": false,
+        "package_installs_executed": false,
+        "lifecycle_scripts_executed": false
+      },
+      {
+        "path": "app/index.dxpk",
+        "kind": "immutable-asset",
+        "cache_control": "public, max-age=31536000, immutable",
+        "account_required": false,
+        "network_required": false,
+        "package_installs_executed": false,
+        "lifecycle_scripts_executed": false
+      },
+      {
+        "path": "app/index.dxpk.br",
+        "kind": "immutable-asset",
+        "cache_control": "public, max-age=31536000, immutable",
+        "account_required": false,
+        "network_required": false,
+        "package_installs_executed": false,
+        "lifecycle_scripts_executed": false
+      },
+      {
+        "path": "app/index.dxpk.gz",
+        "kind": "immutable-asset",
+        "cache_control": "public, max-age=31536000, immutable",
         "account_required": false,
         "network_required": false,
         "package_installs_executed": false,
@@ -1907,33 +1897,6 @@
         "lifecycle_scripts_executed": false
       },
       {
-        "path": "logo.svg",
-        "kind": "immutable-asset",
-        "cache_control": "public, max-age=31536000, immutable",
-        "account_required": false,
-        "network_required": false,
-        "package_installs_executed": false,
-        "lifecycle_scripts_executed": false
-      },
-      {
-        "path": "logo.svg.br",
-        "kind": "immutable-asset",
-        "cache_control": "public, max-age=31536000, immutable",
-        "account_required": false,
-        "network_required": false,
-        "package_installs_executed": false,
-        "lifecycle_scripts_executed": false
-      },
-      {
-        "path": "logo.svg.gz",
-        "kind": "immutable-asset",
-        "cache_control": "public, max-age=31536000, immutable",
-        "account_required": false,
-        "network_required": false,
-        "package_installs_executed": false,
-        "lifecycle_scripts_executed": false
-      },
-      {
         "path": "public/agent-cursor-b383c71fb0eaf48f.js",
         "kind": "immutable-asset",
         "cache_control": "public, max-age=31536000, immutable",
@@ -2438,7 +2401,7 @@
         "lifecycle_scripts_executed": false
       },
       {
-        "path": "public/icon-c592869c9c233ec1.svg",
+        "path": "public/icon-4ef4b7a78017f8f9.svg",
         "kind": "immutable-asset",
         "cache_control": "public, max-age=31536000, immutable",
         "account_required": false,
@@ -2447,7 +2410,7 @@
         "lifecycle_scripts_executed": false
       },
       {
-        "path": "public/icon-c592869c9c233ec1.svg.br",
+        "path": "public/icon-4ef4b7a78017f8f9.svg.br",
         "kind": "immutable-asset",
         "cache_control": "public, max-age=31536000, immutable",
         "account_required": false,
@@ -2456,34 +2419,7 @@
         "lifecycle_scripts_executed": false
       },
       {
-        "path": "public/icon-c592869c9c233ec1.svg.gz",
-        "kind": "immutable-asset",
-        "cache_control": "public, max-age=31536000, immutable",
-        "account_required": false,
-        "network_required": false,
-        "package_installs_executed": false,
-        "lifecycle_scripts_executed": false
-      },
-      {
-        "path": "public/logo-c592869c9c233ec1.svg",
-        "kind": "immutable-asset",
-        "cache_control": "public, max-age=31536000, immutable",
-        "account_required": false,
-        "network_required": false,
-        "package_installs_executed": false,
-        "lifecycle_scripts_executed": false
-      },
-      {
-        "path": "public/logo-c592869c9c233ec1.svg.br",
-        "kind": "immutable-asset",
-        "cache_control": "public, max-age=31536000, immutable",
-        "account_required": false,
-        "network_required": false,
-        "package_installs_executed": false,
-        "lifecycle_scripts_executed": false
-      },
-      {
-        "path": "public/logo-c592869c9c233ec1.svg.gz",
+        "path": "public/icon-4ef4b7a78017f8f9.svg.gz",
         "kind": "immutable-asset",
         "cache_control": "public, max-age=31536000, immutable",
         "account_required": false,

@@ -1,19 +1,4 @@
-<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <title>DX root icon dx-ecosystem-logos</title>
-  <desc>Transparent standalone DX root D symbol filled with the official smooth rainbow palette.</desc>
-  <metadata><![CDATA[{"kind":"icon","tool":"dx","label":"DX","letter":"D","asset_family":"dx-ecosystem-logos","brand":"DX pure symbol logo family: transparent smooth rainbow marks plus monochrome background and transparent light/dark variants"}]]></metadata>
-  <defs>
-    <linearGradient id="dx-root-cycle" x1="248" y1="128" x2="888" y2="896" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#00E5FF"/>
-      <stop offset="0.14285714285714285" stop-color="#0A84FF"/>
-      <stop offset="0.2857142857142857" stop-color="#BF5AF2"/>
-      <stop offset="0.42857142857142855" stop-color="#FF2D55"/>
-      <stop offset="0.5714285714285714" stop-color="#FF9500"/>
-      <stop offset="0.7142857142857143" stop-color="#FFD60A"/>
-      <stop offset="0.8571428571428571" stop-color="#32D74B"/>
-      <stop offset="1" stop-color="#00E5FF"/>
-    </linearGradient>
-  </defs>
-
-  <path d="M248 128H514C723.316 128 888 296.517 888 512C888 727.483 723.316 896 514 896H248V128Z" fill="url(#dx-root-cycle)"/>
+<svg width="900" height="900" viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="900" height="900" fill="white"/>
+<path d="M174 105H472.379C482.547 105 490.809 108.499 497.164 115.498C503.52 122.497 506.697 131.722 506.697 143.174V795H406.602C384.994 795 370.695 791.501 363.704 784.502C357.349 777.504 354.171 762.87 354.171 740.602V224.295H201.645C183.215 224.295 174 209.025 174 178.485V105ZM544.829 105H697.355C715.785 105 725 120.27 725 150.809V224.295H544.829V105Z" fill="black"/>
 </svg>

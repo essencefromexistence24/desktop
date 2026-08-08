@@ -188,12 +188,12 @@ function createCalendarDocument() {
   const sheet = createBlankSheet("Calendar");
   const headers = ["Date", "Day", "Event", "Category", "Owner", "Status"];
   const events = [
-    [0, "Weekly planning", "Work", "Essence", "Planned"],
-    [1, "Invoice follow-up", "Finance", "Essence", "Planned"],
-    [3, "Product review", "Work", "Essence", "In progress"],
-    [5, "Personal reset", "Personal", "Essence", "Planned"],
-    [7, "Metrics review", "Finance", "Essence", "Planned"],
-    [10, "Release checkpoint", "Work", "Essence", "Planned"],
+    [0, "Weekly planning", "Work", "Spreadsheets", "Planned"],
+    [1, "Invoice follow-up", "Finance", "Spreadsheets", "Planned"],
+    [3, "Product review", "Work", "Spreadsheets", "In progress"],
+    [5, "Personal reset", "Personal", "Spreadsheets", "Planned"],
+    [7, "Metrics review", "Finance", "Spreadsheets", "Planned"],
+    [10, "Release checkpoint", "Work", "Spreadsheets", "Planned"],
   ];
 
   sheet.rowCount = 60;
@@ -360,9 +360,9 @@ function createProjectTrackerDocument() {
   const sheet = createBlankSheet("Project Tracker");
   const headers = ["Task", "Owner", "Status", "Due date", "Progress"];
   const tasks = [
-    ["Workbook shell", "Essence", "Done", "2026-05-15", "1"],
-    ["Formula polish", "Essence", "In progress", "2026-05-20", "0.65"],
-    ["Desktop packaging", "Essence", "Planned", "2026-05-27", "0.15"],
+    ["Workbook shell", "Spreadsheets", "Done", "2026-05-15", "1"],
+    ["Formula polish", "Spreadsheets", "In progress", "2026-05-20", "0.65"],
+    ["Desktop packaging", "Spreadsheets", "Planned", "2026-05-27", "0.15"],
   ];
 
   sheet.rowCount = 80;

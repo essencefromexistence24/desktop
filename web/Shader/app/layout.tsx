@@ -23,14 +23,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
           type="font/woff2"
           crossOrigin="anonymous"
         />
-        <script defer src="/dx-shader/js/palettes.js"></script>
-        <script defer src="/dx-shader/js/shaders.js"></script>
-        <script defer src="/dx-shader/js/engine.js"></script>
-        <script defer src="/dx-shader/js/ui.js"></script>
-        <script defer src="/dx-shader/js/main.js"></script>
-        <script src="/sw-register.js"></script>
-        <script defer src="/agent-cursor.js"></script>
-        <script defer src="/canvas-export.js"></script>
       </head>
       <body>
         {children}

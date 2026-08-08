@@ -72,7 +72,7 @@ function updateTauriConfig(content: string) {
 function readme(options: SignedTauriPackageOptions) {
   return `# ${options.sceneName} Signed Desktop Package
 
-This package wraps the published Essence Spline scene in a signing-ready Tauri desktop shell.
+This package wraps the published 3D scene in a signing-ready Tauri desktop shell.
 
 - Share URL: ${options.shareUrl}
 - Scene API: ${options.sceneApiUrl}

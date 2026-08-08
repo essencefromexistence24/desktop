@@ -102,7 +102,7 @@ impl DxSkillPanel {
         let http_client = self.http_client.clone();
         self.fetch_task = Some(cx.spawn(async move |this: WeakEntity<Self>, cx| {
             let mut fetched = vec![];
-            
+
             if let Ok(mut response) = http_client.get("https://api.github.com/search/repositories?q=topic:mcp-server+OR+topic:agent-skill&sort=stars&order=desc", http_client::AsyncBody::default(), true).await {
                     use futures::AsyncReadExt;
                     let mut body = Vec::new();
@@ -115,7 +115,7 @@ impl DxSkillPanel {
                                 let full_name = item.get("full_name").and_then(|n| n.as_str()).unwrap_or("Unknown").to_string();
                                 let description = item.get("description").and_then(|d| d.as_str()).unwrap_or("No description").to_string();
                                 let html_url = item.get("html_url").and_then(|u| u.as_str()).unwrap_or("").to_string();
-                                
+
                                 fetched.push(SkillEntry {
                                     id: full_name.clone().into(),
                                     name: full_name.into(),

@@ -6173,9 +6173,7 @@ impl Workspace {
                     // preview screen instead of leaving the previous screen
                     // visible.
                     let target_pane_weak = target_pane.downgrade();
-                    cx.spawn_in(
-                        window,
-                        async move |workspace, cx| -> anyhow::Result<()> {
+                    cx.spawn_in(window, async move |workspace, cx| -> anyhow::Result<()> {
                         for _ in 0..10 {
                             let found = workspace
                                 .update_in(cx, |workspace, window, cx| {

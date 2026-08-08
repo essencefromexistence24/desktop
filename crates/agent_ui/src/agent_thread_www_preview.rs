@@ -11,12 +11,16 @@ pub const DX_WEB_TOOLS: &[&str] = &[
     "Design",
     "3D",
     "Video",
-    "Music",
     "Presentations",
     "Spreadsheets",
     "Graphics",
     "Whiteboard",
     "Shader",
+    "CMS",
+    "Graph",
+    "Media",
+    "Train",
+    "Metasearch",
 ];
 
 const DEFAULT_DEV_HOST: &str = "127.0.0.1";
