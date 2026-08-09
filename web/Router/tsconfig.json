@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "allowImportingTsExtensions": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@omniroute/open-sse": ["./route/open-sse"],
+      "@omniroute/open-sse/*": ["./route/open-sse/*"],
+      "@dx-serializer/core": ["./route/packages/dx-serializer/src"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "./src/scripts/build-registry.mts"
+  ],
+  "exclude": [
+    "node_modules",
+    "inspirations",
+    "packages",
+    "apps",
+    "scripts",
+    "src/app/_app",
+    "src/app/_preview"
+  ]
+}

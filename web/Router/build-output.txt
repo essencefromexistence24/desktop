@@ -1,0 +1,35 @@
+npm warn Unknown project config "onlyBuiltDependencies". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+npm notice run npx
+npm notice run next build --webpack
+Γû▓ Next.js 16.2.10 (webpack)
+- Environments: .env
+- Experiments (use with caution):
+  ┬╖ cpus: 2
+  ┬╖ serverActions
+
+[MDX] generated files in 56.09300000000076ms
+  Creating an optimized production build ...
+glob error [Error: EPERM: operation not permitted, scandir 'C:\Users\Computer\Application Data'] {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'scandir',
+  path: 'C:\\Users\\Computer\\Application Data'
+}
+glob error [Error: EACCES: permission denied, scandir 'C:\Users\Computer\AppData\Local\docker-secrets-engine\engine.sock'] {
+  errno: -4092,
+  code: 'EACCES',
+  syscall: 'scandir',
+  path: 'C:\\Users\\Computer\\AppData\\Local\\docker-secrets-engine\\engine.sock'
+}
+glob error [Error: EPERM: operation not permitted, scandir 'C:\Users\Computer\Application Data'] {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'scandir',
+  path: 'C:\\Users\\Computer\\Application Data'
+}
+unhandledRejection [Error: EPERM: operation not permitted, scandir 'C:\Users\Computer\Application Data'] {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'scandir',
+  path: 'C:\\Users\\Computer\\Application Data'
+}

@@ -1,0 +1,6 @@
+{
+  "identifier": "ios-capability",
+  "windows": ["main"],
+  "platforms": ["ios"],
+  "permissions": ["core:default", "shell:allow-open"]
+}
