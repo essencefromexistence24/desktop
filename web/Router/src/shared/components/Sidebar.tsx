@@ -493,11 +493,14 @@ export default function Sidebar({
               aria-expanded={!collapsed}
               aria-label={collapsed ? t("expandSidebar") : t("collapseSidebar")}
               className={cn(
-                "rounded-md p-1 text-text-muted/50 transition-colors hover:bg-black/5 hover:text-text-muted dark:hover:bg-white/5",
+                "flex size-7 shrink-0 items-center justify-center rounded-md text-text-muted/50 transition-colors hover:bg-black/5 hover:text-text-muted dark:hover:bg-white/5",
                 collapsed && "mt-2",
               )}
             >
-              <span className="material-symbols-outlined text-[16px]" aria-hidden="true">
+              <span
+                className="material-symbols-outlined text-[16px] leading-none"
+                aria-hidden="true"
+              >
                 {collapsed ? "chevron_right" : "chevron_left"}
               </span>
             </button>
@@ -638,8 +641,9 @@ export default function Sidebar({
           </nav>
         </div>
 
-        {!isE2EMode && <CloudSyncStatus collapsed={collapsed} />}
+        {/* {!isE2EMode && <CloudSyncStatus collapsed={collapsed} />} */}
 
+        {/* [TEMPORARILY DISABLED] Sync, restart & shutdown sidebar actions
         <div
           className={cn(
             "shrink-0 border-t border-black/5 dark:border-white/5",
@@ -674,6 +678,7 @@ export default function Sidebar({
             {!collapsed && <span className="truncate">{t("shutdown")}</span>}
           </button>
         </div>
+        */}
       </aside>
 
       {/* Styled tooltip for collapsed (mini) sidebar */}
