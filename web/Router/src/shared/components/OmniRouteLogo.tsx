@@ -1,6 +1,5 @@
 /**
- * OmniRoute logo SVG — network hub icon with connected nodes.
- * Matches the favicon and app icon design.
+ * Dx Route logo — the current Route app glyph.
  */
 type OmniRouteLogoProps = {
   size?: number;
@@ -12,74 +11,14 @@ export default function OmniRouteLogo({ size = 20, className = "" }: OmniRouteLo
     <svg
       width={size}
       height={size}
-      viewBox="0 0 32 32"
+      viewBox="0 0 900 900"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Central node */}
-      <circle cx="16" cy="16" r="3" fill="currentColor" />
-      {/* Outer nodes */}
-      <circle cx="8" cy="8" r="2" fill="currentColor" />
-      <circle cx="24" cy="8" r="2" fill="currentColor" />
-      <circle cx="8" cy="24" r="2" fill="currentColor" />
-      <circle cx="24" cy="24" r="2" fill="currentColor" />
-      <circle cx="16" cy="5" r="1.5" fill="currentColor" />
-      <circle cx="16" cy="27" r="1.5" fill="currentColor" />
-      {/* Connection lines */}
-      <line
-        x1="16"
-        y1="13"
-        x2="8"
-        y2="8"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      <line
-        x1="16"
-        y1="13"
-        x2="24"
-        y2="8"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      <line
-        x1="16"
-        y1="19"
-        x2="8"
-        y2="24"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      <line
-        x1="16"
-        y1="19"
-        x2="24"
-        y2="24"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      <line
-        x1="16"
-        y1="13"
-        x2="16"
-        y2="5"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      <line
-        x1="16"
-        y1="19"
-        x2="16"
-        y2="27"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
+      <path
+        d="M355.5 725.5H110V174H522.5C610.313 174 681.5 245.187 681.5 333V485.5L789 725.5H528.5L421 485.5V261.5H355.5V725.5Z"
+        fill="currentColor"
       />
     </svg>
   );

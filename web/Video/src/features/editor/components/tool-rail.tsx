@@ -46,7 +46,7 @@ export function ToolRail({ variant = "rail" }: ToolRailProps) {
   if (isBottom) {
     return (
       <nav
-        className="pointer-events-auto flex max-w-[calc(100vw-2rem)] items-center gap-1 overflow-hidden rounded-full border border-border bg-background/90 p-1 shadow-xl backdrop-blur"
+        className="pointer-events-auto flex max-w-[calc(100vw-2rem)] flex-wrap items-center justify-center gap-1 overflow-y-auto rounded-full border border-border bg-background/90 p-1 shadow-xl backdrop-blur"
         aria-label="Create tools"
       >
         {content}

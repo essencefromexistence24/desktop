@@ -148,23 +148,46 @@ async function readImageMetadata(file: File) {
 
 async function readTimedMediaMetadata(file: File, mediaType: "video" | "audio") {
   const url = URL.createObjectURL(file);
+  const element = document.createElement(mediaType);
 
   try {
-    const element = document.createElement(mediaType);
-    const metadata = await new Promise<{ duration: number; width?: number; height?: number }>((resolve, reject) => {
-      element.preload = "metadata";
-      element.onloadedmetadata = () =>
-        resolve({
-          duration: Number.isFinite(element.duration) ? element.duration : 0,
-          width: mediaType === "video" ? (element as HTMLVideoElement).videoWidth : undefined,
-          height: mediaType === "video" ? (element as HTMLVideoElement).videoHeight : undefined,
-        });
-      element.onerror = () => reject(new Error("Media metadata could not be read."));
-      element.src = url;
+    element.preload = "metadata";
+    element.src = url;
+    element.load();
+
+    const metadata = await new Promise<{ duration: number; width?: number; height?: number }>((resolve) => {
+      let settled = false;
+
+      const settle = (duration: number, width?: number, height?: number) => {
+        if (settled) return;
+        settled = true;
+        element.onloadedmetadata = null;
+        element.onerror = null;
+        resolve({ duration, width, height });
+      };
+
+      const timeout = window.setTimeout(() => {
+        settle(0);
+      }, 10_000);
+
+      element.onloadedmetadata = () => {
+        window.clearTimeout(timeout);
+        settle(
+          Number.isFinite(element.duration) ? element.duration : 0,
+          mediaType === "video" ? (element as HTMLVideoElement).videoWidth : undefined,
+          mediaType === "video" ? (element as HTMLVideoElement).videoHeight : undefined,
+        );
+      };
+      element.onerror = () => {
+        window.clearTimeout(timeout);
+        settle(0);
+      };
     });
 
     return metadata;
   } finally {
+    element.removeAttribute("src");
+    element.load();
     URL.revokeObjectURL(url);
   }
 }

@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import type { MutableRefObject } from "react";
 
 import { applyProjectAssetManifest } from "@/features/assets/project-asset-manifest";
+import type { LocalProjectStore } from "@/features/editor/local-project-store";
 import { createProjectCollaborationOperationId } from "@/features/editor/project-collaboration-sync";
 import type {
   BrandColorSummary,
@@ -25,6 +26,7 @@ type UseEditorProjectPersistenceInput = {
   document: DesignDocument;
   projectName: string;
   sharedEditShareId: string | null;
+  localStore?: LocalProjectStore | null;
   changeRevisionRef: MutableRefObject<number>;
   captureCurrentThumbnail: () => Promise<string | undefined>;
   replacePresent: (document: DesignDocument) => void;
@@ -43,6 +45,7 @@ export function useEditorProjectPersistence({
   document,
   projectName,
   sharedEditShareId,
+  localStore = null,
   changeRevisionRef,
   captureCurrentThumbnail,
   replacePresent,
@@ -61,7 +64,7 @@ export function useEditorProjectPersistence({
   );
 
   const refreshVersions = useCallback(async () => {
-    if (!canRestoreVersions) return;
+    if (!canRestoreVersions || localStore) return;
 
     const response = await fetch(`/api/projects/${projectId}/versions`);
 
@@ -72,13 +75,51 @@ export function useEditorProjectPersistence({
     };
 
     setVersions(body.versions);
-  }, [canRestoreVersions, projectId]);
+  }, [canRestoreVersions, projectId, localStore]);
 
   const saveProject = useCallback(async () => {
     setSaveState("saving");
     const saveRevision = changeRevisionRef.current;
     const thumbnail = await captureCurrentThumbnail();
     const documentWithAssetManifest = applyProjectAssetManifest(document);
+
+    if (localStore) {
+      const now = new Date().toISOString();
+      const localProject: ProjectDetail = {
+        id: projectId,
+        name: projectName,
+        width: document.width,
+        height: document.height,
+        folderId: null,
+        sourceProjectId: null,
+        variantProfileId: null,
+        variantName: null,
+        thumbnail: thumbnail ?? null,
+        publicShareId: null,
+        editShareId: null,
+        editSharePermission: "view",
+        approvalStatus: "draft",
+        starred: false,
+        deletedAt: null,
+        updatedAt: now,
+        createdAt: now,
+        document,
+      };
+
+      const saved = localStore.save(localProject);
+
+      if (!saved) {
+        setSaveState("error");
+        return false;
+      }
+
+      markProjectSynced(localProject);
+      setSaveState(
+        saveRevision === changeRevisionRef.current ? "saved" : "dirty",
+      );
+      return true;
+    }
+
     const operationId = createProjectCollaborationOperationId({
       projectId,
       revision: saveRevision,
@@ -120,6 +161,7 @@ export function useEditorProjectPersistence({
     captureCurrentThumbnail,
     changeRevisionRef,
     document,
+    localStore,
     markProjectSynced,
     projectId,
     projectName,
@@ -130,6 +172,8 @@ export function useEditorProjectPersistence({
 
   const restoreVersion = useCallback(
     async (versionId: string) => {
+      if (localStore) return;
+
       setRestoringVersionId(versionId);
 
       try {
@@ -161,6 +205,7 @@ export function useEditorProjectPersistence({
       }
     },
     [
+      localStore,
       markProjectSynced,
       projectId,
       replacePresent,
@@ -170,29 +215,36 @@ export function useEditorProjectPersistence({
     ],
   );
 
-  const createBrandColor = useCallback(async (color: string) => {
-    const response = await fetch("/api/brand/colors", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ color }),
-    });
+  const createBrandColor = useCallback(
+    async (color: string) => {
+      if (localStore) return;
 
-    if (!response.ok) return;
+      const response = await fetch("/api/brand/colors", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ color }),
+      });
 
-    const body = (await response.json()) as {
-      color: BrandColorSummary;
-    };
+      if (!response.ok) return;
 
-    setBrandColors((current) => [
-      body.color,
-      ...current.filter((item) => item.id !== body.color.id),
-    ]);
-  }, []);
+      const body = (await response.json()) as {
+        color: BrandColorSummary;
+      };
+
+      setBrandColors((current) => [
+        body.color,
+        ...current.filter((item) => item.id !== body.color.id),
+      ]);
+    },
+    [localStore],
+  );
 
   const saveBrandFont = useCallback(
     async (font: Omit<BrandFontSummary, "id" | "createdAt" | "updatedAt">) => {
+      if (localStore) return;
+
       const response = await fetch("/api/brand/fonts", {
         method: "POST",
         headers: {
@@ -212,11 +264,13 @@ export function useEditorProjectPersistence({
         ...current.filter((item) => item.role !== body.font.role),
       ]);
     },
-    [],
+    [localStore],
   );
 
   const saveAsTemplate = useCallback(
     async (kind: "standard" | "brand" | "team" = "standard") => {
+      if (localStore) return;
+
       setTemplateSaveState("saving");
       const thumbnail = await captureCurrentThumbnail();
       const isBrandTemplate = kind === "brand";
@@ -250,7 +304,7 @@ export function useEditorProjectPersistence({
 
       setTemplateSaveState("saved");
     },
-    [captureCurrentThumbnail, document, projectName],
+    [captureCurrentThumbnail, document, localStore, projectName],
   );
 
   return {

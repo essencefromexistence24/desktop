@@ -39,8 +39,13 @@ function notify(p: FfmpegLoadPhase, loaded = 0, total = 0) {
   }
 }
 
-async function fetchAsBlobURL(url: string, mimeType: string, onProgress?: (loaded: number, total: number) => void): Promise<string> {
-  const response = await fetch(url);
+async function fetchAsBlobURL(
+  url: string,
+  mimeType: string,
+  signal: AbortSignal,
+  onProgress?: (loaded: number, total: number) => void,
+): Promise<string> {
+  const response = await fetch(url, { signal });
   if (!response.ok) {
     throw new Error(`Failed to fetch ${url}: ${response.status}`);
   }
@@ -66,42 +71,79 @@ async function fetchAsBlobURL(url: string, mimeType: string, onProgress?: (loade
   return URL.createObjectURL(blob);
 }
 
-function timeout(ms: number): Promise<never> {
-  return new Promise((_, reject) =>
-    setTimeout(() => reject(new Error(`FFmpeg fetch timed out after ${ms}ms`)), ms),
-  );
+function ffmpegBaseCandidates(): string[] {
+  const candidates = new Set<string>();
+  const origin = window.location.origin;
+
+  candidates.add(`${origin}/ffmpeg`);
+
+  const pageDir = window.location.pathname.split("/").slice(0, -1).join("/");
+  if (pageDir) {
+    candidates.add(`${origin}${pageDir}/ffmpeg`);
+  }
+
+  const { baseURI } = document;
+  if (baseURI && baseURI.startsWith("http")) {
+    candidates.add(new URL("ffmpeg", baseURI).toString().replace(/\/$/, ""));
+  }
+
+  return [...candidates];
+}
+
+async function fetchFfmpegAsset(
+  filename: string,
+  mimeType: string,
+  signal: AbortSignal,
+  onProgress?: (loaded: number, total: number) => void,
+): Promise<string> {
+  let lastError: unknown;
+  for (const base of ffmpegBaseCandidates()) {
+    try {
+      return await fetchAsBlobURL(`${base}/${filename}`, mimeType, signal, onProgress);
+    } catch (error) {
+      lastError = error;
+      if (signal.aborted) throw error;
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error(`Failed to fetch ${filename}.`);
 }
 
 export async function preloadFfmpeg(): Promise<void> {
   if (loadPromise) return loadPromise;
 
-  const base = `${window.location.origin}/ffmpeg`;
-
   loadPromise = (async () => {
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
     try {
-      coreBlobURL = await Promise.race([
-        fetchAsBlobURL(
-          `${base}/ffmpeg-core.js`,
-          "text/javascript",
-          (loaded, total) => notify("prefetching-core", loaded, total),
-        ),
-        timeout(FETCH_TIMEOUT_MS),
-      ]);
+      coreBlobURL = await fetchFfmpegAsset(
+        "ffmpeg-core.js",
+        "text/javascript",
+        controller.signal,
+        (loaded, total) => notify("prefetching-core", loaded, total),
+      );
 
-      wasmBlobURL = await Promise.race([
-        fetchAsBlobURL(
-          `${base}/ffmpeg-core.wasm`,
-          "application/wasm",
-          (loaded, total) => notify("prefetching-wasm", loaded, total),
-        ),
-        timeout(FETCH_TIMEOUT_MS),
-      ]);
+      wasmBlobURL = await fetchFfmpegAsset(
+        "ffmpeg-core.wasm",
+        "application/wasm",
+        controller.signal,
+        (loaded, total) => notify("prefetching-wasm", loaded, total),
+      );
 
       notify("ready");
     } catch (err) {
+      if (coreBlobURL) {
+        URL.revokeObjectURL(coreBlobURL);
+        coreBlobURL = null;
+      }
+      if (wasmBlobURL) {
+        URL.revokeObjectURL(wasmBlobURL);
+        wasmBlobURL = null;
+      }
       notify("error");
       loadPromise = null;
       throw err;
+    } finally {
+      window.clearTimeout(timeoutId);
     }
   })();
 

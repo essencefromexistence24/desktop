@@ -2,6 +2,10 @@
 
 import { useEffect, useRef } from "react";
 
+type AgentCursorWindow = Window & {
+  __agentCursor?: { disconnect: () => void };
+};
+
 function loadScript(src: string): Promise<void> {
   return new Promise(function (resolve, reject) {
     if (document.querySelector('script[src="' + src + '"]')) {
@@ -31,8 +35,9 @@ export function AgentCursorProvider() {
     });
 
     return function () {
-      if (typeof window !== "undefined" && window.__agentCursor) {
-        window.__agentCursor.disconnect();
+      const browserWindow = window as AgentCursorWindow;
+      if (typeof window !== "undefined" && browserWindow.__agentCursor) {
+        browserWindow.__agentCursor.disconnect();
       }
     };
   }, []);

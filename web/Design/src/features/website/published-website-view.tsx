@@ -30,7 +30,7 @@ export function PublishedWebsiteView({
   ));
 
   return (
-    <main className="min-h-dvh bg-background text-foreground">
+    <main id="top" className="min-h-dvh bg-background text-foreground">
       {navigationStyle === "hidden" ? null : navigationStyle === "side" ? (
         <div className="lg:hidden">
           <WebsiteNavigation model={model} style="pills" />

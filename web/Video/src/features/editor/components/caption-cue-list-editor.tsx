@@ -28,7 +28,7 @@ import {
 interface CaptionCueListEditorProps {
   cues: SubtitleCue[];
   duration: number;
-  onChange: (cues: SubtitleCue[]) => void;
+  onChange: (cues: SubtitleCue[], options?: { history?: boolean }) => void;
   onApplyCuts?: (proposals: TranscriptCutProposal[]) => TranscriptCutApplySummary;
 }
 
@@ -51,6 +51,10 @@ export function CaptionCueListEditor({ cues, duration, onChange, onApplyCuts }: 
 
   function updateCue(cueId: string, patch: Partial<Pick<SubtitleCue, "start" | "end" | "text" | "emphasis">>) {
     onChange(updateSubtitleCue(normalizedCues, cueId, patch));
+  }
+
+  function updateCueCoalesced(cueId: string, patch: Partial<Pick<SubtitleCue, "start" | "end" | "text" | "emphasis">>) {
+    onChange(updateSubtitleCue(normalizedCues, cueId, patch), { history: false });
   }
 
   function splitCue(cue: SubtitleCue) {
@@ -124,13 +128,13 @@ export function CaptionCueListEditor({ cues, duration, onChange, onApplyCuts }: 
               </ButtonGroup>
             </div>
             <div className="grid grid-cols-2 gap-2">
-              <TimeField label="Start" value={cue.start} max={duration} onChange={(start) => updateCue(cue.id, { start })} />
-              <TimeField label="End" value={cue.end} max={duration} onChange={(end) => updateCue(cue.id, { end })} />
+              <TimeField label="Start" value={cue.start} max={duration} onChange={(start) => updateCueCoalesced(cue.id, { start })} />
+              <TimeField label="End" value={cue.end} max={duration} onChange={(end) => updateCueCoalesced(cue.id, { end })} />
             </div>
             <Textarea
               className="min-h-16 text-xs"
               value={cue.text}
-              onChange={(event) => updateCue(cue.id, { text: event.target.value })}
+              onChange={(event) => updateCueCoalesced(cue.id, { text: event.target.value })}
               aria-label={`Caption cue ${index + 1} text`}
             />
             <Select value={cue.emphasis ?? "normal"} onValueChange={(emphasis) => updateCue(cue.id, { emphasis: emphasis as SubtitleCue["emphasis"] })}>

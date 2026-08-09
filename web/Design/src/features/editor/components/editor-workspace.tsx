@@ -49,6 +49,7 @@ import { useEditorComments } from "@/features/editor/use-editor-comments";
 import { useEditorDocumentActions } from "@/features/editor/use-editor-document-actions";
 import { createDashboardDataStoryElements } from "@/features/editor/data-story-elements";
 import { getEditorLocale } from "@/features/editor/editor-localization";
+import type { LocalProjectStore } from "@/features/editor/local-project-store";
 import {
   useEditorProjectPersistence,
   type SaveState,
@@ -109,6 +110,7 @@ type EditorWorkspaceProps = {
   canRestoreVersions?: boolean;
   sharedEditShareId?: string | null;
   embedded?: boolean;
+  localStore?: LocalProjectStore | null;
 };
 
 export function EditorWorkspace({
@@ -124,8 +126,10 @@ export function EditorWorkspace({
   canRestoreVersions = true,
   sharedEditShareId = null,
   embedded = false,
+  localStore = null,
 }: EditorWorkspaceProps) {
   const isEmbedded = embedded || project.id === "embedded-canva-project";
+  const isLocalMode = Boolean(localStore);
   const {
     document,
     canUndo,
@@ -220,7 +224,7 @@ export function EditorWorkspace({
     projectId: project.id,
     initialUpdatedAt: project.updatedAt,
     editShareId: sharedEditShareId,
-    enabled: !isEmbedded,
+    enabled: !isEmbedded && !isLocalMode,
     projectName,
     document,
     saveState,
@@ -253,6 +257,7 @@ export function EditorWorkspace({
     document,
     projectName,
     sharedEditShareId,
+    localStore,
     changeRevisionRef,
     captureCurrentThumbnail,
     replacePresent,
@@ -561,6 +566,7 @@ export function EditorWorkspace({
       />
       <TopToolbar
         embedded={isEmbedded}
+        localMode={isLocalMode}
         projectName={projectName}
         saveState={saveState}
         autosaveState={autosaveState}

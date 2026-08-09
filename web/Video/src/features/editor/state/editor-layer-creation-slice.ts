@@ -234,7 +234,12 @@ export function createEditorLayerCreationSlice(
       const preset = stickerPresets.find((item) => item.id === stickerId);
       if (!preset) return;
 
-      deps.addLayer(createStickerLayer(preset, deps.nextTrack(get().project.layers)));
+      deps.addLayer(
+        placeLayerAtPlayhead(
+          createStickerLayer(preset, deps.nextTrack(get().project.layers)),
+          get().currentTime,
+        ),
+      );
     },
     addMemeLayout: (input: { assetId?: string; topText: string; bottomText: string; duration: number; style: MemeStyle }) => {
       const asset = input.assetId ? get().mediaAssets.find((item) => item.id === input.assetId) : undefined;

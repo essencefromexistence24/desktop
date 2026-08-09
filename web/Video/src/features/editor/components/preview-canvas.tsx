@@ -62,7 +62,9 @@ export function PreviewCanvas() {
           />
         ))}
         {activeLayers.length === 0 ? (
-          <div className="absolute inset-0 grid place-items-center text-sm text-muted-foreground">00:00 canvas</div>
+          <div className="absolute inset-0 grid place-items-center p-4 text-center text-sm text-muted-foreground">
+            Add media, text, captions, or shapes to start editing.
+          </div>
         ) : null}
         {showSafeZones ? (
           <SafeZoneOverlay aspectRatio={project.aspectRatio} socialFormatId={project.socialFormatId} width={project.width} height={project.height} />

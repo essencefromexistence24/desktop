@@ -1,7 +1,11 @@
 "use client";
 
 import type { EditorProject, TimelineLayer } from "@/lib/editor/types";
-import type { EditorStoreSet } from "@/features/editor/state/editor-store-types";
+import type {
+  EditorDocumentSnapshot,
+  EditorState,
+  EditorStoreSet,
+} from "@/features/editor/state/editor-store-types";
 
 export type EditorProjectCommit = (mutator: (project: EditorProject) => EditorProject) => void;
 
@@ -10,11 +14,25 @@ export type EditorLayerWriters = {
   addLayers: (layers: TimelineLayer[]) => void;
 };
 
+export function createEditorDocumentSnapshot(
+  state: Pick<
+    EditorState,
+    "project" | "mediaAssets" | "favoriteMediaAssetIds" | "lastRemovedMedia"
+  >,
+): EditorDocumentSnapshot {
+  return {
+    project: state.project,
+    mediaAssets: state.mediaAssets,
+    favoriteMediaAssetIds: state.favoriteMediaAssetIds,
+    lastRemovedMedia: state.lastRemovedMedia,
+  };
+}
+
 export function createEditorProjectCommit(set: EditorStoreSet): EditorProjectCommit {
   return (mutator) => {
     set((state) => ({
       project: mutator(state.project),
-      past: [...state.past, state.project].slice(-40),
+      past: [...state.past, createEditorDocumentSnapshot(state)].slice(-40),
       future: [],
     }));
   };

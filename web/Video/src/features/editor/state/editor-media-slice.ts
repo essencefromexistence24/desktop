@@ -2,6 +2,7 @@
 
 import { createId } from "@/lib/editor/factory";
 import type { EditorProject, MediaAsset, MediaCollection } from "@/lib/editor/types";
+import { createEditorDocumentSnapshot } from "@/features/editor/state/editor-store-core";
 import type {
   EditorState,
   EditorStoreGet,
@@ -153,7 +154,7 @@ export function createEditorMediaSlice(set: EditorStoreSet, get: EditorStoreGet,
         selectedLayerIds,
         currentTime: deps.clamp(state.currentTime, 0, duration),
         isPlaying: state.isPlaying && state.currentTime < duration,
-        past: [],
+        past: [...state.past, createEditorDocumentSnapshot(state)].slice(-40),
         future: [],
       });
 
@@ -180,7 +181,7 @@ export function createEditorMediaSlice(set: EditorStoreSet, get: EditorStoreGet,
         },
         selectedLayerId: restoredLayers.at(-1)?.id ?? state.selectedLayerId,
         selectedLayerIds: restoredLayers.map((layer) => layer.id),
-        past: [],
+        past: [...state.past, createEditorDocumentSnapshot(state)].slice(-40),
         future: [],
       });
       return true;

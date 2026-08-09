@@ -173,10 +173,10 @@ export function EditorShell({ embedded = false }: EditorShellProps) {
     : "flex min-h-0 flex-1 overflow-hidden";
   const mediaBinClassName = embedded
     ? "hidden min-h-0 w-[clamp(220px,24vw,320px)] shrink-0 resize-x overflow-hidden lg:block"
-    : "min-h-0 w-[280px] shrink-0 resize-x overflow-hidden";
+    : "hidden min-h-0 w-[clamp(220px,24vw,320px)] shrink-0 resize-x overflow-hidden lg:block";
   const inspectorClassName = embedded
     ? "hidden min-h-0 w-[clamp(280px,25vw,360px)] shrink-0 resize-x overflow-hidden border-l border-border xl:grid xl:grid-rows-[minmax(0,1fr)_minmax(180px,260px)]"
-    : "grid min-h-0 w-[340px] shrink-0 resize-x overflow-hidden border-l border-border grid-rows-[1fr_330px]";
+    : "hidden min-h-0 w-[clamp(280px,25vw,360px)] shrink-0 resize-x overflow-hidden border-l border-border xl:grid xl:grid-rows-[minmax(0,1fr)_minmax(180px,260px)]";
 
   return (
     <main

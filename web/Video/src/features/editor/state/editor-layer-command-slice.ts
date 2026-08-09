@@ -1,6 +1,7 @@
 "use client";
 
 import type { EditorProject, TimelineLayer } from "@/lib/editor/types";
+import { createEditorDocumentSnapshot } from "@/features/editor/state/editor-store-core";
 import type { EditorState, EditorStoreGet, EditorStoreSet } from "@/features/editor/state/editor-store-types";
 
 type EditorLayerCommandSlice = Pick<
@@ -33,7 +34,7 @@ export function createEditorLayerCommandSlice(
   return {
     pushHistorySnapshot: () =>
       set((state) => ({
-        past: [...state.past, state.project].slice(-40),
+        past: [...state.past, createEditorDocumentSnapshot(state)].slice(-40),
         future: [],
       })),
     removeSelectedLayer: () => get().removeSelectedLayers(),
@@ -49,14 +50,34 @@ export function createEditorLayerCommandSlice(
       );
       if (!removableIds.size) return;
 
+      const ripple = removedRippleSpan(
+        state.project.rippleMode,
+        state.project.layers.filter((layer) => removableIds.has(layer.id)),
+      );
+
       deps.commit((project) => {
-        const layers = project.layers.filter((layer) => !removableIds.has(layer.id));
+        const now = new Date().toISOString();
+        const layers = project.layers.flatMap((layer) => {
+          if (removableIds.has(layer.id)) return [];
+
+          if (ripple && !layer.locked && layer.start >= ripple.start) {
+            return [
+              {
+                ...layer,
+                start: Math.max(0, layer.start - ripple.span),
+                updatedAt: now,
+              },
+            ];
+          }
+
+          return [layer];
+        });
 
         return {
           ...project,
           layers,
           duration: deps.projectDurationForLayers(project.duration, layers),
-          updatedAt: new Date().toISOString(),
+          updatedAt: now,
         };
       });
       set({ selectedLayerId: null, selectedLayerIds: [] });
@@ -139,4 +160,16 @@ export function createEditorLayerCommandSlice(
       get().updateSelectedLayerTiming(layerId, { track: Math.max(0, layer.track + direction) });
     },
   };
+}
+
+function removedRippleSpan(rippleMode: boolean, removedLayers: TimelineLayer[]) {
+  if (!rippleMode || removedLayers.length === 0) return null;
+
+  const start = Math.min(...removedLayers.map((layer) => layer.start));
+  const end = Math.max(...removedLayers.map((layer) => layer.start + layer.duration));
+  const span = Math.max(0, end - start);
+
+  if (span <= 0) return null;
+
+  return { start, span };
 }

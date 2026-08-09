@@ -122,7 +122,8 @@ export function MediaBin() {
         try {
           addMediaAsset(await saveBrowserMedia(file));
           importedCount += 1;
-        } catch {
+        } catch (error) {
+          console.error(`Failed to import media: ${file.name}`, error);
           failedCount += 1;
         }
       }

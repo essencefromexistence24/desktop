@@ -125,10 +125,15 @@ export function CreationPanel() {
             </Button>
           </div>
           {templateMessage ? <div className="rounded-md border border-border p-2 text-xs text-muted-foreground">{templateMessage}</div> : null}
-          <div className="grid grid-cols-[1fr_132px] gap-2">
-            <Input value={templateQuery} onChange={(event) => setTemplateQuery(event.target.value)} placeholder="Search templates" />
+          <div className="flex flex-wrap items-center gap-2">
+            <Input
+              className="min-w-0 flex-1 basis-36"
+              value={templateQuery}
+              onChange={(event) => setTemplateQuery(event.target.value)}
+              placeholder="Search templates"
+            />
             <Select value={templateCategory} onValueChange={(value) => setTemplateCategory(value as TemplateCategoryFilter)}>
-              <SelectTrigger className="h-9">
+              <SelectTrigger className="h-9 w-32 shrink-0">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

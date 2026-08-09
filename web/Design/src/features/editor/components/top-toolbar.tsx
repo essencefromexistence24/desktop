@@ -70,6 +70,7 @@ import type {
 type TopToolbarProps = {
   projectName: string;
   embedded?: boolean;
+  localMode?: boolean;
   saveState: "dirty" | "saving" | "saved" | "error";
   autosaveState: "idle" | "saving" | "saved" | "error";
   templateSaveState: "idle" | "saving" | "saved" | "error";
@@ -127,6 +128,7 @@ type TopToolbarProps = {
 export function TopToolbar({
   projectName,
   embedded = false,
+  localMode = false,
   saveState,
   autosaveState,
   templateSaveState,
@@ -186,7 +188,7 @@ export function TopToolbar({
   return (
     <header className="flex h-12 shrink-0 items-center gap-2 overflow-hidden border-b border-border bg-card px-2 py-1 [&_button]:h-8 [&_button]:gap-1.5 [&_[role=combobox]]:h-8">
       <div className="flex min-w-0 flex-1 items-center gap-2">
-        {!embedded ? (
+        {!embedded || localMode ? (
           <Button asChild variant="outline" size="sm" className="shrink-0">
             <Link href="/designs">{copy.projects}</Link>
           </Button>
@@ -201,7 +203,7 @@ export function TopToolbar({
           onChange={(event) => onNameChange(event.target.value)}
           aria-label={copy.projectName}
         />
-        {!embedded ? (
+        {!embedded || localMode ? (
           <Badge
             variant={saveState === "error" ? "destructive" : "secondary"}
             className="hidden shrink-0 sm:inline-flex"
@@ -209,7 +211,9 @@ export function TopToolbar({
             {copy.saveState[saveState]}
           </Badge>
         ) : null}
-        {!embedded && saveState !== "saved" && autosaveState !== "idle" ? (
+        {(!embedded || localMode) &&
+        saveState !== "saved" &&
+        autosaveState !== "idle" ? (
           <Badge
             variant={autosaveState === "error" ? "destructive" : "outline"}
             className="hidden shrink-0 lg:inline-flex"
@@ -217,7 +221,7 @@ export function TopToolbar({
             {copy.autosaveState[autosaveState]}
           </Badge>
         ) : null}
-        {!embedded ? (
+        {!embedded && !localMode ? (
           <PresenceIndicator presence={presence} />
         ) : null}
         <Button
@@ -286,7 +290,7 @@ export function TopToolbar({
                 </SelectContent>
               </Select>
             </div>
-            {!embedded ? (
+            {!embedded && !localMode ? (
               <>
                 <DropdownMenuItem onClick={onOpenComments}>
                   <MessageSquare className="h-4 w-4" />
@@ -317,7 +321,7 @@ export function TopToolbar({
                 ) : null}
               </>
             ) : null}
-            {!embedded && canManageSharing ? (
+            {!embedded && !localMode && canManageSharing ? (
               <>
                 <DropdownMenuSeparator />
                 <DropdownMenuLabel>{copy.share[shareState]}</DropdownMenuLabel>
@@ -400,7 +404,7 @@ export function TopToolbar({
                 )}
               </>
             ) : null}
-            {!embedded ? (
+            {!embedded && !localMode ? (
               <>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
@@ -584,7 +588,7 @@ export function TopToolbar({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {!embedded ? (
+        {!embedded || localMode ? (
           <Button size="sm" onClick={onSave}>
             <Save className="h-4 w-4" />
             <span className="hidden sm:inline">{copy.save}</span>

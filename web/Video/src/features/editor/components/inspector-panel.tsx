@@ -77,7 +77,7 @@ export function InspectorPanel() {
           onDuplicateSelectedLayers={duplicateSelectedLayers}
           onRemoveSelectedLayers={removeSelectedLayers}
         />
-        <InspectorTextSection layer={layer} onUpdateLayer={updateLayer} />
+        <InspectorTextSection layer={layer} />
         {layer.kind === "subtitle" ? <InspectorCaptionSection layer={layer} /> : null}
         <InspectorLayerReviewSection layer={layer} onUpdateLayer={updateLayer} />
         <InspectorTimingSection

@@ -73,6 +73,12 @@ export async function renderCompositeWithCanvas(
     const recorder = new MediaRecorder(stream, { mimeType });
     const chunks: Blob[] = [];
 
+    try {
+      await audioContext.resume();
+    } catch {
+      throw new Error("Audio playback is blocked. Allow autoplay and try exporting again.");
+    }
+
     const recorded = await new Promise<Blob>((resolve, reject) => {
       const startedAt = performance.now();
       let animationFrame = 0;
@@ -126,7 +132,6 @@ export async function renderCompositeWithCanvas(
         return;
       }
 
-      void audioContext.resume().catch(() => undefined);
       drawFrameSafely();
       if (settled) return;
       interval = setInterval(drawFrameSafely, 1000 / fps);
@@ -377,7 +382,7 @@ async function seekFrameMedia(layers: PreparedLayer[], currentTime: number) {
 
 function seekPlayable(media: HTMLVideoElement | HTMLAudioElement, localTime: number) {
   const duration = Number.isFinite(media.duration) && media.duration > 0 ? media.duration : localTime;
-  const targetTime = Math.min(Math.max(0, duration - 0.01), Math.max(0, localTime));
+  const targetTime = Math.min(Math.max(0, duration), Math.max(0, localTime));
 
   return new Promise<void>((resolve, reject) => {
     let timeout: ReturnType<typeof setTimeout> | null = null;
@@ -397,7 +402,8 @@ function seekPlayable(media: HTMLVideoElement | HTMLAudioElement, localTime: num
 
     media.addEventListener("seeked", onSeeked);
     media.addEventListener("error", onError, { once: true });
-    timeout = setTimeout(onSeeked, 600);
+    const targetMs = 100;
+    timeout = setTimeout(onSeeked, targetMs);
     media.currentTime = targetTime;
   });
 }

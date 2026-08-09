@@ -281,14 +281,14 @@ export function ExportPanel() {
 
   return (
     <footer
-      className="flex h-32 flex-col gap-2 border-t border-border bg-card px-3 py-2"
+      className="flex min-h-32 flex-col gap-2 border-t border-border bg-card px-3 py-2"
       data-editor-region="export-workspace"
       tabIndex={-1}
     >
-      <div className="flex min-w-0 items-center justify-between gap-4">
-        <div className="flex min-w-0 items-center gap-2">
+      <div className="flex min-w-0 flex-wrap items-center justify-between gap-x-4 gap-y-2">
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
         <Select value={presetId} onValueChange={handlePresetChange}>
-          <SelectTrigger className="w-[220px]">
+          <SelectTrigger className="w-full min-w-0 max-w-[220px]">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -362,14 +362,14 @@ export function ExportPanel() {
           </div>
         ) : null}
         </div>
-        <div className="flex min-w-0 flex-1 items-center justify-end gap-3">
+        <div className="flex min-w-0 flex-wrap items-center justify-end gap-3">
         {exportJobs.some((job) => job.status !== "queued" && job.status !== "rendering") ? (
           <Button size="sm" variant="outline" onClick={clearFinishedJobs} disabled={isExportBusy}>
             Clear done
           </Button>
         ) : null}
         {exportJobs.slice(0, 3).map((job) => (
-          <div key={job.id} className="w-64">
+          <div key={job.id} className="w-full min-w-0 max-w-[16rem] sm:w-64">
             <div className="mb-1 flex justify-between gap-2 text-xs text-muted-foreground">
               <span className="truncate" title={job.error ?? job.outputName}>
                 {job.outputName}

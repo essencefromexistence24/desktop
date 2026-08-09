@@ -27,7 +27,7 @@ export function WebsiteNavigation({
           aria-label="Website sections"
           className="sticky top-6 rounded-md border border-border bg-background/90 p-3 shadow-sm backdrop-blur"
         >
-          <a href="#" className="block truncate text-sm font-semibold">
+          <a href="#top" className="block truncate text-sm font-semibold">
             {model.title}
           </a>
           <div className="mt-3 grid gap-1">
@@ -44,7 +44,7 @@ export function WebsiteNavigation({
     return (
       <nav aria-label="Website sections" className="sticky top-3 z-30 px-4">
         <div className="mx-auto flex w-fit max-w-full flex-wrap items-center gap-2 rounded-md border border-border bg-background/90 p-1 shadow-sm backdrop-blur">
-          <a href="#" className="shrink-0 px-3 text-sm font-semibold">
+          <a href="#top" className="shrink-0 px-3 text-sm font-semibold">
             {model.title}
           </a>
           {navigationItems.map((item) => (
@@ -61,7 +61,7 @@ export function WebsiteNavigation({
       className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur"
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
-        <a href="#" className="truncate text-sm font-semibold">
+        <a href="#top" className="truncate text-sm font-semibold">
           {model.title}
         </a>
         <div className="flex max-w-[65vw] flex-wrap justify-end gap-2">

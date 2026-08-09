@@ -25,6 +25,13 @@ export interface RemovedMediaRecovery {
   removedAt: string;
 }
 
+export interface EditorDocumentSnapshot {
+  project: EditorProject;
+  mediaAssets: MediaAsset[];
+  favoriteMediaAssetIds: string[];
+  lastRemovedMedia: RemovedMediaRecovery | null;
+}
+
 export interface EditorState {
   project: EditorProject;
   mediaAssets: MediaAsset[];
@@ -38,8 +45,8 @@ export interface EditorState {
   savedTemplates: SavedEditorTemplate[];
   lastRemovedMedia: RemovedMediaRecovery | null;
   showSafeZones: boolean;
-  past: EditorProject[];
-  future: EditorProject[];
+  past: EditorDocumentSnapshot[];
+  future: EditorDocumentSnapshot[];
   createNewProject: (title?: string, aspectRatio?: string) => void;
   loadProject: (project: EditorProject, mediaAssets?: MediaAsset[]) => void;
   setProjectTitle: (title: string) => void;

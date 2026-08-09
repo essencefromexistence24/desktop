@@ -9,6 +9,6 @@ export function downloadTextFile(filename: string, text: string, type: string) {
     link.click();
   } finally {
     link.remove();
-    window.setTimeout(() => URL.revokeObjectURL(url), 0);
+    window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
   }
 }

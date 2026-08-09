@@ -142,7 +142,7 @@ export function MediaAssetCard({
         </div>
       ) : null}
       {asset.objectUrl && asset.type === "audio" ? <WaveformBars peaks={asset.waveformPeaks} className="mt-2 text-primary" /> : null}
-      <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
+      <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
         <Badge variant="outline" className="capitalize">
           {asset.type}
         </Badge>

@@ -68,7 +68,7 @@ export function MediaBinImportControls({
         aria-label="Batch reconnect missing media files"
         onChange={onReconnectMissingMediaBatch}
       />
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 gap-2 min-[320px]:grid-cols-3">
         <Button size="sm" onClick={() => inputRef.current?.click()} disabled={isImporting} aria-label="Import media files">
           <Upload className="size-4" />
           Import

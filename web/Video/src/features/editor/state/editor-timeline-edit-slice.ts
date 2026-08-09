@@ -62,7 +62,7 @@ export function createEditorTimelineEditSlice(
       };
 
       if (options?.history === false) {
-        set((state) => ({ project: mutator(state.project) }));
+        set((state) => ({ project: mutator(state.project), future: [] }));
         return;
       }
 
@@ -138,7 +138,7 @@ export function createEditorTimelineEditSlice(
       };
 
       if (options?.history === false) {
-        set((current) => ({ project: mutator(current.project) }));
+        set((current) => ({ project: mutator(current.project), future: [] }));
         return;
       }
 
@@ -162,30 +162,30 @@ export function createEditorTimelineEditSlice(
       const now = new Date().toISOString();
       let changedCount = 0;
 
-      deps.commit((project) => {
-        const layers = project.layers.map((layer) => {
-          if (!editableIds.has(layer.id)) return layer;
+      const layers = state.project.layers.map((layer) => {
+        if (!editableIds.has(layer.id)) return layer;
 
-          const nextStart = targetStart + (layer.start - bounds.start) * scale;
-          const nextDuration = Math.max(TIMELINE_MIN_LAYER_SECONDS, layer.duration * scale);
-          if (nextStart === layer.start && nextDuration === layer.duration) return layer;
+        const nextStart = targetStart + (layer.start - bounds.start) * scale;
+        const nextDuration = Math.max(TIMELINE_MIN_LAYER_SECONDS, layer.duration * scale);
+        if (nextStart === layer.start && nextDuration === layer.duration) return layer;
 
-          changedCount += 1;
-          return {
-            ...layer,
-            start: nextStart,
-            duration: nextDuration,
-            updatedAt: now,
-          };
-        });
-
+        changedCount += 1;
         return {
-          ...project,
-          layers,
-          duration: deps.projectDurationForLayers(project.duration, layers),
-          updatedAt: changedCount > 0 ? now : project.updatedAt,
+          ...layer,
+          start: nextStart,
+          duration: nextDuration,
+          updatedAt: now,
         };
       });
+
+      if (changedCount === 0) return 0;
+
+      deps.commit((project) => ({
+        ...project,
+        layers,
+        duration: deps.projectDurationForLayers(project.duration, layers),
+        updatedAt: now,
+      }));
 
       return changedCount;
     },
@@ -202,39 +202,41 @@ export function createEditorTimelineEditSlice(
           : null;
       let movedCount = 0;
       const now = new Date().toISOString();
-      deps.commit((project) => {
-        const layers = project.layers.map((layer) => {
-          if (rippleBoundary !== null && !selected.has(layer.id) && !layer.locked && layer.start >= rippleBoundary) {
-            movedCount += 1;
-            return {
-              ...layer,
-              start: Math.max(0, layer.start + (input.timeDelta ?? 0)),
-              updatedAt: now,
-            };
-          }
 
-          if (!selected.has(layer.id) || layer.locked) return layer;
-
-          const nextStart = deps.snapProjectTime(project, Math.max(0, layer.start + (input.timeDelta ?? 0)));
-          const nextTrack = Math.max(0, layer.track + (input.trackDelta ?? 0));
-          if (nextStart === layer.start && nextTrack === layer.track) return layer;
-
+      const layers = state.project.layers.map((layer) => {
+        if (rippleBoundary !== null && !selected.has(layer.id) && !layer.locked && layer.start >= rippleBoundary) {
           movedCount += 1;
           return {
             ...layer,
-            start: nextStart,
-            track: nextTrack,
+            start: Math.max(0, layer.start + (input.timeDelta ?? 0)),
             updatedAt: now,
           };
-        });
+        }
 
+        if (!selected.has(layer.id) || layer.locked) return layer;
+
+        const nextStart = deps.snapProjectTime(state.project, Math.max(0, layer.start + (input.timeDelta ?? 0)));
+        const nextTrack = Math.max(0, layer.track + (input.trackDelta ?? 0));
+        if (nextStart === layer.start && nextTrack === layer.track) return layer;
+
+        movedCount += 1;
         return {
-          ...project,
-          layers,
-          duration: deps.projectDurationForLayers(project.duration, layers),
-          updatedAt: movedCount > 0 ? now : project.updatedAt,
+          ...layer,
+          start: nextStart,
+          track: nextTrack,
+          updatedAt: now,
         };
       });
+
+      if (movedCount === 0) return 0;
+
+      deps.commit((project) => ({
+        ...project,
+        layers,
+        duration: deps.projectDurationForLayers(project.duration, layers),
+        updatedAt: now,
+      }));
+
       return movedCount;
     },
     alignSelectedLayers: (mode) => {
@@ -248,28 +250,28 @@ export function createEditorTimelineEditSlice(
       const now = new Date().toISOString();
       let alignedCount = 0;
 
-      deps.commit((project) => {
-        const layers = project.layers.map((layer) => {
-          if (!editableIds.has(layer.id)) return layer;
+      const layers = state.project.layers.map((layer) => {
+        if (!editableIds.has(layer.id)) return layer;
 
-          const nextStart = Math.max(0, alignedLayerStart(layer, bounds, mode, state.currentTime));
-          if (Math.abs(nextStart - layer.start) < 0.0001) return layer;
+        const nextStart = Math.max(0, alignedLayerStart(layer, bounds, mode, state.currentTime));
+        if (Math.abs(nextStart - layer.start) < 0.0001) return layer;
 
-          alignedCount += 1;
-          return {
-            ...layer,
-            start: nextStart,
-            updatedAt: now,
-          };
-        });
-
+        alignedCount += 1;
         return {
-          ...project,
-          layers,
-          duration: deps.projectDurationForLayers(project.duration, layers),
-          updatedAt: alignedCount > 0 ? now : project.updatedAt,
+          ...layer,
+          start: nextStart,
+          updatedAt: now,
         };
       });
+
+      if (alignedCount === 0) return 0;
+
+      deps.commit((project) => ({
+        ...project,
+        layers,
+        duration: deps.projectDurationForLayers(project.duration, layers),
+        updatedAt: now,
+      }));
 
       return alignedCount;
     },
@@ -286,32 +288,32 @@ export function createEditorTimelineEditSlice(
         mode === "fill-selection" ? fillSelectionTiming(editableLayers, bounds) : equalDurationTiming(editableLayers);
       let distributedCount = 0;
 
-      deps.commit((project) => {
-        const layers = project.layers.map((layer) => {
-          if (!editableIds.has(layer.id)) return layer;
+      const layers = state.project.layers.map((layer) => {
+        if (!editableIds.has(layer.id)) return layer;
 
-          const timing = distributedTiming.get(layer.id);
-          if (!timing) return layer;
-          if (Math.abs(timing.start - layer.start) < 0.0001 && Math.abs(timing.duration - layer.duration) < 0.0001) {
-            return layer;
-          }
+        const timing = distributedTiming.get(layer.id);
+        if (!timing) return layer;
+        if (Math.abs(timing.start - layer.start) < 0.0001 && Math.abs(timing.duration - layer.duration) < 0.0001) {
+          return layer;
+        }
 
-          distributedCount += 1;
-          return {
-            ...layer,
-            start: timing.start,
-            duration: timing.duration,
-            updatedAt: now,
-          };
-        });
-
+        distributedCount += 1;
         return {
-          ...project,
-          layers,
-          duration: deps.projectDurationForLayers(project.duration, layers),
-          updatedAt: distributedCount > 0 ? now : project.updatedAt,
+          ...layer,
+          start: timing.start,
+          duration: timing.duration,
+          updatedAt: now,
         };
       });
+
+      if (distributedCount === 0) return 0;
+
+      deps.commit((project) => ({
+        ...project,
+        layers,
+        duration: deps.projectDurationForLayers(project.duration, layers),
+        updatedAt: now,
+      }));
 
       return distributedCount;
     },
@@ -325,20 +327,25 @@ export function createEditorTimelineEditSlice(
 
       const now = new Date().toISOString();
       let centeredCount = 0;
+
+      const layers = state.project.layers.map((layer) => {
+        if (!editableIds.has(layer.id)) return layer;
+        if (layer.transform.x === 0.5 && layer.transform.y === 0.5) return layer;
+
+        centeredCount += 1;
+        return {
+          ...layer,
+          transform: { ...layer.transform, x: 0.5, y: 0.5 },
+          updatedAt: now,
+        };
+      });
+
+      if (centeredCount === 0) return 0;
+
       deps.commit((project) => ({
         ...project,
-        layers: project.layers.map((layer) => {
-          if (!editableIds.has(layer.id)) return layer;
-          if (layer.transform.x === 0.5 && layer.transform.y === 0.5) return layer;
-
-          centeredCount += 1;
-          return {
-            ...layer,
-            transform: { ...layer.transform, x: 0.5, y: 0.5 },
-            updatedAt: now,
-          };
-        }),
-        updatedAt: centeredCount > 0 ? now : project.updatedAt,
+        layers,
+        updatedAt: now,
       }));
 
       return centeredCount;
@@ -353,31 +360,36 @@ export function createEditorTimelineEditSlice(
 
       const now = new Date().toISOString();
       let fittedCount = 0;
+
+      const layers = state.project.layers.map((layer) => {
+        if (!editableIds.has(layer.id)) return layer;
+
+        const source = layerSourceDimensions(layer, state.mediaAssets);
+        const scale =
+          mode === "cover"
+            ? Math.max(state.project.width / source.width, state.project.height / source.height)
+            : Math.min(state.project.width / source.width, state.project.height / source.height);
+        fittedCount += 1;
+        return {
+          ...layer,
+          transform: {
+            ...layer.transform,
+            x: 0.5,
+            y: 0.5,
+            width: Math.max(1, Math.round(source.width * scale)),
+            height: Math.max(1, Math.round(source.height * scale)),
+            framing: mode === "cover" ? "fill" : "fit",
+          },
+          updatedAt: now,
+        };
+      });
+
+      if (fittedCount === 0) return 0;
+
       deps.commit((project) => ({
         ...project,
-        layers: project.layers.map((layer) => {
-          if (!editableIds.has(layer.id)) return layer;
-
-          const source = layerSourceDimensions(layer, state.mediaAssets);
-          const scale =
-            mode === "cover"
-              ? Math.max(project.width / source.width, project.height / source.height)
-              : Math.min(project.width / source.width, project.height / source.height);
-          fittedCount += 1;
-          return {
-            ...layer,
-            transform: {
-              ...layer.transform,
-              x: 0.5,
-              y: 0.5,
-              width: Math.max(1, Math.round(source.width * scale)),
-              height: Math.max(1, Math.round(source.height * scale)),
-              framing: mode === "cover" ? "fill" : "fit",
-            },
-            updatedAt: now,
-          };
-        }),
-        updatedAt: fittedCount > 0 ? now : project.updatedAt,
+        layers,
+        updatedAt: now,
       }));
 
       return fittedCount;
@@ -391,28 +403,26 @@ export function createEditorTimelineEditSlice(
       const createdIds: string[] = [];
       let createdCount = 0;
 
-      deps.commit((project) => {
-        const layers = project.layers.flatMap((layer) => {
-          if (!selectedIds.has(layer.id) || layer.locked || (layer.kind !== "image" && layer.kind !== "video") || !layer.assetId) {
-            return [layer];
-          }
+      const layers = state.project.layers.flatMap((layer) => {
+        if (!selectedIds.has(layer.id) || layer.locked || (layer.kind !== "image" && layer.kind !== "video") || !layer.assetId) {
+          return [layer];
+        }
 
-          const background = createBlurredBackgroundLayer(layer, project, now);
-          createdIds.push(background.id);
-          createdCount += 1;
-          return [background, layer];
-        });
-
-        return {
-          ...project,
-          layers,
-          updatedAt: createdCount > 0 ? now : project.updatedAt,
-        };
+        const background = createBlurredBackgroundLayer(layer, state.project, now);
+        createdIds.push(background.id);
+        createdCount += 1;
+        return [background, layer];
       });
 
-      if (createdIds.length) {
-        set({ selectedLayerId: createdIds[0], selectedLayerIds: createdIds });
-      }
+      if (createdCount === 0) return 0;
+
+      deps.commit((project) => ({
+        ...project,
+        layers,
+        updatedAt: now,
+      }));
+
+      set({ selectedLayerId: createdIds[0], selectedLayerIds: createdIds });
 
       return createdCount;
     },

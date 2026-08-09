@@ -34,6 +34,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useEditorStore } from "@/features/editor/state/editor-store";
 import { aspectPresets } from "@/lib/editor/presets";
+import { cn } from "@/lib/utils";
 import { CloudSyncButton } from "@/features/projects/components/cloud-sync-button";
 import { LocalSaveButton } from "@/features/projects/components/local-save-button";
 import { ReviewWorkspaceDialog } from "@/features/projects/components/review-workspace-dialog";
@@ -150,7 +151,7 @@ export function ProjectTopbar({ embedded = false }: ProjectTopbarProps) {
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </ProjectMenu>
-        <ProjectMenu label="View">
+        <ProjectMenu label="View" className="hidden md:inline-flex">
           <DropdownMenuItem onSelect={toggleSafeZones}>
             <Grid3X3 className="size-4" />
             {showSafeZones ? "Hide safe zones" : "Show safe zones"}
@@ -167,7 +168,7 @@ export function ProjectTopbar({ embedded = false }: ProjectTopbarProps) {
             </DropdownMenuItem>
           ))}
         </ProjectMenu>
-        <ProjectMenu label="Arrange">
+        <ProjectMenu label="Arrange" className="hidden lg:inline-flex">
           <DropdownMenuItem onSelect={centerSelectedLayers} disabled={!hasSelection}>
             <Maximize2 className="size-4" />
             Center selection
@@ -181,7 +182,7 @@ export function ProjectTopbar({ embedded = false }: ProjectTopbarProps) {
             Fit cover
           </DropdownMenuItem>
         </ProjectMenu>
-        <ProjectMenu label="Export">
+        <ProjectMenu label="Export" className="hidden md:inline-flex">
           <DropdownMenuItem onSelect={() => focusEditorRegion("export-workspace")}>
             <Download className="size-4" />
             Use export tray
@@ -218,11 +219,11 @@ export function ProjectTopbar({ embedded = false }: ProjectTopbarProps) {
   );
 }
 
-function ProjectMenu({ label, children }: { label: string; children: ReactNode }) {
+function ProjectMenu({ label, className, children }: { label: string; className?: string; children: ReactNode }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="sm" variant="ghost" className="h-8 px-2 text-xs">
+        <Button size="sm" variant="ghost" className={cn("h-8 px-2 text-xs", className)}>
           {label}
           <ChevronDown className="size-3" />
         </Button>

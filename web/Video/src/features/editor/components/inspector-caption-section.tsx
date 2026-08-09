@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { CaptionCueListEditor } from "@/features/editor/components/caption-cue-list-editor";
 import { CaptionImportPreview } from "@/features/editor/components/caption-import-preview";
+import { useCoalescedLayerEdit } from "@/features/editor/hooks/use-coalesced-layer-edit";
 import { useEditorStore } from "@/features/editor/state/editor-store";
 import type { SubtitleCue, TimelineLayer } from "@/lib/editor/types";
 import { normalizeSubtitleCues } from "@/lib/subtitles/cue-operations";
@@ -18,17 +19,25 @@ export function InspectorCaptionSection({ layer }: { layer: TimelineLayer }) {
   const updateLayer = useEditorStore((state) => state.updateLayer);
   const addSubtitleLayerFromCues = useEditorStore((state) => state.addSubtitleLayerFromCues);
   const applyTimelineCutRanges = useEditorStore((state) => state.applyTimelineCutRanges);
+  const captionEdit = useCoalescedLayerEdit(layer.id);
   const [captionMessage, setCaptionMessage] = useState<string | null>(null);
   const [isImportingCaptions, setIsImportingCaptions] = useState(false);
   const [pendingCaptionImport, setPendingCaptionImport] = useState<{ filename: string; cues: SubtitleCue[] } | null>(null);
   const text = (layer.cues ?? []).map((cue) => `${cue.start}-${cue.end} ${cue.text}`).join("\n");
 
-  function applyCues(cues: SubtitleCue[]) {
+  function applyCues(cues: SubtitleCue[], options?: { history?: boolean }) {
     const normalizedCues = normalizeSubtitleCues(cues);
-    updateLayer(layer.id, {
+    const patch = {
       cues: normalizedCues,
       duration: Math.max(layer.duration, ...normalizedCues.map((cue) => cue.end), 5),
-    });
+    };
+
+    if (options?.history === false) {
+      captionEdit.update(patch);
+      return;
+    }
+
+    updateLayer(layer.id, patch);
   }
 
   async function importCaptions(event: ChangeEvent<HTMLInputElement>) {
@@ -136,7 +145,11 @@ export function InspectorCaptionSection({ layer }: { layer: TimelineLayer }) {
         />
       ) : null}
       <CaptionCueListEditor cues={layer.cues ?? []} duration={Math.max(layer.duration, 5)} onChange={applyCues} onApplyCuts={applyTranscriptCuts} />
-      <Textarea value={text} onChange={(event) => applyCues(parseManualCaptionText(event.target.value, layer.cues))} />
+      <Textarea
+        value={text}
+        onChange={(event) => applyCues(parseManualCaptionText(event.target.value, layer.cues), { history: false })}
+        onBlur={captionEdit.endSession}
+      />
     </div>
   );
 }

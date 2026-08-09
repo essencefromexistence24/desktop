@@ -98,15 +98,15 @@ export function TimelineCommandBar({
   onRippleModeChange,
 }: TimelineCommandBarProps) {
   return (
-    <div className="flex h-12 items-center gap-3 border-b border-border px-3">
+    <div className="flex h-12 min-w-0 items-center gap-3 overflow-x-auto border-b border-border px-3">
       <Button size="icon" variant="outline" onClick={onTogglePlayback} aria-label={isPlaying ? "Pause" : "Play"}>
         {isPlaying ? <Pause className="size-4" /> : <Play className="size-4" />}
       </Button>
-      <Button size="sm" variant="outline" onClick={onSplitSelectedLayers} disabled={!canSplitSelection}>
+      <Button size="sm" variant="outline" className="hidden md:inline-flex" onClick={onSplitSelectedLayers} disabled={!canSplitSelection}>
         <Scissors className="size-4" />
         Split
       </Button>
-      <Button size="sm" variant="outline" onClick={onAddMarker}>
+      <Button size="sm" variant="outline" className="hidden md:inline-flex" onClick={onAddMarker}>
         <Flag className="size-4" />
         Marker
       </Button>
