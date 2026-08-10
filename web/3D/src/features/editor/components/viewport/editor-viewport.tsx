@@ -3,8 +3,6 @@
 import { useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
-  GizmoHelper,
-  GizmoViewport,
   Grid,
   OrbitControls,
   OrthographicCamera,
@@ -179,7 +177,17 @@ function CameraRig({
     );
   }
 
-  return <PerspectiveCamera makeDefault position={[5, 4, 6]} fov={48} />;
+  return (
+    <PerspectiveCamera
+      makeDefault
+      onUpdate={(camera) => {
+        camera.lookAt(0, 0, 0);
+        camera.updateProjectionMatrix();
+      }}
+      position={[5, 4, 6]}
+      fov={48}
+    />
+  );
 }
 
 type EditorViewportProps = {
@@ -368,11 +376,6 @@ export function EditorViewport({
         return;
       }
 
-      const state = useEditorStore.getState();
-      if ((event.key === "Delete" || event.key === "Backspace") && state.selectedObjectId && !state.playModeEnabled) {
-        state.deleteObject(state.selectedObjectId);
-      }
-
       recordViewportInteractionEvent({
         at: new Date().toISOString(),
         key: event.key,
@@ -424,9 +427,19 @@ export function EditorViewport({
         <Canvas
           className="h-full w-full"
           dpr={[1, 2]}
+          fallback={
+            <div className="flex h-full items-center justify-center bg-background p-6 text-center text-sm text-muted-foreground">
+              WebGL could not start in this browser session. Enable hardware acceleration or use a WebGL-capable browser.
+            </div>
+          }
           gl={{ antialias: true, preserveDrawingBuffer: true }}
+          resize={{ debounce: 0 }}
           shadows
-          style={{ cursor: viewportCursor }}
+          style={{
+            cursor: viewportCursor,
+            height: "100%",
+            width: "100%",
+          }}
           onCreated={({ gl }) => {
             gl.localClippingEnabled = true;
           }}
@@ -594,27 +607,22 @@ export function EditorViewport({
             ))}
             {collaborationEnabled && !playModeEnabled ? <CommentPins /> : null}
             {orbitControlsEnabled ? (
-              <>
-                <OrbitControls
-                  enableDamping
-                  enableRotate={surfaceMode !== "2d"}
-                  makeDefault
-                  onChange={() => {
-                    emitControlsEvent("change");
-                  }}
-                  onEnd={() => {
-                    emitControlsEvent("end");
-                    recordCameraEvent("orbit-end");
-                  }}
-                  onStart={() => {
-                    emitControlsEvent("start");
-                    recordCameraEvent("orbit-start");
-                  }}
-                />
-                <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
-                  <GizmoViewport axisColors={["#ff3653", "#8adb00", "#2c8fff"]} labelColor="black" />
-                </GizmoHelper>
-              </>
+              <OrbitControls
+                enableDamping
+                enableRotate={surfaceMode !== "2d"}
+                makeDefault
+                onChange={() => {
+                  emitControlsEvent("change");
+                }}
+                onEnd={() => {
+                  emitControlsEvent("end");
+                  recordCameraEvent("orbit-end");
+                }}
+                onStart={() => {
+                  emitControlsEvent("start");
+                  recordCameraEvent("orbit-start");
+                }}
+              />
             ) : null}
           </MediaActionProvider>
         </Canvas>
@@ -641,3 +649,5 @@ export function EditorViewport({
     </section>
   );
 }
+
+export default EditorViewport;

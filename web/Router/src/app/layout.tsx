@@ -18,12 +18,12 @@ export const viewport: Viewport = {
 
 export async function generateMetadata() {
   const settings = await getSettings();
-  const instanceName = settings?.instanceName || "Dx Route";
+  const instanceName = settings?.instanceName || "Router";
   const customFaviconUrl = settings?.customFaviconUrl || settings?.customFaviconBase64;
 
   return {
-    title: `${instanceName} — Unified AI Gateway`,
-    description: "DX is a unified AI gateway. One endpoint for all your AI providers.",
+    title: `${instanceName} — AI Router`,
+    description: "Route AI requests across providers with reliable fallbacks.",
     manifest: "/manifest.webmanifest",
     applicationName: instanceName,
     appleWebApp: {

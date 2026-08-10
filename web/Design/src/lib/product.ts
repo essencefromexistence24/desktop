@@ -1,6 +1,6 @@
 export const productName = "Design";
 export const productDescription =
-  "A private design studio for creating, organizing, and publishing visual work.";
+  "Create, organize, and publish visual design projects in one focused workspace.";
 export const productEmailFrom =
   process.env.BREVO_FROM_EMAIL?.trim() ||
   process.env.SMTP_FROM?.trim() ||

@@ -2,7 +2,7 @@
 
 # Cms
 
-**Own your site. Love building it.**
+Create, manage, and publish content with a visual CMS.
 
 A self-hosted CMS where the visual editor, content engine, and publisher all live in one Bun server — and the pages it ships are clean enough to read in view-source.
 

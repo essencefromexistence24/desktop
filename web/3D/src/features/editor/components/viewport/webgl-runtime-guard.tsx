@@ -1,6 +1,6 @@
 "use client";
 
-import { Component, useEffect, useState, type ReactNode } from "react";
+import { Component, useState, type ReactNode } from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -127,19 +127,11 @@ class WebGLCanvasErrorBoundary extends Component<WebGLCanvasErrorBoundaryProps, 
 }
 
 export function WebGLRuntimeGuard({ children, className, surfaceLabel }: WebGLRuntimeGuardProps) {
-  const [status, setStatus] = useState<WebGlStatus>("checking");
+  const [status, setStatus] = useState<WebGlStatus>("ready");
   const [retryKey, setRetryKey] = useState(0);
 
-  useEffect(() => {
-    const timeoutId = window.setTimeout(() => {
-      setStatus(canCreateWebGlContext() ? "ready" : "blocked");
-    }, 0);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [retryKey]);
-
   const retry = () => {
-    setStatus("checking");
+    setStatus("ready");
     setRetryKey((currentKey) => currentKey + 1);
   };
 

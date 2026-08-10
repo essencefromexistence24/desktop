@@ -1,5 +1,6 @@
 {
   "name": "spreadsheets",
+  "description": "Create, import, edit, and manage spreadsheet workbooks.",
   "version": "0.1.0",
   "private": true,
   "scripts": {

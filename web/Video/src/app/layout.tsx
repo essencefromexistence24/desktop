@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Video",
-  description: "Local-first browser and desktop media editor.",
+  description: "Edit, enhance, and share video projects in the browser or desktop app.",
   icons: { icon: "/favicon.svg" },
 };
 

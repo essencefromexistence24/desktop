@@ -1,5 +1,6 @@
 {
   "name": "graphics",
+  "description": "Create and collaborate on graphics, layouts, and visual assets.",
   "version": "0.1.0",
   "private": true,
   "scripts": {

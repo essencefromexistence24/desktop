@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Dx Route AI Gateway",
     short_name: "Dx Route",
-    description: "Dx Route is a unified AI gateway. One endpoint for all your AI providers.",
+    description: "Route AI requests across providers with reliable fallbacks.",
     start_url: "/dashboard",
     scope: "/",
     display: "standalone",

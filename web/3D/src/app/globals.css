@@ -167,3 +167,9 @@ canvas {
 [data-slot="scroll-area-viewport"]::-webkit-scrollbar {
   display: none;
 }
+
+[data-testid="editor-viewport"] > div > div > canvas {
+  display: block;
+  height: 100% !important;
+  width: 100% !important;
+}

@@ -2,6 +2,14 @@
 
 import { useEffect, useRef } from "react";
 
+declare global {
+  interface Window {
+    __agentCursor?: {
+      disconnect: () => void;
+    };
+  }
+}
+
 function loadScript(src: string): Promise<void> {
   return new Promise(function (resolve, reject) {
     if (document.querySelector('script[src="' + src + '"]')) {

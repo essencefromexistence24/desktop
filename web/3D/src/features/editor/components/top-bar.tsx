@@ -421,8 +421,11 @@ export function TopBar({ cloudEnabled = true }: TopBarProps) {
   return (
     <header className="grid min-w-0 grid-cols-[minmax(160px,1fr)_auto] items-center gap-2 border-b border-border bg-background px-3 max-sm:grid-cols-[1fr_auto]">
       <div className="flex min-w-0 items-center gap-2">
-        <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground">
-          <Box className="size-4" />
+        <div className="flex size-8 shrink-0 items-center justify-center p-1">
+          <picture>
+            <source media="(prefers-color-scheme: dark)" srcSet="/logo-dark.svg" />
+            <img className="size-full object-contain" src="/logo-light.svg" alt="3D" />
+          </picture>
         </div>
         <Input
           aria-label="Scene name"

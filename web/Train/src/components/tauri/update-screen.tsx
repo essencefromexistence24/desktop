@@ -22,8 +22,8 @@ function Logo() {
   return (
     <div className="flex flex-col items-center gap-4">
       <img src="/favicon.svg" alt="Train" className="h-[72px] w-[72px] object-contain" />
-      <img src="/train-logo-light.svg" alt="Train" className="h-auto w-[250px] object-contain dark:hidden" />
-      <img src="/train-logo-dark.svg" alt="Train" className="hidden h-auto w-[250px] object-contain dark:block" />
+      <img src="/logo-light.svg" alt="Train" className="h-auto w-[250px] object-contain dark:hidden" />
+      <img src="/logo-dark.svg" alt="Train" className="hidden h-auto w-[250px] object-contain dark:block" />
     </div>
   );
 }

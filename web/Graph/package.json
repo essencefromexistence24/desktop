@@ -1,8 +1,8 @@
 {
   "name": "graph",
+  "description": "Explore codebases and knowledge as interactive graphs.",
   "private": true,
   "type": "module",
-  "description": "An open-source tool combining LLM intelligence + static analysis to produce interactive dashboards for understanding codebases.",
   "license": "MIT",
   "homepage": "https://github.com/Egonex-AI/Understand-Anything#readme",
   "repository": {

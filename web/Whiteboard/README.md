@@ -1,7 +1,7 @@
 # Whiteboard
 
-`examples/whiteboard` is a source-owned WWW whiteboard example inspired by the
-product shape of Excalidraw, without depending on the Excalidraw runtime,
+Create and organize visual ideas on an interactive whiteboard inspired by
+the product shape of Excalidraw, without depending on the Excalidraw runtime,
 React DOM, Vite, or browser UI packages.
 
 The local Excalidraw reference clone lives at

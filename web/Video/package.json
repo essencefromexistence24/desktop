@@ -1,5 +1,6 @@
 {
   "name": "video",
+  "description": "Edit, enhance, and share video projects in the browser or desktop app.",
   "version": "0.1.0",
   "private": true,
   "scripts": {

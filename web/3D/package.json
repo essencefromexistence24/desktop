@@ -1,5 +1,6 @@
 {
   "name": "3d",
+  "description": "Create, edit, publish, and embed interactive 3D scenes.",
   "version": "0.1.0",
   "private": true,
   "scripts": {

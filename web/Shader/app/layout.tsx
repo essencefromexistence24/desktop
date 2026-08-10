@@ -8,7 +8,7 @@ type RootLayoutProps = {
 
 export const metadata = {
   title: "Shader",
-  description: "Shader",
+  description: "Create and explore real-time generative WebGL shaders.",
 } as const;
 
 export default function RootLayout({ children }: RootLayoutProps) {

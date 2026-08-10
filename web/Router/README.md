@@ -1,6 +1,6 @@
 # Router
 
-AI assistant with ChatGPT-, v0- and Claude-like features, plus a shadcn/ui component registry.
+Route AI requests across providers with reliable fallbacks and a unified workspace.
 
 ## Stack
 

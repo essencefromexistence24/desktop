@@ -1,6 +1,6 @@
 # Metasearch
 
-DX Metasearch WWW is the public DX WWW frontend for the metasearch project in this repository.
+Search the web through a focused metasearch workspace with light and dark themes.
 
 It recreates the current local search experience with a polished neutral Vercel-style interface, system-aware light and dark themes, first-party icons, DX Style tokens, DX Forge policy, and DX Check receipts.
 

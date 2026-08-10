@@ -1,5 +1,6 @@
 {
   "name": "presentations",
+  "description": "Create, edit, present, and export presentation decks.",
   "version": "0.1.0",
   "private": true,
   "scripts": {

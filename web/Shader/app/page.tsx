@@ -2,7 +2,7 @@ import { Icon } from "../components/icons/icon";
 
 export const metadata = {
   title: "Shader",
-  description: "Shader",
+  description: "Create and explore real-time generative WebGL shaders.",
 } as const;
 
 export default function HomePage() {
@@ -18,7 +18,10 @@ export default function HomePage() {
       <script defer src="/canvas-export.js"></script>
       <header className="topbar">
         <div className="brand">
-          <img className="brand-mark" src="/favicon.svg" alt="Shader Logo" />
+          <picture>
+            <source media="(prefers-color-scheme: dark)" srcSet="/logo-dark.svg" />
+            <img className="brand-mark" src="/logo-light.svg" alt="Shader" />
+          </picture>
           <span className="brand-name">Shader</span>
         </div>
 

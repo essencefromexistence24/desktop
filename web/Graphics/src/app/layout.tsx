@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Graphics",
-  description: "Embedded design surface for DX Code.",
+  description: "Create and collaborate on graphics, layouts, and visual assets.",
   icons: { icon: "/favicon.svg" },
 };
 

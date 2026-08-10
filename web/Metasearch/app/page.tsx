@@ -3,7 +3,7 @@ import { SearchToolbar } from "../components/metasearch/search-toolbar";
 
 export const metadata = {
   title: "Metasearch",
-  description: "Search results served through DX WWW.",
+  description: "Search the web through a focused metasearch workspace.",
 } as const;
 
 export default function HomePage() {
@@ -16,10 +16,12 @@ export default function HomePage() {
     >
       <div className="sticky-headers">
         <header className="site-header">
-          <a className="brand" href="/" aria-label="DX Metasearch">
-            <img className="brand-mark" src="/logo.svg" alt="DX" />
+          <a className="brand" href="/" aria-label="Metasearch">
+            <picture>
+              <source media="(prefers-color-scheme: dark)" srcSet="/logo-dark.svg" />
+              <img className="brand-mark" src="/logo-light.svg" alt="Metasearch" />
+            </picture>
             <span className="brand-text">
-              <span>DX</span>
               <strong>Metasearch</strong>
             </span>
           </a>

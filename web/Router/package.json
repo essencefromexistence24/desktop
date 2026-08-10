@@ -1,7 +1,7 @@
 {
   "name": "router",
+  "description": "Route AI requests across providers with reliable fallbacks.",
   "private": true,
-  "description": "chanhdai.com - Internal Dev Codename: dx",
   "scripts": {
     "postinstall": "node scripts/dev/sync-env.mjs",
     "start": "node -e \"require('fs').existsSync('.next/BUILD_ID')?process.exit(0):process.exit(1)\" && next start || (echo 'No build found — running next build first' && next build && next start)",

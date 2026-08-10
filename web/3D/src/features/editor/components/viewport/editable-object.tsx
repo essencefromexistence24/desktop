@@ -240,8 +240,6 @@ export function EditableObject({
   const runtimeObjectById = useMemo(() => new Map(runtimeObjects.map((entry) => [entry.id, entry])), [runtimeObjects]);
   const tracksByObjectId = useMemo(() => createAnimationTrackMap(allAnimationTracks), [allAnimationTracks]);
   const dragActiveRef = useRef(false);
-  const dragPlaneRef = useRef(new THREE.Plane());
-  const dragIntersectionPointRef = useRef(new Vector3());
   const dragOffsetRef = useRef(new Vector3());
   const dragLastTriggerAtRef = useRef(0);
   const dragSuppressClickRef = useRef(false);
@@ -446,17 +444,7 @@ export function EditableObject({
     if (dragEnabled && objectRef.current) {
       dragActiveRef.current = true;
       dragSuppressClickRef.current = true;
-      
-      const cameraDirection = new Vector3();
-      event.camera.getWorldDirection(cameraDirection);
-      dragPlaneRef.current.setFromNormalAndCoplanarPoint(cameraDirection.negate(), event.point);
       dragOffsetRef.current.copy(objectRef.current.position).sub(event.point);
-      
-      // Capture pointer to ensure drag events continue even if pointer leaves object
-      if (event.target instanceof Element) {
-        event.target.setPointerCapture(event.pointerId);
-      }
-      
       runDragInteraction("start");
     }
   }
@@ -467,12 +455,7 @@ export function EditableObject({
     }
 
     event.stopPropagation();
-    
-    event.ray.intersectPlane(dragPlaneRef.current, dragIntersectionPointRef.current);
-    if (dragIntersectionPointRef.current) {
-      objectRef.current.position.copy(dragIntersectionPointRef.current).add(dragOffsetRef.current);
-    }
-    
+    objectRef.current.position.copy(event.point).add(dragOffsetRef.current);
     runDragInteraction("drag");
   }
 
@@ -489,11 +472,6 @@ export function EditableObject({
 
     event.stopPropagation();
     dragActiveRef.current = false;
-    
-    if (event.target instanceof Element && event.target.hasPointerCapture(event.pointerId)) {
-      event.target.releasePointerCapture(event.pointerId);
-    }
-    
     runDragInteraction("drop");
   }
 
@@ -560,15 +538,6 @@ export function EditableObject({
     }
   }
 
-  function handleDoubleClick(event: ThreeEvent<MouseEvent>) {
-    if (playModeEnabled) return;
-    event.stopPropagation();
-    // Ensures double click is registered without selecting other elements behind.
-    if (!object.locked) {
-      selectObject(object.id);
-    }
-  }
-
   const setObjectRef = useCallback((nextObject: THREE.Group | null) => {
     objectRef.current = nextObject;
     setSceneObject(nextObject);
@@ -616,7 +585,6 @@ export function EditableObject({
         scale={runtimeTransform.scale}
         visible={runtimeVisible}
         onClick={handleClick}
-        onDoubleClick={handleDoubleClick}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerOut={handlePointerOut}

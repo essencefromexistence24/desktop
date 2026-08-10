@@ -1,6 +1,6 @@
 # Design
 
-Essence Studio is a private visual design workspace for creating, organizing, and publishing original design projects.
+Create, organize, and publish visual design projects in one focused workspace.
 
 The product is original to this repository. It does not ship Canva logos, proprietary templates, paid media, or AI features. See [LEGAL_BOUNDARY.md](LEGAL_BOUNDARY.md) for the project boundary.
 

@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Spreadsheets",
-  description: "A free, browser-first spreadsheet workspace.",
+  description: "Create, import, edit, and manage spreadsheet workbooks.",
   icons: { icon: "/favicon.svg" },
 };
 

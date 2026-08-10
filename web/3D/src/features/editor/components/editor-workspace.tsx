@@ -1,6 +1,5 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import { EditorCommandPalette } from "./editor-command-palette";
 import { ProjectCommentLoader } from "@/features/projects/components/project-comment-loader";
@@ -11,22 +10,8 @@ import { SceneList } from "./panels/scene-list";
 import { SceneTree } from "./panels/scene-tree";
 import { TopBar } from "./top-bar";
 import { ToolRail } from "./tool-rail";
+import { EditorViewport } from "./viewport/editor-viewport";
 import { useEditorStore } from "../store/editor-store";
-
-const EditorViewport = dynamic(
-  () =>
-    import("./viewport/editor-viewport").then(
-      (module) => module.EditorViewport,
-    ),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="flex h-full items-center justify-center bg-background text-sm text-muted-foreground">
-        Loading viewport
-      </div>
-    ),
-  },
-);
 
 type EditorWorkspaceProps = {
   embedded?: boolean;
