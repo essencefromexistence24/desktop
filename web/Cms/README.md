@@ -1,6 +1,6 @@
 <div align="center">
 
-# Instatic
+# Cms
 
 **Own your site. Love building it.**
 

@@ -1,4 +1,4 @@
-# Canva - Design
+# Design
 
 Essence Studio is a private visual design workspace for creating, organizing, and publishing original design projects.
 

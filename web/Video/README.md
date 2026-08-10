@@ -1,4 +1,4 @@
-# Essence Studio
+# Video
 
 A local-first browser and desktop media editor built for essencefromexistence with Next.js, Bun, Tailwind CSS, shadcn/ui, Better Auth, Drizzle, Turso, Vercel AI SDK, and Tauri.
 

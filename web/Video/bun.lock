@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "essence-kapwing",
+      "name": "video",
       "dependencies": {
         "@ai-sdk/groq": "3.0.39",
         "@ai-sdk/react": "^3.0.182",

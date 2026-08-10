@@ -1,7 +1,7 @@
 import pkg from "../../../package.json" with { type: "json" };
 
 export const APP_CONFIG = {
-  name: "Dx Route",
+  name: "Router",
   description: "Unified AI Gateway",
   version: pkg.version,
   displayVersion: "1.0.0",

@@ -1,4 +1,4 @@
-# Essence Spline
+# 3D
 
 An original 3D design workspace for creating, publishing, and embedding interactive scenes.
 

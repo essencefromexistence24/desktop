@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "essence-powerpoint",
+      "name": "presentations",
       "dependencies": {
         "@base-ui/react": "^1.4.1",
         "@better-auth/drizzle-adapter": "^1.6.11",

@@ -1,4 +1,4 @@
-# DX Shader
+# Shader
 
 DX-WWW shader studio adapted from [Leonxlnx/lumenshaders](https://github.com/Leonxlnx/lumenshaders), a dependency-free WebGL2 generative shader studio.
 

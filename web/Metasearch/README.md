@@ -1,4 +1,4 @@
-# DX Metasearch WWW
+# Metasearch
 
 DX Metasearch WWW is the public DX WWW frontend for the metasearch project in this repository.
 

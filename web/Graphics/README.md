@@ -1,4 +1,4 @@
-# Figma - Graphics
+# Graphics
 
 Essence Figma is a private design workspace with files, canvas editing, public share views, comments, reusable components, version history, and workspace administration.
 

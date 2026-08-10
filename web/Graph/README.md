@@ -1,4 +1,4 @@
-<h1 align="center">Understand Anything</h1>
+<h1 align="center">Graph</h1>
 
 <p align="center">
   <strong>Turn any codebase, knowledge base, or docs into an interactive knowledge graph you can explore, search, and ask questions about.</strong>

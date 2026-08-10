@@ -1,4 +1,4 @@
-# Essence Excel
+# Spreadsheets
 
 A free spreadsheet workspace for creating, importing, editing, and managing workbooks.
 

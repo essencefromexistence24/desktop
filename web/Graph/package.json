@@ -1,5 +1,5 @@
 {
-  "name": "understand-anything",
+  "name": "graph",
   "private": true,
   "type": "module",
   "description": "An open-source tool combining LLM intelligence + static analysis to produce interactive dashboards for understanding codebases.",

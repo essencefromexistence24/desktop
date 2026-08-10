@@ -1,4 +1,4 @@
-# Essence PowerPoint
+# Presentations
 
 A free presentation workspace for creating, managing, presenting, and exporting decks.
 

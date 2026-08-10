@@ -1,4 +1,4 @@
-# DX WWW Whiteboard
+# Whiteboard
 
 `examples/whiteboard` is a source-owned WWW whiteboard example inspired by the
 product shape of Excalidraw, without depending on the Excalidraw runtime,

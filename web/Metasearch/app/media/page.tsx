@@ -2,7 +2,7 @@ import { SearchControls } from "../../components/metasearch/search-controls";
 import { SearchToolbar } from "../../components/metasearch/search-toolbar";
 
 export const metadata = {
-  title: "DX Metasearch Media",
+  title: "Metasearch Media",
   description: "Media search results served through DX WWW.",
 } as const;
 

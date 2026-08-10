@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "essence-figma",
+      "name": "graphics",
       "dependencies": {
         "@libsql/client": "^0.17.3",
         "@tanstack/react-table": "^8.21.3",

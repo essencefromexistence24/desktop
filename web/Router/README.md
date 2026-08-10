@@ -1,4 +1,4 @@
-# DX Platform
+# Router
 
 AI assistant with ChatGPT-, v0- and Claude-like features, plus a shadcn/ui component registry.
 
