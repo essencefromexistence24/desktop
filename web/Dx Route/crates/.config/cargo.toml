@@ -1,8 +1,0 @@
-[net]
-git-fetch-with-cli = true
-
-[registries]
-dx-route = { index = "https://github.com/chanhdai/dx-route-crates" }
-
-[profile.release]
-split-debuginfo = "packed"

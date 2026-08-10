@@ -51,7 +51,7 @@ export function createEditorLayerCommandSlice(
       if (!removableIds.size) return;
 
       const ripple = removedRippleSpan(
-        state.project.rippleMode,
+        Boolean(state.project.rippleMode),
         state.project.layers.filter((layer) => removableIds.has(layer.id)),
       );
 

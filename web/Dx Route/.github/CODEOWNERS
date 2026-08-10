@@ -1,6 +1,0 @@
-* @dx/core
-/apps/web/ @dx/web
-/apps/native/ @dx/native
-/packages/ai-core/ @dx/ai
-/packages/db/ @dx/backend
-/docs/ @dx/docs

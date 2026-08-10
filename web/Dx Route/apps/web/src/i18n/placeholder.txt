@@ -1,1 +1,0 @@
-Internationalization config and locale files

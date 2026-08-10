@@ -1,1 +1,0 @@
-Animation primitives (framer-motion, motion, etc.)

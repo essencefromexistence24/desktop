@@ -1,6 +1,0 @@
-[workspaces]
-packages = ["apps/*", "packages/*"]
-
-[install]
-exact = true
-frozenLockfile = false
