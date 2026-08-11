@@ -12,6 +12,7 @@ import { applyTimelineCutRangesToLayers, shiftTimeAfterCuts, type TimelineCutRan
 import { normalizeLayerVisualStyle } from "@/lib/editor/visual-effects";
 import type {
   EditorProject,
+  LayerFramingMode,
   MediaAsset,
   TimelineAlignmentMode,
   TimelineDurationDistributionMode,
@@ -378,7 +379,7 @@ export function createEditorTimelineEditSlice(
             y: 0.5,
             width: Math.max(1, Math.round(source.width * scale)),
             height: Math.max(1, Math.round(source.height * scale)),
-            framing: mode === "cover" ? "fill" : "fit",
+            framing: (mode === "cover" ? "fill" : "fit") as LayerFramingMode,
           },
           updatedAt: now,
         };

@@ -1,7 +1,7 @@
 {
   "schema": "dx.dev.extension_toolchain",
   "version": 2,
-  "generated_at": "2026-06-26T13:06:56.686788400+00:00",
+  "generated_at": "2026-08-10T23:58:04.815427500+00:00",
   "config_source": "dx",
   "serializer_cache": ".dx/serializer",
   "triggered_paths": [

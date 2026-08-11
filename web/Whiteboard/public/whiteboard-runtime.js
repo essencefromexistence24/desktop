@@ -85,6 +85,7 @@
   };
 
   const swatches = {
+    primary: { type: "solid", value: "hsl(var(--primary))" },
     ink: { type: "solid", value: "hsl(0 0% 96%)" },
     graphite: { type: "solid", value: "hsl(0 0% 58%)" },
     sky: { type: "solid", value: "hsl(204 88% 55%)" },
@@ -101,10 +102,21 @@
     grape: { type: "linear", value: "linear-gradient(135deg, #7f00ff 0%, #e100ff 100%)" },
     fire: { type: "linear", value: "linear-gradient(135deg, #f12711 0%, #f5af19 100%)" },
     steel: { type: "linear", value: "linear-gradient(135deg, #485563 0%, #29323c 100%)" },
+    ember: { type: "linear", value: "linear-gradient(135deg, #ff512f 0%, #dd2476 100%)" },
+    citrus: { type: "linear", value: "linear-gradient(135deg, #f7971e 0%, #ffd200 100%)" },
+    meadow: { type: "linear", value: "linear-gradient(135deg, #56ab2f 0%, #a8e063 100%)" },
+    lagoon: { type: "linear", value: "linear-gradient(135deg, #43cea2 0%, #185a9d 100%)" },
+    twilight: { type: "linear", value: "linear-gradient(135deg, #0f2027 0%, #2c5364 100%)" },
+    blossom: { type: "linear", value: "linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)" },
+    lavender: { type: "linear", value: "linear-gradient(135deg, #c471ed 0%, #f64f59 100%)" },
+    neon: { type: "linear", value: "linear-gradient(135deg, #00f260 0%, #0575e6 100%)" },
+    coral: { type: "linear", value: "linear-gradient(135deg, #ff9966 0%, #ff5e62 100%)" },
+    sunrise: { type: "linear", value: "linear-gradient(135deg, #ff512f 0%, #f09819 100%)" },
     custom: { type: "solid", value: "#ffffff" }
   };
 
   const swatchLabels = {
+    primary: "Theme primary",
     ink: "Ink",
     graphite: "Graphite",
     sky: "Sky",
@@ -121,6 +133,16 @@
     grape: "Grape",
     fire: "Fire",
     steel: "Steel",
+    ember: "Ember",
+    citrus: "Citrus",
+    meadow: "Meadow",
+    lagoon: "Lagoon",
+    twilight: "Twilight",
+    blossom: "Blossom",
+    lavender: "Lavender",
+    neon: "Neon",
+    coral: "Coral",
+    sunrise: "Sunrise",
     custom: "Custom"
   };
 
@@ -161,11 +183,11 @@
     selectedId: "",
     selectedIds: [],
     controllerId: "",
-    activeSwatch: "aurora",
-    paintMode: "linear",
+    activeSwatch: "primary",
+    paintMode: "solid",
     customSolid: "#ffffff",
-    customGradientStart: "#00c6ff",
-    customGradientEnd: "#0072ff",
+    customGradientStart: "#8b5cf6",
+    customGradientEnd: "#06b6d4",
     customGradientAngle: 135,
     sidePanelOpen: false,
     shortcutPanelOpen: false,

@@ -2,8 +2,8 @@
   "tool": "dx style",
   "command": "build",
   "version": 1,
-  "generated_at": "2026-06-26T13:06:56.188963200+00:00",
-  "project": "G:/Dx/code/web/Whiteboard",
+  "generated_at": "2026-08-10T23:58:04.496208300+00:00",
+  "project": "G:/Dx/desktop/web/Whiteboard",
   "public_launch_path": "tsx-app-router",
   "binary_style_output": "deprecated",
   "config_source": "dx",
@@ -3847,7 +3847,7 @@
     ]
   },
   "css_browser_normalizer": "lightningcss-parse-print-with-source-hash-header",
-  "source_hash": "blake3:98cc63c9c53080bb9caf4d75a27d78f50b84faac46bc0c089d5dc315c7db75c1",
+  "source_hash": "blake3:fdb76b23cc0f60149c160dfab629ad09f204f3c8c7432fe19977facbf5eaf4c2",
   "scanned_files": 56,
   "class_source_extension_counts": {
     "ts": 4,
@@ -3883,11 +3883,11 @@
       "remediation": "Use a supported dx-style utility, add engine support, or move semantic component styling into authored CSS."
     }
   ],
-  "source_scan_diagnostic_count": 2962,
+  "source_scan_diagnostic_count": 3029,
   "source_scan_diagnostic_counts_by_kind": {
     "duplicate-candidate": 6,
     "dynamic-fragment": 52,
-    "non-utility-candidate": 2287,
+    "non-utility-candidate": 2354,
     "object-key": 502,
     "unsafe-candidate": 115
   },

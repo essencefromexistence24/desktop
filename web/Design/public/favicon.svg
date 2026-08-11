@@ -2,6 +2,7 @@
   <title>Design light transparent logo dx-ecosystem-logos</title>
   <desc>light monochrome geometric symbol with transparent background for Design.</desc>
   <metadata><![CDATA[{"kind":"light-transparent","tool":"design","label":"Design","letter":"D","primary_repo":"G:/Figma","legacy_repo":"","collection":"web-preview","source_project":"Figma","asset_family":"dx-ecosystem-logos","brand":"DX pure symbol logo family: transparent smooth rainbow marks plus monochrome background and transparent light/dark variants"}]]></metadata>
+  <rect width="1024" height="1024" fill="#FFFFFF"/>
   <g color="#000000">
     <g color="currentColor" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
       <path d="M318 190V812H506C684 812 796 682 796 512C796 342 684 190 506 190H318" stroke-width="104"/>

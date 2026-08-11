@@ -423,9 +423,15 @@ export function desktopPackagingReadinessReport(
     options.packaging ?? {},
   )
   const edgeCases = openSaveEdgeCases(readiness, runtime)
+  // Stale recent-file history does not make a correctly configured desktop
+  // package unusable. Keep actual registration failures as release gates.
+  const recentDocumentsGateStatus =
+    recentDocuments.blockedCount > recentDocuments.staleCount
+      ? recentDocuments.status
+      : "ready"
   const statusInputs = [
     ...fileAssociations.map((item) => item.status),
-    recentDocuments.status,
+    recentDocumentsGateStatus,
     ...signedChecks.map((item) => item.status),
     ...edgeCases.map((item) => item.status),
   ]

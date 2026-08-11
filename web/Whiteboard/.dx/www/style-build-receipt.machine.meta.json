@@ -2,12 +2,12 @@
   "cache_schema": "dx.www.json_receipt",
   "cache_version": 2,
   "cache_kind": 3,
-  "source_path": "G:\\Dx\\code\\web\\Whiteboard\\.dx/receipts/style/build.json",
-  "source_len": 256594,
-  "source_modified_unix_ms": 1782479216230,
-  "source_blake3": "d40028d3fe320a09471c739ba2f8843ff2b65a8fb6c40a628c4ea66a59fc5416",
-  "machine_path": "G:\\Dx\\code\\web\\Whiteboard\\.dx\\www\\style-build-receipt.machine",
+  "source_path": "G:\\Dx\\desktop\\web\\Whiteboard\\.dx/receipts/style/build.json",
+  "source_len": 256597,
+  "source_modified_unix_ms": 1786406284501,
+  "source_blake3": "3597df536b2534036e0c22fa1ae7c7d26f9c5103df92120bf321d58f5dbcbf19",
+  "machine_path": "G:\\Dx\\desktop\\web\\Whiteboard\\.dx\\www\\style-build-receipt.machine",
   "machine_payload_len": 276068,
   "machine_archive_len": 276068,
-  "machine_payload_blake3": "8b390485f29b45d1325a0b2d3465117d6fb72a88328794e7a4f789ac675e76aa"
+  "machine_payload_blake3": "870070e7074f0741c5c21f96046cf98aff9073c43a7ca007d4ceeeabf2b6f86b"
 }

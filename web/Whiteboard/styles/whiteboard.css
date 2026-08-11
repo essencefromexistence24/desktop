@@ -1048,6 +1048,10 @@ select:focus-visible {
   --swatch-color: hsl(var(--wb-swatch-ink));
 }
 
+.wb-swatch[data-swatch="primary"] {
+  --swatch-color: hsl(var(--wb-swatch-primary));
+}
+
 .wb-swatch[data-swatch="graphite"] {
   --swatch-color: hsl(var(--wb-swatch-graphite));
 }
@@ -1126,6 +1130,46 @@ select:focus-visible {
 
 .wb-swatch[data-swatch="ice"] {
   --swatch-color: linear-gradient(135deg, hsl(var(--wb-gradient-ice-start)) 0%, hsl(var(--wb-gradient-ice-end)) 100%);
+}
+
+.wb-swatch[data-swatch="ember"] {
+  --swatch-color: linear-gradient(135deg, hsl(var(--wb-gradient-ember-start)) 0%, hsl(var(--wb-gradient-ember-end)) 100%);
+}
+
+.wb-swatch[data-swatch="citrus"] {
+  --swatch-color: linear-gradient(135deg, hsl(var(--wb-gradient-citrus-start)) 0%, hsl(var(--wb-gradient-citrus-end)) 100%);
+}
+
+.wb-swatch[data-swatch="meadow"] {
+  --swatch-color: linear-gradient(135deg, hsl(var(--wb-gradient-meadow-start)) 0%, hsl(var(--wb-gradient-meadow-end)) 100%);
+}
+
+.wb-swatch[data-swatch="lagoon"] {
+  --swatch-color: linear-gradient(135deg, hsl(var(--wb-gradient-lagoon-start)) 0%, hsl(var(--wb-gradient-lagoon-end)) 100%);
+}
+
+.wb-swatch[data-swatch="twilight"] {
+  --swatch-color: linear-gradient(135deg, hsl(var(--wb-gradient-twilight-start)) 0%, hsl(var(--wb-gradient-twilight-end)) 100%);
+}
+
+.wb-swatch[data-swatch="blossom"] {
+  --swatch-color: linear-gradient(135deg, hsl(var(--wb-gradient-blossom-start)) 0%, hsl(var(--wb-gradient-blossom-end)) 100%);
+}
+
+.wb-swatch[data-swatch="lavender"] {
+  --swatch-color: linear-gradient(135deg, hsl(var(--wb-gradient-lavender-start)) 0%, hsl(var(--wb-gradient-lavender-end)) 100%);
+}
+
+.wb-swatch[data-swatch="neon"] {
+  --swatch-color: linear-gradient(135deg, hsl(var(--wb-gradient-neon-start)) 0%, hsl(var(--wb-gradient-neon-end)) 100%);
+}
+
+.wb-swatch[data-swatch="coral"] {
+  --swatch-color: linear-gradient(135deg, hsl(var(--wb-gradient-coral-start)) 0%, hsl(var(--wb-gradient-coral-end)) 100%);
+}
+
+.wb-swatch[data-swatch="sunrise"] {
+  --swatch-color: linear-gradient(135deg, hsl(var(--wb-gradient-sunrise-start)) 0%, hsl(var(--wb-gradient-sunrise-end)) 100%);
 }
 
 .wb-control-row {

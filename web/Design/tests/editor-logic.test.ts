@@ -239,10 +239,10 @@ test("auth email content creates purpose-specific security messages", () => {
     url: "https://app.example.com/reset-password?token=abc",
   });
 
-  assert.equal(verification.subject, "Verify your Essence Studio email");
-  assert.match(verification.text, /verify your Essence Studio email/);
+  assert.equal(verification.subject, "Verify your Design email");
+  assert.match(verification.text, /verify your Design email/);
   assert.match(verification.html, /Designer &lt;One&gt;/);
-  assert.equal(reset.subject, "Reset your Essence Studio password");
+  assert.equal(reset.subject, "Reset your Design password");
   assert.match(reset.text, /choose a new password/);
 });
 

@@ -13,7 +13,7 @@ import { ProductReadinessCard } from "@/features/settings/components/product-rea
 import { ReleaseOperationsHistoryCard } from "@/features/settings/components/release-operations-history-card";
 import { ReleaseReadinessCard } from "@/features/settings/components/release-readiness-card";
 import { WorkspaceActivityCard } from "@/features/settings/components/workspace-activity-card";
-import { loadSettingsServerData } from "@/app/settings/settings-server-data";
+import { loadSettingsServerData } from "@/app/_settings/settings-server-data";
 import type { PublicAiGenerationRecord } from "@/lib/ai/generation-records";
 import type { AiUsageAction } from "@/lib/ai/schemas";
 

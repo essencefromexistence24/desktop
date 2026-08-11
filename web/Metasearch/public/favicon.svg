@@ -2,6 +2,7 @@
   <title>DX Metasearch light transparent logo dx-ecosystem-logos</title>
   <desc>light monochrome geometric symbol with transparent background for DX Metasearch.</desc>
   <metadata><![CDATA[{"kind":"light-transparent","tool":"metasearch","label":"DX Metasearch","letter":"M","primary_repo":"millercarla211-ctrl/dx-metasearch","legacy_repo":"manfromexistence/dx-metasearch","collection":"dx-tools","asset_family":"dx-ecosystem-logos","brand":"DX pure symbol logo family: transparent smooth rainbow marks plus monochrome background and transparent light/dark variants"}]]></metadata>
+  <rect width="1024" height="1024" fill="#FFFFFF"/>
   <g color="#000000">
     <g color="currentColor" fill="none" stroke="currentColor" stroke-width="120" stroke-linecap="round" stroke-linejoin="round">
       <path d="M238 812V190L512 594L786 190V812"/>

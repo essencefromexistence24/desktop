@@ -150,6 +150,7 @@ export function createPresentationPersistenceSnapshot(
   const deck = migrateDeckAssets(state.deck)
   const workspacePreferences = normalizeWorkspacePreferences({
     density: state.workspaceDensity,
+    panelWidths: state.workspacePanelWidths,
     panels: state.workspacePanels,
   })
   const selection = normalizedSelection({
