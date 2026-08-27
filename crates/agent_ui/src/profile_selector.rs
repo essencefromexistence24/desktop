@@ -65,7 +65,7 @@ impl ProfileSelector {
         });
 
         Self {
-            profiles: AgentProfile::available_profiles(cx),
+            profiles: AgentProfile::visible_profiles(cx),
             pending_refresh: false,
             fs,
             provider,
@@ -85,7 +85,7 @@ impl ProfileSelector {
             return;
         }
 
-        let profiles = AgentProfile::available_profiles(cx);
+        let profiles = AgentProfile::visible_profiles(cx);
         if profiles.is_empty() {
             return;
         }
@@ -115,7 +115,7 @@ impl ProfileSelector {
 
     fn reconcile_current_profile(&mut self, cx: &mut Context<Self>) -> AgentProfileId {
         let current_profile_id = self.provider.profile_id(cx);
-        let profiles: std::collections::HashMap<_, _> = AgentProfile::available_profiles(cx)
+        let profiles: std::collections::HashMap<_, _> = AgentProfile::visible_profiles(cx)
             .into_iter()
             .filter(|(id, _)| !builtin_profiles::is_hidden(id))
             .collect();
@@ -169,7 +169,7 @@ impl ProfileSelector {
 
         if self.pending_refresh {
             if let Some(picker) = &self.picker {
-                let profiles = AgentProfile::available_profiles(cx);
+                let profiles = AgentProfile::visible_profiles(cx);
                 self.profiles = profiles.clone();
                 picker.update(cx, |picker, cx| {
                     let query = picker.query(cx);

@@ -11,7 +11,8 @@ import {
 import { isDesktopRuntime } from "@/lib/runtime/client-api";
 
 const autopilotRunStorageKey = "essence.desktop.proof-autopilot.runs.v1";
-export const desktopVerificationUpdatedEvent = "essence:desktop-verification-updated";
+export const desktopVerificationUpdatedEvent =
+  "essence:desktop-verification-updated";
 
 export interface DesktopVerificationUpdatedEventDetail {
   report: Awaited<ReturnType<typeof runDesktopVerification>>;
@@ -27,7 +28,9 @@ export function DesktopProofAutopilot() {
       if (!isDesktopRuntime()) return;
 
       const session = await readCurrentDesktopLaunchSession();
-      const forcedByUrl = new URLSearchParams(window.location.search).get("desktopProof") === "run";
+      const forcedByUrl =
+        new URLSearchParams(window.location.search).get("desktopProof") ===
+        "run";
       if (!session.autoVerify && !forcedByUrl) return;
       if (!forcedByUrl && hasAutopilotRun(session.id)) return;
 
@@ -36,17 +39,22 @@ export function DesktopProofAutopilot() {
       if (cancelled) return;
 
       const history = saveDesktopVerificationReport(report);
-      const evidenceFile = await writeDesktopVerificationEvidenceToAppLocalData(history).catch(() => null);
+      const evidenceFile = await writeDesktopVerificationEvidenceToAppLocalData(
+        history,
+      ).catch(() => null);
 
       if (cancelled) return;
       window.dispatchEvent(
-        new CustomEvent<DesktopVerificationUpdatedEventDetail>(desktopVerificationUpdatedEvent, {
-          detail: {
-            report,
-            history,
-            evidenceFile,
+        new CustomEvent<DesktopVerificationUpdatedEventDetail>(
+          desktopVerificationUpdatedEvent,
+          {
+            detail: {
+              report,
+              history,
+              evidenceFile,
+            },
           },
-        }),
+        ),
       );
     }
 
@@ -66,7 +74,9 @@ function hasAutopilotRun(sessionId: string) {
   if (!canUseSessionStorage()) return false;
 
   try {
-    const parsed = JSON.parse(window.sessionStorage.getItem(autopilotRunStorageKey) ?? "[]") as unknown;
+    const parsed = JSON.parse(
+      window.sessionStorage.getItem(autopilotRunStorageKey) ?? "[]",
+    ) as unknown;
     return Array.isArray(parsed) && parsed.includes(sessionId);
   } catch {
     return false;
@@ -77,9 +87,21 @@ function markAutopilotRun(sessionId: string) {
   if (!canUseSessionStorage()) return;
 
   try {
-    const parsed = JSON.parse(window.sessionStorage.getItem(autopilotRunStorageKey) ?? "[]") as unknown;
-    const sessions = Array.isArray(parsed) ? parsed.filter((value): value is string => typeof value === "string") : [];
-    window.sessionStorage.setItem(autopilotRunStorageKey, JSON.stringify([sessionId, ...sessions.filter((value) => value !== sessionId)].slice(0, 10)));
+    const parsed = JSON.parse(
+      window.sessionStorage.getItem(autopilotRunStorageKey) ?? "[]",
+    ) as unknown;
+    const sessions = Array.isArray(parsed)
+      ? parsed.filter((value): value is string => typeof value === "string")
+      : [];
+    window.sessionStorage.setItem(
+      autopilotRunStorageKey,
+      JSON.stringify(
+        [sessionId, ...sessions.filter((value) => value !== sessionId)].slice(
+          0,
+          10,
+        ),
+      ),
+    );
   } catch {
     return;
   }

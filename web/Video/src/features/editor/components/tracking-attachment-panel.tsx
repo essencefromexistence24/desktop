@@ -2,15 +2,27 @@
 
 import { Crosshair, Link2Off } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Field, NumberField } from "@/features/editor/components/inspector-fields";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Field,
+  NumberField,
+} from "@/features/editor/components/inspector-fields";
 import {
   availableTrackingRegions,
   layerCanAttachToTracking,
   normalizeLayerTrackingAttachment,
   trackingRegionId,
 } from "@/lib/editor/tracking";
-import type { LayerTrackingAttachment, TimelineLayer } from "@/lib/editor/types";
+import type {
+  LayerTrackingAttachment,
+  TimelineLayer,
+} from "@/lib/editor/types";
 
 type TrackingAttachmentPanelProps = {
   layer: TimelineLayer;
@@ -18,7 +30,11 @@ type TrackingAttachmentPanelProps = {
   onChange: (tracking: LayerTrackingAttachment | undefined) => void;
 };
 
-export function TrackingAttachmentPanel({ layer, layers, onChange }: TrackingAttachmentPanelProps) {
+export function TrackingAttachmentPanel({
+  layer,
+  layers,
+  onChange,
+}: TrackingAttachmentPanelProps) {
   if (!layerCanAttachToTracking(layer)) return null;
 
   const regions = availableTrackingRegions(layers, layer.id);
@@ -78,7 +94,9 @@ export function TrackingAttachmentPanel({ layer, layers, onChange }: TrackingAtt
                 min={-100}
                 max={100}
                 step={1}
-                onChange={(offsetX) => updateAttachment({ offsetX: offsetX / 100 })}
+                onChange={(offsetX) =>
+                  updateAttachment({ offsetX: offsetX / 100 })
+                }
               />
               <NumberField
                 label="Offset Y %"
@@ -86,18 +104,28 @@ export function TrackingAttachmentPanel({ layer, layers, onChange }: TrackingAtt
                 min={-100}
                 max={100}
                 step={1}
-                onChange={(offsetY) => updateAttachment({ offsetY: offsetY / 100 })}
+                onChange={(offsetY) =>
+                  updateAttachment({ offsetY: offsetY / 100 })
+                }
               />
             </div>
             <div className="grid grid-cols-2 gap-2">
               <Button
                 size="sm"
                 variant={attachment.scaleWithTarget ? "secondary" : "outline"}
-                onClick={() => updateAttachment({ scaleWithTarget: !attachment.scaleWithTarget })}
+                onClick={() =>
+                  updateAttachment({
+                    scaleWithTarget: !attachment.scaleWithTarget,
+                  })
+                }
               >
                 Scale follow
               </Button>
-              <Button size="sm" variant="outline" onClick={() => onChange(undefined)}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onChange(undefined)}
+              >
                 <Link2Off className="size-4" />
                 Detach
               </Button>

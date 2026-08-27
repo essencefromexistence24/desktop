@@ -3,11 +3,25 @@
 import { AlertTriangle, CheckCircle2, ListChecks } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import type { BatchExportReadinessItem, BatchExportReadinessReport } from "@/lib/editor/batch-export-readiness";
+import type {
+  BatchExportReadinessItem,
+  BatchExportReadinessReport,
+} from "@/lib/editor/batch-export-readiness";
 
-export function BatchExportReadinessDialog({ report }: { report: BatchExportReadinessReport }) {
+export function BatchExportReadinessDialog({
+  report,
+}: {
+  report: BatchExportReadinessReport;
+}) {
   const label =
     report.selectedCount === 0
       ? "Batch QA"
@@ -18,18 +32,35 @@ export function BatchExportReadinessDialog({ report }: { report: BatchExportRead
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="sm" variant={buttonVariant(report.status)} className="h-8 shrink-0" aria-label="Open batch export readiness comparison">
-          {report.status === "ready" ? <CheckCircle2 className="size-4" /> : <AlertTriangle className="size-4" />}
+        <Button
+          size="sm"
+          variant={buttonVariant(report.status)}
+          className="h-8 shrink-0"
+          aria-label="Open batch export readiness comparison"
+        >
+          {report.status === "ready" ? (
+            <CheckCircle2 className="size-4" />
+          ) : (
+            <AlertTriangle className="size-4" />
+          )}
           {label}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-3xl">
         <DialogHeader>
           <DialogTitle>Batch Export Readiness</DialogTitle>
-          <DialogDescription>Compare selected social deliveries before starting the batch render.</DialogDescription>
+          <DialogDescription>
+            Compare selected social deliveries before starting the batch render.
+          </DialogDescription>
         </DialogHeader>
         <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-          <Badge variant={badgeVariant(report.status)}>{report.status === "blocked" ? "Blocked" : report.status === "review" ? "Review needed" : "Ready"}</Badge>
+          <Badge variant={badgeVariant(report.status)}>
+            {report.status === "blocked"
+              ? "Blocked"
+              : report.status === "review"
+                ? "Review needed"
+                : "Ready"}
+          </Badge>
           <span>{report.readyCount} ready</span>
           <span>{report.reviewCount} review</span>
           <span>{report.blockedCount} blocked</span>
@@ -37,9 +68,13 @@ export function BatchExportReadinessDialog({ report }: { report: BatchExportRead
         <ScrollArea className="max-h-[420px] pr-3">
           <div className="space-y-2">
             {report.items.length === 0 ? (
-              <div className="rounded-md border border-border p-3 text-sm text-muted-foreground">Select at least one social delivery to compare batch readiness.</div>
+              <div className="rounded-md border border-border p-3 text-sm text-muted-foreground">
+                Select at least one social delivery to compare batch readiness.
+              </div>
             ) : (
-              report.items.map((item) => <BatchExportReadinessRow key={item.delivery.id} item={item} />)
+              report.items.map((item) => (
+                <BatchExportReadinessRow key={item.delivery.id} item={item} />
+              ))
             )}
           </div>
         </ScrollArea>
@@ -55,9 +90,17 @@ function BatchExportReadinessRow({ item }: { item: BatchExportReadinessItem }) {
         <div>
           <div className="flex flex-wrap items-center gap-2">
             <div className="text-sm font-medium">{item.delivery.label}</div>
-            <Badge variant={badgeVariant(item.status)}>{item.status === "blocked" ? "Blocked" : item.status === "review" ? "Review" : "Ready"}</Badge>
+            <Badge variant={badgeVariant(item.status)}>
+              {item.status === "blocked"
+                ? "Blocked"
+                : item.status === "review"
+                  ? "Review"
+                  : "Ready"}
+            </Badge>
           </div>
-          <p className="mt-1 text-xs text-muted-foreground">{item.delivery.description}</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {item.delivery.description}
+          </p>
         </div>
         <div className="text-right text-xs text-muted-foreground">
           <div>{item.outputLabel}</div>

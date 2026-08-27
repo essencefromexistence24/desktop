@@ -12,10 +12,17 @@ type DashboardLibrarySectionProps = {
   localLibrary: DashboardLocalLibrary;
 };
 
-export function DashboardLibrarySection({ bundleInputRef, cloudLibrary, localLibrary }: DashboardLibrarySectionProps) {
+export function DashboardLibrarySection({
+  bundleInputRef,
+  cloudLibrary,
+  localLibrary,
+}: DashboardLibrarySectionProps) {
   return (
     <section className="grid gap-6" aria-label="Project libraries">
-      <LocalProjectLibraryCard library={localLibrary} bundleInputRef={bundleInputRef} />
+      <LocalProjectLibraryCard
+        library={localLibrary}
+        bundleInputRef={bundleInputRef}
+      />
       <SignedInProjectLibraryCard library={cloudLibrary} />
     </section>
   );

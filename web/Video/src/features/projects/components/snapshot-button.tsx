@@ -3,13 +3,23 @@
 import { useEffect, useRef, useState } from "react";
 import { AlertCircle, CheckCircle2, History, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { EditorProject, MediaAsset } from "@/lib/editor/types";
 import { createLocalProjectSnapshot } from "@/lib/projects/local-project-store";
 
 type SnapshotStatus = "idle" | "saving" | "saved" | "error";
 
-export function SnapshotButton({ project, mediaAssets }: { project: EditorProject; mediaAssets: MediaAsset[] }) {
+export function SnapshotButton({
+  project,
+  mediaAssets,
+}: {
+  project: EditorProject;
+  mediaAssets: MediaAsset[];
+}) {
   const [status, setStatus] = useState<SnapshotStatus>("idle");
   const [message, setMessage] = useState("Create checkpoint");
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -45,13 +55,28 @@ export function SnapshotButton({ project, mediaAssets }: { project: EditorProjec
     }
   }
 
-  const Icon = status === "saving" ? Loader2 : status === "saved" ? CheckCircle2 : status === "error" ? AlertCircle : History;
+  const Icon =
+    status === "saving"
+      ? Loader2
+      : status === "saved"
+        ? CheckCircle2
+        : status === "error"
+          ? AlertCircle
+          : History;
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button size="icon" variant="outline" onClick={createSnapshot} disabled={status === "saving"} aria-label={message}>
-          <Icon className={`size-4 ${status === "saving" ? "animate-spin" : ""}`} />
+        <Button
+          size="icon"
+          variant="outline"
+          onClick={createSnapshot}
+          disabled={status === "saving"}
+          aria-label={message}
+        >
+          <Icon
+            className={`size-4 ${status === "saving" ? "animate-spin" : ""}`}
+          />
         </Button>
       </TooltipTrigger>
       <TooltipContent>{message}</TooltipContent>

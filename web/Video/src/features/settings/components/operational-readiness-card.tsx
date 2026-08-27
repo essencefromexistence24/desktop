@@ -9,7 +9,10 @@ import {
   createOperationalReadinessReport,
   type OperationalReadinessStatus,
 } from "@/lib/operations/operational-readiness";
-import { createProjectLibraryHealthReport, type ProjectLibraryHealthReport } from "@/lib/projects/project-health";
+import {
+  createProjectLibraryHealthReport,
+  type ProjectLibraryHealthReport,
+} from "@/lib/projects/project-health";
 import { listLocalProjects } from "@/lib/projects/local-project-store";
 import { useHasClientApiRuntime } from "@/lib/runtime/client-api";
 
@@ -24,8 +27,11 @@ export function OperationalReadinessCard({
 }) {
   const exportJobs = useEditorStore((state) => state.exportJobs);
   const hasOnlineActions = useHasClientApiRuntime();
-  const [projectLibrary, setProjectLibrary] = useState<ProjectLibraryHealthReport | null>(null);
-  const [localProjectStatus, setLocalProjectStatus] = useState<"loading" | "ready" | "failed">("loading");
+  const [projectLibrary, setProjectLibrary] =
+    useState<ProjectLibraryHealthReport | null>(null);
+  const [localProjectStatus, setLocalProjectStatus] = useState<
+    "loading" | "ready" | "failed"
+  >("loading");
 
   useEffect(() => {
     let cancelled = false;
@@ -60,7 +66,15 @@ export function OperationalReadinessCard({
         aiConfigured,
         dailyAiRemaining,
       }),
-    [aiConfigured, dailyAiRemaining, exportJobs, hasOnlineActions, isSignedIn, localProjectStatus, projectLibrary],
+    [
+      aiConfigured,
+      dailyAiRemaining,
+      exportJobs,
+      hasOnlineActions,
+      isSignedIn,
+      localProjectStatus,
+      projectLibrary,
+    ],
   );
 
   return (
@@ -71,7 +85,9 @@ export function OperationalReadinessCard({
             <Activity className="size-4 shrink-0" />
             Operational readiness
           </span>
-          <Badge variant={statusBadgeVariant(report.status)}>{report.score}/100</Badge>
+          <Badge variant={statusBadgeVariant(report.status)}>
+            {report.score}/100
+          </Badge>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -84,15 +100,26 @@ export function OperationalReadinessCard({
           {report.signals.map((signal) => {
             const Icon = signal.status === "ready" ? ShieldCheck : CircleAlert;
             return (
-              <div key={signal.id} className="rounded-md border border-border p-3">
+              <div
+                key={signal.id}
+                className="rounded-md border border-border p-3"
+              >
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex min-w-0 items-center gap-2">
-                    <Icon className={`size-4 shrink-0 ${signal.status === "blocked" ? "text-destructive" : signal.status === "attention" ? "text-amber-300" : "text-primary"}`} />
-                    <div className="truncate text-sm font-medium">{signal.label}</div>
+                    <Icon
+                      className={`size-4 shrink-0 ${signal.status === "blocked" ? "text-destructive" : signal.status === "attention" ? "text-amber-300" : "text-primary"}`}
+                    />
+                    <div className="truncate text-sm font-medium">
+                      {signal.label}
+                    </div>
                   </div>
-                  <Badge variant={statusBadgeVariant(signal.status)}>{signal.count ?? statusLabel(signal.status)}</Badge>
+                  <Badge variant={statusBadgeVariant(signal.status)}>
+                    {signal.count ?? statusLabel(signal.status)}
+                  </Badge>
                 </div>
-                <p className="mt-2 text-xs text-muted-foreground">{signal.detail}</p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {signal.detail}
+                </p>
               </div>
             );
           })}

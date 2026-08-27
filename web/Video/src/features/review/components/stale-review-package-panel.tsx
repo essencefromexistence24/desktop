@@ -10,7 +10,11 @@ import {
   type StaleReviewPackageStatus,
 } from "@/lib/projects/stale-review-package";
 
-export function StaleReviewPackagePanel({ report }: { report: StaleReviewPackageReport }) {
+export function StaleReviewPackagePanel({
+  report,
+}: {
+  report: StaleReviewPackageReport;
+}) {
   return (
     <Card>
       <CardHeader>
@@ -20,7 +24,8 @@ export function StaleReviewPackagePanel({ report }: { report: StaleReviewPackage
             Review freshness
           </span>
           <Badge variant={freshnessBadgeVariant(report.status)}>
-            {report.currentCount} current / {report.reviewCount} review / {report.staleCount} stale
+            {report.currentCount} current / {report.reviewCount} review /{" "}
+            {report.staleCount} stale
           </Badge>
         </CardTitle>
       </CardHeader>
@@ -37,10 +42,18 @@ export function StaleReviewPackagePanel({ report }: { report: StaleReviewPackage
             <div key={item.id} className="rounded-md border border-border p-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="text-sm font-medium">{item.label}</div>
-                <Badge variant={freshnessBadgeVariant(item.status)}>{staleReviewPackageStatusLabel(item.status)}</Badge>
+                <Badge variant={freshnessBadgeVariant(item.status)}>
+                  {staleReviewPackageStatusLabel(item.status)}
+                </Badge>
               </div>
-              <p className="mt-2 text-xs text-muted-foreground">{item.detail}</p>
-              {item.evidenceAt ? <div className="mt-2 text-xs text-muted-foreground">Evidence: {formatFreshnessTime(item.evidenceAt)}</div> : null}
+              <p className="mt-2 text-xs text-muted-foreground">
+                {item.detail}
+              </p>
+              {item.evidenceAt ? (
+                <div className="mt-2 text-xs text-muted-foreground">
+                  Evidence: {formatFreshnessTime(item.evidenceAt)}
+                </div>
+              ) : null}
             </div>
           ))}
         </div>
@@ -49,7 +62,9 @@ export function StaleReviewPackagePanel({ report }: { report: StaleReviewPackage
   );
 }
 
-function freshnessBadgeVariant(status: StaleReviewPackageStatus | StaleReviewPackageItemStatus) {
+function freshnessBadgeVariant(
+  status: StaleReviewPackageStatus | StaleReviewPackageItemStatus,
+) {
   if (status === "stale") return "destructive";
   if (status === "review") return "secondary";
   return "outline";

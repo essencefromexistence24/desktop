@@ -22,7 +22,9 @@ export type GeneratedSceneVideoOutput = {
 
 export async function fetchSceneVideoGenerationStatus(): Promise<SceneVideoGenerationStatus | null> {
   try {
-    const response = await fetch(clientApiUrl("/api/ai/scene-video"), { credentials: "include" });
+    const response = await fetch(clientApiUrl("/api/ai/scene-video"), {
+      credentials: "include",
+    });
     const data = await safeJson(response);
     if (response.ok && isSceneVideoGenerationStatus(data)) return data;
   } catch {
@@ -53,7 +55,9 @@ export async function generateSceneVideoWithConnectedService(input: {
   if (!response.ok || !isSceneVideoGenerationSuccess(data)) {
     return {
       ok: false as const,
-      reason: isAiFailure(data) ? data.reason : "Scene video generation could not finish.",
+      reason: isAiFailure(data)
+        ? data.reason
+        : "Scene video generation could not finish.",
     };
   }
 
@@ -69,7 +73,9 @@ export function fileFromSceneVideoOutput(output: GeneratedSceneVideoOutput) {
   return new File([blob], output.filename, { type: output.mediaType });
 }
 
-function isSceneVideoGenerationStatus(value: unknown): value is SceneVideoGenerationStatus {
+function isSceneVideoGenerationStatus(
+  value: unknown,
+): value is SceneVideoGenerationStatus {
   return (
     typeof value === "object" &&
     value !== null &&
@@ -84,8 +90,17 @@ function isSceneVideoGenerationStatus(value: unknown): value is SceneVideoGenera
   );
 }
 
-function isSceneVideoGenerationSuccess(value: unknown): value is { ok: true; output: GeneratedSceneVideoOutput } {
-  if (typeof value !== "object" || value === null || !("ok" in value) || value.ok !== true || !("output" in value)) return false;
+function isSceneVideoGenerationSuccess(
+  value: unknown,
+): value is { ok: true; output: GeneratedSceneVideoOutput } {
+  if (
+    typeof value !== "object" ||
+    value === null ||
+    !("ok" in value) ||
+    value.ok !== true ||
+    !("output" in value)
+  )
+    return false;
   const output = value.output;
   return (
     typeof output === "object" &&
@@ -113,7 +128,12 @@ function isSceneVideoGenerationSuccess(value: unknown): value is { ok: true; out
 }
 
 function isAiFailure(value: unknown): value is { reason: string } {
-  return typeof value === "object" && value !== null && "reason" in value && typeof value.reason === "string";
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "reason" in value &&
+    typeof value.reason === "string"
+  );
 }
 
 async function safeJson(response: Response) {

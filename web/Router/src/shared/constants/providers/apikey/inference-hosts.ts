@@ -485,4 +485,17 @@ export const APIKEY_PROVIDERS_INFERENCE = {
     freeNote: "Free credits on signup — GPU inference",
     authHint: "Get API key at neuralwatt.ai",
   },
+  "openference-api": {
+    id: "openference-api",
+    alias: "ofa",
+    name: "Openference API",
+    icon: "openference",
+    color: "#6366F1",
+    textIcon: "OF",
+    website: "https://openference.com",
+    hasFree: true,
+    freeNote: "Free plan: 3-day trial with open-source models — no credit card required",
+  },
+  
+
 };

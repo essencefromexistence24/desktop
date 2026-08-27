@@ -57,7 +57,7 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
     const config = validation.data as import(
-      "@omniroute/open-sse/services/taskAwareRouter.ts",
+      "@omniroute/open-sse/services/taskAwareRouter.ts"
     ).TaskRoutingConfig;
 
     setTaskRoutingConfig(config);

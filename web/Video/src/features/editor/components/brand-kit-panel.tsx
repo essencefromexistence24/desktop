@@ -5,7 +5,13 @@ import { BadgeCheck, ImagePlus, Palette, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useEditorStore } from "@/features/editor/state/editor-store";
 import { normalizeBrandKitSettings } from "@/lib/editor/brand-kit";
@@ -16,17 +22,33 @@ export function BrandKitPanel() {
   const project = useEditorStore((state) => state.project);
   const brandColors = useEditorStore((state) => state.brandColors);
   const mediaAssets = useEditorStore((state) => state.mediaAssets);
-  const updateBrandKitSettings = useEditorStore((state) => state.updateBrandKitSettings);
+  const updateBrandKitSettings = useEditorStore(
+    (state) => state.updateBrandKitSettings,
+  );
   const addBrandLogoAsset = useEditorStore((state) => state.addBrandLogoAsset);
-  const removeBrandLogoAsset = useEditorStore((state) => state.removeBrandLogoAsset);
-  const applyBrandKitToSelected = useEditorStore((state) => state.applyBrandKitToSelected);
+  const removeBrandLogoAsset = useEditorStore(
+    (state) => state.removeBrandLogoAsset,
+  );
+  const applyBrandKitToSelected = useEditorStore(
+    (state) => state.applyBrandKitToSelected,
+  );
   const addLayerFromAsset = useEditorStore((state) => state.addLayerFromAsset);
   const [message, setMessage] = useState<string | null>(null);
   const typographyPresets = project.brandTypographyPresets ?? [];
-  const imageAssets = useMemo(() => mediaAssets.filter((asset) => asset.type === "image"), [mediaAssets]);
-  const brandKit = normalizeBrandKitSettings(project.brandKit, { mediaAssets, typographyPresets });
+  const imageAssets = useMemo(
+    () => mediaAssets.filter((asset) => asset.type === "image"),
+    [mediaAssets],
+  );
+  const brandKit = normalizeBrandKitSettings(project.brandKit, {
+    mediaAssets,
+    typographyPresets,
+  });
   const logoAssets = brandKit.logoAssetIds
-    .map((assetId) => mediaAssets.find((asset) => asset.id === assetId && asset.type === "image"))
+    .map((assetId) =>
+      mediaAssets.find(
+        (asset) => asset.id === assetId && asset.type === "image",
+      ),
+    )
     .filter((asset): asset is (typeof mediaAssets)[number] => Boolean(asset));
   const activeLogoId = brandKit.defaultLogoAssetId ?? noneValue;
   const activeTypographyId = brandKit.defaultTypographyPresetId ?? noneValue;
@@ -51,14 +73,20 @@ export function BrandKitPanel() {
   }
 
   function placeLogo() {
-    const logoAsset = mediaAssets.find((asset) => asset.id === brandKit.defaultLogoAssetId && asset.type === "image");
+    const logoAsset = mediaAssets.find(
+      (asset) =>
+        asset.id === brandKit.defaultLogoAssetId && asset.type === "image",
+    );
     if (!logoAsset) {
       setMessage("Choose an image logo first.");
       return;
     }
 
     const width = Math.round(Math.min(project.width * 0.18, 280));
-    const ratio = logoAsset.width && logoAsset.height ? logoAsset.height / logoAsset.width : 1;
+    const ratio =
+      logoAsset.width && logoAsset.height
+        ? logoAsset.height / logoAsset.width
+        : 1;
     const layerId = addLayerFromAsset(logoAsset.id, {
       name: `Logo - ${logoAsset.name}`,
       duration: project.duration,
@@ -77,7 +105,11 @@ export function BrandKitPanel() {
       },
     });
 
-    setMessage(layerId ? "Logo placed on the canvas." : "Logo asset is not available in this project.");
+    setMessage(
+      layerId
+        ? "Logo placed on the canvas."
+        : "Logo asset is not available in this project.",
+    );
   }
 
   function enforceBrandKit() {
@@ -100,28 +132,55 @@ export function BrandKitPanel() {
       </div>
 
       <div className="grid gap-2">
-        <ColorSelect label="Primary" value={activePrimaryColor} colors={brandColors} onChange={(value) => updateBrandKitSettings({ defaultPrimaryColor: value })} />
+        <ColorSelect
+          label="Primary"
+          value={activePrimaryColor}
+          colors={brandColors}
+          onChange={(value) =>
+            updateBrandKitSettings({ defaultPrimaryColor: value })
+          }
+        />
         <ColorSelect
           label="Secondary"
           value={activeSecondaryColor}
           colors={brandColors}
-          onChange={(value) => updateBrandKitSettings({ defaultSecondaryColor: value })}
+          onChange={(value) =>
+            updateBrandKitSettings({ defaultSecondaryColor: value })
+          }
         />
         <TypographySelect
           value={activeTypographyId}
           presets={typographyPresets}
-          onChange={(value) => updateBrandKitSettings({ defaultTypographyPresetId: value === noneValue ? undefined : value })}
+          onChange={(value) =>
+            updateBrandKitSettings({
+              defaultTypographyPresetId:
+                value === noneValue ? undefined : value,
+            })
+          }
         />
-        <LogoSelect value={activeLogoId} imageAssets={imageAssets} onChange={setDefaultLogo} />
+        <LogoSelect
+          value={activeLogoId}
+          imageAssets={imageAssets}
+          onChange={setDefaultLogo}
+        />
       </div>
 
       {logoAssets.length ? (
         <div className="space-y-1">
           <Label className="text-xs text-muted-foreground">Logos</Label>
           {logoAssets.map((asset) => (
-            <div key={asset.id} className="flex items-center justify-between gap-2 rounded-md border border-border px-2 py-1 text-xs">
+            <div
+              key={asset.id}
+              className="flex items-center justify-between gap-2 rounded-md border border-border px-2 py-1 text-xs"
+            >
               <span className="truncate">{asset.name}</span>
-              <Button size="icon" variant="ghost" className="size-7" onClick={() => removeBrandLogoAsset(asset.id)} aria-label={`Remove ${asset.name}`}>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="size-7"
+                onClick={() => removeBrandLogoAsset(asset.id)}
+                aria-label={`Remove ${asset.name}`}
+              >
                 <Trash2 className="size-3.5" />
               </Button>
             </div>
@@ -130,17 +189,37 @@ export function BrandKitPanel() {
       ) : null}
 
       <div className="space-y-2 rounded-md border border-border p-2">
-        <BrandSwitch label="Enforce colors" checked={brandKit.enforceColors} onCheckedChange={(enforceColors) => updateBrandKitSettings({ enforceColors })} />
+        <BrandSwitch
+          label="Enforce colors"
+          checked={brandKit.enforceColors}
+          onCheckedChange={(enforceColors) =>
+            updateBrandKitSettings({ enforceColors })
+          }
+        />
         <BrandSwitch
           label="Enforce typography"
           checked={brandKit.enforceTypography}
-          onCheckedChange={(enforceTypography) => updateBrandKitSettings({ enforceTypography })}
+          onCheckedChange={(enforceTypography) =>
+            updateBrandKitSettings({ enforceTypography })
+          }
         />
-        <BrandSwitch label="Require logo" checked={brandKit.enforceLogo} onCheckedChange={(enforceLogo) => updateBrandKitSettings({ enforceLogo })} />
+        <BrandSwitch
+          label="Require logo"
+          checked={brandKit.enforceLogo}
+          onCheckedChange={(enforceLogo) =>
+            updateBrandKitSettings({ enforceLogo })
+          }
+        />
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        <Button size="sm" variant="outline" className="h-8" onClick={placeLogo} disabled={!brandKit.defaultLogoAssetId}>
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-8"
+          onClick={placeLogo}
+          disabled={!brandKit.defaultLogoAssetId}
+        >
           <ImagePlus className="size-4" />
           Logo
         </Button>
@@ -150,16 +229,35 @@ export function BrandKitPanel() {
         </Button>
       </div>
 
-      {message ? <div className="rounded-md border border-border p-2 text-xs text-muted-foreground">{message}</div> : null}
+      {message ? (
+        <div className="rounded-md border border-border p-2 text-xs text-muted-foreground">
+          {message}
+        </div>
+      ) : null}
     </div>
   );
 }
 
-function ColorSelect({ label, value, colors, onChange }: { label: string; value: string; colors: string[]; onChange: (value: string | undefined) => void }) {
+function ColorSelect({
+  label,
+  value,
+  colors,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  colors: string[];
+  onChange: (value: string | undefined) => void;
+}) {
   return (
     <div className="space-y-1">
       <Label className="text-xs text-muted-foreground">{label}</Label>
-      <Select value={value} onValueChange={(nextValue) => onChange(nextValue === noneValue ? undefined : nextValue)}>
+      <Select
+        value={value}
+        onValueChange={(nextValue) =>
+          onChange(nextValue === noneValue ? undefined : nextValue)
+        }
+      >
         <SelectTrigger className="h-8">
           <SelectValue />
         </SelectTrigger>
@@ -234,7 +332,15 @@ function LogoSelect({
   );
 }
 
-function BrandSwitch({ label, checked, onCheckedChange }: { label: string; checked: boolean; onCheckedChange: (checked: boolean) => void }) {
+function BrandSwitch({
+  label,
+  checked,
+  onCheckedChange,
+}: {
+  label: string;
+  checked: boolean;
+  onCheckedChange: (checked: boolean) => void;
+}) {
   return (
     <div className="flex items-center justify-between gap-3">
       <Label className="text-xs text-muted-foreground">{label}</Label>
@@ -243,6 +349,14 @@ function BrandSwitch({ label, checked, onCheckedChange }: { label: string; check
   );
 }
 
-function enabledCount(settings: { enforceColors: boolean; enforceTypography: boolean; enforceLogo: boolean }) {
-  return [settings.enforceColors, settings.enforceTypography, settings.enforceLogo].filter(Boolean).length;
+function enabledCount(settings: {
+  enforceColors: boolean;
+  enforceTypography: boolean;
+  enforceLogo: boolean;
+}) {
+  return [
+    settings.enforceColors,
+    settings.enforceTypography,
+    settings.enforceLogo,
+  ].filter(Boolean).length;
 }

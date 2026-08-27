@@ -11,7 +11,10 @@ import { createEditorMediaSlice } from "@/features/editor/state/editor-media-sli
 import { createEditorPresetBrandSlice } from "@/features/editor/state/editor-preset-brand-slice";
 import { createEditorProjectPlaybackSlice } from "@/features/editor/state/editor-project-playback-slice";
 import { createEditorSelectionSlice } from "@/features/editor/state/editor-selection-slice";
-import { createEditorLayerWriters, createEditorProjectCommit } from "@/features/editor/state/editor-store-core";
+import {
+  createEditorLayerWriters,
+  createEditorProjectCommit,
+} from "@/features/editor/state/editor-store-core";
 import { createEditorTemplateSlice } from "@/features/editor/state/editor-template-slice";
 import { createEditorTimelineEditSlice } from "@/features/editor/state/editor-timeline-edit-slice";
 import type { EditorState } from "@/features/editor/state/editor-store-types";
@@ -158,7 +161,10 @@ export const useEditorStore = create<EditorState>()(
       name: "essence-kapwing-editor",
       partialize: (state) => ({
         project: state.project,
-        mediaAssets: state.mediaAssets.map((asset) => ({ ...asset, objectUrl: undefined })),
+        mediaAssets: state.mediaAssets.map((asset) => ({
+          ...asset,
+          objectUrl: undefined,
+        })),
         exportJobs: state.exportJobs,
         brandColors: state.brandColors,
         favoriteMediaAssetIds: state.favoriteMediaAssetIds,

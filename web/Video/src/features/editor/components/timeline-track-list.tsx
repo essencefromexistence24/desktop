@@ -3,13 +3,21 @@
 import type { PointerEvent } from "react";
 import { Group, Lock } from "lucide-react";
 import { layerColors } from "@/lib/editor/presets";
-import type { LayerReviewStatus, MediaAsset, TimelineLayer } from "@/lib/editor/types";
+import type {
+  LayerReviewStatus,
+  MediaAsset,
+  TimelineLayer,
+} from "@/lib/editor/types";
 import type { TimelineDragMode } from "@/features/editor/hooks/use-timeline-drag";
 import { WaveformBars } from "@/features/editor/components/waveform-bars";
 
-export type TrackLaneKind = "media" | "audio" | "captions" | "overlays" | "mixed";
+export type TrackLaneKind =
+  "media" | "audio" | "captions" | "overlays" | "mixed";
 
-export const trackLaneMetadata: Record<TrackLaneKind, { label: string; toneClass: string }> = {
+export const trackLaneMetadata: Record<
+  TrackLaneKind,
+  { label: string; toneClass: string }
+> = {
   media: { label: "Media", toneClass: "bg-primary" },
   audio: { label: "Audio", toneClass: "bg-secondary-foreground" },
   captions: { label: "Captions", toneClass: "bg-accent-foreground" },
@@ -34,8 +42,15 @@ type TimelineTrackListProps = {
   trackHeight: number;
   layerHeight: number;
   layerTop: number;
-  onSelectTimelineLayer: (event: { shiftKey: boolean; ctrlKey: boolean; metaKey: boolean }, layerId: string) => void;
-  onBeginDrag: (event: PointerEvent<HTMLDivElement>, layer: TimelineLayer, mode: TimelineDragMode) => void;
+  onSelectTimelineLayer: (
+    event: { shiftKey: boolean; ctrlKey: boolean; metaKey: boolean },
+    layerId: string,
+  ) => void;
+  onBeginDrag: (
+    event: PointerEvent<HTMLDivElement>,
+    layer: TimelineLayer,
+    mode: TimelineDragMode,
+  ) => void;
   onUpdateDrag: (event: PointerEvent<HTMLDivElement>) => void;
   onEndDrag: (event: PointerEvent<HTMLDivElement>) => void;
 };
@@ -65,16 +80,24 @@ export function TimelineTrackList({
           <div
             key={track}
             className="mb-2 grid items-center gap-2"
-            style={{ gridTemplateColumns: `${labelWidth}px ${timelineWidth}px` }}
+            style={{
+              gridTemplateColumns: `${labelWidth}px ${timelineWidth}px`,
+            }}
             role="group"
             aria-label={lane.label}
           >
             <div className="min-w-0">
               <div className="flex min-w-0 items-center gap-1">
-                <span className={`size-2 shrink-0 rounded-full ${lane.toneClass}`} />
-                <span className="truncate text-xs font-medium text-foreground">{lane.label}</span>
+                <span
+                  className={`size-2 shrink-0 rounded-full ${lane.toneClass}`}
+                />
+                <span className="truncate text-xs font-medium text-foreground">
+                  {lane.label}
+                </span>
               </div>
-              <div className="truncate text-[10px] leading-4 text-muted-foreground">{lane.detail}</div>
+              <div className="truncate text-[10px] leading-4 text-muted-foreground">
+                {lane.detail}
+              </div>
             </div>
             <div
               data-timeline-track
@@ -89,7 +112,9 @@ export function TimelineTrackList({
             >
               {layers.map((layer) => {
                 const isSelected = selectedLayerIds.includes(layer.id);
-                const asset = layer.assetId ? assetById.get(layer.assetId) : undefined;
+                const asset = layer.assetId
+                  ? assetById.get(layer.assetId)
+                  : undefined;
                 return (
                   <div
                     key={layer.id}
@@ -119,15 +144,25 @@ export function TimelineTrackList({
                     {!layer.locked ? (
                       <div
                         className="absolute inset-y-0 left-0 w-2 cursor-ew-resize rounded-l-md bg-foreground/15"
-                        onPointerDown={(event) => onBeginDrag(event, layer, "trim-start")}
+                        onPointerDown={(event) =>
+                          onBeginDrag(event, layer, "trim-start")
+                        }
                       />
                     ) : null}
                     {layer.kind === "audio" ? (
-                      <WaveformBars peaks={asset?.waveformPeaks} className="absolute inset-x-3 top-1 h-6 text-current" barClassName="w-0.5" />
+                      <WaveformBars
+                        peaks={asset?.waveformPeaks}
+                        className="absolute inset-x-3 top-1 h-6 text-current"
+                        barClassName="w-0.5"
+                      />
                     ) : null}
                     <span className="relative flex min-w-0 items-center gap-1 pl-1 pr-3">
-                      {layer.locked ? <Lock className="size-3 shrink-0" /> : null}
-                      {layer.groupId ? <Group className="size-3 shrink-0" /> : null}
+                      {layer.locked ? (
+                        <Lock className="size-3 shrink-0" />
+                      ) : null}
+                      {layer.groupId ? (
+                        <Group className="size-3 shrink-0" />
+                      ) : null}
                       <span className="truncate">{layer.name}</span>
                       {layer.reviewStatus && layer.reviewStatus !== "none" ? (
                         <span className="shrink-0 rounded bg-foreground/10 px-1 text-[10px] uppercase">
@@ -138,7 +173,9 @@ export function TimelineTrackList({
                     {!layer.locked ? (
                       <div
                         className="absolute inset-y-0 right-0 w-2 cursor-ew-resize rounded-r-md bg-foreground/15"
-                        onPointerDown={(event) => onBeginDrag(event, layer, "trim-end")}
+                        onPointerDown={(event) =>
+                          onBeginDrag(event, layer, "trim-end")
+                        }
                       />
                     ) : null}
                   </div>
@@ -162,7 +199,11 @@ function formatTimelineSeconds(value: number) {
 
 export function getTrackLaneSummary(track: number, layers: TimelineLayer[]) {
   const laneCounts = layers.reduce(
-    (counts, layer) => counts.set(getLayerLaneKind(layer), (counts.get(getLayerLaneKind(layer)) ?? 0) + 1),
+    (counts, layer) =>
+      counts.set(
+        getLayerLaneKind(layer),
+        (counts.get(getLayerLaneKind(layer)) ?? 0) + 1,
+      ),
     new Map<TrackLaneKind, number>(),
   );
   const dominantLanes = [...laneCounts.entries()].sort(([, a], [, b]) => b - a);

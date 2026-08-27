@@ -2,7 +2,11 @@
 
 import { createProject } from "@/lib/editor/factory";
 import { getAspectPreset } from "@/lib/editor/presets";
-import type { EditorProject, MediaAsset, TimelineMarker } from "@/lib/editor/types";
+import type {
+  EditorProject,
+  MediaAsset,
+  TimelineMarker,
+} from "@/lib/editor/types";
 import type {
   EditorState,
   EditorStoreGet,
@@ -29,12 +33,24 @@ type EditorProjectPlaybackSlice = Pick<
 type EditorProjectPlaybackDeps = {
   commit: (mutator: (project: EditorProject) => EditorProject) => void;
   normalizeProjectTimeline: (project: EditorProject) => EditorProject;
-  revokeMediaAssetObjectUrls: (assets: MediaAsset[], keepAssets?: MediaAsset[]) => void;
+  revokeMediaAssetObjectUrls: (
+    assets: MediaAsset[],
+    keepAssets?: MediaAsset[],
+  ) => void;
   revokeRemovedMediaRecovery: (recovery: RemovedMediaRecovery | null) => void;
   normalizeSnapInterval: (seconds: number | undefined) => number;
-  createTimelineMarker: (time: number, project: EditorProject) => TimelineMarker;
-  timelineMarkers: (project: EditorProject, duration?: number) => TimelineMarker[];
-  normalizeTimelineMarkers: (markers: TimelineMarker[], duration: number) => TimelineMarker[];
+  createTimelineMarker: (
+    time: number,
+    project: EditorProject,
+  ) => TimelineMarker;
+  timelineMarkers: (
+    project: EditorProject,
+    duration?: number,
+  ) => TimelineMarker[];
+  normalizeTimelineMarkers: (
+    markers: TimelineMarker[],
+    duration: number,
+  ) => TimelineMarker[];
   cleanMarkerLabel: (label: string) => string;
   clamp: (value: number, min: number, max: number) => number;
 };
@@ -111,12 +127,16 @@ export function createEditorProjectPlaybackSlice(
         updatedAt: new Date().toISOString(),
       }));
     },
-    setCurrentTime: (time) => set({ currentTime: deps.clamp(time, 0, get().project.duration) }),
+    setCurrentTime: (time) =>
+      set({ currentTime: deps.clamp(time, 0, get().project.duration) }),
     addTimelineMarker: (time = get().currentTime) => {
       const marker = deps.createTimelineMarker(time, get().project);
       deps.commit((project) => ({
         ...project,
-        markers: deps.normalizeTimelineMarkers([...deps.timelineMarkers(project), marker], project.duration),
+        markers: deps.normalizeTimelineMarkers(
+          [...deps.timelineMarkers(project), marker],
+          project.duration,
+        ),
         updatedAt: new Date().toISOString(),
       }));
       return marker;
@@ -132,7 +152,11 @@ export function createEditorProjectPlaybackSlice(
               ? {
                   ...marker,
                   ...patch,
-                  time: deps.clamp(patch.time ?? marker.time, 0, project.duration),
+                  time: deps.clamp(
+                    patch.time ?? marker.time,
+                    0,
+                    project.duration,
+                  ),
                   label: deps.cleanMarkerLabel(patch.label ?? marker.label),
                   updatedAt: now,
                 }
@@ -143,11 +167,18 @@ export function createEditorProjectPlaybackSlice(
       }));
     },
     removeTimelineMarker: (markerId) => {
-      if (!deps.timelineMarkers(get().project).some((marker) => marker.id === markerId)) return;
+      if (
+        !deps
+          .timelineMarkers(get().project)
+          .some((marker) => marker.id === markerId)
+      )
+        return;
 
       deps.commit((project) => ({
         ...project,
-        markers: deps.timelineMarkers(project).filter((marker) => marker.id !== markerId),
+        markers: deps
+          .timelineMarkers(project)
+          .filter((marker) => marker.id !== markerId),
         updatedAt: new Date().toISOString(),
       }));
     },
@@ -155,7 +186,10 @@ export function createEditorProjectPlaybackSlice(
     togglePlayback: () =>
       set((state) => ({
         isPlaying: !state.isPlaying,
-        currentTime: !state.isPlaying && state.currentTime >= state.project.duration ? 0 : state.currentTime,
+        currentTime:
+          !state.isPlaying && state.currentTime >= state.project.duration
+            ? 0
+            : state.currentTime,
       })),
   };
 }

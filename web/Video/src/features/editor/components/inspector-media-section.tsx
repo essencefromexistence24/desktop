@@ -33,10 +33,20 @@ export function InspectorMediaSection({
   return (
     <>
       <Separator />
-      {hasAudioControls ? <AudioMixPanel layer={layer} asset={asset} onChange={(patch) => onUpdateLayer(layer.id, patch)} /> : null}
+      {hasAudioControls ? (
+        <AudioMixPanel
+          layer={layer}
+          asset={asset}
+          onChange={(patch) => onUpdateLayer(layer.id, patch)}
+        />
+      ) : null}
       {hasVideoControls ? (
         <>
-          <VideoAudioWorkflowPanel audioAssets={audioAssets} onExtract={onExtractAudio} onReplace={onReplaceAudio} />
+          <VideoAudioWorkflowPanel
+            audioAssets={audioAssets}
+            onExtract={onExtractAudio}
+            onReplace={onReplaceAudio}
+          />
           <FreezeFramePanel onCreate={onCreateFreezeFrames} />
         </>
       ) : null}

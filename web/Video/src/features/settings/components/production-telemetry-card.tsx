@@ -21,7 +21,12 @@ export function ProductionTelemetryCard({
   usage,
   generations,
 }: ProductionTelemetryCardProps) {
-  const report = createProductionTelemetryReport({ isSignedIn, aiConfigured, usage, generations });
+  const report = createProductionTelemetryReport({
+    isSignedIn,
+    aiConfigured,
+    usage,
+    generations,
+  });
 
   return (
     <Card className="shadow-none">
@@ -31,7 +36,9 @@ export function ProductionTelemetryCard({
             <Activity className="size-4 shrink-0" />
             Production telemetry
           </span>
-          <Badge variant={telemetryBadgeVariant(report.status)}>{report.score}/100</Badge>
+          <Badge variant={telemetryBadgeVariant(report.status)}>
+            {report.score}/100
+          </Badge>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -44,15 +51,26 @@ export function ProductionTelemetryCard({
           {report.signals.map((signal) => {
             const Icon = signal.status === "ready" ? ShieldCheck : CircleAlert;
             return (
-              <div key={signal.id} className="rounded-md border border-border p-3">
+              <div
+                key={signal.id}
+                className="rounded-md border border-border p-3"
+              >
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex min-w-0 items-center gap-2">
-                    <Icon className={`size-4 shrink-0 ${signal.status === "blocked" ? "text-destructive" : signal.status === "attention" ? "text-amber-300" : "text-primary"}`} />
-                    <div className="truncate text-sm font-medium">{signal.label}</div>
+                    <Icon
+                      className={`size-4 shrink-0 ${signal.status === "blocked" ? "text-destructive" : signal.status === "attention" ? "text-amber-300" : "text-primary"}`}
+                    />
+                    <div className="truncate text-sm font-medium">
+                      {signal.label}
+                    </div>
                   </div>
-                  <Badge variant={telemetryBadgeVariant(signal.status)}>{signal.count ?? telemetryLabel(signal.status)}</Badge>
+                  <Badge variant={telemetryBadgeVariant(signal.status)}>
+                    {signal.count ?? telemetryLabel(signal.status)}
+                  </Badge>
                 </div>
-                <p className="mt-2 text-xs text-muted-foreground">{signal.detail}</p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {signal.detail}
+                </p>
               </div>
             );
           })}

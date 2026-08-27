@@ -13,13 +13,22 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { SelfHostedUploadHistoryList } from "@/features/editor/components/self-hosted-upload-history-list";
 import { SelfHostedUploadProfileReadinessHistory } from "@/features/editor/components/self-hosted-upload-profile-readiness-history";
 import { SelfHostedUploadProfileReadinessPanel } from "@/features/editor/components/self-hosted-upload-profile-readiness-panel";
 import type { MediaAsset } from "@/lib/editor/types";
 import type { SelfHostedMediaUploadInput } from "@/lib/media/self-hosted-upload";
-import { loadSelfHostedUploadHistory, type SelfHostedUploadHistoryEntry } from "@/lib/media/self-hosted-upload-history";
+import {
+  loadSelfHostedUploadHistory,
+  type SelfHostedUploadHistoryEntry,
+} from "@/lib/media/self-hosted-upload-history";
 import {
   checkSelfHostedUploadProfileReadiness,
   loadSelfHostedUploadProfileReadinessHistory,
@@ -58,16 +67,25 @@ export function SelfHostedMediaUploadDialog({
   const [selectedProfileId, setSelectedProfileId] = useState(noProfileValue);
   const [uploadUrl, setUploadUrl] = useState("");
   const [publicUrl, setPublicUrl] = useState("");
-  const [selectedProviderId, setSelectedProviderId] = useState(defaultSelfHostedUploadProviderId);
+  const [selectedProviderId, setSelectedProviderId] = useState(
+    defaultSelfHostedUploadProviderId,
+  );
   const [profileName, setProfileName] = useState("");
   const [profileBaseUrl, setProfileBaseUrl] = useState("");
-  const [uploadHistory, setUploadHistory] = useState<SelfHostedUploadHistoryEntry[]>([]);
-  const [readinessReport, setReadinessReport] = useState<SelfHostedUploadProfileReadinessReport | null>(null);
-  const [readinessHistory, setReadinessHistory] = useState<SelfHostedUploadProfileReadinessReport[]>([]);
+  const [uploadHistory, setUploadHistory] = useState<
+    SelfHostedUploadHistoryEntry[]
+  >([]);
+  const [readinessReport, setReadinessReport] =
+    useState<SelfHostedUploadProfileReadinessReport | null>(null);
+  const [readinessHistory, setReadinessHistory] = useState<
+    SelfHostedUploadProfileReadinessReport[]
+  >([]);
   const [isCheckingReadiness, setIsCheckingReadiness] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const selectedProfile = profiles.find((profile) => profile.id === selectedProfileId) ?? null;
-  const selectedProvider = getSelfHostedUploadProviderPreset(selectedProviderId);
+  const selectedProfile =
+    profiles.find((profile) => profile.id === selectedProfileId) ?? null;
+  const selectedProvider =
+    getSelfHostedUploadProviderPreset(selectedProviderId);
 
   useEffect(() => {
     if (!open) return;
@@ -116,14 +134,22 @@ export function SelfHostedMediaUploadDialog({
     setError(null);
 
     try {
-      const nextProfiles = saveSelfHostedUploadProfile({ name: profileName, providerId: selectedProviderId, publicBaseUrl: profileBaseUrl });
+      const nextProfiles = saveSelfHostedUploadProfile({
+        name: profileName,
+        providerId: selectedProviderId,
+        publicBaseUrl: profileBaseUrl,
+      });
       const profile = nextProfiles[0] ?? null;
       setProfiles(nextProfiles);
       setProfileName("");
       setProfileBaseUrl("");
       if (profile) selectSavedProfile(profile, nextProfiles);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Storage profile could not be saved.");
+      setError(
+        caught instanceof Error
+          ? caught.message
+          : "Storage profile could not be saved.",
+      );
     }
   }
 
@@ -134,11 +160,16 @@ export function SelfHostedMediaUploadDialog({
     setReadinessReport(null);
   }
 
-  function selectSavedProfile(profile: SelfHostedUploadProfile, availableProfiles: SelfHostedUploadProfile[]) {
+  function selectSavedProfile(
+    profile: SelfHostedUploadProfile,
+    availableProfiles: SelfHostedUploadProfile[],
+  ) {
     setSelectedProfileId(profile.id);
     setSelectedProviderId(profile.providerId);
-    const savedProfile = availableProfiles.find((item) => item.id === profile.id) ?? profile;
-    if (asset) setPublicUrl(createSelfHostedPublicUrl(savedProfile, asset.name));
+    const savedProfile =
+      availableProfiles.find((item) => item.id === profile.id) ?? profile;
+    if (asset)
+      setPublicUrl(createSelfHostedPublicUrl(savedProfile, asset.name));
   }
 
   async function checkSelectedProfileReadiness() {
@@ -147,7 +178,10 @@ export function SelfHostedMediaUploadDialog({
     setError(null);
 
     try {
-      const report = await checkSelfHostedUploadProfileReadiness(selectedProfile, asset?.name);
+      const report = await checkSelfHostedUploadProfileReadiness(
+        selectedProfile,
+        asset?.name,
+      );
       setReadinessReport(report);
       setReadinessHistory(saveSelfHostedUploadProfileReadinessReport(report));
     } finally {
@@ -161,7 +195,9 @@ export function SelfHostedMediaUploadDialog({
         <DialogHeader>
           <DialogTitle>Upload To Your Storage</DialogTitle>
           <DialogDescription>
-            {asset ? `Upload ${asset.name} with a signed PUT URL, then keep the public file URL in this project.` : "Upload a media file you control."}
+            {asset
+              ? `Upload ${asset.name} with a signed PUT URL, then keep the public file URL in this project.`
+              : "Upload a media file you control."}
           </DialogDescription>
         </DialogHeader>
         <form className="space-y-4" onSubmit={submit}>
@@ -179,7 +215,11 @@ export function SelfHostedMediaUploadDialog({
             <div className="grid gap-2 sm:grid-cols-[minmax(0,0.9fr)_1fr_auto]">
               <div className="space-y-2">
                 <Label>Provider preset</Label>
-                <Select value={selectedProviderId} onValueChange={selectProvider} disabled={isUploading}>
+                <Select
+                  value={selectedProviderId}
+                  onValueChange={selectProvider}
+                  disabled={isUploading}
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue />
                   </SelectTrigger>
@@ -194,7 +234,11 @@ export function SelfHostedMediaUploadDialog({
               </div>
               <div className="space-y-2">
                 <Label>Storage profile</Label>
-                <Select value={selectedProfileId} onValueChange={selectProfile} disabled={isUploading || profiles.length === 0}>
+                <Select
+                  value={selectedProfileId}
+                  onValueChange={selectProfile}
+                  disabled={isUploading || profiles.length === 0}
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Choose a profile" />
                   </SelectTrigger>
@@ -208,7 +252,13 @@ export function SelfHostedMediaUploadDialog({
                   </SelectContent>
                 </Select>
               </div>
-              <Button type="button" variant="outline" className="self-end" onClick={removeProfile} disabled={isUploading || !selectedProfile}>
+              <Button
+                type="button"
+                variant="outline"
+                className="self-end"
+                onClick={removeProfile}
+                disabled={isUploading || !selectedProfile}
+              >
                 <Trash2 className="size-4" />
                 Remove
               </Button>
@@ -218,7 +268,9 @@ export function SelfHostedMediaUploadDialog({
                 type="button"
                 variant="outline"
                 onClick={checkSelectedProfileReadiness}
-                disabled={isUploading || isCheckingReadiness || !selectedProfile}
+                disabled={
+                  isUploading || isCheckingReadiness || !selectedProfile
+                }
               >
                 {isCheckingReadiness ? "Checking..." : "Check profile"}
               </Button>
@@ -241,7 +293,9 @@ export function SelfHostedMediaUploadDialog({
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="self-hosted-profile-base-url">Public folder URL</Label>
+                <Label htmlFor="self-hosted-profile-base-url">
+                  Public folder URL
+                </Label>
                 <Input
                   id="self-hosted-profile-base-url"
                   value={profileBaseUrl}
@@ -250,7 +304,13 @@ export function SelfHostedMediaUploadDialog({
                   disabled={isUploading}
                 />
               </div>
-              <Button type="button" variant="secondary" className="self-end" onClick={saveProfile} disabled={isUploading}>
+              <Button
+                type="button"
+                variant="secondary"
+                className="self-end"
+                onClick={saveProfile}
+                disabled={isUploading}
+              >
                 Save profile
               </Button>
             </div>
@@ -265,10 +325,18 @@ export function SelfHostedMediaUploadDialog({
               disabled={isUploading}
             />
           </div>
-          <SelfHostedUploadHistoryList entries={uploadHistory} onEntriesChange={setUploadHistory} />
+          <SelfHostedUploadHistoryList
+            entries={uploadHistory}
+            onEntriesChange={setUploadHistory}
+          />
           {error ? <p className="text-xs text-destructive">{error}</p> : null}
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isUploading}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              disabled={isUploading}
+            >
               Cancel
             </Button>
             <Button type="submit" disabled={isUploading || !asset}>

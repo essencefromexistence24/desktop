@@ -25,11 +25,16 @@ type TimelineDragOptions = {
   projectDuration: number;
   snapInterval: number;
   trackStep: number;
-  onSelectLayer: (event: { shiftKey: boolean; ctrlKey: boolean; metaKey: boolean }, layerId: string) => void;
+  onSelectLayer: (
+    event: { shiftKey: boolean; ctrlKey: boolean; metaKey: boolean },
+    layerId: string,
+  ) => void;
   onPushHistorySnapshot: () => void;
   onUpdateLayerTiming: (
     layerId: string,
-    patch: Partial<Pick<TimelineLayer, "start" | "duration" | "trimStart" | "track">>,
+    patch: Partial<
+      Pick<TimelineLayer, "start" | "duration" | "trimStart" | "track">
+    >,
     options?: { history?: boolean; snap?: boolean },
   ) => void;
 };
@@ -44,7 +49,11 @@ export function useTimelineDrag({
 }: TimelineDragOptions) {
   const dragRef = useRef<TimelineDragState | null>(null);
 
-  function beginTimelineDrag(event: PointerEvent<HTMLDivElement>, layer: TimelineLayer, mode: TimelineDragMode) {
+  function beginTimelineDrag(
+    event: PointerEvent<HTMLDivElement>,
+    layer: TimelineLayer,
+    mode: TimelineDragMode,
+  ) {
     event.preventDefault();
     event.stopPropagation();
     onSelectLayer(event, layer.id);
@@ -73,8 +82,11 @@ export function useTimelineDrag({
     const drag = dragRef.current;
     if (!drag) return;
 
-    const secondsDelta = ((event.clientX - drag.startX) / drag.trackWidth) * drag.projectDuration;
-    const trackDelta = Math.round((event.clientY - drag.startY) / drag.trackStep);
+    const secondsDelta =
+      ((event.clientX - drag.startX) / drag.trackWidth) * drag.projectDuration;
+    const trackDelta = Math.round(
+      (event.clientY - drag.startY) / drag.trackStep,
+    );
 
     if (drag.mode === "move") {
       onUpdateLayerTiming(
@@ -89,8 +101,15 @@ export function useTimelineDrag({
     }
 
     if (drag.mode === "trim-start") {
-      const nextStart = snapTime(drag.layerStart + secondsDelta, true, snapInterval);
-      const consumed = Math.min(drag.layerDuration - TIMELINE_MIN_LAYER_SECONDS, Math.max(-drag.layerTrimStart, nextStart - drag.layerStart));
+      const nextStart = snapTime(
+        drag.layerStart + secondsDelta,
+        true,
+        snapInterval,
+      );
+      const consumed = Math.min(
+        drag.layerDuration - TIMELINE_MIN_LAYER_SECONDS,
+        Math.max(-drag.layerTrimStart, nextStart - drag.layerStart),
+      );
       onUpdateLayerTiming(
         drag.layerId,
         {
@@ -103,11 +122,18 @@ export function useTimelineDrag({
       return;
     }
 
-    const nextEnd = snapTime(drag.layerStart + drag.layerDuration + secondsDelta, true, snapInterval);
+    const nextEnd = snapTime(
+      drag.layerStart + drag.layerDuration + secondsDelta,
+      true,
+      snapInterval,
+    );
     onUpdateLayerTiming(
       drag.layerId,
       {
-        duration: Math.max(TIMELINE_MIN_LAYER_SECONDS, nextEnd - drag.layerStart),
+        duration: Math.max(
+          TIMELINE_MIN_LAYER_SECONDS,
+          nextEnd - drag.layerStart,
+        ),
       },
       { history: false },
     );

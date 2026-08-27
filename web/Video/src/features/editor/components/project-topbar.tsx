@@ -3,20 +3,14 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import {
-  Captions,
   ChevronDown,
-  Circle,
   Copy,
   Download,
-  Gauge,
   Grid3X3,
   LayoutDashboard,
-  Maximize2,
+  MoreHorizontal,
   Redo2,
-  RotateCcwSquare,
-  Timer,
   Trash2,
-  Type,
   Undo2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -30,8 +24,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useEditorStore } from "@/features/editor/state/editor-store";
 import { aspectPresets } from "@/lib/editor/presets";
 import { cn } from "@/lib/utils";
@@ -42,9 +46,13 @@ import { SnapshotButton } from "@/features/projects/components/snapshot-button";
 
 type ProjectTopbarProps = {
   embedded?: boolean;
+  onExportClick?: () => void;
 };
 
-export function ProjectTopbar({ embedded = false }: ProjectTopbarProps) {
+export function ProjectTopbar({
+  embedded = false,
+  onExportClick,
+}: ProjectTopbarProps) {
   const project = useEditorStore((state) => state.project);
   const mediaAssets = useEditorStore((state) => state.mediaAssets);
   const setProjectTitle = useEditorStore((state) => state.setProjectTitle);
@@ -54,24 +62,32 @@ export function ProjectTopbar({ embedded = false }: ProjectTopbarProps) {
   const canUndo = useEditorStore((state) => state.past.length > 0);
   const canRedo = useEditorStore((state) => state.future.length > 0);
   const selectedLayerIds = useEditorStore((state) => state.selectedLayerIds);
-  const addTextLayer = useEditorStore((state) => state.addTextLayer);
-  const addSubtitleLayer = useEditorStore((state) => state.addSubtitleLayer);
-  const addShapeLayer = useEditorStore((state) => state.addShapeLayer);
-  const addProgressLayer = useEditorStore((state) => state.addProgressLayer);
-  const addTimerLayer = useEditorStore((state) => state.addTimerLayer);
-  const duplicateSelectedLayers = useEditorStore((state) => state.duplicateSelectedLayers);
-  const removeSelectedLayers = useEditorStore((state) => state.removeSelectedLayers);
-  const centerSelectedLayers = useEditorStore((state) => state.centerSelectedLayers);
-  const fitSelectedLayersToCanvas = useEditorStore((state) => state.fitSelectedLayersToCanvas);
+  const duplicateSelectedLayers = useEditorStore(
+    (state) => state.duplicateSelectedLayers,
+  );
+  const removeSelectedLayers = useEditorStore(
+    (state) => state.removeSelectedLayers,
+  );
+  const centerSelectedLayers = useEditorStore(
+    (state) => state.centerSelectedLayers,
+  );
+  const fitSelectedLayersToCanvas = useEditorStore(
+    (state) => state.fitSelectedLayersToCanvas,
+  );
   const toggleSafeZones = useEditorStore((state) => state.toggleSafeZones);
   const showSafeZones = useEditorStore((state) => state.showSafeZones);
   const hasSelection = selectedLayerIds.length > 0;
 
   return (
-    <header className="flex min-h-12 flex-wrap items-center justify-between gap-2 border-b border-border bg-background/95 px-2 py-1.5">
+    <header className="flex min-h-12 items-center justify-between gap-2 overflow-hidden border-b border-border bg-background/95 px-2 py-1.5">
       <div className="flex min-w-0 items-center gap-2">
         {embedded ? null : (
-          <Button asChild size="icon" variant="ghost">
+          <Button
+            asChild
+            size="icon"
+            variant="ghost"
+            className="size-8 shrink-0"
+          >
             <Link href="/dashboard" aria-label="Dashboard">
               <LayoutDashboard className="size-4" />
             </Link>
@@ -84,112 +100,9 @@ export function ProjectTopbar({ embedded = false }: ProjectTopbarProps) {
           aria-label="Project title"
         />
       </div>
-      <div className="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-1">
-        <ProjectMenu label="File">
-          <DropdownMenuLabel>Local project</DropdownMenuLabel>
-          <DropdownMenuItem onSelect={() => focusEditorRegion("media-library")}>
-            <Grid3X3 className="size-4" />
-            Open media library
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => focusEditorRegion("export-workspace")}>
-            <Download className="size-4" />
-            Open export tray
-          </DropdownMenuItem>
-          {embedded ? null : (
-            <>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/dashboard">
-                  <LayoutDashboard className="size-4" />
-                  Dashboard
-                </Link>
-              </DropdownMenuItem>
-            </>
-          )}
-        </ProjectMenu>
-        <ProjectMenu label="Edit">
-          <DropdownMenuItem onSelect={undo} disabled={!canUndo}>
-            <Undo2 className="size-4" />
-            Undo
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={redo} disabled={!canRedo}>
-            <Redo2 className="size-4" />
-            Redo
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={duplicateSelectedLayers} disabled={!hasSelection}>
-            <Copy className="size-4" />
-            Duplicate selection
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={removeSelectedLayers} disabled={!hasSelection} variant="destructive">
-            <Trash2 className="size-4" />
-            Delete selection
-          </DropdownMenuItem>
-        </ProjectMenu>
-        <ProjectMenu label="Insert">
-          <DropdownMenuLabel>Create layer</DropdownMenuLabel>
-          <DropdownMenuGroup>
-            <DropdownMenuItem onSelect={addTextLayer}>
-              <Type className="size-4" />
-              Text
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={addSubtitleLayer}>
-              <Captions className="size-4" />
-              Captions
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={addShapeLayer}>
-              <Circle className="size-4" />
-              Shape
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={addProgressLayer}>
-              <Gauge className="size-4" />
-              Progress
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={addTimerLayer}>
-              <Timer className="size-4" />
-              Timer
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-        </ProjectMenu>
-        <ProjectMenu label="View" className="hidden md:inline-flex">
-          <DropdownMenuItem onSelect={toggleSafeZones}>
-            <Grid3X3 className="size-4" />
-            {showSafeZones ? "Hide safe zones" : "Show safe zones"}
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => focusEditorRegion("preview-stage")}>
-            <Maximize2 className="size-4" />
-            Focus stage
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuLabel>Aspect ratio</DropdownMenuLabel>
-          {aspectPresets.map((preset) => (
-            <DropdownMenuItem key={preset.id} onSelect={() => setAspectRatio(preset.id)}>
-              {preset.label} {preset.id}
-            </DropdownMenuItem>
-          ))}
-        </ProjectMenu>
-        <ProjectMenu label="Arrange" className="hidden lg:inline-flex">
-          <DropdownMenuItem onSelect={centerSelectedLayers} disabled={!hasSelection}>
-            <Maximize2 className="size-4" />
-            Center selection
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => fitSelectedLayersToCanvas("contain")} disabled={!hasSelection}>
-            <RotateCcwSquare className="size-4" />
-            Fit contain
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => fitSelectedLayersToCanvas("cover")} disabled={!hasSelection}>
-            <RotateCcwSquare className="size-4" />
-            Fit cover
-          </DropdownMenuItem>
-        </ProjectMenu>
-        <ProjectMenu label="Export" className="hidden md:inline-flex">
-          <DropdownMenuItem onSelect={() => focusEditorRegion("export-workspace")}>
-            <Download className="size-4" />
-            Use export tray
-          </DropdownMenuItem>
-        </ProjectMenu>
+      <div className="flex shrink-0 items-center gap-1">
         <Select value={project.aspectRatio} onValueChange={setAspectRatio}>
-          <SelectTrigger className="hidden h-8 w-[132px] xl:inline-flex">
+          <SelectTrigger className="h-8 w-[120px] shrink-0">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -200,17 +113,95 @@ export function ProjectTopbar({ embedded = false }: ProjectTopbarProps) {
             ))}
           </SelectContent>
         </Select>
-        <IconButton label="Undo" onClick={undo} disabled={!canUndo} className="hidden md:inline-flex">
+        <IconButton label="Undo" onClick={undo} disabled={!canUndo}>
           <Undo2 className="size-4" />
         </IconButton>
-        <IconButton label="Redo" onClick={redo} disabled={!canRedo} className="hidden md:inline-flex">
+        <IconButton label="Redo" onClick={redo} disabled={!canRedo}>
           <Redo2 className="size-4" />
         </IconButton>
+        {/* Everything else — File/View/Arrange/Export/Edit duplicates — collapsed into More */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-8 gap-1 px-2 text-xs"
+            >
+              <MoreHorizontal className="size-4" />
+              <span className="hidden sm:inline">More</span>
+              <ChevronDown className="size-3 opacity-60" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>Edit</DropdownMenuLabel>
+            <DropdownMenuItem onSelect={undo} disabled={!canUndo}>
+              <Undo2 className="size-4" />
+              Undo
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={redo} disabled={!canRedo}>
+              <Redo2 className="size-4" />
+              Redo
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={duplicateSelectedLayers}
+              disabled={!hasSelection}
+            >
+              <Copy className="size-4" />
+              Duplicate selection
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={removeSelectedLayers}
+              disabled={!hasSelection}
+              variant="destructive"
+            >
+              <Trash2 className="size-4" />
+              Delete selection
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel>View</DropdownMenuLabel>
+            <DropdownMenuItem onSelect={toggleSafeZones}>
+              <Grid3X3 className="size-4" />
+              {showSafeZones ? "Hide safe zones" : "Show safe zones"}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel>Arrange</DropdownMenuLabel>
+            <DropdownMenuItem
+              onSelect={centerSelectedLayers}
+              disabled={!hasSelection}
+            >
+              <Grid3X3 className="size-4" />
+              Center selection
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={() => fitSelectedLayersToCanvas("contain")}
+              disabled={!hasSelection}
+            >
+              <Grid3X3 className="size-4" />
+              Fit contain
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={() => fitSelectedLayersToCanvas("cover")}
+              disabled={!hasSelection}
+            >
+              <Grid3X3 className="size-4" />
+              Fit cover
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <Button
+          size="sm"
+          onClick={
+            onExportClick ?? (() => focusEditorRegion("export-workspace"))
+          }
+          className="h-8 gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90"
+        >
+          <Download className="size-4" />
+          Export
+        </Button>
         {embedded ? null : (
           <>
             <LocalSaveButton project={project} mediaAssets={mediaAssets} />
             <SnapshotButton project={project} mediaAssets={mediaAssets} />
-            <ReviewWorkspaceDialog />
             <CloudSyncButton project={project} mediaAssets={mediaAssets} />
           </>
         )}
@@ -219,18 +210,28 @@ export function ProjectTopbar({ embedded = false }: ProjectTopbarProps) {
   );
 }
 
-function ProjectMenu({ label, className, children }: { label: string; className?: string; children: ReactNode }) {
+function ProjectMenu({
+  label,
+  className,
+  children,
+}: {
+  label: string;
+  className?: string;
+  children: ReactNode;
+}) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="sm" variant="ghost" className={cn("h-8 px-2 text-xs", className)}>
+        <Button
+          size="sm"
+          variant="ghost"
+          className={cn("h-8 px-2 text-xs", className)}
+        >
           {label}
           <ChevronDown className="size-3" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-        {children}
-      </DropdownMenuContent>
+      <DropdownMenuContent className="w-56">{children}</DropdownMenuContent>
     </DropdownMenu>
   );
 }
@@ -251,7 +252,14 @@ function IconButton({
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button size="icon-sm" variant="outline" className={className} onClick={onClick} disabled={disabled} aria-label={label}>
+        <Button
+          size="icon-sm"
+          variant="outline"
+          className={className}
+          onClick={onClick}
+          disabled={disabled}
+          aria-label={label}
+        >
           {children}
         </Button>
       </TooltipTrigger>
@@ -260,8 +268,12 @@ function IconButton({
   );
 }
 
-function focusEditorRegion(region: "media-library" | "preview-stage" | "export-workspace") {
-  const element = document.querySelector<HTMLElement>(`[data-editor-region="${region}"]`);
+function focusEditorRegion(
+  region: "media-library" | "preview-stage" | "export-workspace",
+) {
+  const element = document.querySelector<HTMLElement>(
+    `[data-editor-region="${region}"]`,
+  );
   element?.focus({ preventScroll: true });
   element?.scrollIntoView({ block: "nearest", inline: "nearest" });
 }

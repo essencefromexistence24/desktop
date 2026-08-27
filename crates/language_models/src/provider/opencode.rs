@@ -74,7 +74,9 @@ fn opencode_external_model_id(model: &opencode::Model) -> String {
 }
 
 fn is_default_api_url(api_url: &str) -> bool {
-    api_url.trim_end_matches('/') == OPENCODE_API_URL.trim_end_matches('/')
+    let normalized = api_url.trim_end_matches('/');
+    let base = OPENCODE_API_URL.trim_end_matches('/');
+    normalized == base || normalized == format!("{base}/v1")
 }
 
 fn is_builtin_public_free_model(model: &opencode::Model) -> bool {
@@ -84,7 +86,7 @@ fn is_builtin_public_free_model(model: &opencode::Model) -> bool {
     )
 }
 
-#[derive(Default, Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct OpenCodeSettings {
     pub api_url: String,
     pub available_models: Vec<AvailableModel>,
@@ -92,6 +94,19 @@ pub struct OpenCodeSettings {
     pub show_zen_models: bool,
     pub show_go_models: bool,
     pub show_free_models: bool,
+}
+
+impl Default for OpenCodeSettings {
+    fn default() -> Self {
+        Self {
+            api_url: String::new(),
+            available_models: Vec::new(),
+            custom_headers: CustomHeaders::default(),
+            show_zen_models: true,
+            show_go_models: true,
+            show_free_models: true,
+        }
+    }
 }
 
 pub struct OpenCodeLanguageModelProvider {
@@ -194,7 +209,7 @@ impl OpenCodeLanguageModelProvider {
     }
 
     fn public_free_mode_enabled(cx: &App) -> bool {
-        Self::subscription_enabled(OpenCodeSubscription::Free, cx) && Self::uses_default_api_url(cx)
+        Self::uses_default_api_url(cx)
     }
 
     fn subscription_available(
@@ -202,12 +217,14 @@ impl OpenCodeLanguageModelProvider {
         has_real_key: bool,
         cx: &App,
     ) -> bool {
+        if subscription == OpenCodeSubscription::Free {
+            return has_real_key || Self::uses_default_api_url(cx);
+        }
         if !Self::subscription_enabled(subscription, cx) {
             return false;
         }
 
         has_real_key
-            || (subscription == OpenCodeSubscription::Free && Self::uses_default_api_url(cx))
     }
 
     fn api_url(cx: &App) -> SharedString {
@@ -339,9 +356,20 @@ impl LanguageModelProvider for OpenCodeLanguageModelProvider {
             }
         }
 
-        models
+        let mut models_vec: Vec<_> = models
             .into_values()
-            .map(|(model, subscription)| self.create_language_model(model, subscription))
+            .map(|(model, subscription)| {
+                let is_free = matches!(model.available_subscriptions(), [OpenCodeSubscription::Free]);
+                (model, subscription, is_free)
+            })
+            .collect();
+        // Sort free models first, then by display name, so Opencode free tier appears at top
+        models_vec.sort_by(|(a_model, _, a_free), (b_model, _, b_free)| {
+            b_free.cmp(a_free).then_with(|| a_model.display_name().cmp(b_model.display_name()))
+        });
+        models_vec
+            .into_iter()
+            .map(|(model, subscription, _)| self.create_language_model(model, subscription))
             .collect()
     }
 
@@ -1121,9 +1149,9 @@ mod tests {
 
         assert_eq!(
             opencode_language_model_id(&model),
-            LanguageModelId::from("mimo-v2.5-free".to_string())
+            LanguageModelId::from("x-preview-f-free".to_string())
         );
-        assert_eq!(opencode_model_registry_key(&model), "mimo-v2.5-free");
+        assert_eq!(opencode_model_registry_key(&model), "x-preview-f-free");
     }
 
     #[test]
@@ -1181,15 +1209,19 @@ mod tests {
             (default_id, default_fast_id, provided_ids)
         });
 
-        assert_eq!(default_id.as_deref(), Some("mimo-v2.5-free"));
+        assert_eq!(default_id.as_deref(), Some("x-preview-f-free"));
         assert_eq!(default_fast_id.as_deref(), Some("deepseek-v4-flash-free"));
         assert_eq!(
             provided_ids,
             [
                 "big-pickle",
                 "deepseek-v4-flash-free",
+                "laguna-s-2.1-free",
                 "mimo-v2.5-free",
+                "muse-spark-1.2-contributor-free",
                 "nemotron-3-ultra-free",
+                "nemotron-3.5-lightning-free",
+                "x-preview-f-free",
             ]
         );
     }

@@ -1,10 +1,9 @@
 import type { NextConfig } from "next";
 
-const isDev = process.env.NODE_ENV === "development";
+const isTauriStaticExport = process.env.TAURI_STATIC_EXPORT === "1";
 
 const nextConfig: NextConfig = {
-  output: "export",
-  ...(isDev ? {} : { assetPrefix: "./" }),
+  ...(isTauriStaticExport ? { output: "export", assetPrefix: "./" } : {}),
   images: {
     unoptimized: true,
   },

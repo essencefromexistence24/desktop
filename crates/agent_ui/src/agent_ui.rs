@@ -571,7 +571,7 @@ pub fn default_agent_icon(id: &str) -> Option<IconName> {
         "codex-acp" => Some(IconName::AiOpenAi),
         "github-copilot-acp" => Some(IconName::Copilot),
         "cursor-acp" => Some(IconName::EditorCursor),
-        "opencode-acp" => Some(IconName::Sparkle),
+        "opencode-acp" => Some(IconName::AiOpenCode),
         _ => None,
     }
 }

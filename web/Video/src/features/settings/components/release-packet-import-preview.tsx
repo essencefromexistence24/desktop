@@ -1,7 +1,10 @@
 import { AlertTriangle, CheckCircle2, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import type { ReleasePacketImportConflictItem, ReleasePacketImportConflictPreview } from "@/lib/product/release-packet-import-conflicts";
+import type {
+  ReleasePacketImportConflictItem,
+  ReleasePacketImportConflictPreview,
+} from "@/lib/product/release-packet-import-conflicts";
 
 interface ReleasePacketImportPreviewProps {
   preview: ReleasePacketImportConflictPreview;
@@ -9,7 +12,11 @@ interface ReleasePacketImportPreviewProps {
   onConfirm: () => void;
 }
 
-export function ReleasePacketImportPreview({ preview, onCancel, onConfirm }: ReleasePacketImportPreviewProps) {
+export function ReleasePacketImportPreview({
+  preview,
+  onCancel,
+  onConfirm,
+}: ReleasePacketImportPreviewProps) {
   const visibleItems = preview.items.filter((item) => item.status !== "same");
 
   return (
@@ -20,11 +27,14 @@ export function ReleasePacketImportPreview({ preview, onCancel, onConfirm }: Rel
           <div>
             <div className="text-sm font-medium">Import conflict preview</div>
             <div className="text-xs text-muted-foreground">
-              {preview.conflictCount} conflicts / {preview.newCount} new / {preview.sameCount} unchanged
+              {preview.conflictCount} conflicts / {preview.newCount} new /{" "}
+              {preview.sameCount} unchanged
             </div>
           </div>
         </div>
-        <Badge variant={preview.status === "conflict" ? "destructive" : "secondary"}>
+        <Badge
+          variant={preview.status === "conflict" ? "destructive" : "secondary"}
+        >
           {preview.status === "conflict" ? "Needs confirmation" : "Clear"}
         </Badge>
       </div>
@@ -47,12 +57,18 @@ export function ReleasePacketImportPreview({ preview, onCancel, onConfirm }: Rel
   );
 }
 
-function ImportConflictRow({ item }: { item: ReleasePacketImportConflictItem }) {
+function ImportConflictRow({
+  item,
+}: {
+  item: ReleasePacketImportConflictItem;
+}) {
   return (
     <div className="rounded-md bg-muted/40 p-2">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="text-xs font-medium">{item.label}</div>
-        <Badge variant={item.status === "conflict" ? "destructive" : "outline"}>{item.status === "conflict" ? "Conflict" : "New"}</Badge>
+        <Badge variant={item.status === "conflict" ? "destructive" : "outline"}>
+          {item.status === "conflict" ? "Conflict" : "New"}
+        </Badge>
       </div>
       <p className="mt-1 text-xs text-muted-foreground">{item.detail}</p>
       <div className="mt-2 grid gap-2 text-xs text-muted-foreground sm:grid-cols-2">

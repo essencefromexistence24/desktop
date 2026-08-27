@@ -2,17 +2,30 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CircleAlert, RefreshCw, ShieldCheck, Trash2, Wrench } from "lucide-react";
+import {
+  CircleAlert,
+  RefreshCw,
+  ShieldCheck,
+  Trash2,
+  Wrench,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LocalMaintenanceHistoryPanel } from "@/features/settings/components/local-maintenance-history-panel";
 import { LocalMaintenanceRecoveryQueue } from "@/features/settings/components/local-maintenance-recovery-queue";
 import { useEditorStore } from "@/features/editor/state/editor-store";
-import { createDesktopLaunchProofSummary, type DesktopLaunchProofSummary } from "@/lib/desktop/desktop-launch-proof";
+import {
+  createDesktopLaunchProofSummary,
+  type DesktopLaunchProofSummary,
+} from "@/lib/desktop/desktop-launch-proof";
 import { loadDesktopVerificationHistory } from "@/lib/desktop/desktop-verification-history";
 import { createMediaHealthReport } from "@/lib/media/media-health";
-import { createLocalMaintenanceReport, type LocalMaintenanceItem, type LocalMaintenanceStatus } from "@/lib/operations/local-maintenance-center";
+import {
+  createLocalMaintenanceReport,
+  type LocalMaintenanceItem,
+  type LocalMaintenanceStatus,
+} from "@/lib/operations/local-maintenance-center";
 import {
   createLocalMaintenanceEvidencePacket,
   downloadLocalMaintenanceEvidencePacket,
@@ -22,7 +35,11 @@ import {
   type LocalMaintenanceHistoryFilter,
 } from "@/lib/operations/local-maintenance-history";
 import { createLocalMaintenanceRecoveryQueue } from "@/lib/operations/local-maintenance-recovery-queue";
-import { createReleaseEvidenceSummary, loadReleaseEvidence, type ReleaseEvidenceSummary } from "@/lib/product/release-evidence";
+import {
+  createReleaseEvidenceSummary,
+  loadReleaseEvidence,
+  type ReleaseEvidenceSummary,
+} from "@/lib/product/release-evidence";
 import {
   clearProjectSyncConflictHistory,
   loadProjectSyncConflictHistory,
@@ -36,13 +53,23 @@ export function LocalMaintenanceCenterCard() {
   const removeMediaAsset = useEditorStore((state) => state.removeMediaAsset);
   const removeExportJob = useEditorStore((state) => state.removeExportJob);
   const updateExportJob = useEditorStore((state) => state.updateExportJob);
-  const [releaseEvidenceSummary, setReleaseEvidenceSummary] = useState<ReleaseEvidenceSummary | null>(null);
-  const [desktopProofSummary, setDesktopProofSummary] = useState<DesktopLaunchProofSummary | null>(null);
-  const [cloudConflicts, setCloudConflicts] = useState<ProjectSyncConflictHistoryEntry[]>([]);
-  const [maintenanceHistory, setMaintenanceHistory] = useState<LocalMaintenanceHistoryEntry[]>([]);
-  const [maintenanceHistoryFilter, setMaintenanceHistoryFilter] = useState<LocalMaintenanceHistoryFilter>("all");
+  const [releaseEvidenceSummary, setReleaseEvidenceSummary] =
+    useState<ReleaseEvidenceSummary | null>(null);
+  const [desktopProofSummary, setDesktopProofSummary] =
+    useState<DesktopLaunchProofSummary | null>(null);
+  const [cloudConflicts, setCloudConflicts] = useState<
+    ProjectSyncConflictHistoryEntry[]
+  >([]);
+  const [maintenanceHistory, setMaintenanceHistory] = useState<
+    LocalMaintenanceHistoryEntry[]
+  >([]);
+  const [maintenanceHistoryFilter, setMaintenanceHistoryFilter] =
+    useState<LocalMaintenanceHistoryFilter>("all");
   const [message, setMessage] = useState("");
-  const mediaHealth = useMemo(() => createMediaHealthReport(project, mediaAssets), [project, mediaAssets]);
+  const mediaHealth = useMemo(
+    () => createMediaHealthReport(project, mediaAssets),
+    [project, mediaAssets],
+  );
   const report = useMemo(
     () =>
       createLocalMaintenanceReport({
@@ -53,7 +80,14 @@ export function LocalMaintenanceCenterCard() {
         desktopProofSummary,
         cloudConflicts,
       }),
-    [cloudConflicts, desktopProofSummary, exportJobs, mediaAssets, project, releaseEvidenceSummary],
+    [
+      cloudConflicts,
+      desktopProofSummary,
+      exportJobs,
+      mediaAssets,
+      project,
+      releaseEvidenceSummary,
+    ],
   );
   const recoveryQueue = useMemo(
     () =>
@@ -67,8 +101,14 @@ export function LocalMaintenanceCenterCard() {
   );
 
   const refreshScan = useCallback((silent = false) => {
-    setReleaseEvidenceSummary(createReleaseEvidenceSummary(loadReleaseEvidence()));
-    setDesktopProofSummary(createDesktopLaunchProofSummary(loadDesktopVerificationHistory()[0] ?? null));
+    setReleaseEvidenceSummary(
+      createReleaseEvidenceSummary(loadReleaseEvidence()),
+    );
+    setDesktopProofSummary(
+      createDesktopLaunchProofSummary(
+        loadDesktopVerificationHistory()[0] ?? null,
+      ),
+    );
     setCloudConflicts(loadProjectSyncConflictHistory());
     setMaintenanceHistory(loadLocalMaintenanceHistory());
     if (!silent) setMessage("Maintenance scan refreshed.");
@@ -79,14 +119,20 @@ export function LocalMaintenanceCenterCard() {
   }, [refreshScan]);
 
   function removeUnusedMedia() {
-    const unusedAssets = mediaHealth.assets.filter((item) => item.linkedLayerCount === 0).map((item) => item.asset);
+    const unusedAssets = mediaHealth.assets
+      .filter((item) => item.linkedLayerCount === 0)
+      .map((item) => item.asset);
     let removedCount = 0;
 
     for (const asset of unusedAssets) {
       if (removeMediaAsset(asset.id).removedAsset) removedCount += 1;
     }
 
-    setMessage(removedCount > 0 ? `${removedCount} unused ${removedCount === 1 ? "asset" : "assets"} removed.` : "No unused media to remove.");
+    setMessage(
+      removedCount > 0
+        ? `${removedCount} unused ${removedCount === 1 ? "asset" : "assets"} removed.`
+        : "No unused media to remove.",
+    );
   }
 
   function clearFailedExports() {
@@ -96,7 +142,11 @@ export function LocalMaintenanceCenterCard() {
       removeExportJob(job.id);
     }
 
-    setMessage(failedJobs.length > 0 ? `${failedJobs.length} failed ${failedJobs.length === 1 ? "export" : "exports"} cleared.` : "No failed exports to clear.");
+    setMessage(
+      failedJobs.length > 0
+        ? `${failedJobs.length} failed ${failedJobs.length === 1 ? "export" : "exports"} cleared.`
+        : "No failed exports to clear.",
+    );
   }
 
   function clearCloudConflicts() {
@@ -108,7 +158,11 @@ export function LocalMaintenanceCenterCard() {
     const failedJobs = exportJobs.filter((job) => job.status === "failed");
 
     for (const job of failedJobs) {
-      updateExportJob(job.id, { status: "queued", progress: 0, error: undefined });
+      updateExportJob(job.id, {
+        status: "queued",
+        progress: 0,
+        error: undefined,
+      });
     }
 
     setMessage(
@@ -119,13 +173,20 @@ export function LocalMaintenanceCenterCard() {
   }
 
   function saveMaintenanceSnapshot() {
-    const packet = createLocalMaintenanceEvidencePacket(project, report, new Date().toISOString(), {
-      mediaAssetCount: mediaAssets.length,
-      exportJobCount: exportJobs.length,
-    });
+    const packet = createLocalMaintenanceEvidencePacket(
+      project,
+      report,
+      new Date().toISOString(),
+      {
+        mediaAssetCount: mediaAssets.length,
+        exportJobCount: exportJobs.length,
+      },
+    );
     const entries = saveLocalMaintenanceHistoryEntry(packet);
     setMaintenanceHistory(entries);
-    setMessage(`Saved ${report.status === "ready" ? "ready" : report.blockedCount > 0 ? "blocked" : "draft"} maintenance snapshot.`);
+    setMessage(
+      `Saved ${report.status === "ready" ? "ready" : report.blockedCount > 0 ? "blocked" : "draft"} maintenance snapshot.`,
+    );
   }
 
   function exportMaintenancePacket() {
@@ -133,7 +194,11 @@ export function LocalMaintenanceCenterCard() {
       mediaAssetCount: mediaAssets.length,
       exportJobCount: exportJobs.length,
     });
-    setMessage(downloaded ? "Maintenance evidence packet exported." : "Maintenance evidence export is unavailable in this runtime.");
+    setMessage(
+      downloaded
+        ? "Maintenance evidence packet exported."
+        : "Maintenance evidence export is unavailable in this runtime.",
+    );
   }
 
   return (
@@ -145,8 +210,15 @@ export function LocalMaintenanceCenterCard() {
             Local maintenance
           </span>
           <span className="flex flex-wrap items-center gap-2">
-            <Badge variant={maintenanceBadgeVariant(report.status)}>{report.score}/100</Badge>
-            <Button type="button" size="sm" variant="outline" onClick={() => refreshScan()}>
+            <Badge variant={maintenanceBadgeVariant(report.status)}>
+              {report.score}/100
+            </Badge>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => refreshScan()}
+            >
               <RefreshCw className="size-4" />
               Scan
             </Button>
@@ -155,25 +227,51 @@ export function LocalMaintenanceCenterCard() {
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-sm text-muted-foreground">
-          {report.status === "ready" ? "Local proof, media, export queue, and sync handoff are clean." : "Resolve local delivery blockers before the next handoff."}
+          {report.status === "ready"
+            ? "Local proof, media, export queue, and sync handoff are clean."
+            : "Resolve local delivery blockers before the next handoff."}
         </p>
-        {message ? <div className="rounded-md border border-border p-2 text-xs text-muted-foreground">{message}</div> : null}
+        {message ? (
+          <div className="rounded-md border border-border p-2 text-xs text-muted-foreground">
+            {message}
+          </div>
+        ) : null}
         <div className="grid gap-2 sm:grid-cols-2">
           {report.items.map((item) => {
             const Icon = item.status === "ready" ? ShieldCheck : CircleAlert;
             return (
-              <div key={item.id} className="rounded-md border border-border p-3">
+              <div
+                key={item.id}
+                className="rounded-md border border-border p-3"
+              >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="flex min-w-0 items-center gap-2">
-                    <Icon className={`size-4 shrink-0 ${item.status === "blocked" ? "text-destructive" : item.status === "attention" ? "text-amber-300" : "text-primary"}`} />
+                    <Icon
+                      className={`size-4 shrink-0 ${item.status === "blocked" ? "text-destructive" : item.status === "attention" ? "text-amber-300" : "text-primary"}`}
+                    />
                     <div className="min-w-0">
-                      <div className="truncate text-sm font-medium">{item.label}</div>
-                      <div className="mt-1 text-xs text-muted-foreground">{item.detail}</div>
+                      <div className="truncate text-sm font-medium">
+                        {item.label}
+                      </div>
+                      <div className="mt-1 text-xs text-muted-foreground">
+                        {item.detail}
+                      </div>
                     </div>
                   </div>
-                  <Badge variant={maintenanceBadgeVariant(item.status)}>{item.count || maintenanceStatusLabel(item.status)}</Badge>
+                  <Badge variant={maintenanceBadgeVariant(item.status)}>
+                    {item.count || maintenanceStatusLabel(item.status)}
+                  </Badge>
                 </div>
-                {item.status !== "ready" ? <div className="mt-3">{maintenanceAction(item, { clearCloudConflicts, clearFailedExports, refreshScan, removeUnusedMedia })}</div> : null}
+                {item.status !== "ready" ? (
+                  <div className="mt-3">
+                    {maintenanceAction(item, {
+                      clearCloudConflicts,
+                      clearFailedExports,
+                      refreshScan,
+                      removeUnusedMedia,
+                    })}
+                  </div>
+                ) : null}
               </div>
             );
           })}
@@ -207,7 +305,12 @@ function maintenanceAction(
 ) {
   if (item.id === "unused-media") {
     return (
-      <Button type="button" size="sm" variant="outline" onClick={actions.removeUnusedMedia}>
+      <Button
+        type="button"
+        size="sm"
+        variant="outline"
+        onClick={actions.removeUnusedMedia}
+      >
         <Trash2 className="size-4" />
         Remove unused
       </Button>
@@ -216,7 +319,12 @@ function maintenanceAction(
 
   if (item.id === "failed-exports") {
     return (
-      <Button type="button" size="sm" variant="outline" onClick={actions.clearFailedExports}>
+      <Button
+        type="button"
+        size="sm"
+        variant="outline"
+        onClick={actions.clearFailedExports}
+      >
         <Trash2 className="size-4" />
         Clear failed
       </Button>
@@ -225,7 +333,12 @@ function maintenanceAction(
 
   if (item.id === "cloud-version-conflicts") {
     return (
-      <Button type="button" size="sm" variant="outline" onClick={actions.clearCloudConflicts}>
+      <Button
+        type="button"
+        size="sm"
+        variant="outline"
+        onClick={actions.clearCloudConflicts}
+      >
         Clear reviewed
       </Button>
     );
@@ -240,7 +353,12 @@ function maintenanceAction(
   }
 
   return (
-    <Button type="button" size="sm" variant="outline" onClick={actions.refreshScan}>
+    <Button
+      type="button"
+      size="sm"
+      variant="outline"
+      onClick={actions.refreshScan}
+    >
       Refresh proof scan
     </Button>
   );

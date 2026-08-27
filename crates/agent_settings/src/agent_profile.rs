@@ -22,12 +22,21 @@ pub mod builtin_profiles {
     pub const SEARCH: &str = "search";
     pub const STUDY: &str = "study";
     pub const LEGACY_MINIMAL: &str = "minimal";
-    // Search, Media, and Study remain defined for compatibility with existing
-    // profile metadata, but only Agents and Ask are enabled in the default UI.
-    pub const DX_PROFILE_ORDER: [&str; 2] = [WRITE, ASK];
+
+    // The 5 primary profiles surfaced in the agent screen / sidebar.
+    pub const PLAN: &str = "plan";
+    pub const BUILD: &str = "build";
+    pub const GOAL: &str = "goal";
+    pub const AUTOMATION: &str = "automation";
+    pub const MULTI: &str = "multi";
+
+    pub const DX_PROFILE_ORDER: [&str; 5] = [PLAN, BUILD, GOAL, AUTOMATION, MULTI];
 
     pub fn is_builtin(profile_id: &AgentProfileId) -> bool {
-        matches!(profile_id.as_str(), WRITE | ASK)
+        matches!(
+            profile_id.as_str(),
+            WRITE | ASK | PLAN | BUILD | GOAL | AUTOMATION | MULTI
+        )
     }
 
     pub fn is_hidden(profile_id: &AgentProfileId) -> bool {
@@ -42,6 +51,11 @@ pub enum DxAiProfileKind {
     Search,
     Study,
     Media,
+    Plan,
+    Build,
+    Goal,
+    Automation,
+    Multi,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -93,19 +107,20 @@ impl AgentProfile {
             return ask_profile;
         }
 
+        // Migrate legacy "write" → "build" when build exists.
+        if profile_id.as_str() == builtin_profiles::WRITE {
+            let build_profile = AgentProfileId(builtin_profiles::BUILD.into());
+            if profiles.contains_key(&build_profile) {
+                return build_profile;
+            }
+        }
+
         if profiles.contains_key(&profile_id) {
             return profile_id;
         }
 
-        let write_profile = AgentProfileId(builtin_profiles::WRITE.into());
-        if profiles.contains_key(&write_profile) {
-            return write_profile;
-        }
-
-        if profiles.contains_key(&ask_profile) {
-            return ask_profile;
-        }
-
+        // Preserve unknown/custom profile ids verbatim so user-defined
+        // profiles and in-flight references survive normalization.
         profile_id
     }
 
@@ -138,6 +153,46 @@ impl AgentProfile {
                 summary: "Runs builder and worker flows for code, tools, goals, plans, and multitask work.",
                 backend_state: DxAiProfileBackendState::Wired,
                 runtime_proof_backend_lane_id: None,
+            }),
+            builtin_profiles::PLAN => Some(DxAiProfileMetadata {
+                id: builtin_profiles::PLAN,
+                kind: DxAiProfileKind::Plan,
+                display_name: "Plan",
+                summary: "Research & structured planning — explores code, asks clarification, and produces a verifiable PLAN.md. No writes without approval.",
+                backend_state: DxAiProfileBackendState::EvidenceBacked,
+                runtime_proof_backend_lane_id: Some("plan-evidence-proof"),
+            }),
+            builtin_profiles::BUILD => Some(DxAiProfileMetadata {
+                id: builtin_profiles::BUILD,
+                kind: DxAiProfileKind::Build,
+                display_name: "Build",
+                summary: "Autonomous execution — builds features end-to-end, runs tools, tests, and previews.",
+                backend_state: DxAiProfileBackendState::Wired,
+                runtime_proof_backend_lane_id: None,
+            }),
+            builtin_profiles::GOAL => Some(DxAiProfileMetadata {
+                id: builtin_profiles::GOAL,
+                kind: DxAiProfileKind::Goal,
+                display_name: "Goal",
+                summary: "Persistent completion contract — runs until verified done, with budget and evidence-based audit. /goal, /goal pause|resume|clear.",
+                backend_state: DxAiProfileBackendState::ReceiptBacked,
+                runtime_proof_backend_lane_id: Some("goal-completion-proof"),
+            }),
+            builtin_profiles::AUTOMATION => Some(DxAiProfileMetadata {
+                id: builtin_profiles::AUTOMATION,
+                kind: DxAiProfileKind::Automation,
+                display_name: "Automation",
+                summary: "Scheduled / periodic runs — spawns a Goal on a timer (cron / interval / webhook).",
+                backend_state: DxAiProfileBackendState::ReceiptBacked,
+                runtime_proof_backend_lane_id: Some("automation-schedule-proof"),
+            }),
+            builtin_profiles::MULTI => Some(DxAiProfileMetadata {
+                id: builtin_profiles::MULTI,
+                kind: DxAiProfileKind::Multi,
+                display_name: "Multi",
+                summary: "Parallel multi-agent orchestration — fans out to specialist subagents, foreground or background.",
+                backend_state: DxAiProfileBackendState::Wired,
+                runtime_proof_backend_lane_id: Some("multi-orchestrator-proof"),
             }),
             builtin_profiles::SEARCH => Some(DxAiProfileMetadata {
                 id: builtin_profiles::SEARCH,
@@ -258,6 +313,28 @@ impl AgentProfile {
                 continue;
             }
             profiles.insert(id.clone(), Self::display_name(id, &profile.name));
+        }
+        profiles
+    }
+
+    /// The profiles surfaced in the composer picker: the 5 primary DX profiles
+    /// (Plan/Build/Goal/Automation/Multi) plus any user-defined ones, ordered by
+    /// `DX_PROFILE_ORDER`. Legacy `write`/`ask` are excluded — they remain valid
+    /// settings for compat but are not selectable.
+    pub fn visible_profiles(cx: &App) -> AvailableProfiles {
+        let all = Self::available_profiles(cx);
+        let mut profiles = AvailableProfiles::default();
+        for id in builtin_profiles::DX_PROFILE_ORDER {
+            let key = AgentProfileId((*id).into());
+            if let Some(entry) = all.iter().find(|(existing, _)| **existing == key) {
+                profiles.insert(key, entry.1.clone());
+            }
+        }
+        for (id, name) in all {
+            if builtin_profiles::is_builtin(&id) {
+                continue;
+            }
+            profiles.insert(id, name);
         }
         profiles
     }

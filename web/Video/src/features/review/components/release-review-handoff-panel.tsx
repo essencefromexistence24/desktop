@@ -3,9 +3,16 @@
 import { ShieldCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { ReleaseReviewHandoffComparison, ReleaseReviewHandoffStatus } from "@/lib/projects/release-review-handoff";
+import type {
+  ReleaseReviewHandoffComparison,
+  ReleaseReviewHandoffStatus,
+} from "@/lib/projects/release-review-handoff";
 
-export function ReleaseReviewHandoffPanel({ comparison }: { comparison: ReleaseReviewHandoffComparison }) {
+export function ReleaseReviewHandoffPanel({
+  comparison,
+}: {
+  comparison: ReleaseReviewHandoffComparison;
+}) {
   return (
     <Card>
       <CardHeader>
@@ -15,7 +22,8 @@ export function ReleaseReviewHandoffPanel({ comparison }: { comparison: ReleaseR
             Release Handoff
           </span>
           <Badge variant={handoffBadgeVariant(comparison.status)}>
-            {comparison.matchCount} match / {comparison.attentionCount} review / {comparison.mismatchCount} mismatch
+            {comparison.matchCount} match / {comparison.attentionCount} review /{" "}
+            {comparison.mismatchCount} mismatch
           </Badge>
         </CardTitle>
       </CardHeader>
@@ -30,9 +38,13 @@ export function ReleaseReviewHandoffPanel({ comparison }: { comparison: ReleaseR
             <div key={item.id} className="rounded-md border border-border p-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="text-sm font-medium">{item.label}</div>
-                <Badge variant={handoffBadgeVariant(item.status)}>{handoffStatusLabel(item.status)}</Badge>
+                <Badge variant={handoffBadgeVariant(item.status)}>
+                  {handoffStatusLabel(item.status)}
+                </Badge>
               </div>
-              <p className="mt-2 text-xs text-muted-foreground">{item.detail}</p>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {item.detail}
+              </p>
             </div>
           ))}
         </div>

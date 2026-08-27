@@ -16,7 +16,10 @@ type CurrentProjectCardProps = {
   canUseOnlineLibrary: boolean;
   isCloudActionPending: boolean;
   isLibraryActionPending: boolean;
-  onCreatePresetProject: (title: string, aspectRatio: string) => void | Promise<void>;
+  onCreatePresetProject: (
+    title: string,
+    aspectRatio: string,
+  ) => void | Promise<void>;
   onSyncCurrentProject: () => void | Promise<void>;
 };
 
@@ -39,11 +42,14 @@ export function CurrentProjectCard({
             <div>
               <h2 className="font-medium">{project.title}</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                {project.layers.length} layers / {project.duration}s / {project.aspectRatio}
+                {project.layers.length} layers / {project.duration}s /{" "}
+                {project.aspectRatio}
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <ProjectReviewBadge summary={createProjectReviewSummary(project)} />
+              <ProjectReviewBadge
+                summary={createProjectReviewSummary(project)}
+              />
               <Badge variant="secondary">Autosaved</Badge>
             </div>
           </div>
@@ -52,7 +58,12 @@ export function CurrentProjectCard({
             <Button asChild size="sm">
               <Link href="/editor">Continue</Link>
             </Button>
-            <Button size="sm" variant="outline" onClick={onSyncCurrentProject} disabled={!canUseOnlineLibrary || isCloudActionPending}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={onSyncCurrentProject}
+              disabled={!canUseOnlineLibrary || isCloudActionPending}
+            >
               <Cloud className="size-4" />
               Sync current
             </Button>
@@ -61,7 +72,9 @@ export function CurrentProjectCard({
                 key={preset.id}
                 size="sm"
                 variant="outline"
-                onClick={() => onCreatePresetProject(`${preset.label} project`, preset.id)}
+                onClick={() =>
+                  onCreatePresetProject(`${preset.label} project`, preset.id)
+                }
                 disabled={isLibraryActionPending}
               >
                 <FolderPlus className="size-4" />

@@ -19,10 +19,16 @@ export function FreezeFramePanel({ onCreate }: FreezeFramePanelProps) {
     try {
       const result = await onCreate();
       if (result.created > 0) {
-        setMessage(`${result.created} freeze frame${result.created === 1 ? "" : "s"} added.`);
+        setMessage(
+          `${result.created} freeze frame${result.created === 1 ? "" : "s"} added.`,
+        );
         return;
       }
-      setMessage(result.skipped > 0 ? "Selected video could not be captured." : "Select a connected video layer.");
+      setMessage(
+        result.skipped > 0
+          ? "Selected video could not be captured."
+          : "Select a connected video layer.",
+      );
     } catch {
       setMessage("Freeze frame could not be created.");
     } finally {
@@ -36,10 +42,17 @@ export function FreezeFramePanel({ onCreate }: FreezeFramePanelProps) {
         <Camera className="size-4 text-muted-foreground" />
         Freeze frame
       </div>
-      <Button className="w-full" variant="outline" onClick={createFreezeFrame} disabled={isCapturing}>
+      <Button
+        className="w-full"
+        variant="outline"
+        onClick={createFreezeFrame}
+        disabled={isCapturing}
+      >
         {isCapturing ? "Capturing..." : "Capture playhead still"}
       </Button>
-      {message ? <p className="text-xs text-muted-foreground">{message}</p> : null}
+      {message ? (
+        <p className="text-xs text-muted-foreground">{message}</p>
+      ) : null}
     </div>
   );
 }

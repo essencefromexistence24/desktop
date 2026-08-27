@@ -7,7 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 
-export function Field({ label, children }: { label: string; children: ReactNode }) {
+export function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: ReactNode;
+}) {
   return (
     <div className="space-y-2">
       <Label className="text-xs text-muted-foreground">{label}</Label>
@@ -40,7 +46,11 @@ export function NumberField({
 
   const commitValue = useCallback(
     (nextValue: number) => {
-      const committedValue = clampInspectorNumber(roundInspectorNumber(nextValue, normalizedStep), min, max);
+      const committedValue = clampInspectorNumber(
+        roundInspectorNumber(nextValue, normalizedStep),
+        min,
+        max,
+      );
       valueRef.current = committedValue;
       onChange(committedValue);
     },
@@ -66,7 +76,11 @@ export function NumberField({
   return (
     <Field label={label}>
       <div className="flex overflow-hidden rounded-md border border-input bg-background">
-        <StepButton label={`Decrease ${label}`} direction={-1} onStep={stepValue} />
+        <StepButton
+          label={`Decrease ${label}`}
+          direction={-1}
+          onStep={stepValue}
+        />
         <Input
           className="h-8 min-w-0 flex-1 rounded-none border-0 text-center font-mono text-xs shadow-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
           type="number"
@@ -76,7 +90,11 @@ export function NumberField({
           max={max}
           onChange={(event) => handleChange(event.target.value)}
         />
-        <StepButton label={`Increase ${label}`} direction={1} onStep={stepValue} />
+        <StepButton
+          label={`Increase ${label}`}
+          direction={1}
+          onStep={stepValue}
+        />
       </div>
     </Field>
   );
@@ -163,13 +181,20 @@ function StepButton({
         }
       }}
     >
-      {direction < 0 ? <Minus className="size-3.5" /> : <Plus className="size-3.5" />}
+      {direction < 0 ? (
+        <Minus className="size-3.5" />
+      ) : (
+        <Plus className="size-3.5" />
+      )}
     </Button>
   );
 }
 
 function roundInspectorNumber(value: number, step: number) {
   if (step >= 1) return Math.round(value);
-  const decimals = Math.min(4, Math.max(1, Math.ceil(Math.abs(Math.log10(step)))));
+  const decimals = Math.min(
+    4,
+    Math.max(1, Math.ceil(Math.abs(Math.log10(step)))),
+  );
   return Number(value.toFixed(decimals));
 }

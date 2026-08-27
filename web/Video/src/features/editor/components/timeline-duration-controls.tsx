@@ -1,9 +1,18 @@
 "use client";
 
-import { AlignHorizontalSpaceBetween, StretchHorizontal, type LucideIcon } from "lucide-react";
+import {
+  AlignHorizontalSpaceBetween,
+  StretchHorizontal,
+  type LucideIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { TimelineDurationDistributionMode } from "@/lib/editor/types";
 
 interface TimelineDurationControlsProps {
@@ -11,12 +20,27 @@ interface TimelineDurationControlsProps {
   onDistribute: (mode: TimelineDurationDistributionMode) => void;
 }
 
-const durationActions: Array<{ mode: TimelineDurationDistributionMode; label: string; Icon: LucideIcon }> = [
-  { mode: "equal", label: "Make selected layer durations equal", Icon: StretchHorizontal },
-  { mode: "fill-selection", label: "Fill selection span with selected layers", Icon: AlignHorizontalSpaceBetween },
+const durationActions: Array<{
+  mode: TimelineDurationDistributionMode;
+  label: string;
+  Icon: LucideIcon;
+}> = [
+  {
+    mode: "equal",
+    label: "Make selected layer durations equal",
+    Icon: StretchHorizontal,
+  },
+  {
+    mode: "fill-selection",
+    label: "Fill selection span with selected layers",
+    Icon: AlignHorizontalSpaceBetween,
+  },
 ];
 
-export function TimelineDurationControls({ disabled, onDistribute }: TimelineDurationControlsProps) {
+export function TimelineDurationControls({
+  disabled,
+  onDistribute,
+}: TimelineDurationControlsProps) {
   return (
     <TooltipProvider>
       <ButtonGroup className="hidden 2xl:flex">

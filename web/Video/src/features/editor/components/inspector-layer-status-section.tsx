@@ -33,25 +33,55 @@ export function InspectorLayerStatusSection({
   return (
     <>
       <div className="grid gap-3">
-        <Toggle label="Locked" icon={<Lock className="size-4" />} checked={layer.locked} onChange={onSetSelectedLayersLocked} />
-        <Toggle label="Hidden" icon={<EyeOff className="size-4" />} checked={layer.hidden} onChange={onSetSelectedLayersHidden} />
-        <Toggle label="Muted" icon={<VolumeX className="size-4" />} checked={layer.muted} onChange={(muted) => onUpdateLayer(layer.id, { muted })} />
+        <Toggle
+          label="Locked"
+          icon={<Lock className="size-4" />}
+          checked={layer.locked}
+          onChange={onSetSelectedLayersLocked}
+        />
+        <Toggle
+          label="Hidden"
+          icon={<EyeOff className="size-4" />}
+          checked={layer.hidden}
+          onChange={onSetSelectedLayersHidden}
+        />
+        <Toggle
+          label="Muted"
+          icon={<VolumeX className="size-4" />}
+          checked={layer.muted}
+          onChange={(muted) => onUpdateLayer(layer.id, { muted })}
+        />
       </div>
       <div className="grid grid-cols-3 gap-2">
-        <Button variant="outline" onClick={onGroupSelectedLayers} disabled={selectedLayers.length < 2}>
+        <Button
+          variant="outline"
+          onClick={onGroupSelectedLayers}
+          disabled={selectedLayers.length < 2}
+        >
           <Group className="size-4" />
           Group
         </Button>
-        <Button variant="outline" onClick={() => layer.groupId && onSelectLayerGroup(layer.groupId)} disabled={!layer.groupId}>
+        <Button
+          variant="outline"
+          onClick={() => layer.groupId && onSelectLayerGroup(layer.groupId)}
+          disabled={!layer.groupId}
+        >
           Select group
         </Button>
-        <Button variant="outline" onClick={onUngroupSelectedLayers} disabled={!selectedHasGroup}>
+        <Button
+          variant="outline"
+          onClick={onUngroupSelectedLayers}
+          disabled={!selectedHasGroup}
+        >
           <Ungroup className="size-4" />
           Ungroup
         </Button>
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <Button variant="outline" onClick={() => onMoveLayerTrack(layer.id, -1)}>
+        <Button
+          variant="outline"
+          onClick={() => onMoveLayerTrack(layer.id, -1)}
+        >
           Track up
         </Button>
         <Button variant="outline" onClick={() => onMoveLayerTrack(layer.id, 1)}>

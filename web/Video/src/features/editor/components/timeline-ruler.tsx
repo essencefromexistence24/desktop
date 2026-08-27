@@ -9,11 +9,18 @@ interface TimelineRulerProps {
   width: number;
 }
 
-export function TimelineRuler({ duration, labelWidth, width }: TimelineRulerProps) {
+export function TimelineRuler({
+  duration,
+  labelWidth,
+  width,
+}: TimelineRulerProps) {
   const ticks = createTimelineRulerTicks(duration, width);
 
   return (
-    <div className="mb-2 grid items-end gap-2" style={{ gridTemplateColumns: `${labelWidth}px ${width}px` }}>
+    <div
+      className="mb-2 grid items-end gap-2"
+      style={{ gridTemplateColumns: `${labelWidth}px ${width}px` }}
+    >
       <div className="pb-1 text-xs text-muted-foreground">Time</div>
       <div className="relative h-8 border-b border-border/80 bg-background/70">
         {ticks.map((tick) => (

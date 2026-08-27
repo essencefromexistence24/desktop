@@ -4,24 +4,42 @@ import { useState } from "react";
 import { Palette, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useEditorStore } from "@/features/editor/state/editor-store";
 import type { TimelineLayer } from "@/lib/editor/types";
 
 export function LayerStylePresetsPanel({ layer }: { layer: TimelineLayer }) {
   const project = useEditorStore((state) => state.project);
-  const saveSelectedLayerStylePreset = useEditorStore((state) => state.saveSelectedLayerStylePreset);
-  const applyLayerStylePreset = useEditorStore((state) => state.applyLayerStylePreset);
-  const removeLayerStylePreset = useEditorStore((state) => state.removeLayerStylePreset);
+  const saveSelectedLayerStylePreset = useEditorStore(
+    (state) => state.saveSelectedLayerStylePreset,
+  );
+  const applyLayerStylePreset = useEditorStore(
+    (state) => state.applyLayerStylePreset,
+  );
+  const removeLayerStylePreset = useEditorStore(
+    (state) => state.removeLayerStylePreset,
+  );
   const presets = project.layerStylePresets ?? [];
   const [presetName, setPresetName] = useState("");
   const [selectedPresetId, setSelectedPresetId] = useState("");
   const [message, setMessage] = useState<string | null>(null);
-  const activePresetId = presets.some((preset) => preset.id === selectedPresetId) ? selectedPresetId : (presets[0]?.id ?? "");
+  const activePresetId = presets.some(
+    (preset) => preset.id === selectedPresetId,
+  )
+    ? selectedPresetId
+    : (presets[0]?.id ?? "");
   const activePreset = presets.find((preset) => preset.id === activePresetId);
 
   function savePreset() {
-    const result = saveSelectedLayerStylePreset(presetName || `${layer.name} style`);
+    const result = saveSelectedLayerStylePreset(
+      presetName || `${layer.name} style`,
+    );
     if (!result.saved) {
       setMessage("Select a layer before saving a style preset.");
       return;
@@ -34,7 +52,11 @@ export function LayerStylePresetsPanel({ layer }: { layer: TimelineLayer }) {
   function applyPreset() {
     if (!activePresetId) return;
     const changedCount = applyLayerStylePreset(activePresetId);
-    setMessage(changedCount > 0 ? `Style applied to ${changedCount} ${changedCount === 1 ? "layer" : "layers"}.` : "No editable selected layers.");
+    setMessage(
+      changedCount > 0
+        ? `Style applied to ${changedCount} ${changedCount === 1 ? "layer" : "layers"}.`
+        : "No editable selected layers.",
+    );
   }
 
   function removePreset() {
@@ -60,7 +82,12 @@ export function LayerStylePresetsPanel({ layer }: { layer: TimelineLayer }) {
             if (event.key === "Enter") savePreset();
           }}
         />
-        <Button size="sm" variant="outline" className="h-8" onClick={savePreset}>
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-8"
+          onClick={savePreset}
+        >
           Save
         </Button>
       </div>
@@ -81,7 +108,13 @@ export function LayerStylePresetsPanel({ layer }: { layer: TimelineLayer }) {
           <Button size="sm" className="h-8" onClick={applyPreset}>
             Apply
           </Button>
-          <Button size="icon" variant="ghost" className="size-8" onClick={removePreset} aria-label="Remove style preset">
+          <Button
+            size="icon"
+            variant="ghost"
+            className="size-8"
+            onClick={removePreset}
+            aria-label="Remove style preset"
+          >
             <Trash2 className="size-4" />
           </Button>
         </div>
@@ -92,13 +125,23 @@ export function LayerStylePresetsPanel({ layer }: { layer: TimelineLayer }) {
       )}
       {activePreset ? (
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="size-4 rounded border border-border" style={{ background: activePreset.style.fill }} />
-          <span className="size-4 rounded border border-border" style={{ background: activePreset.style.background }} />
+          <span
+            className="size-4 rounded border border-border"
+            style={{ background: activePreset.style.fill }}
+          />
+          <span
+            className="size-4 rounded border border-border"
+            style={{ background: activePreset.style.background }}
+          />
           <span>{activePreset.style.fontFamily}</span>
           <span>{activePreset.style.fontSize}px</span>
         </div>
       ) : null}
-      {message ? <div className="rounded-md border border-border p-2 text-xs text-muted-foreground">{message}</div> : null}
+      {message ? (
+        <div className="rounded-md border border-border p-2 text-xs text-muted-foreground">
+          {message}
+        </div>
+      ) : null}
     </div>
   );
 }

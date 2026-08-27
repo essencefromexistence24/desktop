@@ -18,7 +18,7 @@ use std::{cell::RefCell, ops::Range};
 
 use acp_thread::{ContentBlock, PlanEntry, SandboxAuthorizationDetails};
 use agent::{SkillLoadingIssue, SkillLoadingIssueKind, SkillLoadingIssuesUpdated};
-use agent_settings::UserAgentsMd;
+use agent_settings::{AgentProfile, UserAgentsMd};
 use agent_skills::MAX_SKILL_DESCRIPTION_LEN;
 use cloud_api_types::{SubmitAgentThreadFeedbackBody, SubmitAgentThreadFeedbackCommentsBody};
 use editor::actions::OpenExcerpts;
@@ -35,7 +35,7 @@ use language_model::{
 };
 use settings::{update_settings_file, update_settings_file_with_completion};
 use ui::{
-    ButtonLike, CalloutBorderPosition, Chip, SpinnerLabel, SpinnerVariant, SplitButton,
+    ButtonLike, CalloutBorderPosition, Chip, IconButtonShape, SpinnerLabel, SpinnerVariant, SplitButton,
     SplitButtonStyle, Tab,
 };
 use workspace::notifications::NotificationId;
@@ -4304,6 +4304,325 @@ impl ThreadView {
         )
     }
 
+    fn render_review_pill(&self, cx: &mut Context<Self>) -> Option<AnyElement> {
+        if self.is_subagent() {
+            return None;
+        }
+        let changed_buffers = self
+            .thread
+            .read(cx)
+            .action_log()
+            .read(cx)
+            .changed_buffers(cx)
+            .collect::<Vec<_>>();
+        let file_count = changed_buffers.len();
+        let stats = DiffStats::all_files(changed_buffers.iter().cloned(), cx);
+        let has_changes = file_count > 0 || stats.lines_added > 0 || stats.lines_removed > 0;
+        // Don't show in truly empty threads with no changes and no plan
+        let is_empty_thread = self.thread.read(cx).entries().is_empty() && self.thread.read(cx).plan().entries.is_empty();
+        if is_empty_thread && !has_changes {
+            return None;
+        }
+        let profile_stats = self.render_profile_telemetry(cx);
+        let pending_edits = self.thread.read(cx).has_pending_edit_tool_calls();
+        let focus_handle = self.focus_handle(cx);
+        Some(
+            div()
+                .id("agent-review-pill")
+                .w_full()
+                .px_1p5()
+                .py_1()
+                .rounded_md()
+                .border_1()
+                .border_color(cx.theme().colors().border_variant)
+                .bg(cx.theme().colors().surface_background)
+                .child(
+                    h_flex()
+                        .w_full()
+                        .justify_between()
+                        .child(
+                            h_flex()
+                                .gap_2()
+                                .when_some(profile_stats, |this, stats_el| this.child(stats_el))
+                                .child(
+                                    h_flex()
+                                        .id("agent-review-pill-summary")
+                                        .gap_2()
+                                        .cursor_pointer()
+                                        .tooltip(Tooltip::for_action_title(
+                                            "Review changes",
+                                            &OpenAgentDiff,
+                                        ))
+                                        .on_click(cx.listener(|_, _, window, cx| {
+                                            window.dispatch_action(OpenAgentDiff.boxed_clone(), cx);
+                                        }))
+                                        .child(
+                                            div()
+                                                .size_4()
+                                                .flex_none()
+                                                .rounded_full()
+                                                .border_1()
+                                                .border_color(cx.theme().colors().border)
+                                                .bg(cx.theme().colors().element_background)
+                                                .flex()
+                                                .items_center()
+                                                .justify_center()
+                                                .child(
+                                                    Icon::new(IconName::Diff)
+                                                        .size(IconSize::XSmall)
+                                                        .color(Color::Accent),
+                                                ),
+                                        )
+                                        .when(has_changes, |this| {
+                                            this.child(DiffStat::new(
+                                                "review-pill-stats",
+                                                stats.lines_added as usize,
+                                                stats.lines_removed as usize,
+                                            ))
+                                            .child(
+                                                Label::new(if file_count == 1 {
+                                                    format!("{file_count} file")
+                                                } else {
+                                                    format!("{file_count} files")
+                                                })
+                                                .size(LabelSize::Small)
+                                                .color(Color::Muted),
+                                            )
+                                        })
+                                        .when(!has_changes, |this| {
+                                            this.child(
+                                                Label::new("No changes yet")
+                                                    .size(LabelSize::Small)
+                                                    .color(Color::Muted),
+                                            )
+                                        })
+                                        .when(pending_edits, |this| {
+                                            this.child(
+                                                Label::new("Editing...")
+                                                    .size(LabelSize::Small)
+                                                    .color(Color::Muted)
+                                                    .with_animation(
+                                                        "review-pill-editing",
+                                                        Animation::new(Duration::from_secs(2))
+                                                            .repeat()
+                                                            .with_easing(pulsating_between(0.3, 0.7)),
+                                                        |label, delta| label.alpha(delta),
+                                                    ),
+                                            )
+                                        }),
+                                )
+                        )
+                        .child(
+                            h_flex()
+                                .gap_0p5()
+                                .child(
+                                    IconButton::new("review-pill-prev-change", IconName::ArrowUp)
+                                        .icon_size(IconSize::Small)
+                                        .shape(IconButtonShape::Square)
+                                        .disabled(pending_edits)
+                                        .tooltip({
+                                            let focus_handle = focus_handle.clone();
+                                            move |_window, cx| {
+                                                Tooltip::for_action_in(
+                                                    "First message",
+                                                    &ScrollOutputToTop,
+                                                    &focus_handle,
+                                                    cx,
+                                                )
+                                            }
+                                        })
+                                        .on_click(cx.listener(|this, _, window, cx| {
+                                            this.scroll_output_to_top(
+                                                &ScrollOutputToTop,
+                                                window,
+                                                cx,
+                                            );
+                                        })),
+                                )
+                                .child(
+                                    IconButton::new("review-pill-next-change", IconName::ArrowDown)
+                                        .icon_size(IconSize::Small)
+                                        .shape(IconButtonShape::Square)
+                                        .disabled(pending_edits)
+                                        .tooltip({
+                                            let focus_handle = focus_handle.clone();
+                                            move |_window, cx| {
+                                                Tooltip::for_action_in(
+                                                    "Last message",
+                                                    &ScrollOutputToBottom,
+                                                    &focus_handle,
+                                                    cx,
+                                                )
+                                            }
+                                        })
+                                        .on_click(cx.listener(|this, _, window, cx| {
+                                            this.scroll_output_to_bottom(
+                                                &ScrollOutputToBottom,
+                                                window,
+                                                cx,
+                                            );
+                                        })),
+                                ),
+                        ),
+                )
+                .into_any(),
+        )
+    }
+
+    fn render_profile_telemetry(&self, cx: &mut Context<Self>) -> Option<AnyElement> {
+        use agent_settings::{AgentProfile, DxAiProfileKind};
+        use acp_thread::TokenUsageRatio;
+        use chrono::Utc;
+        let profile_id = self.current_mode_id(cx)?.to_string();
+        let profile = AgentProfile::dx_builtin_metadata_for_id(&profile_id)?;
+        let is_goal = matches!(profile.kind, DxAiProfileKind::Goal);
+        let is_automation = matches!(profile.kind, DxAiProfileKind::Automation);
+        let is_multi = matches!(profile.kind, DxAiProfileKind::Multi);
+        if !is_goal && !is_automation && !is_multi {
+            return None;
+        }
+        let dot_divider = || Label::new("•").size(LabelSize::XSmall).color(Color::Disabled);
+        let mut cluster = h_flex().id("agent-profile-telemetry").gap_2();
+        cluster = cluster.child(Label::new(profile.display_name).size(LabelSize::Small).color(Color::Accent));
+        if is_goal || is_automation {
+            let store = ThreadMetadataStore::global(cx);
+            let created_at = store.read(cx).entry(self.root_thread_id).and_then(|meta| meta.created_at);
+            if let Some(created_at) = created_at {
+                let elapsed = Utc::now().signed_duration_since(created_at);
+                let elapsed_label = if elapsed.num_hours() >= 1 {
+                    format!("{}h {}m", elapsed.num_hours(), elapsed.num_minutes() % 60)
+                } else if elapsed.num_minutes() >= 1 {
+                    format!("{}m {}s", elapsed.num_minutes(), elapsed.num_seconds() % 60)
+                } else {
+                    format!("{}s", elapsed.num_seconds())
+                };
+                cluster = cluster.child(dot_divider()).child(
+                    h_flex().gap_1()
+                        .child(Icon::new(IconName::Clock).size(IconSize::XSmall).color(Color::Muted))
+                        .child(Label::new(elapsed_label).size(LabelSize::Small).color(Color::Muted)),
+                );
+            }
+            if let Some(usage) = self.thread.read(cx).token_usage() {
+                let fmt = |n: u64| {
+                    let s = n.to_string();
+                    let mut out = String::new();
+                    for (i, c) in s.chars().enumerate() {
+                        if i > 0 && (s.len() - i) % 3 == 0 { out.push(','); }
+                        out.push(c);
+                    }
+                    out
+                };
+                let used = fmt(usage.used_tokens);
+                cluster = cluster.child(dot_divider()).child(
+                    h_flex().gap_1()
+                        .child(Icon::new(IconName::BoltOutlined).size(IconSize::XSmall).color(if usage.ratio() == TokenUsageRatio::Exceeded { Color::Error } else { Color::Muted }))
+                        .child(Label::new(match usage.max_tokens { 0 => format!("{used} tokens"), max => format!("{used} / {}", fmt(max)) }).size(LabelSize::Small).color(Color::Muted)),
+                );
+            }
+        }
+        if is_multi {
+            let prompts_sent = self.thread.read(cx).entries().iter().filter(|e| matches!(e, AgentThreadEntry::UserMessage(_))).count();
+            cluster = cluster.child(dot_divider()).child(
+                h_flex().gap_1()
+                    .child(Icon::new(IconName::UserGroup).size(IconSize::XSmall).color(Color::Muted))
+                    .child(Label::new(format!("{prompts_sent} prompt{}", if prompts_sent == 1 { "" } else { "s" })).size(LabelSize::Small).color(Color::Muted)),
+            );
+        }
+        if is_automation {
+            let store = ThreadMetadataStore::global(cx);
+            let interacted_at = store.read(cx).entry(self.root_thread_id).and_then(|meta| meta.interacted_at.or(Some(meta.updated_at)));
+            if let Some(last_run) = interacted_at {
+                let elapsed_min = (Utc::now().signed_duration_since(last_run)).num_minutes();
+                cluster = cluster.child(dot_divider()).child(
+                    h_flex().gap_1()
+                        .child(Icon::new(IconName::HistoryRerun).size(IconSize::XSmall).color(Color::Muted))
+                        .child(Label::new(format!("next in {}m (last {}m ago)", elapsed_min.max(0), elapsed_min.max(0))).size(LabelSize::Small).color(Color::Muted)),
+                );
+            }
+        }
+        Some(cluster.into_any())
+    }
+
+    fn render_profile_context_strip(&self, window: &mut Window, cx: &mut Context<Self>) -> Option<AnyElement> {
+        let profile_id = self.current_mode_id(cx)?.to_string();
+        let meta = AgentProfile::dx_builtin_metadata_for_id(&profile_id)?;
+        let is_plan = matches!(meta.kind, agent_settings::DxAiProfileKind::Plan);
+        let is_goal = matches!(meta.kind, agent_settings::DxAiProfileKind::Goal);
+        let is_automation = matches!(meta.kind, agent_settings::DxAiProfileKind::Automation);
+        if !is_plan && !is_goal && !is_automation {
+            return None;
+        }
+        if is_plan {
+            let plan = self.thread.read(cx).plan();
+            let has_plan = !plan.entries.is_empty();
+            return Some(
+                div().id("plan-mode-questions").w_full().rounded_md().border_1().border_color(cx.theme().colors().border_variant).bg(cx.theme().colors().element_background.opacity(0.5)).p_2()
+                    .child(v_flex().gap_1p5()
+                        .child(h_flex().gap_1p5().child(Icon::new(IconName::ListTodo).size(IconSize::Small).color(Color::Accent)).child(Label::new("Plan — open questions").size(LabelSize::Small).color(Color::Default)).child(Label::new(format!("{} steps", plan.entries.len())).size(LabelSize::XSmall).color(Color::Muted)))
+                        .when(has_plan, |this| this.child(v_flex().gap_1().children(plan.entries.iter().enumerate().take(6).map(|(ix, entry)| {
+                            let status_icon = match entry.status {
+                                acp::PlanEntryStatus::Pending => IconName::Circle,
+                                acp::PlanEntryStatus::InProgress => IconName::PlayFilled,
+                                acp::PlanEntryStatus::Completed => IconName::CheckDouble,
+                                _ => IconName::Circle,
+                            };
+                            h_flex().id(("plan-question", ix)).gap_1p5().child(Icon::new(status_icon).size(IconSize::XSmall).color(Color::Muted)).child(Label::new(entry.content.read(cx).source().to_string()).size(LabelSize::Small).color(Color::Muted)).into_any_element()
+                        })).into_any_element()))
+                        .when(!has_plan, |this| this.children(vec![
+                            Label::new("Ask clarifying questions before building. Your answers become the checklist the Build agent will execute.").size(LabelSize::Small).color(Color::Muted).into_any_element(),
+                            Label::new("Try: \"What should the plan cover? What counts as done?\"").size(LabelSize::XSmall).color(Color::Disabled).into_any_element(),
+                        ]))
+                    ).into_any(),
+            );
+        }
+        if is_goal {
+            let thread = self.thread.read(cx);
+            let title = thread.title().as_ref().map(|t| t.to_string()).unwrap_or_else(|| "No goal set — describe the desired end state.".to_string());
+            let entries = thread.entries();
+            let pending = entries.iter().filter(|e| matches!(e, AgentThreadEntry::UserMessage(_))).count();
+            return Some(
+                div().id("goal-mode-details").w_full().rounded_md().border_1().border_color(cx.theme().colors().border_variant).bg(cx.theme().colors().element_background.opacity(0.5)).p_2()
+                    .child(v_flex().gap_1p5()
+                        .child(h_flex().gap_1p5().child(Icon::new(IconName::Crosshair).size(IconSize::Small).color(Color::Accent)).child(Label::new("Goal").size(LabelSize::Small).color(Color::Default)).child(Label::new(format!("{pending} prompts • {} steps", entries.len())).size(LabelSize::XSmall).color(Color::Muted)))
+                        .child(Label::new(title.clone()).size(LabelSize::Small).color(Color::Muted))
+                        .child(Label::new("Verified by: cargo test / build • Constraints: do not regress • /goal pause|resume|clear to control").size(LabelSize::XSmall).color(Color::Disabled))
+                    ).into_any(),
+            );
+        }
+        if is_automation {
+            let site = self.thread.read(cx).work_dirs().and_then(|dirs| dirs.paths().first().map(|p| p.to_string_lossy().to_string())).unwrap_or_else(|| "No site selected".to_string());
+            return Some(
+                div().id("automation-site-setup").w_full().rounded_md().border_1().border_color(cx.theme().colors().border_variant).bg(cx.theme().colors().element_background.opacity(0.5)).p_2()
+                    .child(v_flex().gap_1p5()
+                        .child(h_flex().gap_1p5().child(Icon::new(IconName::Clock).size(IconSize::Small).color(Color::Accent)).child(Label::new("Automation").size(LabelSize::Small).color(Color::Default)).child(Label::new("site + schedule").size(LabelSize::XSmall).color(Color::Muted)))
+                        .child(h_flex().gap_2().child(Label::new("Site:").size(LabelSize::XSmall).color(Color::Muted)).child(Label::new(site).size(LabelSize::Small).color(Color::Default)))
+                        .child(h_flex().gap_1().child(Button::new("automation-open-screen", "Site setup").label_size(LabelSize::Small).on_click({
+                            let workspace = self.workspace.clone();
+                            move |_, window, cx| {
+                                if let Some(ws) = workspace.upgrade() {
+                                    ws.update(cx, |ws, cx| crate::automation_screen::AutomationScreen::open_or_focus(ws, window, cx));
+                                }
+                            }
+                        })).child(Label::new("Configure target URL and how often it runs").size(LabelSize::XSmall).color(Color::Disabled)))
+                    ).into_any(),
+            );
+        }
+        None
+    }
+
+    fn navigate_changes(&mut self, direction: editor::Direction, window: &mut Window, cx: &mut Context<Self>) {
+        let Some(workspace) = self.workspace.upgrade() else { return; };
+        workspace.update(cx, |workspace, cx| {
+            let Some(editor) = workspace.active_item(cx).and_then(|item| item.act_as::<Editor>(cx)) else { return; };
+            editor.update(cx, |editor, cx| {
+                let snapshot = editor.snapshot(window, cx);
+                let position = editor.selections.newest::<Point>(&snapshot.display_snapshot);
+                editor.go_to_hunk_before_or_after_position(&snapshot, position.head(), direction, true, window, cx);
+                editor.expand_selected_diff_hunks(cx);
+            });
+        });
+    }
+
     pub(crate) fn render_message_editor(
         &mut self,
         window: &mut Window,
@@ -4350,17 +4669,18 @@ impl ThreadView {
         // Use the standard border color unconditionally for the outer container frame (inner editor focus uses its own treatment).
         let chat_input_border = border;
 
-        h_flex()
+        v_flex()
             .id("agent-chat-input-lane")
+            .items_center()
+            .gap_2()
             .px_2()
             .pt_0p5()
-            .pb_2()
+            .pb_4()
             .when(overlay_chat_input, |this| {
                 this.absolute().left_0().right_0().bottom_0().occlude()
             })
             .when(!overlay_chat_input, |this| this.bg(panel_background))
             .justify_center()
-            .items_end()
             .map(|this| {
                 if overlay_chat_input {
                     this.on_action(cx.listener(Self::expand_message_editor))
@@ -4369,6 +4689,50 @@ impl ThreadView {
                     this.flex_1().w_full()
                 }
             })
+            .when(self.thread.read(cx).entries().is_empty() && self.thread.read(cx).plan().entries.is_empty(), |this| {
+                let folder = self
+                    .project
+                    .upgrade()
+                    .and_then(|p| {
+                        p.read(cx).visible_worktrees(cx).next().map(|w| {
+                            let abs_path = w.read(cx).abs_path().to_path_buf();
+                            let raw = abs_path
+                                .file_name()
+                                .and_then(|n| n.to_str())
+                                .unwrap_or("this project");
+                            let mut chars = raw.chars();
+                            match chars.next() {
+                                Some(first) => {
+                                    let upper: String = first.to_uppercase().collect();
+                                    format!("{}{}", upper, chars.as_str())
+                                }
+                                None => raw.to_string(),
+                            }
+                        })
+                    })
+                    .unwrap_or_else(|| "This project".to_string());
+                this.child(
+                    div()
+                        .w_full()
+                        .max_w(rems(48.))
+                        .flex()
+                        .justify_center()
+                        .child(
+                            div()
+                                .text_size(rems(1.9))
+                                .font_weight(gpui::FontWeight::BOLD)
+                                .line_height(rems(2.1))
+                                .child(format!("What you want to build in {}?", folder)),
+                        ),
+                )
+            })
+            .child(
+                h_flex()
+                    .w_full()
+                    .max_w(rems(28.))
+                    .justify_center()
+                    .children(self.render_review_pill(cx))
+            )
             .child(
                 v_flex()
                     .id("agent-liquid-glass-chat-input-container")
@@ -4380,11 +4744,7 @@ impl ThreadView {
                     .rounded_md()
                     .border_1()
                     .border_color(chat_input_border)
-                    .bg(if uses_liquid_glass {
-                        panel_background.opacity(0.08)
-                    } else {
-                        panel_background.opacity(0.72)
-                    })
+                    .bg(panel_background)
                     .p_1p5()
                     .shadow_sm()
                     .flex_shrink_1()
@@ -4512,6 +4872,7 @@ impl ThreadView {
                                                 .items_center()
                                                 .child(self.render_add_context_button(cx))
                                                 .children(self.profile_selector.clone())
+                                                .child(self.render_permission_selector(cx))
                                                 // Temporarily hidden; keep the profile option slots and handlers intact.
                                                 // .children(self.render_profile_option_slots(cx))
                                                 .child(div().h_5().child(
@@ -4797,6 +5158,41 @@ impl ThreadView {
         message_editor.update(cx, |editor, cx| {
             editor.insert_text(&prompt, window, cx);
         });
+    }
+
+    fn render_permission_selector(&self, cx: &mut Context<Self>) -> AnyElement {
+        let current_mode = "Full access";
+        PopoverMenu::new("permission-selector")
+            .trigger_with_tooltip(
+                Button::new("permission-selector-trigger", current_mode)
+                    .label_size(LabelSize::Small)
+                    .start_icon(Icon::new(IconName::Settings).size(IconSize::XSmall))
+                    .color(Color::Muted),
+                Tooltip::text("Tool permissions"),
+            )
+            .anchor(gpui::Anchor::BottomLeft)
+            .menu(move |window, cx| {
+                Some(ContextMenu::build(window, cx, |mut menu, _window, _cx| {
+                    menu = menu.header("Permissions");
+                    menu = menu.item(
+                        ContextMenuEntry::new("Ask for approval")
+                            .icon(IconName::Eye)
+                            .handler(|_, _| {}),
+                    );
+                    menu = menu.item(
+                        ContextMenuEntry::new("Approve for me")
+                            .icon(IconName::Check)
+                            .handler(|_, _| {}),
+                    );
+                    menu = menu.item(
+                        ContextMenuEntry::new("Full access")
+                            .icon(IconName::Settings)
+                            .handler(|_, _| {}),
+                    );
+                    menu
+                }))
+            })
+            .into_any_element()
     }
 
     fn render_profile_option_slots(&self, cx: &mut Context<Self>) -> Vec<AnyElement> {
@@ -12935,8 +13331,24 @@ pub(crate) fn open_link(
                 };
 
                 workspace
-                    .open_path(path, None, true, window, cx)
+                    .open_path(path.clone(), None, true, window, cx)
                     .detach_and_log_err(cx);
+                // Ensure code screen is visible on the right per screen-system
+                {
+                    if let Some(agent_pane) = workspace.pane_for_screen_kind(workspace::WorkspaceScreenKind::Agent, cx) {
+                        if let Some(item) = workspace.active_item(cx) {
+                            if item.screen_kind(cx) == workspace::WorkspaceScreenKind::Agent {
+                                let has_code_pane = workspace.panes().iter().any(|pane| {
+                                    pane != &agent_pane
+                                        && pane.read(cx).items().any(|item| item.screen_kind(cx) == workspace::WorkspaceScreenKind::Editor)
+                                });
+                                if !has_code_pane {
+                                    workspace.split_and_move(agent_pane.clone(), workspace::pane_group::SplitDirection::Right, window, cx);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             MentionUri::PastedImage { .. } => {}
             MentionUri::Directory { abs_path } => {

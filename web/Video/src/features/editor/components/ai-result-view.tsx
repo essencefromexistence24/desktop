@@ -5,8 +5,15 @@ import { Captions, Check, ImageIcon, Scissors, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MessageResponse } from "@/components/ai-elements/message";
-import { AiBrollReview, type BrollInsertSummary } from "@/features/editor/components/ai-broll-review";
-import { AiVideoProjectReview, type VideoProjectSaveOptions, type VideoProjectSaveSummary } from "@/features/editor/components/ai-video-project-review";
+import {
+  AiBrollReview,
+  type BrollInsertSummary,
+} from "@/features/editor/components/ai-broll-review";
+import {
+  AiVideoProjectReview,
+  type VideoProjectSaveOptions,
+  type VideoProjectSaveSummary,
+} from "@/features/editor/components/ai-video-project-review";
 import {
   isBrollOutput,
   isCaptionOutputLike,
@@ -29,7 +36,11 @@ import {
 } from "@/features/editor/components/ai-result-types";
 import { formatTime } from "@/lib/editor/factory";
 import { imageDataUrl } from "@/lib/media/base64-image";
-import { downloadTextFile, formatSrt, formatVtt } from "@/lib/subtitles/srt-vtt";
+import {
+  downloadTextFile,
+  formatSrt,
+  formatVtt,
+} from "@/lib/subtitles/srt-vtt";
 
 export function AiResultView({
   result,
@@ -43,10 +54,17 @@ export function AiResultView({
 }: {
   result: AiResult;
   onApplyCaptions: (captions: CaptionChunk[]) => void;
-  onInsertBroll?: (suggestions: BrollSuggestion[]) => Promise<BrollInsertSummary>;
-  onSaveVideoProject?: (output: VideoProjectOutput, options?: VideoProjectSaveOptions) => Promise<VideoProjectSaveSummary>;
+  onInsertBroll?: (
+    suggestions: BrollSuggestion[],
+  ) => Promise<BrollInsertSummary>;
+  onSaveVideoProject?: (
+    output: VideoProjectOutput,
+    options?: VideoProjectSaveOptions,
+  ) => Promise<VideoProjectSaveSummary>;
   onApplySmartCuts?: (cuts: SmartCutSuggestion[]) => AppliedSmartCutSummary;
-  onSaveClipVariants?: (clips: RepurposeClipSuggestion[]) => Promise<ClipVariantSaveSummary>;
+  onSaveClipVariants?: (
+    clips: RepurposeClipSuggestion[],
+  ) => Promise<ClipVariantSaveSummary>;
   sceneVideoConfigured?: boolean;
   sceneVideoStatusLabel?: string;
 }) {
@@ -60,7 +78,10 @@ export function AiResultView({
         </ResultBlock>
         {arrayValue(output, "scenes").map((scene, index) =>
           isRecord(scene) ? (
-            <ResultBlock key={index} title={stringValue(scene, "label") || `Scene ${index + 1}`}>
+            <ResultBlock
+              key={index}
+              title={stringValue(scene, "label") || `Scene ${index + 1}`}
+            >
               <MessageResponse>
                 {[
                   `${numberValue(scene, "seconds")}s`,
@@ -75,13 +96,18 @@ export function AiResultView({
           ) : null,
         )}
         <ResultBlock title="Call to action">
-          <MessageResponse>{stringValue(output, "callToAction")}</MessageResponse>
+          <MessageResponse>
+            {stringValue(output, "callToAction")}
+          </MessageResponse>
         </ResultBlock>
       </ResultStack>
     );
   }
 
-  if ((result.action === "captions" || result.action === "transcript-cleanup") && isCaptionOutputLike(output)) {
+  if (
+    (result.action === "captions" || result.action === "transcript-cleanup") &&
+    isCaptionOutputLike(output)
+  ) {
     const captions = output.captions ?? output.captionChunks;
 
     return (
@@ -96,13 +122,20 @@ export function AiResultView({
             <MessageResponse>{output.summary}</MessageResponse>
           </ResultBlock>
         ) : null}
-        <Button size="sm" variant="outline" onClick={() => onApplyCaptions(captions)}>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => onApplyCaptions(captions)}
+        >
           <Captions className="size-4" />
           Add captions
         </Button>
         <div className="space-y-2">
           {captions.map((caption, index) => (
-            <ResultBlock key={index} title={`${formatTime(caption.start)} - ${formatTime(caption.end)}`}>
+            <ResultBlock
+              key={index}
+              title={`${formatTime(caption.start)} - ${formatTime(caption.end)}`}
+            >
               <MessageResponse>{caption.text}</MessageResponse>
             </ResultBlock>
           ))}
@@ -112,7 +145,9 @@ export function AiResultView({
   }
 
   if (result.action === "smart-cut" && isSmartCutOutput(output)) {
-    return <SmartCutReview output={output} onApplySmartCuts={onApplySmartCuts} />;
+    return (
+      <SmartCutReview output={output} onApplySmartCuts={onApplySmartCuts} />
+    );
   }
 
   if (result.action === "b-roll" && isBrollOutput(output)) {
@@ -135,8 +170,14 @@ export function AiResultView({
       <ResultStack>
         <ResultBlock title="Applied subtitle style">
           <div className="mb-3 flex items-center gap-2">
-            <span className="h-6 w-10 rounded-sm border border-border" style={{ background: output.style.fill }} />
-            <span className="h-6 w-10 rounded-sm border border-border" style={{ background: output.style.background }} />
+            <span
+              className="h-6 w-10 rounded-sm border border-border"
+              style={{ background: output.style.fill }}
+            />
+            <span
+              className="h-6 w-10 rounded-sm border border-border"
+              style={{ background: output.style.background }}
+            />
             <Badge variant="secondary">{output.style.fontSize}px</Badge>
             <Badge variant="secondary">{output.style.fontWeight}</Badge>
           </div>
@@ -151,12 +192,21 @@ export function AiResultView({
     );
   }
 
-  if (result.action === "subtitle-translation" && isSubtitleTranslationOutput(output)) {
+  if (
+    result.action === "subtitle-translation" &&
+    isSubtitleTranslationOutput(output)
+  ) {
     return (
       <ResultStack>
-        <ResultBlock title={`${output.sourceLanguage} to ${output.targetLanguage}`}>
+        <ResultBlock
+          title={`${output.sourceLanguage} to ${output.targetLanguage}`}
+        >
           <div className="flex flex-wrap gap-2">
-            <Button size="sm" variant="outline" onClick={() => onApplyCaptions(output.translatedCaptions)}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => onApplyCaptions(output.translatedCaptions)}
+            >
               <Captions className="size-4" />
               Add translated captions
             </Button>
@@ -164,7 +214,11 @@ export function AiResultView({
               size="sm"
               variant="outline"
               onClick={() =>
-                downloadTextFile(`translated-${output.targetLanguage}.srt`, formatSrt(captionChunksForExport(output.translatedCaptions)), "application/x-subrip")
+                downloadTextFile(
+                  `translated-${output.targetLanguage}.srt`,
+                  formatSrt(captionChunksForExport(output.translatedCaptions)),
+                  "application/x-subrip",
+                )
               }
             >
               SRT
@@ -172,7 +226,13 @@ export function AiResultView({
             <Button
               size="sm"
               variant="outline"
-              onClick={() => downloadTextFile(`translated-${output.targetLanguage}.vtt`, formatVtt(captionChunksForExport(output.translatedCaptions)), "text/vtt")}
+              onClick={() =>
+                downloadTextFile(
+                  `translated-${output.targetLanguage}.vtt`,
+                  formatVtt(captionChunksForExport(output.translatedCaptions)),
+                  "text/vtt",
+                )
+              }
             >
               VTT
             </Button>
@@ -185,7 +245,10 @@ export function AiResultView({
         ) : null}
         <div className="space-y-2">
           {output.translatedCaptions.map((caption, index) => (
-            <ResultBlock key={index} title={`${formatTime(caption.start)} - ${formatTime(caption.end)}`}>
+            <ResultBlock
+              key={index}
+              title={`${formatTime(caption.start)} - ${formatTime(caption.end)}`}
+            >
               <MessageResponse>{caption.text}</MessageResponse>
             </ResultBlock>
           ))}
@@ -194,7 +257,10 @@ export function AiResultView({
     );
   }
 
-  if ((result.action === "image" || result.action === "image-edit") && isGeneratedImageOutput(output)) {
+  if (
+    (result.action === "image" || result.action === "image-edit") &&
+    isGeneratedImageOutput(output)
+  ) {
     return (
       <ResultStack>
         {output.images.map((image) => (
@@ -202,13 +268,21 @@ export function AiResultView({
             <div className="space-y-3">
               <div className="overflow-hidden rounded-md border border-border bg-muted">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={imageSource(image)} alt={image.prompt} className="max-h-64 w-full object-contain" />
+                <img
+                  src={imageSource(image)}
+                  alt={image.prompt}
+                  className="max-h-64 w-full object-contain"
+                />
               </div>
               <div className="flex flex-wrap gap-2">
                 <Badge variant="secondary">{image.mediaType}</Badge>
                 <Badge variant="outline">{image.model}</Badge>
-                {image.editMode ? <Badge variant="outline">{image.editMode}</Badge> : null}
-                {image.sourceImageName ? <Badge variant="secondary">{image.sourceImageName}</Badge> : null}
+                {image.editMode ? (
+                  <Badge variant="outline">{image.editMode}</Badge>
+                ) : null}
+                {image.sourceImageName ? (
+                  <Badge variant="secondary">{image.sourceImageName}</Badge>
+                ) : null}
               </div>
               <MessageResponse>{image.prompt}</MessageResponse>
             </div>
@@ -228,7 +302,12 @@ export function AiResultView({
   }
 
   if (result.action === "repurpose" && isRepurposeOutput(output)) {
-    return <RepurposeClipVariantReview output={output} onSaveClipVariants={onSaveClipVariants} />;
+    return (
+      <RepurposeClipVariantReview
+        output={output}
+        onSaveClipVariants={onSaveClipVariants}
+      />
+    );
   }
 
   if (result.action === "edit-plan" && isRecord(output)) {
@@ -239,9 +318,17 @@ export function AiResultView({
         </ResultBlock>
         {arrayValue(output, "steps").map((step, index) =>
           isRecord(step) ? (
-            <ResultBlock key={index} title={`${index + 1}. ${stringValue(step, "tool")}`}>
+            <ResultBlock
+              key={index}
+              title={`${index + 1}. ${stringValue(step, "tool")}`}
+            >
               <MessageResponse>
-                {[stringValue(step, "instruction"), step.targetTime === null ? null : `Target: ${formatTime(numberValue(step, "targetTime"))}`]
+                {[
+                  stringValue(step, "instruction"),
+                  step.targetTime === null
+                    ? null
+                    : `Target: ${formatTime(numberValue(step, "targetTime"))}`,
+                ]
                   .filter(Boolean)
                   .join("\n\n")}
               </MessageResponse>
@@ -249,7 +336,9 @@ export function AiResultView({
           ) : null,
         )}
         <ResultBlock title="Export preset">
-          <MessageResponse>{stringValue(output, "exportPreset")}</MessageResponse>
+          <MessageResponse>
+            {stringValue(output, "exportPreset")}
+          </MessageResponse>
         </ResultBlock>
       </ResultStack>
     );
@@ -279,7 +368,9 @@ function RepurposeClipVariantReview({
   onSaveClipVariants,
 }: {
   output: RepurposeOutput;
-  onSaveClipVariants?: (clips: RepurposeClipSuggestion[]) => Promise<ClipVariantSaveSummary>;
+  onSaveClipVariants?: (
+    clips: RepurposeClipSuggestion[],
+  ) => Promise<ClipVariantSaveSummary>;
 }) {
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
@@ -304,18 +395,31 @@ function RepurposeClipVariantReview({
       <ResultBlock title="Clip variants">
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="secondary">{output.clips.length} suggested</Badge>
-          <Button size="sm" onClick={() => void saveClipVariants()} disabled={!onSaveClipVariants || isSaving || output.clips.length === 0}>
+          <Button
+            size="sm"
+            onClick={() => void saveClipVariants()}
+            disabled={
+              !onSaveClipVariants || isSaving || output.clips.length === 0
+            }
+          >
             {isSaving ? "Saving..." : "Save clip variants"}
           </Button>
         </div>
-        {saveMessage ? <p className="mt-2 text-xs text-muted-foreground">{saveMessage}</p> : null}
+        {saveMessage ? (
+          <p className="mt-2 text-xs text-muted-foreground">{saveMessage}</p>
+        ) : null}
       </ResultBlock>
       {output.clips.map((clip, index) => (
-        <ResultBlock key={`${clip.title}-${clip.start}-${clip.end}-${index}`} title={`${clip.title} | ${formatTime(clip.start)} - ${formatTime(clip.end)}`}>
+        <ResultBlock
+          key={`${clip.title}-${clip.start}-${clip.end}-${index}`}
+          title={`${clip.title} | ${formatTime(clip.start)} - ${formatTime(clip.end)}`}
+        >
           <div className="mb-2">
             <Badge variant="outline">{clip.platform}</Badge>
           </div>
-          <MessageResponse>{[clip.caption, ...clip.editNotes].join("\n\n")}</MessageResponse>
+          <MessageResponse>
+            {[clip.caption, ...clip.editNotes].join("\n\n")}
+          </MessageResponse>
         </ResultBlock>
       ))}
     </ResultStack>
@@ -341,7 +445,11 @@ function SmartCutReview({
     [decisions, output.cuts],
   );
 
-  function setAccepted(cut: SmartCutSuggestion, index: number, accepted: boolean) {
+  function setAccepted(
+    cut: SmartCutSuggestion,
+    index: number,
+    accepted: boolean,
+  ) {
     setApplyMessage(null);
     setDecisions((current) => ({
       ...current,
@@ -365,29 +473,54 @@ function SmartCutReview({
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="secondary">{acceptedCuts.length} accepted</Badge>
           <Badge variant="outline">{output.cuts.length} suggested</Badge>
-          <Button size="sm" onClick={applyAcceptedCuts} disabled={!onApplySmartCuts || acceptedCuts.length === 0}>
+          <Button
+            size="sm"
+            onClick={applyAcceptedCuts}
+            disabled={!onApplySmartCuts || acceptedCuts.length === 0}
+          >
             <Scissors className="size-4" />
             Apply accepted cuts
           </Button>
         </div>
-        {applyMessage ? <p className="mt-2 text-xs text-muted-foreground">{applyMessage}</p> : null}
+        {applyMessage ? (
+          <p className="mt-2 text-xs text-muted-foreground">{applyMessage}</p>
+        ) : null}
       </ResultBlock>
       {output.cuts.map((cut, index) => {
-        const accepted = decisions[smartCutDecisionId(cut, index)] ?? defaultSmartCutAccepted(cut);
+        const accepted =
+          decisions[smartCutDecisionId(cut, index)] ??
+          defaultSmartCutAccepted(cut);
         const canCutTimeline = isTimelineCutAction(cut);
 
         return (
-          <ResultBlock key={smartCutDecisionId(cut, index)} title={`${cut.suggestedAction} | ${formatTime(cut.start)} - ${formatTime(cut.end)}`}>
+          <ResultBlock
+            key={smartCutDecisionId(cut, index)}
+            title={`${cut.suggestedAction} | ${formatTime(cut.start)} - ${formatTime(cut.end)}`}
+          >
             <div className="mb-2 flex flex-wrap items-center gap-2">
-              <Badge variant={cut.priority === "high" ? "default" : "secondary"}>{cut.priority}</Badge>
-              <Badge variant={canCutTimeline ? "outline" : "secondary"}>{canCutTimeline ? "timeline cut" : "review note"}</Badge>
+              <Badge
+                variant={cut.priority === "high" ? "default" : "secondary"}
+              >
+                {cut.priority}
+              </Badge>
+              <Badge variant={canCutTimeline ? "outline" : "secondary"}>
+                {canCutTimeline ? "timeline cut" : "review note"}
+              </Badge>
               {canCutTimeline ? (
                 <div className="ml-auto flex gap-1">
-                  <Button size="sm" variant={accepted ? "default" : "outline"} onClick={() => setAccepted(cut, index, true)}>
+                  <Button
+                    size="sm"
+                    variant={accepted ? "default" : "outline"}
+                    onClick={() => setAccepted(cut, index, true)}
+                  >
                     <Check className="size-4" />
                     Accept
                   </Button>
-                  <Button size="sm" variant={accepted ? "outline" : "secondary"} onClick={() => setAccepted(cut, index, false)}>
+                  <Button
+                    size="sm"
+                    variant={accepted ? "outline" : "secondary"}
+                    onClick={() => setAccepted(cut, index, false)}
+                  >
                     <X className="size-4" />
                     Skip
                   </Button>
@@ -406,10 +539,18 @@ function ResultStack({ children }: { children: ReactNode }) {
   return <div className="space-y-3">{children}</div>;
 }
 
-function ResultBlock({ title, children }: { title: string; children: ReactNode }) {
+function ResultBlock({
+  title,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+}) {
   return (
     <div className="rounded-md border border-border bg-background p-3 text-sm">
-      <div className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">{title || "Result"}</div>
+      <div className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        {title || "Result"}
+      </div>
       <div className="text-foreground">{children}</div>
     </div>
   );
@@ -430,7 +571,11 @@ function numberValue(value: Record<string, unknown>, key: string) {
 }
 
 function isTimelineCutAction(cut: SmartCutSuggestion) {
-  return cut.suggestedAction === "remove" || cut.suggestedAction === "trim" || cut.suggestedAction === "split";
+  return (
+    cut.suggestedAction === "remove" ||
+    cut.suggestedAction === "trim" ||
+    cut.suggestedAction === "split"
+  );
 }
 
 function defaultSmartCutAccepted(cut: SmartCutSuggestion) {
@@ -442,8 +587,10 @@ function smartCutDecisionId(cut: SmartCutSuggestion, index: number) {
 }
 
 function smartCutApplyMessage(summary: AppliedSmartCutSummary) {
-  if (summary.rangeCount === 0) return "No accepted timeline cuts were applied.";
-  if (summary.changedLayerCount === 0) return `${summary.rangeCount} cut range${summary.rangeCount === 1 ? "" : "s"} reviewed; no editable layers crossed those ranges.`;
+  if (summary.rangeCount === 0)
+    return "No accepted timeline cuts were applied.";
+  if (summary.changedLayerCount === 0)
+    return `${summary.rangeCount} cut range${summary.rangeCount === 1 ? "" : "s"} reviewed; no editable layers crossed those ranges.`;
 
   return `${summary.rangeCount} cut range${summary.rangeCount === 1 ? "" : "s"} applied across ${summary.changedLayerCount} layer${
     summary.changedLayerCount === 1 ? "" : "s"
@@ -453,7 +600,10 @@ function smartCutApplyMessage(summary: AppliedSmartCutSummary) {
 function clipVariantSaveMessage(summary: ClipVariantSaveSummary) {
   if (summary.savedCount === 0) return "No valid clip variants were saved.";
 
-  const skipped = summary.skippedCount > 0 ? ` ${summary.skippedCount} invalid clip${summary.skippedCount === 1 ? "" : "s"} skipped.` : "";
+  const skipped =
+    summary.skippedCount > 0
+      ? ` ${summary.skippedCount} invalid clip${summary.skippedCount === 1 ? "" : "s"} skipped.`
+      : "";
   return `${summary.savedCount} clip variant${summary.savedCount === 1 ? "" : "s"} saved locally.${skipped}`;
 }
 

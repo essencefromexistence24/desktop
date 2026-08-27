@@ -6,7 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import type { TimelineLayer } from "@/lib/editor/types";
-import { MAX_PLAYBACK_RATE, MIN_PLAYBACK_RATE, normalizeLayerSpeed } from "@/lib/editor/speed";
+import {
+  MAX_PLAYBACK_RATE,
+  MIN_PLAYBACK_RATE,
+  normalizeLayerSpeed,
+} from "@/lib/editor/speed";
 import { TIMELINE_MIN_LAYER_SECONDS } from "@/lib/editor/timeline";
 import { NumberField } from "@/features/editor/components/inspector-fields";
 
@@ -29,22 +33,37 @@ export function InspectorTimingSection({
   onUpdateLayer,
   onUpdateSelectionBounds,
 }: InspectorTimingSectionProps) {
-  const selectionBounds = getSelectionBounds(selectedLayers.filter((item) => !item.locked));
+  const selectionBounds = getSelectionBounds(
+    selectedLayers.filter((item) => !item.locked),
+  );
 
   return (
     <>
       {selectedLayers.length > 1 && selectionBounds ? (
-        <SelectionTimingEditor bounds={selectionBounds} onChange={onUpdateSelectionBounds} />
+        <SelectionTimingEditor
+          bounds={selectionBounds}
+          onChange={onUpdateSelectionBounds}
+        />
       ) : null}
       <div className="grid grid-cols-2 gap-3">
-        <NumberField label="Start" value={layer.start} min={0} onChange={(start) => onUpdateLayer(layer.id, { start })} />
+        <NumberField
+          label="Start"
+          value={layer.start}
+          min={0}
+          onChange={(start) => onUpdateLayer(layer.id, { start })}
+        />
         <NumberField
           label="Duration"
           value={layer.duration}
           min={TIMELINE_MIN_LAYER_SECONDS}
           onChange={(duration) => onUpdateLayer(layer.id, { duration })}
         />
-        <NumberField label="Trim" value={layer.trimStart} min={0} onChange={(trimStart) => onUpdateLayer(layer.id, { trimStart })} />
+        <NumberField
+          label="Trim"
+          value={layer.trimStart}
+          min={0}
+          onChange={(trimStart) => onUpdateLayer(layer.id, { trimStart })}
+        />
         <NumberField
           label="Speed"
           value={layer.playbackRate}
@@ -58,7 +77,9 @@ export function InspectorTimingSection({
           }
         />
       </div>
-      {isSpeedEditableLayer(layer) ? <MediaSpeedEditor layer={layer} onUpdateLayer={onUpdateLayer} /> : null}
+      {isSpeedEditableLayer(layer) ? (
+        <MediaSpeedEditor layer={layer} onUpdateLayer={onUpdateLayer} />
+      ) : null}
     </>
   );
 }
@@ -192,7 +213,12 @@ function SelectionTimingEditor({
 }) {
   return (
     <div className="grid grid-cols-3 gap-3 rounded-md border border-border p-2">
-      <NumberField label="Selection start" value={roundInspectorNumber(bounds.start)} min={0} onChange={(start) => onChange({ start })} />
+      <NumberField
+        label="Selection start"
+        value={roundInspectorNumber(bounds.start)}
+        min={0}
+        onChange={(start) => onChange({ start })}
+      />
       <NumberField
         label="Selection end"
         value={roundInspectorNumber(bounds.end)}
@@ -214,7 +240,11 @@ function getSelectionBounds(layers: TimelineLayer[]) {
 
   const start = Math.min(...layers.map((layer) => layer.start));
   const end = Math.max(...layers.map((layer) => layer.start + layer.duration));
-  return { start, end, duration: Math.max(TIMELINE_MIN_LAYER_SECONDS, end - start) };
+  return {
+    start,
+    end,
+    duration: Math.max(TIMELINE_MIN_LAYER_SECONDS, end - start),
+  };
 }
 
 function roundInspectorNumber(value: number) {

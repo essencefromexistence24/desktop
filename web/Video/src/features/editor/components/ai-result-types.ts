@@ -106,11 +106,15 @@ export interface RepurposeOutput {
   clips: RepurposeClipSuggestion[];
 }
 
-export function isCaptionOutput(value: unknown): value is { captions: CaptionChunk[] } {
+export function isCaptionOutput(
+  value: unknown,
+): value is { captions: CaptionChunk[] } {
   return isRecord(value) && isCaptionArray(value.captions);
 }
 
-export function isSubtitleStyleOutput(value: unknown): value is SubtitleStyleOutput {
+export function isSubtitleStyleOutput(
+  value: unknown,
+): value is SubtitleStyleOutput {
   if (!isRecord(value) || !isRecord(value.style)) return false;
 
   return (
@@ -124,7 +128,9 @@ export function isSubtitleStyleOutput(value: unknown): value is SubtitleStyleOut
   );
 }
 
-export function isSubtitleTranslationOutput(value: unknown): value is SubtitleTranslationOutput {
+export function isSubtitleTranslationOutput(
+  value: unknown,
+): value is SubtitleTranslationOutput {
   return (
     isRecord(value) &&
     typeof value.sourceLanguage === "string" &&
@@ -137,7 +143,9 @@ export function isSubtitleTranslationOutput(value: unknown): value is SubtitleTr
   );
 }
 
-export function isGeneratedImageOutput(value: unknown): value is GeneratedImageOutput {
+export function isGeneratedImageOutput(
+  value: unknown,
+): value is GeneratedImageOutput {
   return (
     isRecord(value) &&
     Array.isArray(value.images) &&
@@ -156,29 +164,45 @@ export function isGeneratedImageOutput(value: unknown): value is GeneratedImageO
         typeof item.model === "string" &&
         item.model.trim().length > 0 &&
         (item.editMode === undefined || isImageEditMode(item.editMode)) &&
-        (item.sourceImageName === undefined || (typeof item.sourceImageName === "string" && item.sourceImageName.trim().length > 0)),
+        (item.sourceImageName === undefined ||
+          (typeof item.sourceImageName === "string" &&
+            item.sourceImageName.trim().length > 0)),
     )
   );
 }
 
 export function isBrollOutput(value: unknown): value is BrollOutput {
-  return isRecord(value) && Array.isArray(value.suggestions) && value.suggestions.every(isBrollSuggestion);
+  return (
+    isRecord(value) &&
+    Array.isArray(value.suggestions) &&
+    value.suggestions.every(isBrollSuggestion)
+  );
 }
 
-export function isVideoProjectOutput(value: unknown): value is VideoProjectOutput {
+export function isVideoProjectOutput(
+  value: unknown,
+): value is VideoProjectOutput {
   return (
     isRecord(value) &&
     typeof value.title === "string" &&
     value.title.trim().length > 0 &&
-    (value.aspectRatio === "16:9" || value.aspectRatio === "9:16" || value.aspectRatio === "1:1" || value.aspectRatio === "4:5") &&
+    (value.aspectRatio === "16:9" ||
+      value.aspectRatio === "9:16" ||
+      value.aspectRatio === "1:1" ||
+      value.aspectRatio === "4:5") &&
     typeof value.summary === "string" &&
     value.summary.trim().length > 0 &&
-    (value.exportPreset === "mp4-1080p" || value.exportPreset === "webm-1080p" || value.exportPreset === "gif-social" || value.exportPreset === "project-bundle") &&
+    (value.exportPreset === "mp4-1080p" ||
+      value.exportPreset === "webm-1080p" ||
+      value.exportPreset === "gif-social" ||
+      value.exportPreset === "project-bundle") &&
     Array.isArray(value.scenes) &&
     value.scenes.length > 0 &&
     value.scenes.every(isVideoProjectScene) &&
     Array.isArray(value.notes) &&
-    value.notes.every((item) => typeof item === "string" && item.trim().length > 0)
+    value.notes.every(
+      (item) => typeof item === "string" && item.trim().length > 0,
+    )
   );
 }
 
@@ -192,7 +216,11 @@ export function isSmartCutOutput(value: unknown): value is SmartCutOutput {
 }
 
 export function isRepurposeOutput(value: unknown): value is RepurposeOutput {
-  return isRecord(value) && Array.isArray(value.clips) && value.clips.every(isRepurposeClipSuggestion);
+  return (
+    isRecord(value) &&
+    Array.isArray(value.clips) &&
+    value.clips.every(isRepurposeClipSuggestion)
+  );
 }
 
 export function isRecord(value: unknown): value is Record<string, unknown> {
@@ -201,7 +229,12 @@ export function isRecord(value: unknown): value is Record<string, unknown> {
 
 export function isCaptionOutputLike(
   value: unknown,
-): value is { captions?: CaptionChunk[]; captionChunks: CaptionChunk[]; cleanedTranscript?: string; summary?: string } {
+): value is {
+  captions?: CaptionChunk[];
+  captionChunks: CaptionChunk[];
+  cleanedTranscript?: string;
+  summary?: string;
+} {
   if (!isRecord(value)) return false;
   return isCaptionArray(value.captions) || isCaptionArray(value.captionChunks);
 }
@@ -222,7 +255,10 @@ function isCaptionChunk(value: unknown): value is CaptionChunk {
     end > start &&
     typeof value.text === "string" &&
     value.text.trim().length > 0 &&
-    (value.emphasis === undefined || value.emphasis === "normal" || value.emphasis === "strong" || value.emphasis === "quiet")
+    (value.emphasis === undefined ||
+      value.emphasis === "normal" ||
+      value.emphasis === "strong" ||
+      value.emphasis === "quiet")
   );
 }
 
@@ -233,7 +269,9 @@ function isSmartCutSuggestion(value: unknown): value is SmartCutSuggestion {
     isBoundedNumber(value.start, 0, Number.MAX_SAFE_INTEGER) &&
     isBoundedNumber(value.end, 0, Number.MAX_SAFE_INTEGER) &&
     value.end > value.start &&
-    (value.priority === "high" || value.priority === "medium" || value.priority === "low") &&
+    (value.priority === "high" ||
+      value.priority === "medium" ||
+      value.priority === "low") &&
     (value.suggestedAction === "keep" ||
       value.suggestedAction === "trim" ||
       value.suggestedAction === "split" ||
@@ -256,11 +294,15 @@ function isBrollSuggestion(value: unknown): value is BrollSuggestion {
     value.end > value.start &&
     typeof value.layerName === "string" &&
     value.layerName.trim().length > 0 &&
-    (value.placement === "background" || value.placement === "overlay" || value.placement === "cutaway") &&
+    (value.placement === "background" ||
+      value.placement === "overlay" ||
+      value.placement === "cutaway") &&
     typeof value.rationale === "string" &&
     value.rationale.trim().length > 0 &&
     Array.isArray(value.searchNotes) &&
-    value.searchNotes.every((item) => typeof item === "string" && item.trim().length > 0)
+    value.searchNotes.every(
+      (item) => typeof item === "string" && item.trim().length > 0,
+    )
   );
 }
 
@@ -277,13 +319,17 @@ function isVideoProjectScene(value: unknown): value is VideoProjectScene {
     value.caption.trim().length > 0 &&
     typeof value.visualPrompt === "string" &&
     value.visualPrompt.trim().length > 0 &&
-    (value.brollQuery === undefined || (typeof value.brollQuery === "string" && value.brollQuery.trim().length >= 2)) &&
+    (value.brollQuery === undefined ||
+      (typeof value.brollQuery === "string" &&
+        value.brollQuery.trim().length >= 2)) &&
     isHexColor(value.backgroundColor) &&
     isHexColor(value.accentColor)
   );
 }
 
-function isRepurposeClipSuggestion(value: unknown): value is RepurposeClipSuggestion {
+function isRepurposeClipSuggestion(
+  value: unknown,
+): value is RepurposeClipSuggestion {
   if (!isRecord(value)) return false;
 
   return (
@@ -303,8 +349,17 @@ function isRepurposeClipSuggestion(value: unknown): value is RepurposeClipSugges
   );
 }
 
-function isBoundedNumber(value: unknown, min: number, max: number): value is number {
-  return typeof value === "number" && Number.isFinite(value) && value >= min && value <= max;
+function isBoundedNumber(
+  value: unknown,
+  min: number,
+  max: number,
+): value is number {
+  return (
+    typeof value === "number" &&
+    Number.isFinite(value) &&
+    value >= min &&
+    value <= max
+  );
 }
 
 function isHexColor(value: unknown) {
@@ -312,5 +367,11 @@ function isHexColor(value: unknown) {
 }
 
 function isImageEditMode(value: unknown): value is AiImageEditMode {
-  return value === "inpaint" || value === "outpaint" || value === "background-removal" || value === "cleanup" || value === "translate";
+  return (
+    value === "inpaint" ||
+    value === "outpaint" ||
+    value === "background-removal" ||
+    value === "cleanup" ||
+    value === "translate"
+  );
 }

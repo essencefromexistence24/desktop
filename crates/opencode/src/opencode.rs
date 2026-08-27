@@ -143,22 +143,32 @@ pub enum Model {
     MiniMaxM2_7,
     #[serde(rename = "minimax-m3")]
     MiniMaxM3,
-    #[serde(rename = "minimax-m3-free", alias = "low")]
-    MiniMaxM3Free,
-    #[serde(rename = "mimo-v2.5-pro")]
-    MimoV2_5Pro,
-    #[serde(rename = "mimo-v2.5")]
-    MimoV2_5,
+    // -- Free models (keyless, Bearer public) — shown first as Opencode ===
+    #[serde(rename = "x-preview-f-free")]
+    XPreviewFFree,
     #[serde(rename = "big-pickle", alias = "high")]
     BigPickle,
     #[serde(rename = "deepseek-v4-flash-free", alias = "xhigh")]
     DeepSeekV4FlashFree,
     #[serde(rename = "mimo-v2.5-free", alias = "default")]
     MimoV2_5Free,
-    #[serde(rename = "nemotron-3-super-free", alias = "medium")]
-    Nemotron3SuperFree,
     #[serde(rename = "nemotron-3-ultra-free", alias = "xlow")]
     Nemotron3UltraFree,
+    #[serde(rename = "nemotron-3-super-free", alias = "medium")]
+    Nemotron3SuperFree,
+    #[serde(rename = "nemotron-3.5-lightning-free")]
+    Nemotron3_5LightningFree,
+    #[serde(rename = "laguna-s-2.1-free")]
+    LagunaS2_1Free,
+    #[serde(rename = "muse-spark-1.2-contributor-free")]
+    MuseSpark1_2ContributorFree,
+    #[serde(rename = "minimax-m3-free", alias = "low")]
+    MiniMaxM3Free,
+
+    #[serde(rename = "mimo-v2.5-pro")]
+    MimoV2_5Pro,
+    #[serde(rename = "mimo-v2.5")]
+    MimoV2_5,
     #[serde(rename = "qwen3.5-plus")]
     Qwen3_5Plus,
     #[serde(rename = "qwen3.6-plus")]
@@ -196,7 +206,7 @@ impl Model {
     }
 
     pub fn default_free() -> Self {
-        Self::MimoV2_5Free
+        Self::XPreviewFFree
     }
 
     pub fn default_free_fast() -> Self {
@@ -227,7 +237,11 @@ impl Model {
             Self::BigPickle
             | Self::DeepSeekV4FlashFree
             | Self::MimoV2_5Free
-            | Self::Nemotron3UltraFree => &[OpenCodeSubscription::Free],
+            | Self::Nemotron3UltraFree
+            | Self::Nemotron3_5LightningFree
+            | Self::XPreviewFFree
+            | Self::LagunaS2_1Free
+            | Self::MuseSpark1_2ContributorFree => &[OpenCodeSubscription::Free],
 
             // These former free models are retained for settings compatibility,
             // but OpenCode's public catalog no longer advertises them.
@@ -297,6 +311,10 @@ impl Model {
             Self::MiniMaxM3Free => "minimax-m3-free",
             Self::Nemotron3SuperFree => "nemotron-3-super-free",
             Self::Nemotron3UltraFree => "nemotron-3-ultra-free",
+            Self::Nemotron3_5LightningFree => "nemotron-3.5-lightning-free",
+            Self::XPreviewFFree => "x-preview-f-free",
+            Self::LagunaS2_1Free => "laguna-s-2.1-free",
+            Self::MuseSpark1_2ContributorFree => "muse-spark-1.2-contributor-free",
 
             Self::Custom { name, .. } => name,
         }
@@ -358,6 +376,10 @@ impl Model {
             Self::MiniMaxM3Free => "MiniMax M3 Free",
             Self::Nemotron3SuperFree => "Nemotron 3 Super Free",
             Self::Nemotron3UltraFree => "Nemotron 3 Ultra Free",
+            Self::Nemotron3_5LightningFree => "Nemotron 3.5 Lightning Free",
+            Self::XPreviewFFree => "OX Alpha (Free)",
+            Self::LagunaS2_1Free => "Laguna S 2.1 Free",
+            Self::MuseSpark1_2ContributorFree => "Muse Spark 1.2 Contributor Free",
 
             Self::Custom {
                 name, display_name, ..
@@ -426,7 +448,11 @@ impl Model {
             | Self::DeepSeekV4FlashFree
             | Self::MimoV2_5Free
             | Self::Nemotron3SuperFree
-            | Self::Nemotron3UltraFree => ApiProtocol::OpenAiChat,
+            | Self::Nemotron3UltraFree
+            | Self::Nemotron3_5LightningFree
+            | Self::XPreviewFFree
+            | Self::LagunaS2_1Free
+            | Self::MuseSpark1_2ContributorFree => ApiProtocol::OpenAiChat,
 
             Self::Custom { protocol, .. } => *protocol,
         }
@@ -444,11 +470,13 @@ impl Model {
             | Self::Glm5_1
             | Self::Nemotron3SuperFree
             | Self::Nemotron3UltraFree
+            | Self::Nemotron3_5LightningFree
             | Self::DeepSeekV4FlashFree
             | Self::MimoV2_5Free
             | Self::MiniMaxM2_5
             | Self::MiniMaxM2_7
-            | Self::BigPickle => true,
+            | Self::BigPickle
+            | Self::XPreviewFFree => true,
 
             Self::Custom {
                 interleaved_reasoning,
@@ -516,6 +544,10 @@ impl Model {
             Self::MimoV2_5Free => 1_000_000,
             Self::Nemotron3SuperFree => 204_800,
             Self::Nemotron3UltraFree => 1_000_000,
+            Self::Nemotron3_5LightningFree => 1_000_000,
+            Self::XPreviewFFree => 200_000,
+            Self::LagunaS2_1Free => 128_000,
+            Self::MuseSpark1_2ContributorFree => 128_000,
             Self::DeepSeekV4Pro | Self::DeepSeekV4Flash => 1_000_000,
 
             Self::Custom { max_tokens, .. } => *max_tokens,
@@ -584,6 +616,10 @@ impl Model {
             }
             Self::Nemotron3SuperFree => Some(128_000),
             Self::Nemotron3UltraFree => Some(128_000),
+            Self::Nemotron3_5LightningFree => Some(128_000),
+            Self::XPreviewFFree => Some(32_000),
+            Self::LagunaS2_1Free => Some(32_000),
+            Self::MuseSpark1_2ContributorFree => Some(32_000),
             Self::MimoV2_5Pro | Self::MimoV2_5 | Self::MimoV2_5Free => Some(128_000),
 
             Self::Custom {
@@ -657,7 +693,11 @@ impl Model {
             | Self::DeepSeekV4FlashFree
             | Self::MimoV2_5Free
             | Self::Nemotron3SuperFree
-            | Self::Nemotron3UltraFree => false,
+            | Self::Nemotron3UltraFree
+            | Self::Nemotron3_5LightningFree
+            | Self::XPreviewFFree
+            | Self::LagunaS2_1Free
+            | Self::MuseSpark1_2ContributorFree => false,
 
             Self::Custom { protocol, .. } => matches!(
                 protocol,
@@ -679,6 +719,12 @@ impl Model {
             ]),
 
             Self::Nemotron3UltraFree | Self::MimoV2_5Pro | Self::MimoV2_5 => Some(vec![
+                ReasoningEffort::Low,
+                ReasoningEffort::Medium,
+                ReasoningEffort::High,
+            ]),
+
+            Self::Nemotron3_5LightningFree | Self::XPreviewFFree => Some(vec![
                 ReasoningEffort::Low,
                 ReasoningEffort::Medium,
                 ReasoningEffort::High,

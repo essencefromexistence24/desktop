@@ -81,7 +81,7 @@ export function createRepurposeClipProjectVariants(project: EditorProject, clips
 export function socialPresetForClipPlatform(platform: RepurposeClipVariantInput["platform"]) {
   const presetId = {
     "youtube-shorts": "youtube-shorts",
-    "instagram-reels": "instagram-reels",
+    "instagram-reels": "tiktok-reel",
     tiktok: "tiktok-reel",
     linkedin: "linkedin-feed",
     x: "youtube-video",

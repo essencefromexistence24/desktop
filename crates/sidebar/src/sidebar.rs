@@ -7363,16 +7363,24 @@ impl Sidebar {
         );
 
         let used_icons = self.thread_display_icons_before(ix);
-        let fallback_icon = self.thread_display_icon(thread, &used_icons);
         let overridden_icon = self
             .thread_icon_overrides
             .get(&thread.metadata.thread_id)
             .copied();
+        // Prefer the thread's own agent brand icon (claude/codex/copilot/cursor/
+        // opencode/zai) so the sidebar matches the icons shown in the chat.
+        // The dedup palette only applies to the native agent and unknown custom
+        // agents, whose resolved icon falls back to generic Sparkle.
+        let is_branded =
+            thread.icon != IconName::Sparkle || thread.icon_from_external_svg.is_some();
         let (icon, icon_svg): (IconName, Option<SharedString>) = if is_draft {
             (IconName::Circle, None)
         } else if let Some(icon) = overridden_icon {
             (icon, None)
+        } else if is_branded {
+            (thread.icon, thread.icon_from_external_svg.clone())
         } else {
+            let fallback_icon = self.thread_display_icon(thread, &used_icons);
             (fallback_icon, None)
         };
         let icon_picker_handle = self
@@ -9476,8 +9484,16 @@ impl Sidebar {
                 .active_entry
                 .as_ref()
                 .is_some_and(|entry| entry.is_active_thread(&thread_id));
-            let icon = self.thread_display_icon(thread, &used_icons);
-            used_icons.push(icon);
+            // Brand icon first (matches chat + thread list); palette only for
+            // native/unknown agents.
+            let icon =
+                if thread.icon != IconName::Sparkle || thread.icon_from_external_svg.is_some() {
+                    thread.icon
+                } else {
+                    let icon = self.thread_display_icon(thread, &used_icons);
+                    used_icons.push(icon);
+                    icon
+                };
 
             let dragged_thread = DraggedSidebarThread {
                 thread_id,

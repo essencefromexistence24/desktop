@@ -4,7 +4,14 @@ import { useState } from "react";
 import { History, RotateCcw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import type { DashboardMessage } from "@/features/dashboard/dashboard-types";
 import {
@@ -22,7 +29,12 @@ type CloudProjectVersionDialogProps = {
   onRestored: () => Promise<void>;
 };
 
-export function CloudProjectVersionDialog({ project, disabled, onMessage, onRestored }: CloudProjectVersionDialogProps) {
+export function CloudProjectVersionDialog({
+  project,
+  disabled,
+  onMessage,
+  onRestored,
+}: CloudProjectVersionDialogProps) {
   const [open, setOpen] = useState(false);
   const [versions, setVersions] = useState<SyncedProjectVersionSummary[]>([]);
   const [auditEvents, setAuditEvents] = useState<SyncedProjectAuditEvent[]>([]);
@@ -44,7 +56,10 @@ export function CloudProjectVersionDialog({ project, disabled, onMessage, onRest
       setVersions(history.versions);
       setAuditEvents(history.auditEvents);
     } catch {
-      onMessage({ tone: "destructive", text: "Cloud version history could not be loaded." });
+      onMessage({
+        tone: "destructive",
+        text: "Cloud version history could not be loaded.",
+      });
     } finally {
       setIsPending(false);
     }
@@ -58,18 +73,32 @@ export function CloudProjectVersionDialog({ project, disabled, onMessage, onRest
       await restoreCloudProjectVersion(project.id, version.id);
       await refresh();
       await onRestored();
-      onMessage({ tone: "default", text: "Cloud project version restored. Open it again to load the restored timeline." });
+      onMessage({
+        tone: "default",
+        text: "Cloud project version restored. Open it again to load the restored timeline.",
+      });
     } catch {
-      onMessage({ tone: "destructive", text: "Cloud project version could not be restored." });
+      onMessage({
+        tone: "destructive",
+        text: "Cloud project version could not be restored.",
+      });
     } finally {
       setIsPending(false);
     }
   }
 
   return (
-    <Dialog open={open} onOpenChange={(nextOpen) => void handleOpenChange(nextOpen)}>
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => void handleOpenChange(nextOpen)}
+    >
       <DialogTrigger asChild>
-        <Button size="icon" variant="ghost" disabled={disabled} aria-label={`View version history for ${project.title}`}>
+        <Button
+          size="icon"
+          variant="ghost"
+          disabled={disabled}
+          aria-label={`View version history for ${project.title}`}
+        >
           <History className="size-4" />
         </Button>
       </DialogTrigger>
@@ -83,25 +112,48 @@ export function CloudProjectVersionDialog({ project, disabled, onMessage, onRest
           <section className="space-y-2">
             <div className="flex items-center justify-between gap-2">
               <h3 className="text-sm font-medium">Restore points</h3>
-              <Button size="sm" variant="outline" onClick={() => void refresh()} disabled={isPending}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => void refresh()}
+                disabled={isPending}
+              >
                 Refresh
               </Button>
             </div>
             <div className="max-h-64 space-y-2 overflow-y-auto pr-1">
               {versions.length ? (
                 versions.map((version) => (
-                  <div key={version.id} className="rounded-md border border-border p-3 text-sm">
+                  <div
+                    key={version.id}
+                    className="rounded-md border border-border p-3 text-sm"
+                  >
                     <div className="flex flex-wrap items-start justify-between gap-2">
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
-                          <Badge variant={version.action === "restore" ? "secondary" : "outline"}>{version.action}</Badge>
+                          <Badge
+                            variant={
+                              version.action === "restore"
+                                ? "secondary"
+                                : "outline"
+                            }
+                          >
+                            {version.action}
+                          </Badge>
                           <span className="font-medium">{version.label}</span>
                         </div>
                         <p className="mt-1 text-xs text-muted-foreground">
-                          {formatDate(version.createdAt)} / {version.layerCount} layers / {version.mediaCount} media / {Math.round(version.duration)}s
+                          {formatDate(version.createdAt)} / {version.layerCount}{" "}
+                          layers / {version.mediaCount} media /{" "}
+                          {Math.round(version.duration)}s
                         </p>
                       </div>
-                      <Button size="sm" variant="outline" onClick={() => void restore(version)} disabled={isPending}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => void restore(version)}
+                        disabled={isPending}
+                      >
                         <RotateCcw className="size-4" />
                         Restore
                       </Button>
@@ -123,10 +175,15 @@ export function CloudProjectVersionDialog({ project, disabled, onMessage, onRest
             <div className="max-h-40 space-y-2 overflow-y-auto pr-1">
               {auditEvents.length ? (
                 auditEvents.map((event) => (
-                  <div key={event.id} className="rounded-md border border-border p-2 text-sm">
+                  <div
+                    key={event.id}
+                    className="rounded-md border border-border p-2 text-sm"
+                  >
                     <div className="flex flex-wrap items-center gap-2">
                       <Badge variant="outline">{event.action}</Badge>
-                      <span className="text-xs text-muted-foreground">{formatDate(event.createdAt)}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {formatDate(event.createdAt)}
+                      </span>
                     </div>
                     <p className="mt-1 text-muted-foreground">{event.detail}</p>
                   </div>

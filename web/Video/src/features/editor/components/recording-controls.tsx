@@ -1,11 +1,26 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Camera, Mic, MonitorUp, Pause, Play, RotateCcw, Square } from "lucide-react";
+import {
+  Camera,
+  Mic,
+  MonitorUp,
+  Pause,
+  Play,
+  RotateCcw,
+  Square,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { recordingTimelinePresets, type RecordingMode, type RecordingTimelinePreset } from "@/lib/editor/recording-layouts";
-import { createRecordingCapture, type RecordingCapture } from "@/lib/media/recording-capture";
+import {
+  recordingTimelinePresets,
+  type RecordingMode,
+  type RecordingTimelinePreset,
+} from "@/lib/editor/recording-layouts";
+import {
+  createRecordingCapture,
+  type RecordingCapture,
+} from "@/lib/media/recording-capture";
 import { saveBrowserMedia } from "@/lib/media/browser-media-store";
 import type { MediaAsset } from "@/lib/editor/types";
 
@@ -15,7 +30,11 @@ export type RecordingResultSettings = {
 };
 
 type RecordingControlsProps = {
-  onRecorded: (asset: MediaAsset, mode: RecordingMode, settings: RecordingResultSettings) => void;
+  onRecorded: (
+    asset: MediaAsset,
+    mode: RecordingMode,
+    settings: RecordingResultSettings,
+  ) => void;
 };
 
 export function RecordingControls({ onRecorded }: RecordingControlsProps) {
@@ -29,8 +48,11 @@ export function RecordingControls({ onRecorded }: RecordingControlsProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [countdownSeconds, setCountdownSeconds] = useState(0);
-  const [countdownRemaining, setCountdownRemaining] = useState<number | null>(null);
-  const [timelinePreset, setTimelinePreset] = useState<RecordingTimelinePreset>("save-only");
+  const [countdownRemaining, setCountdownRemaining] = useState<number | null>(
+    null,
+  );
+  const [timelinePreset, setTimelinePreset] =
+    useState<RecordingTimelinePreset>("save-only");
   const [teleprompterText, setTeleprompterText] = useState("");
   const isBusy = Boolean(mode) || isSaving || countdownRemaining !== null;
 
@@ -83,7 +105,9 @@ export function RecordingControls({ onRecorded }: RecordingControlsProps) {
       cleanupRef.current = capture.cleanup;
       const recordingStream = capture.stream;
       const mimeType = preferredMimeType(nextMode);
-      const recorder = mimeType ? new MediaRecorder(recordingStream, { mimeType }) : new MediaRecorder(recordingStream);
+      const recorder = mimeType
+        ? new MediaRecorder(recordingStream, { mimeType })
+        : new MediaRecorder(recordingStream);
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) chunksRef.current.push(event.data);
       };
@@ -149,7 +173,10 @@ export function RecordingControls({ onRecorded }: RecordingControlsProps) {
     setError("Recording discarded.");
   }
 
-  async function finishRecording(nextMode: RecordingMode, recorder: MediaRecorder) {
+  async function finishRecording(
+    nextMode: RecordingMode,
+    recorder: MediaRecorder,
+  ) {
     if (discardNextStopRef.current) {
       discardNextStopRef.current = false;
       cleanupRecording();
@@ -162,13 +189,17 @@ export function RecordingControls({ onRecorded }: RecordingControlsProps) {
     setIsSaving(true);
 
     try {
-      const blob = new Blob(chunksRef.current, { type: recorder.mimeType || "video/webm" });
+      const blob = new Blob(chunksRef.current, {
+        type: recorder.mimeType || "video/webm",
+      });
       if (blob.size === 0) {
         setError("Recording did not capture media.");
         return;
       }
 
-      const file = new File([blob], recordingFilename(nextMode, blob.type), { type: blob.type });
+      const file = new File([blob], recordingFilename(nextMode, blob.type), {
+        type: blob.type,
+      });
       onRecorded(await saveBrowserMedia(file), nextMode, {
         timelinePreset,
         notes: teleprompterText.trim(),
@@ -232,41 +263,82 @@ export function RecordingControls({ onRecorded }: RecordingControlsProps) {
       />
       {countdownRemaining !== null ? (
         <div className="grid gap-2 rounded-md border border-primary/40 bg-primary/10 p-3 text-center">
-          <span className="text-2xl font-semibold tabular-nums">{countdownRemaining}</span>
+          <span className="text-2xl font-semibold tabular-nums">
+            {countdownRemaining}
+          </span>
           <Button size="sm" variant="outline" onClick={cancelCountdown}>
             Cancel
           </Button>
         </div>
       ) : null}
       <div className="grid grid-cols-2 gap-2">
-        <Button size="sm" variant="outline" disabled={isBusy} onClick={() => startRecording("screen")}>
+        <Button
+          size="sm"
+          variant="outline"
+          disabled={isBusy}
+          onClick={() => startRecording("screen")}
+        >
           <MonitorUp className="size-4" />
           Screen
         </Button>
-        <Button size="sm" variant="outline" disabled={isBusy} onClick={() => startRecording("camera")}>
+        <Button
+          size="sm"
+          variant="outline"
+          disabled={isBusy}
+          onClick={() => startRecording("camera")}
+        >
           <Camera className="size-4" />
           Camera
         </Button>
-        <Button size="sm" variant="outline" disabled={isBusy} onClick={() => startRecording("voiceover")}>
+        <Button
+          size="sm"
+          variant="outline"
+          disabled={isBusy}
+          onClick={() => startRecording("voiceover")}
+        >
           <Mic className="size-4" />
           Voice
         </Button>
-        <Button size="sm" variant="outline" disabled={isBusy} onClick={() => startRecording("screen-camera")}>
+        <Button
+          size="sm"
+          variant="outline"
+          disabled={isBusy}
+          onClick={() => startRecording("screen-camera")}
+        >
           <Camera className="size-4" />
           Studio
         </Button>
       </div>
       {mode ? (
         <div className="grid grid-cols-3 gap-2">
-          <Button size="sm" variant="outline" onClick={isPaused ? resumeRecording : pauseRecording} disabled={isSaving}>
-            {isPaused ? <Play className="size-4" /> : <Pause className="size-4" />}
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={isPaused ? resumeRecording : pauseRecording}
+            disabled={isSaving}
+          >
+            {isPaused ? (
+              <Play className="size-4" />
+            ) : (
+              <Pause className="size-4" />
+            )}
             {isPaused ? "Resume" : "Pause"}
           </Button>
-          <Button size="sm" variant="outline" onClick={discardRecording} disabled={isSaving}>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={discardRecording}
+            disabled={isSaving}
+          >
             <RotateCcw className="size-4" />
             Retake
           </Button>
-          <Button size="sm" variant="destructive" onClick={stopRecording} disabled={isSaving}>
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={stopRecording}
+            disabled={isSaving}
+          >
             <Square className="size-4" />
             {isSaving ? "Saving" : "Save"}
           </Button>
@@ -281,7 +353,11 @@ function preferredMimeType(mode: RecordingMode) {
   const options =
     mode === "voiceover"
       ? ["audio/webm;codecs=opus", "audio/webm", "audio/ogg;codecs=opus"]
-      : ["video/webm;codecs=vp9,opus", "video/webm;codecs=vp8,opus", "video/webm"];
+      : [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+        ];
   return options.find((type) => MediaRecorder.isTypeSupported(type));
 }
 
@@ -290,7 +366,11 @@ function recordingFilename(mode: RecordingMode, mimeType: string) {
   return `${mode}-recording-${Date.now()}.${extension}`;
 }
 
-async function runCountdown(seconds: number, onTick: (remaining: number | null) => void, isCanceled: () => boolean) {
+async function runCountdown(
+  seconds: number,
+  onTick: (remaining: number | null) => void,
+  isCanceled: () => boolean,
+) {
   for (let remaining = seconds; remaining > 0; remaining -= 1) {
     if (isCanceled()) return false;
     onTick(remaining);
@@ -306,17 +386,23 @@ function delay(milliseconds: number) {
 }
 
 function recordingFailureMessage(mode: RecordingMode, error: unknown) {
-  if (error instanceof DOMException && (error.name === "NotAllowedError" || error.name === "SecurityError")) {
-    if (mode === "screen") return "Screen recording permission was not granted.";
+  if (
+    error instanceof DOMException &&
+    (error.name === "NotAllowedError" || error.name === "SecurityError")
+  ) {
+    if (mode === "screen")
+      return "Screen recording permission was not granted.";
     if (mode === "camera") return "Camera permission was not granted.";
-    if (mode === "screen-camera") return "Screen and camera recording permission was not granted.";
+    if (mode === "screen-camera")
+      return "Screen and camera recording permission was not granted.";
     return "Microphone permission was not granted.";
   }
 
   if (error instanceof DOMException && error.name === "NotFoundError") {
     if (mode === "screen") return "No screen source is available to record.";
     if (mode === "camera") return "No camera or microphone is available.";
-    if (mode === "screen-camera") return "No screen source, camera, or microphone is available.";
+    if (mode === "screen-camera")
+      return "No screen source, camera, or microphone is available.";
     return "No microphone is available.";
   }
 

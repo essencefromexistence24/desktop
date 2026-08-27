@@ -60,7 +60,9 @@ export function HostedReviewComments({
       setAnchorLabel("");
       setMessage("Comment saved.");
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Comment could not be saved.");
+      setMessage(
+        error instanceof Error ? error.message : "Comment could not be saved.",
+      );
     } finally {
       setIsPending(false);
     }
@@ -74,55 +76,99 @@ export function HostedReviewComments({
             <MessageSquare className="size-4" />
             Reviewer comments
           </span>
-          <Button size="sm" variant="ghost" onClick={() => void refresh()} disabled={isPending || isLoading}>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => void refresh()}
+            disabled={isPending || isLoading}
+          >
             <RefreshCw className="size-4" />
             Refresh
           </Button>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {message ? <div className="rounded-md border border-border p-3 text-sm text-muted-foreground">{message}</div> : null}
+        {message ? (
+          <div className="rounded-md border border-border p-3 text-sm text-muted-foreground">
+            {message}
+          </div>
+        ) : null}
 
         {canComment && !unavailable ? (
           <div className="space-y-3 rounded-md border border-border p-3">
             <div className="grid gap-3 sm:grid-cols-2">
-              <Input value={reviewerName} onChange={(event) => setReviewerName(event.target.value)} placeholder="Your name" />
-              <Input value={reviewerEmail} onChange={(event) => setReviewerEmail(event.target.value)} placeholder="Email optional" type="email" />
+              <Input
+                value={reviewerName}
+                onChange={(event) => setReviewerName(event.target.value)}
+                placeholder="Your name"
+              />
+              <Input
+                value={reviewerEmail}
+                onChange={(event) => setReviewerEmail(event.target.value)}
+                placeholder="Email optional"
+                type="email"
+              />
             </div>
-            <Input value={anchorLabel} onChange={(event) => setAnchorLabel(event.target.value)} placeholder="Scene or timestamp optional" />
-            <Textarea value={body} onChange={(event) => setBody(event.target.value)} placeholder="Leave feedback for this cut" />
-            <Button onClick={submitComment} disabled={!body.trim() || isPending}>
+            <Input
+              value={anchorLabel}
+              onChange={(event) => setAnchorLabel(event.target.value)}
+              placeholder="Scene or timestamp optional"
+            />
+            <Textarea
+              value={body}
+              onChange={(event) => setBody(event.target.value)}
+              placeholder="Leave feedback for this cut"
+            />
+            <Button
+              onClick={submitComment}
+              disabled={!body.trim() || isPending}
+            >
               <Send className="size-4" />
               Send comment
             </Button>
           </div>
         ) : (
           <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">
-            {unavailable ? "This link is no longer accepting comments." : "This link is view-only."}
+            {unavailable
+              ? "This link is no longer accepting comments."
+              : "This link is view-only."}
           </div>
         )}
 
         <div className="space-y-2">
           {isLoading ? (
-            <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">Loading comments.</div>
+            <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">
+              Loading comments.
+            </div>
           ) : comments.length ? (
             comments.map((comment) => (
-              <div key={comment.id} className="rounded-md border border-border p-3 text-sm">
+              <div
+                key={comment.id}
+                className="rounded-md border border-border p-3 text-sm"
+              >
                 <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                   <div className="min-w-0">
-                    <div className="truncate font-medium">{comment.reviewerName}</div>
+                    <div className="truncate font-medium">
+                      {comment.reviewerName}
+                    </div>
                     <div className="text-xs text-muted-foreground">
-                      {comment.reviewerEmail ? `${comment.reviewerEmail} / ` : ""}
+                      {comment.reviewerEmail
+                        ? `${comment.reviewerEmail} / `
+                        : ""}
                       {formatDate(comment.createdAt)}
                     </div>
                   </div>
-                  {comment.anchorLabel ? <Badge variant="outline">{comment.anchorLabel}</Badge> : null}
+                  {comment.anchorLabel ? (
+                    <Badge variant="outline">{comment.anchorLabel}</Badge>
+                  ) : null}
                 </div>
                 <p className="whitespace-pre-wrap">{comment.body}</p>
               </div>
             ))
           ) : (
-            <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">No comments yet.</div>
+            <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">
+              No comments yet.
+            </div>
           )}
         </div>
       </CardContent>

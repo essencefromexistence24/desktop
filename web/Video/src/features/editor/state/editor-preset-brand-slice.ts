@@ -1,10 +1,26 @@
 "use client";
 
 import { normalizeLayerAudioMix } from "@/lib/audio/mix";
-import { brandColorWithAlpha, brandColorsForTemplate, normalizeBrandKitSettings } from "@/lib/editor/brand-kit";
+import {
+  brandColorWithAlpha,
+  brandColorsForTemplate,
+  normalizeBrandKitSettings,
+} from "@/lib/editor/brand-kit";
 import { createId } from "@/lib/editor/factory";
-import type { AudioMixPreset, BrandFontAsset, BrandKitSettings, BrandTypographyPreset, EditorProject, LayerStylePreset, TimelineLayer } from "@/lib/editor/types";
-import type { EditorState, EditorStoreGet, EditorStoreSet } from "@/features/editor/state/editor-store-types";
+import type {
+  AudioMixPreset,
+  BrandFontAsset,
+  BrandKitSettings,
+  BrandTypographyPreset,
+  EditorProject,
+  LayerStylePreset,
+  TimelineLayer,
+} from "@/lib/editor/types";
+import type {
+  EditorState,
+  EditorStoreGet,
+  EditorStoreSet,
+} from "@/features/editor/state/editor-store-types";
 
 type EditorPresetBrandSlice = Pick<
   EditorState,
@@ -35,11 +51,16 @@ type EditorPresetBrandDeps = {
   cleanFontFamily: (fontFamily: string) => string;
   cleanLayerStylePresetName: (name: string) => string;
   commit: (mutator: (project: EditorProject) => EditorProject) => void;
-  getSelectedLayerIds: (state: Pick<EditorState, "selectedLayerId" | "selectedLayerIds">) => string[];
+  getSelectedLayerIds: (
+    state: Pick<EditorState, "selectedLayerId" | "selectedLayerIds">,
+  ) => string[];
   isTextLikeLayer: (layer: TimelineLayer) => boolean;
   layerStylePresets: (project: EditorProject) => LayerStylePreset[];
   normalizeHexColor: (value: string) => string | null;
-  typographyRoleStyle: (preset: BrandTypographyPreset, role: "heading" | "body" | "caption") => {
+  typographyRoleStyle: (
+    preset: BrandTypographyPreset,
+    role: "heading" | "body" | "caption",
+  ) => {
     fontFamily: string;
     fontWeight: number;
     fontSize: number;
@@ -54,11 +75,15 @@ export function createEditorPresetBrandSlice(
   return {
     saveSelectedLayerStylePreset: (name) => {
       const state = get();
-      const layer = state.project.layers.find((item) => item.id === state.selectedLayerId);
+      const layer = state.project.layers.find(
+        (item) => item.id === state.selectedLayerId,
+      );
       if (!layer) return { saved: false };
 
       const now = new Date().toISOString();
-      const presetName = deps.cleanLayerStylePresetName(name || `${layer.name} style`);
+      const presetName = deps.cleanLayerStylePresetName(
+        name || `${layer.name} style`,
+      );
       const preset: LayerStylePreset = {
         id: createId("style"),
         name: presetName,
@@ -69,7 +94,10 @@ export function createEditorPresetBrandSlice(
 
       deps.commit((project) => ({
         ...project,
-        layerStylePresets: [preset, ...deps.layerStylePresets(project)].slice(0, 100),
+        layerStylePresets: [preset, ...deps.layerStylePresets(project)].slice(
+          0,
+          100,
+        ),
         updatedAt: now,
       }));
 
@@ -77,7 +105,9 @@ export function createEditorPresetBrandSlice(
     },
     applyLayerStylePreset: (presetId) => {
       const state = get();
-      const preset = deps.layerStylePresets(state.project).find((item) => item.id === presetId);
+      const preset = deps
+        .layerStylePresets(state.project)
+        .find((item) => item.id === presetId);
       if (!preset) return 0;
 
       const selectedIds = deps.getSelectedLayerIds(state);
@@ -104,23 +134,36 @@ export function createEditorPresetBrandSlice(
     },
     removeLayerStylePreset: (presetId) => {
       const state = get();
-      if (!deps.layerStylePresets(state.project).some((preset) => preset.id === presetId)) return;
+      if (
+        !deps
+          .layerStylePresets(state.project)
+          .some((preset) => preset.id === presetId)
+      )
+        return;
 
       const now = new Date().toISOString();
       deps.commit((project) => ({
         ...project,
-        layerStylePresets: deps.layerStylePresets(project).filter((preset) => preset.id !== presetId),
+        layerStylePresets: deps
+          .layerStylePresets(project)
+          .filter((preset) => preset.id !== presetId),
         updatedAt: now,
       }));
     },
     saveSelectedAudioMixPreset: (name) => {
       const state = get();
-      const layer = state.project.layers.find((item) => item.id === state.selectedLayerId && (item.kind === "audio" || item.kind === "video"));
+      const layer = state.project.layers.find(
+        (item) =>
+          item.id === state.selectedLayerId &&
+          (item.kind === "audio" || item.kind === "video"),
+      );
       if (!layer) return { saved: false };
 
       const now = new Date().toISOString();
       const mix = normalizeLayerAudioMix(layer);
-      const presetName = deps.cleanAudioMixPresetName(name || `${layer.name} mix`);
+      const presetName = deps.cleanAudioMixPresetName(
+        name || `${layer.name} mix`,
+      );
       const preset: AudioMixPreset = {
         id: createId("audio_mix"),
         name: presetName,
@@ -134,7 +177,10 @@ export function createEditorPresetBrandSlice(
 
       deps.commit((project) => ({
         ...project,
-        audioMixPresets: [preset, ...deps.audioMixPresets(project)].slice(0, 100),
+        audioMixPresets: [preset, ...deps.audioMixPresets(project)].slice(
+          0,
+          100,
+        ),
         updatedAt: now,
       }));
 
@@ -142,7 +188,9 @@ export function createEditorPresetBrandSlice(
     },
     applyAudioMixPreset: (presetId) => {
       const state = get();
-      const preset = deps.audioMixPresets(state.project).find((item) => item.id === presetId);
+      const preset = deps
+        .audioMixPresets(state.project)
+        .find((item) => item.id === presetId);
       if (!preset) return 0;
 
       const selectedIds = deps.getSelectedLayerIds(state);
@@ -154,7 +202,12 @@ export function createEditorPresetBrandSlice(
       deps.commit((project) => ({
         ...project,
         layers: project.layers.map((layer) => {
-          if (!targetIds.has(layer.id) || layer.locked || (layer.kind !== "audio" && layer.kind !== "video")) return layer;
+          if (
+            !targetIds.has(layer.id) ||
+            layer.locked ||
+            (layer.kind !== "audio" && layer.kind !== "video")
+          )
+            return layer;
           changedCount += 1;
           return {
             ...layer,
@@ -172,12 +225,19 @@ export function createEditorPresetBrandSlice(
     },
     removeAudioMixPreset: (presetId) => {
       const state = get();
-      if (!deps.audioMixPresets(state.project).some((preset) => preset.id === presetId)) return;
+      if (
+        !deps
+          .audioMixPresets(state.project)
+          .some((preset) => preset.id === presetId)
+      )
+        return;
 
       const now = new Date().toISOString();
       deps.commit((project) => ({
         ...project,
-        audioMixPresets: deps.audioMixPresets(project).filter((preset) => preset.id !== presetId),
+        audioMixPresets: deps
+          .audioMixPresets(project)
+          .filter((preset) => preset.id !== presetId),
         updatedAt: now,
       }));
     },
@@ -201,7 +261,10 @@ export function createEditorPresetBrandSlice(
 
       deps.commit((project) => ({
         ...project,
-        brandTypographyPresets: [preset, ...deps.brandTypographyPresets(project)].slice(0, 100),
+        brandTypographyPresets: [
+          preset,
+          ...deps.brandTypographyPresets(project),
+        ].slice(0, 100),
         updatedAt: now,
       }));
 
@@ -209,7 +272,9 @@ export function createEditorPresetBrandSlice(
     },
     applyBrandTypographyPreset: (presetId, role) => {
       const state = get();
-      const preset = deps.brandTypographyPresets(state.project).find((item) => item.id === presetId);
+      const preset = deps
+        .brandTypographyPresets(state.project)
+        .find((item) => item.id === presetId);
       if (!preset) return 0;
 
       const selectedIds = new Set(deps.getSelectedLayerIds(state));
@@ -221,7 +286,12 @@ export function createEditorPresetBrandSlice(
       deps.commit((project) => ({
         ...project,
         layers: project.layers.map((layer) => {
-          if (!selectedIds.has(layer.id) || layer.locked || !deps.isTextLikeLayer(layer)) return layer;
+          if (
+            !selectedIds.has(layer.id) ||
+            layer.locked ||
+            !deps.isTextLikeLayer(layer)
+          )
+            return layer;
           changedCount += 1;
           return {
             ...layer,
@@ -236,25 +306,38 @@ export function createEditorPresetBrandSlice(
     },
     removeBrandTypographyPreset: (presetId) => {
       const state = get();
-      if (!deps.brandTypographyPresets(state.project).some((preset) => preset.id === presetId)) return;
+      if (
+        !deps
+          .brandTypographyPresets(state.project)
+          .some((preset) => preset.id === presetId)
+      )
+        return;
 
       const now = new Date().toISOString();
       deps.commit((project) => ({
         ...project,
-        brandTypographyPresets: deps.brandTypographyPresets(project).filter((preset) => preset.id !== presetId),
+        brandTypographyPresets: deps
+          .brandTypographyPresets(project)
+          .filter((preset) => preset.id !== presetId),
         brandKit:
           project.brandKit?.defaultTypographyPresetId === presetId
-            ? { ...normalizeBrandKitSettings(project.brandKit), defaultTypographyPresetId: undefined }
+            ? {
+                ...normalizeBrandKitSettings(project.brandKit),
+                defaultTypographyPresetId: undefined,
+              }
             : project.brandKit,
         updatedAt: now,
       }));
     },
     updateBrandKitSettings: (patch) => {
       const state = get();
-      const nextSettings = normalizeBrandKitSettings({ ...state.project.brandKit, ...patch }, {
-        mediaAssets: state.mediaAssets,
-        typographyPresets: deps.brandTypographyPresets(state.project),
-      });
+      const nextSettings = normalizeBrandKitSettings(
+        { ...state.project.brandKit, ...patch },
+        {
+          mediaAssets: state.mediaAssets,
+          typographyPresets: deps.brandTypographyPresets(state.project),
+        },
+      );
       const now = new Date().toISOString();
 
       deps.commit((project) => ({
@@ -265,7 +348,9 @@ export function createEditorPresetBrandSlice(
     },
     addBrandLogoAsset: (assetId) => {
       const state = get();
-      const asset = state.mediaAssets.find((item) => item.id === assetId && item.type === "image");
+      const asset = state.mediaAssets.find(
+        (item) => item.id === assetId && item.type === "image",
+      );
       if (!asset) return false;
 
       const now = new Date().toISOString();
@@ -274,7 +359,10 @@ export function createEditorPresetBrandSlice(
           mediaAssets: state.mediaAssets,
           typographyPresets: deps.brandTypographyPresets(project),
         });
-        const logoAssetIds = [asset.id, ...current.logoAssetIds.filter((item) => item !== asset.id)].slice(0, 24);
+        const logoAssetIds = [
+          asset.id,
+          ...current.logoAssetIds.filter((item) => item !== asset.id),
+        ].slice(0, 24);
 
         return {
           ...project,
@@ -296,14 +384,19 @@ export function createEditorPresetBrandSlice(
           mediaAssets: state.mediaAssets,
           typographyPresets: deps.brandTypographyPresets(project),
         });
-        const logoAssetIds = current.logoAssetIds.filter((item) => item !== assetId);
+        const logoAssetIds = current.logoAssetIds.filter(
+          (item) => item !== assetId,
+        );
 
         return {
           ...project,
           brandKit: {
             ...current,
             logoAssetIds,
-            defaultLogoAssetId: current.defaultLogoAssetId === assetId ? logoAssetIds[0] : current.defaultLogoAssetId,
+            defaultLogoAssetId:
+              current.defaultLogoAssetId === assetId
+                ? logoAssetIds[0]
+                : current.defaultLogoAssetId,
           },
           updatedAt: now,
         };
@@ -320,7 +413,10 @@ export function createEditorPresetBrandSlice(
           mediaAssets: state.mediaAssets,
           typographyPresets: deps.brandTypographyPresets(project),
         });
-        const fontAssets = [cleanAsset, ...current.fontAssets.filter((item) => item.id !== cleanAsset.id)].slice(0, 24);
+        const fontAssets = [
+          cleanAsset,
+          ...current.fontAssets.filter((item) => item.id !== cleanAsset.id),
+        ].slice(0, 24);
 
         return {
           ...project,
@@ -342,14 +438,19 @@ export function createEditorPresetBrandSlice(
           mediaAssets: state.mediaAssets,
           typographyPresets: deps.brandTypographyPresets(project),
         });
-        const fontAssets = current.fontAssets.filter((asset) => asset.id !== assetId);
+        const fontAssets = current.fontAssets.filter(
+          (asset) => asset.id !== assetId,
+        );
 
         return {
           ...project,
           brandKit: {
             ...current,
             fontAssets,
-            defaultFontAssetId: current.defaultFontAssetId === assetId ? fontAssets[0]?.id : current.defaultFontAssetId,
+            defaultFontAssetId:
+              current.defaultFontAssetId === assetId
+                ? fontAssets[0]?.id
+                : current.defaultFontAssetId,
           },
           updatedAt: now,
         };
@@ -366,9 +467,12 @@ export function createEditorPresetBrandSlice(
       });
       const colors = brandColorsForTemplate(state.brandColors, settings);
       const primaryColor = settings.defaultPrimaryColor ?? colors[0];
-      const secondaryColor = settings.defaultSecondaryColor ?? colors[1] ?? colors[0];
+      const secondaryColor =
+        settings.defaultSecondaryColor ?? colors[1] ?? colors[0];
       const typographyPreset = settings.defaultTypographyPresetId
-        ? deps.brandTypographyPresets(state.project).find((preset) => preset.id === settings.defaultTypographyPresetId)
+        ? deps
+            .brandTypographyPresets(state.project)
+            .find((preset) => preset.id === settings.defaultTypographyPresetId)
         : undefined;
       const now = new Date().toISOString();
       let changedCount = 0;
@@ -377,7 +481,14 @@ export function createEditorPresetBrandSlice(
         ...project,
         layers: project.layers.map((layer) => {
           if (!selectedIds.has(layer.id) || layer.locked) return layer;
-          const stylePatch = brandKitStylePatch(layer, settings, primaryColor, secondaryColor, typographyPreset, deps);
+          const stylePatch = brandKitStylePatch(
+            layer,
+            settings,
+            primaryColor,
+            secondaryColor,
+            typographyPreset,
+            deps,
+          );
           if (Object.keys(stylePatch).length === 0) return layer;
 
           changedCount += 1;
@@ -397,7 +508,10 @@ export function createEditorPresetBrandSlice(
       if (!normalized) return;
 
       set((state) => ({
-        brandColors: [normalized, ...state.brandColors.filter((item) => item !== normalized)].slice(0, 12),
+        brandColors: [
+          normalized,
+          ...state.brandColors.filter((item) => item !== normalized),
+        ].slice(0, 12),
       }));
     },
     applyBrandColorToSelected: (color) => {
@@ -411,7 +525,10 @@ export function createEditorPresetBrandSlice(
         ...project,
         layers: project.layers.map((layer) => {
           if (!selectedIds.includes(layer.id)) return layer;
-          const stylePatch = layer.kind === "shape" ? { fill: normalized, background: normalized } : { fill: normalized };
+          const stylePatch =
+            layer.kind === "shape"
+              ? { fill: normalized, background: normalized }
+              : { fill: normalized };
 
           return {
             ...layer,
@@ -430,7 +547,14 @@ function cleanBrandFontAsset(asset: BrandFontAsset): BrandFontAsset | null {
   const name = asset.name.trim().replace(/\s+/g, " ").slice(0, 120);
   const family = asset.family.trim().replace(/\s+/g, "_").slice(0, 120);
   const storageKey = asset.storageKey.trim();
-  if (!id || !name || !family || !storageKey || !["browser-indexeddb", "tauri-fs"].includes(asset.source)) return null;
+  if (
+    !id ||
+    !name ||
+    !family ||
+    !storageKey ||
+    !["browser-indexeddb", "tauri-fs"].includes(asset.source)
+  )
+    return null;
 
   return {
     ...asset,
@@ -463,12 +587,22 @@ function brandKitStylePatch(
       patch.background = secondaryColor ?? layer.style.background;
     } else if (deps.isTextLikeLayer(layer)) {
       patch.fill = primaryColor;
-      patch.background = brandColorWithAlpha(secondaryColor, "cc") ?? layer.style.background;
+      patch.background =
+        brandColorWithAlpha(secondaryColor, "cc") ?? layer.style.background;
     }
   }
 
-  if (settings.enforceTypography && typographyPreset && deps.isTextLikeLayer(layer)) {
-    const role = layer.kind === "subtitle" || layer.kind === "timer" ? "caption" : layer.kind === "sticker" ? "body" : "heading";
+  if (
+    settings.enforceTypography &&
+    typographyPreset &&
+    deps.isTextLikeLayer(layer)
+  ) {
+    const role =
+      layer.kind === "subtitle" || layer.kind === "timer"
+        ? "caption"
+        : layer.kind === "sticker"
+          ? "body"
+          : "heading";
     Object.assign(patch, deps.typographyRoleStyle(typographyPreset, role));
   }
 

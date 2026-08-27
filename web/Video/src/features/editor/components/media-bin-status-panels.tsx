@@ -38,7 +38,9 @@ export function MediaBinStatusPanels({
       {message ? (
         <div
           className={`rounded-md border p-2 text-xs ${
-            message.tone === "destructive" ? "border-destructive/40 text-destructive" : "border-border text-muted-foreground"
+            message.tone === "destructive"
+              ? "border-destructive/40 text-destructive"
+              : "border-border text-muted-foreground"
           }`}
         >
           {message.text}
@@ -46,20 +48,40 @@ export function MediaBinStatusPanels({
       ) : null}
       {lastRemovedAssetName ? (
         <div className="grid grid-cols-[1fr_auto] items-center gap-2 rounded-md border border-border p-2 text-xs text-muted-foreground">
-          <span className="truncate">{lastRemovedAssetName} can be restored.</span>
-          <Button size="sm" variant="outline" className="h-7" onClick={onRestoreRemovedAsset}>
+          <span className="truncate">
+            {lastRemovedAssetName} can be restored.
+          </span>
+          <Button
+            size="sm"
+            variant="outline"
+            className="h-7"
+            onClick={onRestoreRemovedAsset}
+          >
             Restore
           </Button>
         </div>
       ) : null}
-      <MediaHealthStrip report={mediaHealth} activeFilter={activeFilter} impactSummary={impactSummary} onFilter={onFilter} />
+      <MediaHealthStrip
+        report={mediaHealth}
+        activeFilter={activeFilter}
+        impactSummary={impactSummary}
+        onFilter={onFilter}
+      />
       {missingIssueCount > 0 ? (
         <div className="grid grid-cols-[1fr_auto] items-center gap-2 rounded-md border border-destructive/30 bg-destructive/10 p-2 text-xs text-destructive">
           <span>
-            {missingIssueCount} {missingIssueCount === 1 ? "media item needs" : "media items need"} attention
+            {missingIssueCount}{" "}
+            {missingIssueCount === 1 ? "media item needs" : "media items need"}{" "}
+            attention
             {impactSummary ? `: ${impactSummary}` : "."}
           </span>
-          <Button size="sm" variant="outline" className="h-7" onClick={onBatchReconnect} disabled={isImporting || missingAssetCount === 0}>
+          <Button
+            size="sm"
+            variant="outline"
+            className="h-7"
+            onClick={onBatchReconnect}
+            disabled={isImporting || missingAssetCount === 0}
+          >
             Match files
           </Button>
         </div>

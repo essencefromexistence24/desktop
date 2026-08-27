@@ -12,7 +12,12 @@ import { ObjectMaskPanel } from "@/features/editor/components/object-mask-panel"
 import { TrackingAttachmentPanel } from "@/features/editor/components/tracking-attachment-panel";
 import { TransitionPanel } from "@/features/editor/components/transition-panel";
 import { VisualEffectsPanel } from "@/features/editor/components/visual-effects-panel";
-import type { LayerStyle, LayerTransform, MediaAsset, TimelineLayer } from "@/lib/editor/types";
+import type {
+  LayerStyle,
+  LayerTransform,
+  MediaAsset,
+  TimelineLayer,
+} from "@/lib/editor/types";
 
 type InspectorMotionEffectsSectionProps = {
   layer: TimelineLayer;
@@ -52,25 +57,65 @@ export function InspectorMotionEffectsSection({
         onPatchStyle={onPatchStyle}
         onCenterSelectedLayers={onCenterSelectedLayers}
         onFitSelectedLayersToCanvas={onFitSelectedLayersToCanvas}
-        onAddBlurredBackgroundForSelectedMediaLayers={onAddBlurredBackgroundForSelectedMediaLayers}
+        onAddBlurredBackgroundForSelectedMediaLayers={
+          onAddBlurredBackgroundForSelectedMediaLayers
+        }
       />
-      <KeyframePanel layer={layer} currentTime={currentTime} onChange={(keyframes) => onUpdateLayer(layer.id, { keyframes })} />
-      <TrackingAttachmentPanel layer={layer} layers={layers} onChange={(tracking) => onUpdateLayer(layer.id, { tracking })} />
-      <MotionPresetPanel motion={layer.motion} onChange={(motion) => onUpdateLayer(layer.id, { motion })} />
-      <TransitionPanel transition={layer.transition} duration={layer.duration} onChange={(transition) => onUpdateLayer(layer.id, { transition })} />
+      <KeyframePanel
+        layer={layer}
+        currentTime={currentTime}
+        onChange={(keyframes) => onUpdateLayer(layer.id, { keyframes })}
+      />
+      <TrackingAttachmentPanel
+        layer={layer}
+        layers={layers}
+        onChange={(tracking) => onUpdateLayer(layer.id, { tracking })}
+      />
+      <MotionPresetPanel
+        motion={layer.motion}
+        onChange={(motion) => onUpdateLayer(layer.id, { motion })}
+      />
+      <TransitionPanel
+        transition={layer.transition}
+        duration={layer.duration}
+        onChange={(transition) => onUpdateLayer(layer.id, { transition })}
+      />
       <Field label="Opacity">
-        <Slider value={[layer.style.opacity]} min={0} max={1} step={0.01} onValueChange={([opacity]) => onPatchStyle({ opacity: opacity ?? 1 })} />
+        <Slider
+          value={[layer.style.opacity]}
+          min={0}
+          max={1}
+          step={0.01}
+          onValueChange={([opacity]) => onPatchStyle({ opacity: opacity ?? 1 })}
+        />
       </Field>
-      <VisualEffectsPanel style={layer.style} onChange={onPatchStyle} supportsChromaKey={layer.kind === "image" || layer.kind === "video"} />
+      <VisualEffectsPanel
+        style={layer.style}
+        onChange={onPatchStyle}
+        supportsChromaKey={layer.kind === "image" || layer.kind === "video"}
+      />
       {layer.kind === "image" || layer.kind === "video" ? (
-        <ObjectMaskPanel masks={layer.style.objectMasks} onChange={(objectMasks) => onPatchStyle({ objectMasks })} />
+        <ObjectMaskPanel
+          masks={layer.style.objectMasks}
+          onChange={(objectMasks) => onPatchStyle({ objectMasks })}
+        />
       ) : null}
       <div className="grid grid-cols-2 gap-3">
         <Field label="Fill">
-          <Input type="color" value={toColor(layer.style.fill)} onChange={(event) => onPatchStyle({ fill: event.target.value })} />
+          <Input
+            type="color"
+            value={toColor(layer.style.fill)}
+            onChange={(event) => onPatchStyle({ fill: event.target.value })}
+          />
         </Field>
         <Field label="Background">
-          <Input type="color" value={toColor(layer.style.background)} onChange={(event) => onPatchStyle({ background: event.target.value })} />
+          <Input
+            type="color"
+            value={toColor(layer.style.background)}
+            onChange={(event) =>
+              onPatchStyle({ background: event.target.value })
+            }
+          />
         </Field>
       </div>
       <LayerStylePresetsPanel layer={layer} />

@@ -47,6 +47,7 @@ import { TwoDLayerShadow } from "./two-d-layer-shadow";
 import { TwoDShapeFill } from "./two-d-shape-fill";
 import { VideoPlane } from "./video-plane";
 import { ClonerInstanceGroup } from "./cloner-instance-group";
+import { pendingContextObjectIdRef } from "./viewport-context-menu";
 
 function isLightKind(kind: string) {
   return kind === "pointLight" || kind === "directionalLight" || kind === "spotLight";
@@ -585,6 +586,18 @@ export function EditableObject({
         scale={runtimeTransform.scale}
         visible={runtimeVisible}
         onClick={handleClick}
+        onContextMenu={(event) => {
+          if (playModeEnabled) {
+            return;
+          }
+
+          event.stopPropagation();
+          pendingContextObjectIdRef.current = object.id;
+
+          if (!object.locked) {
+            selectObject(object.id);
+          }
+        }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerOut={handlePointerOut}

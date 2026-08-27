@@ -95,7 +95,7 @@ impl RenderOnce for ModelSelectorHeader {
                     .child(
                         div().min_w_0().flex_1().child(
                             Label::new(title.clone())
-                                .size(LabelSize::XSmall)
+                                .size(LabelSize::Default)
                                 .color(Color::Muted)
                                 .truncate(),
                         ),
@@ -229,7 +229,11 @@ impl RenderOnce for ModelSelectorListItem {
                         div()
                             .min_w_0()
                             .flex_1()
-                            .child(Label::new(self.title.clone()).truncate()),
+                            .child(
+                                Label::new(self.title.clone())
+                                    .size(LabelSize::Large)
+                                    .truncate(),
+                            ),
                     )
                     .when(self.is_latest, |parent| parent.child(Chip::new("Latest")))
                     .when_some(self.cost_info, |this, cost_info| {

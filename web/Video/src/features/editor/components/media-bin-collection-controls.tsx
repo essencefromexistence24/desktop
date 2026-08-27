@@ -3,8 +3,17 @@
 import { FolderPlus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { mediaFilters, type MediaFilter } from "@/features/editor/components/media-filters";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  mediaFilters,
+  type MediaFilter,
+} from "@/features/editor/components/media-filters";
 import type { MediaCollection } from "@/lib/editor/types";
 
 type MediaBinCollectionControlsProps = {
@@ -33,8 +42,14 @@ export function MediaBinCollectionControls({
   onRemoveActiveCollection,
 }: MediaBinCollectionControlsProps) {
   return (
-    <>
-      <div className="grid grid-cols-3 gap-1">
+    <div className="flex min-w-0 w-full max-w-full flex-col gap-2 overflow-hidden overflow-x-hidden rounded-md border border-border bg-background p-2 shadow-sm">
+      <div className="flex min-w-0 items-center justify-between gap-2">
+        <span className="text-xs font-semibold">Collections</span>
+        <span className="text-[11px] text-muted-foreground">
+          {mediaCollections.length} sets
+        </span>
+      </div>
+      <div className="flex min-w-0 flex-wrap gap-1 overflow-hidden">
         {mediaFilters.map((filter) => (
           <Button
             key={filter.value}
@@ -47,9 +62,9 @@ export function MediaBinCollectionControls({
           </Button>
         ))}
       </div>
-      <div className="grid grid-cols-[1fr_auto] gap-2">
+      <div className="grid min-w-0 grid-cols-[1fr_auto] gap-2 overflow-hidden">
         <Input
-          className="h-8"
+          className="h-8 min-w-0"
           value={collectionName}
           onChange={(event) => onCollectionNameChange(event.target.value)}
           placeholder="New collection"
@@ -57,13 +72,21 @@ export function MediaBinCollectionControls({
             if (event.key === "Enter") onAddCollection();
           }}
         />
-        <Button size="sm" variant="outline" className="h-8" onClick={onAddCollection}>
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-8"
+          onClick={onAddCollection}
+        >
           <FolderPlus className="size-4" />
         </Button>
       </div>
-      <div className="grid grid-cols-[1fr_auto] gap-2">
-        <Select value={activeCollectionId} onValueChange={onActiveCollectionChange}>
-          <SelectTrigger className="h-8">
+      <div className="grid min-w-0 grid-cols-[1fr_auto] gap-2 overflow-hidden">
+        <Select
+          value={activeCollectionId}
+          onValueChange={onActiveCollectionChange}
+        >
+          <SelectTrigger className="h-8 min-w-0">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -86,6 +109,6 @@ export function MediaBinCollectionControls({
           <Trash2 className="size-4" />
         </Button>
       </div>
-    </>
+    </div>
   );
 }

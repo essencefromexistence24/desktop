@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { useEffect, useMemo, useRef, useState, type MouseEvent, type PointerEvent } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   Grid,
   OrbitControls,
@@ -9,6 +9,7 @@ import {
   PerspectiveCamera,
 } from "@react-three/drei";
 import type * as THREE from "three";
+import { Vector3 } from "three";
 import { evaluateAnimatedTransform } from "../../animation/evaluate-animation";
 import { CollisionInteractionRunner } from "../../interactions/collision-interaction-runner";
 import { ControlsInteractionRunner } from "../../interactions/controls-interaction-runner";
@@ -50,6 +51,7 @@ import { EditableObject } from "./editable-object";
 import { SceneEnvironment } from "./scene-environment";
 import { ScenePostProcessing } from "./scene-post-processing";
 import { WebGLRuntimeGuard } from "./webgl-runtime-guard";
+import { ViewportContextMenu, pendingContextObjectIdRef } from "./viewport-context-menu";
 import type {
   AnimationTrack,
   SceneInputControl,
@@ -194,11 +196,78 @@ type EditorViewportProps = {
   collaborationEnabled?: boolean;
 };
 
+function ViewportFrameInvalidator() {
+  const invalidate = useThree((state) => state.invalidate);
+  const cameraPreviewEnabled = useEditorStore((state) => state.cameraPreviewEnabled);
+  const document = useEditorStore((state) => state.document);
+  const hoveredObjectId = useEditorStore((state) => state.hoveredObjectId);
+  const mode = useEditorStore((state) => state.mode);
+  const playModeEnabled = useEditorStore((state) => state.playModeEnabled);
+  const selectedObjectId = useEditorStore((state) => state.selectedObjectId);
+
+  useEffect(() => {
+    invalidate();
+  }, [cameraPreviewEnabled, document, hoveredObjectId, invalidate, mode, playModeEnabled, selectedObjectId]);
+
+  return null;
+}
+
+function EditorOrbitControls({
+  onControlsEvent,
+  onOrbitEnd,
+  onOrbitStart,
+  playModeEnabled,
+  surfaceMode,
+}: {
+  onControlsEvent: (event: ControlsTriggerEvent) => void;
+  onOrbitEnd: () => void;
+  onOrbitStart: () => void;
+  playModeEnabled: boolean;
+  surfaceMode: "2d" | "3d";
+}) {
+  const camera = useThree((state) => state.camera);
+  const invalidate = useThree((state) => state.invalidate);
+  const lastCameraPosition = useRef(new Vector3());
+
+  return (
+    <OrbitControls
+      enableDamping
+      enableRotate={surfaceMode !== "2d"}
+      makeDefault
+      onChange={() => {
+        const moved = camera.position.distanceToSquared(lastCameraPosition.current);
+        lastCameraPosition.current.copy(camera.position);
+
+        if (moved > 0.000001) {
+          invalidate();
+        }
+
+        if (playModeEnabled) {
+          onControlsEvent("change");
+        }
+      }}
+      onEnd={() => {
+        onControlsEvent("end");
+        onOrbitEnd();
+      }}
+      onStart={() => {
+        onControlsEvent("start");
+        onOrbitStart();
+      }}
+    />
+  );
+}
+
 export function EditorViewport({
   collaborationEnabled = true,
 }: EditorViewportProps) {
   const [controlsEvent, setControlsEvent] =
     useState<RuntimeControlsEvent | null>(null);
+  const [contextMenu, setContextMenu] = useState<{
+    x: number;
+    y: number;
+    objectId: string | null;
+  } | null>(null);
   const cursorRef = useRef<ProjectPresenceCursor | null>(null);
   const objects = useEditorStore((state) => state.document.objects);
   const documentId = useEditorStore((state) => state.document.id);
@@ -349,6 +418,21 @@ export function EditorViewport({
     };
 
   };
+  const handleContextMenu = (event: MouseEvent<HTMLElement>) => {
+    if (playModeEnabled) {
+      return;
+    }
+
+    event.preventDefault();
+    const objectId = pendingContextObjectIdRef.current;
+    pendingContextObjectIdRef.current = null;
+    setContextMenu({ x: event.clientX, y: event.clientY, objectId });
+  };
+  useEffect(() => {
+    if (playModeEnabled) {
+      setContextMenu(null);
+    }
+  }, [playModeEnabled]);
   const handlePointerLeave = (event: PointerEvent<HTMLElement>) => {
     recordPointerEvent("pointer-leave", event);
     hoverObject(null);
@@ -418,10 +502,11 @@ export function EditorViewport({
         backgroundColor: sceneSettings.backgroundColor,
         cursor: viewportCursor,
       }}
-      onPointerDown={handlePointerDown}
+onPointerDown={handlePointerDown}
       onPointerLeave={handlePointerLeave}
       onPointerMove={handlePointerMove}
       onPointerUp={(event) => recordPointerEvent("pointer-up", event)}
+      onContextMenu={handleContextMenu}
     >
       <WebGLRuntimeGuard surfaceLabel="Editor viewport">
         <Canvas
@@ -432,7 +517,8 @@ export function EditorViewport({
               WebGL could not start in this browser session. Enable hardware acceleration or use a WebGL-capable browser.
             </div>
           }
-          gl={{ antialias: true, preserveDrawingBuffer: true }}
+          frameloop={playModeEnabled ? "always" : "demand"}
+          gl={{ antialias: true, powerPreference: "high-performance", preserveDrawingBuffer: true }}
           resize={{ debounce: 0 }}
           shadows
           style={{
@@ -455,7 +541,8 @@ export function EditorViewport({
             }
           }}
         >
-          <MediaActionProvider>
+<MediaActionProvider>
+            <ViewportFrameInvalidator />
             <CameraRig
               activeCamera={activeCamera}
               animationTracks={activeCameraTracks}
@@ -606,36 +693,18 @@ export function EditorViewport({
               />
             ))}
             {collaborationEnabled && !playModeEnabled ? <CommentPins /> : null}
-            {orbitControlsEnabled ? (
-              <OrbitControls
-                enableDamping
-                enableRotate={surfaceMode !== "2d"}
-                makeDefault
-                onChange={() => {
-                  emitControlsEvent("change");
-                }}
-                onEnd={() => {
-                  emitControlsEvent("end");
-                  recordCameraEvent("orbit-end");
-                }}
-                onStart={() => {
-                  emitControlsEvent("start");
-                  recordCameraEvent("orbit-start");
-                }}
+{orbitControlsEnabled ? (
+              <EditorOrbitControls
+                onControlsEvent={emitControlsEvent}
+                onOrbitEnd={() => recordCameraEvent("orbit-end")}
+                onOrbitStart={() => recordCameraEvent("orbit-start")}
+                playModeEnabled={playModeEnabled}
+                surfaceMode={surfaceMode}
               />
             ) : null}
           </MediaActionProvider>
         </Canvas>
       </WebGLRuntimeGuard>
-      <div className="pointer-events-none absolute left-4 top-4 rounded-md border border-border bg-background/80 px-2 py-1 text-xs text-muted-foreground backdrop-blur">
-        {playModeEnabled
-          ? "Play mode"
-          : cameraPreviewEnabled
-            ? "Camera preview"
-            : surfaceMode === "2d"
-              ? "2D canvas"
-              : "Orbit or use the transform tools"}
-      </div>
       {collaborationEnabled ? (
         <ProjectPresenceLayer cursorRef={cursorRef} />
       ) : null}
@@ -644,6 +713,12 @@ export function EditorViewport({
           inputControls={resolvedInputControls}
           variables={resolvedVariables}
           onVariableChange={setRuntimeVariableValue}
+        />
+      ) : null}
+      {contextMenu ? (
+        <ViewportContextMenu
+          menu={contextMenu}
+          onClose={() => setContextMenu(null)}
         />
       ) : null}
     </section>

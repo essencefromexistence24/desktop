@@ -1,7 +1,10 @@
 import { normalizeLayerAudioMix } from "@/lib/audio/mix";
 import { normalizeBrandKitSettings } from "@/lib/editor/brand-kit";
 import { createId, formatTime } from "@/lib/editor/factory";
-import { cloneLayerKeyframes, normalizeLayerKeyframes } from "@/lib/editor/keyframes";
+import {
+  cloneLayerKeyframes,
+  normalizeLayerKeyframes,
+} from "@/lib/editor/keyframes";
 import { normalizeLayerMotion } from "@/lib/editor/motion";
 import { snapTime } from "@/lib/editor/timeline";
 import { normalizeLayerTransition } from "@/lib/editor/transitions";
@@ -16,7 +19,10 @@ import type {
   TimelineMarker,
 } from "@/lib/editor/types";
 import { normalizeLayerVisualStyle } from "@/lib/editor/visual-effects";
-import type { EditorState, RemovedMediaRecovery } from "@/features/editor/state/editor-store-types";
+import type {
+  EditorState,
+  RemovedMediaRecovery,
+} from "@/features/editor/state/editor-store-types";
 
 export function createReplacementAudioLayer(
   sourceLayer: TimelineLayer,
@@ -47,12 +53,17 @@ export function createReplacementAudioLayer(
   };
 }
 
-export function getSelectedLayerIds(state: Pick<EditorState, "selectedLayerId" | "selectedLayerIds">) {
+export function getSelectedLayerIds(
+  state: Pick<EditorState, "selectedLayerId" | "selectedLayerIds">,
+) {
   if (state.selectedLayerIds.length) return state.selectedLayerIds;
   return state.selectedLayerId ? [state.selectedLayerId] : [];
 }
 
-export function groupAwareLayerIds(layers: TimelineLayer[], layerIds: string[]) {
+export function groupAwareLayerIds(
+  layers: TimelineLayer[],
+  layerIds: string[],
+) {
   if (!layerIds.length) return [];
 
   const expanded = new Set(layerIds);
@@ -73,10 +84,16 @@ export function groupAwareLayerIds(layers: TimelineLayer[], layerIds: string[]) 
   return [...expanded];
 }
 
-export function cloneLayer(layer: TimelineLayer, patch: Partial<TimelineLayer>): TimelineLayer {
+export function cloneLayer(
+  layer: TimelineLayer,
+  patch: Partial<TimelineLayer>,
+): TimelineLayer {
   return {
     ...layer,
-    transform: { ...layer.transform, crop: layer.transform.crop ? { ...layer.transform.crop } : undefined },
+    transform: {
+      ...layer.transform,
+      crop: layer.transform.crop ? { ...layer.transform.crop } : undefined,
+    },
     style: { ...layer.style },
     cues: layer.cues?.map((cue) => ({ ...cue, id: crypto.randomUUID() })),
     keyframes: cloneLayerKeyframes(layer.keyframes),
@@ -84,7 +101,9 @@ export function cloneLayer(layer: TimelineLayer, patch: Partial<TimelineLayer>):
   };
 }
 
-export function normalizeProjectTimeline(project: EditorProject): EditorProject {
+export function normalizeProjectTimeline(
+  project: EditorProject,
+): EditorProject {
   const duration = projectDurationForLayers(project.duration, project.layers);
   return {
     ...project,
@@ -101,10 +120,16 @@ export function normalizeProjectTimeline(project: EditorProject): EditorProject 
     rippleMode: Boolean(project.rippleMode),
     markers: timelineMarkers(project, duration),
     mediaCollections: normalizeMediaCollections(project.mediaCollections ?? []),
-    layerStylePresets: normalizeLayerStylePresets(project.layerStylePresets ?? []),
+    layerStylePresets: normalizeLayerStylePresets(
+      project.layerStylePresets ?? [],
+    ),
     audioMixPresets: normalizeAudioMixPresets(project.audioMixPresets ?? []),
-    brandTypographyPresets: normalizeBrandTypographyPresets(project.brandTypographyPresets ?? []),
-    brandKit: normalizeBrandKitSettings(project.brandKit, { typographyPresets: project.brandTypographyPresets ?? [] }),
+    brandTypographyPresets: normalizeBrandTypographyPresets(
+      project.brandTypographyPresets ?? [],
+    ),
+    brandKit: normalizeBrandKitSettings(project.brandKit, {
+      typographyPresets: project.brandTypographyPresets ?? [],
+    }),
   };
 }
 
@@ -168,7 +193,12 @@ export function normalizeAudioMixPresets(presets: AudioMixPreset[]) {
     const name = cleanAudioMixPresetName(preset.name);
     if (!preset.id || seen.has(preset.id) || !name) return [];
     seen.add(preset.id);
-    const mix = normalizeLayerAudioMix({ duration: 7200, volume: preset.volume, fadeIn: preset.fadeIn, fadeOut: preset.fadeOut });
+    const mix = normalizeLayerAudioMix({
+      duration: 7200,
+      volume: preset.volume,
+      fadeIn: preset.fadeIn,
+      fadeOut: preset.fadeOut,
+    });
 
     return [
       {
@@ -189,7 +219,9 @@ export function brandTypographyPresets(project: EditorProject) {
   return normalizeBrandTypographyPresets(project.brandTypographyPresets ?? []);
 }
 
-export function normalizeBrandTypographyPresets(presets: BrandTypographyPreset[]) {
+export function normalizeBrandTypographyPresets(
+  presets: BrandTypographyPreset[],
+) {
   const seen = new Set<string>();
   return presets.flatMap((preset) => {
     const name = cleanBrandTypographyName(preset.name);
@@ -215,18 +247,38 @@ export function cleanBrandTypographyName(name: string) {
   return name.trim().replace(/\s+/g, " ").slice(0, 80);
 }
 
-export function typographyRoleStyle(preset: BrandTypographyPreset, role: "heading" | "body" | "caption") {
+export function typographyRoleStyle(
+  preset: BrandTypographyPreset,
+  role: "heading" | "body" | "caption",
+) {
   if (role === "heading") {
-    return { fontFamily: preset.headingFontFamily, fontWeight: preset.headingWeight, fontSize: 56 };
+    return {
+      fontFamily: preset.headingFontFamily,
+      fontWeight: preset.headingWeight,
+      fontSize: 56,
+    };
   }
   if (role === "caption") {
-    return { fontFamily: preset.captionFontFamily, fontWeight: preset.captionWeight, fontSize: 42 };
+    return {
+      fontFamily: preset.captionFontFamily,
+      fontWeight: preset.captionWeight,
+      fontSize: 42,
+    };
   }
-  return { fontFamily: preset.bodyFontFamily, fontWeight: preset.bodyWeight, fontSize: 34 };
+  return {
+    fontFamily: preset.bodyFontFamily,
+    fontWeight: preset.bodyWeight,
+    fontSize: 34,
+  };
 }
 
 export function isTextLikeLayer(layer: TimelineLayer) {
-  return layer.kind === "text" || layer.kind === "subtitle" || layer.kind === "sticker" || layer.kind === "timer";
+  return (
+    layer.kind === "text" ||
+    layer.kind === "subtitle" ||
+    layer.kind === "sticker" ||
+    layer.kind === "timer"
+  );
 }
 
 export function formatFreezeFrameTime(seconds: number) {
@@ -234,14 +286,22 @@ export function formatFreezeFrameTime(seconds: number) {
 }
 
 export function nextTrack(layers: TimelineLayer[]) {
-  return layers.length ? Math.max(...layers.map((layer) => layer.track)) + 1 : 0;
+  return layers.length
+    ? Math.max(...layers.map((layer) => layer.track)) + 1
+    : 0;
 }
 
 export function timelineOrderedLayers(layers: TimelineLayer[]) {
-  return [...layers].sort((a, b) => a.track - b.track || a.start - b.start || a.name.localeCompare(b.name));
+  return [...layers].sort(
+    (a, b) =>
+      a.track - b.track || a.start - b.start || a.name.localeCompare(b.name),
+  );
 }
 
-export function duplicatedGroupId(groupId: string | undefined, groupIds: Map<string, string>) {
+export function duplicatedGroupId(
+  groupId: string | undefined,
+  groupIds: Map<string, string>,
+) {
   if (!groupId) return undefined;
   const existing = groupIds.get(groupId);
   if (existing) return existing;
@@ -251,11 +311,20 @@ export function duplicatedGroupId(groupId: string | undefined, groupIds: Map<str
   return next;
 }
 
-export function projectDurationForLayers(baseDuration: number, layers: TimelineLayer[]) {
-  return layers.reduce((duration, layer) => Math.max(duration, layer.start + layer.duration), finiteNumber(baseDuration, 0));
+export function projectDurationForLayers(
+  baseDuration: number,
+  layers: TimelineLayer[],
+) {
+  return layers.reduce(
+    (duration, layer) => Math.max(duration, layer.start + layer.duration),
+    finiteNumber(baseDuration, 0),
+  );
 }
 
-export function createTimelineMarker(time: number, project: EditorProject): TimelineMarker {
+export function createTimelineMarker(
+  time: number,
+  project: EditorProject,
+): TimelineMarker {
   const now = new Date().toISOString();
   const count = timelineMarkers(project).length + 1;
 
@@ -269,11 +338,17 @@ export function createTimelineMarker(time: number, project: EditorProject): Time
   };
 }
 
-export function timelineMarkers(project: EditorProject, duration = project.duration) {
+export function timelineMarkers(
+  project: EditorProject,
+  duration = project.duration,
+) {
   return normalizeTimelineMarkers(project.markers ?? [], duration);
 }
 
-export function normalizeTimelineMarkers(markers: TimelineMarker[], duration: number) {
+export function normalizeTimelineMarkers(
+  markers: TimelineMarker[],
+  duration: number,
+) {
   return markers
     .map((marker) => ({
       ...marker,
@@ -293,7 +368,9 @@ export function snapProjectTime(project: EditorProject, time: number) {
   return snapTime(time, true, projectSnapInterval(project));
 }
 
-export function projectSnapInterval(project: Pick<EditorProject, "snapInterval">) {
+export function projectSnapInterval(
+  project: Pick<EditorProject, "snapInterval">,
+) {
   return normalizeSnapInterval(project.snapInterval);
 }
 
@@ -316,15 +393,22 @@ export function upsertAsset(assets: MediaAsset[], asset: MediaAsset) {
   return assets.map((item) => (item.id === asset.id ? asset : item));
 }
 
-export function revokeMediaAssetObjectUrls(assets: MediaAsset[], keepAssets: MediaAsset[] = []) {
-  const keepUrls = new Set(keepAssets.flatMap((asset) => (asset.objectUrl ? [asset.objectUrl] : [])));
+export function revokeMediaAssetObjectUrls(
+  assets: MediaAsset[],
+  keepAssets: MediaAsset[] = [],
+) {
+  const keepUrls = new Set(
+    keepAssets.flatMap((asset) => (asset.objectUrl ? [asset.objectUrl] : [])),
+  );
   assets.forEach((asset) => {
     if (!asset.objectUrl || keepUrls.has(asset.objectUrl)) return;
     revokeObjectUrl(asset.objectUrl);
   });
 }
 
-export function revokeRemovedMediaRecovery(recovery: RemovedMediaRecovery | null) {
+export function revokeRemovedMediaRecovery(
+  recovery: RemovedMediaRecovery | null,
+) {
   if (!recovery) return;
   revokeMediaAssetObjectUrls([recovery.asset]);
 }
@@ -350,7 +434,9 @@ function clampFontWeight(value: number, fallback: number) {
 function nearestMarker(markers: TimelineMarker[], time: number) {
   return markers.reduce<TimelineMarker | null>((closest, marker) => {
     if (!closest) return marker;
-    return Math.abs(marker.time - time) < Math.abs(closest.time - time) ? marker : closest;
+    return Math.abs(marker.time - time) < Math.abs(closest.time - time)
+      ? marker
+      : closest;
   }, null);
 }
 

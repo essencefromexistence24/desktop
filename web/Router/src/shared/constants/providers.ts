@@ -58,6 +58,9 @@ export const IMAGE_ONLY_PROVIDER_IDS = new Set([
   "black-forest-labs",
   "recraft",
   "topaz",
+  "deepai",
+  "freepik",
+  "segmind",
 ]);
 
 export const AGGREGATOR_PROVIDER_IDS = new Set([
@@ -77,6 +80,35 @@ export const AGGREGATOR_PROVIDER_IDS = new Set([
   "poe",
   "chutes",
   "hackclub",
+  "chat-oripe",
+  "chatanywhere",
+  "cloudcode-one",
+  "dxnt",
+  "electronhub",
+  "free-ai",
+  "freeinference",
+  "freetheai",
+  "g4f-gemini",
+  "g4f-groq",
+  "g4f-nvidia",
+  "g4f-ollama",
+  "g4f-pollinations",
+  "helixmind",
+  "helyxai",
+  "literouter",
+  "llm-kiwi",
+  "meganova-ai",
+  "mnn-ai",
+  "naga-ac",
+  "naga-ai",
+  "ofoxai",
+  "poixe-ai",
+  "speka",
+  "tokenreply",
+  "void-ai",
+  "yolo-auto",
+  "zerolimitai",
+  "zylo-api",
 ]);
 
 export const ENTERPRISE_CLOUD_PROVIDER_IDS = new Set([
@@ -105,12 +137,14 @@ export const VIDEO_PROVIDER_IDS = new Set([
   "replicate",
   "haiper",
   "leonardo",
+  "agnes",
+  "segmind",
 ]);
 
 // IDE Providers: editors with built-in AI subscription (separate section in UI).
 // These providers live in OAUTH_PROVIDERS but render under "IDE Providers"
 // instead of "OAuth Providers" to avoid visual duplication.
-export const IDE_PROVIDER_IDS = new Set(["cursor", "zed", "trae"]);
+export const IDE_PROVIDER_IDS = new Set(["cursor", "zed", "trae", "raycast"]);
 
 export const EMBEDDING_RERANK_PROVIDER_IDS = new Set(["voyage-ai", "jina-ai"]);
 
@@ -416,6 +450,17 @@ export const USAGE_SUPPORTED_PROVIDERS = [
   "vertex",
   "vertex-partner",
   "codebuddy-cn",
+  // Qwen Cloud / Model Studio personal Token Plan (cookie-authenticated console gateway)
+  "qwen-cloud-token-plan",
+  "xiaomi-mimo-token-plan",
+  // PromptQL playground credits (getCreditSummary → USD micros)
+  "promptql",
+  // Adobe Firefly web (cookie/JWT as apikey) — GET firefly.adobe.io/v1/credits/balance
+  "adobe-firefly",
+  "hyperagent",
+  // xAI OAuth (Grok) weekly quota (id + public alias, same pattern as ha/agy)
+  "xai-oauth",
+  "conol-web",
 ];
 
 // ── Zod validation at module load (Phase 7.2) ──

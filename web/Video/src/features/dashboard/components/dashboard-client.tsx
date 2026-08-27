@@ -6,9 +6,11 @@ import { DashboardOverviewSection } from "@/features/dashboard/components/dashbo
 import { useDashboardClientController } from "@/features/dashboard/hooks/use-dashboard-client-controller";
 
 export function DashboardClient() {
-  const { bundleInputRef, cloudLibrary, localLibrary, project } = useDashboardClientController();
+  const { bundleInputRef, cloudLibrary, localLibrary, project } =
+    useDashboardClientController();
   const { createPresetProject, isLibraryActionPending } = localLibrary;
-  const { canUseOnlineLibrary, isCloudActionPending, syncCurrentProject } = cloudLibrary;
+  const { canUseOnlineLibrary, isCloudActionPending, syncCurrentProject } =
+    cloudLibrary;
 
   return (
     <DashboardPageShell>
@@ -20,7 +22,11 @@ export function DashboardClient() {
         onCreatePresetProject={createPresetProject}
         onSyncCurrentProject={syncCurrentProject}
       />
-      <DashboardLibrarySection bundleInputRef={bundleInputRef} localLibrary={localLibrary} cloudLibrary={cloudLibrary} />
+      <DashboardLibrarySection
+        bundleInputRef={bundleInputRef}
+        localLibrary={localLibrary}
+        cloudLibrary={cloudLibrary}
+      />
     </DashboardPageShell>
   );
 }

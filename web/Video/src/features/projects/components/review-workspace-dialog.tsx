@@ -1,13 +1,37 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CheckCircle2, Circle, Copy, Folder, History, Link2, MessageSquare, ShieldCheck, Trash2, Users } from "lucide-react";
+import {
+  CheckCircle2,
+  Circle,
+  Copy,
+  Folder,
+  History,
+  Link2,
+  MessageSquare,
+  ShieldCheck,
+  Trash2,
+  Users,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
@@ -57,37 +81,50 @@ export function ReviewWorkspaceDialog() {
   const currentTime = useEditorStore((state) => state.currentTime);
   const selectedLayerId = useEditorStore((state) => state.selectedLayerId);
   const exportJobs = useEditorStore((state) => state.exportJobs);
-  const projectExports = useMemo(() => exportJobs.filter((job) => job.projectId === project.id), [exportJobs, project.id]);
+  const projectExports = useMemo(
+    () => exportJobs.filter((job) => job.projectId === project.id),
+    [exportJobs, project.id],
+  );
   const [open, setOpen] = useState(false);
   const [comments, setComments] = useState<ProjectComment[]>([]);
   const [folders, setFolders] = useState<ProjectFolder[]>([]);
-  const [folderAssignment, setFolderAssignment] = useState<ProjectFolderAssignment | null>(null);
+  const [folderAssignment, setFolderAssignment] =
+    useState<ProjectFolderAssignment | null>(null);
   const [shareLink, setShareLink] = useState<ProjectShareLink | null>(null);
   const [members, setMembers] = useState<WorkspaceMember[]>([]);
   const [commentBody, setCommentBody] = useState("");
-  const [commentAnchorMode, setCommentAnchorMode] = useState<CommentAnchorMode>("time");
+  const [commentAnchorMode, setCommentAnchorMode] =
+    useState<CommentAnchorMode>("time");
   const [commentRangeSeconds, setCommentRangeSeconds] = useState(3);
   const [commentCanvasX, setCommentCanvasX] = useState(50);
   const [commentCanvasY, setCommentCanvasY] = useState(50);
   const [folderName, setFolderName] = useState("");
-  const [folderVisibility, setFolderVisibility] = useState<ProjectFolderVisibility>("workspace");
-  const [folderAccess, setFolderAccess] = useState<ProjectFolderAssignmentAccess>("inherited");
+  const [folderVisibility, setFolderVisibility] =
+    useState<ProjectFolderVisibility>("workspace");
+  const [folderAccess, setFolderAccess] =
+    useState<ProjectFolderAssignmentAccess>("inherited");
   const [memberName, setMemberName] = useState("");
   const [memberEmail, setMemberEmail] = useState("");
-  const [memberRole, setMemberRole] = useState<WorkspaceMember["role"]>("editor");
+  const [memberRole, setMemberRole] =
+    useState<WorkspaceMember["role"]>("editor");
   const [activeRole, setActiveRole] = useState<WorkspaceRole>("owner");
   const [shareMessage, setShareMessage] = useState<string | null>(null);
-  const [reviewMessage, setReviewMessage] = useState<ReviewWorkspaceMessage | null>(null);
+  const [reviewMessage, setReviewMessage] =
+    useState<ReviewWorkspaceMessage | null>(null);
   const [isReviewActionPending, setIsReviewActionPending] = useState(false);
-  const permissions = useMemo(() => createWorkspacePermissionSet(activeRole), [activeRole]);
+  const permissions = useMemo(
+    () => createWorkspacePermissionSet(activeRole),
+    [activeRole],
+  );
 
   async function refresh() {
-    const [nextComments, nextFolders, nextAssignment, nextMembers] = await Promise.all([
-      listProjectComments(project.id),
-      listProjectFolders(),
-      getProjectFolderAssignment(project.id),
-      listWorkspaceMembers(),
-    ]);
+    const [nextComments, nextFolders, nextAssignment, nextMembers] =
+      await Promise.all([
+        listProjectComments(project.id),
+        listProjectFolders(),
+        getProjectFolderAssignment(project.id),
+        listWorkspaceMembers(),
+      ]);
     setComments(nextComments);
     setFolders(nextFolders);
     setFolderAssignment(nextAssignment ?? null);
@@ -99,7 +136,10 @@ export function ReviewWorkspaceDialog() {
     setOpen(nextOpen);
     if (nextOpen) {
       void refresh().catch(() => {
-        setReviewMessage({ tone: "destructive", text: "Review workspace could not be loaded." });
+        setReviewMessage({
+          tone: "destructive",
+          text: "Review workspace could not be loaded.",
+        });
       });
     }
   }
@@ -110,7 +150,10 @@ export function ReviewWorkspaceDialog() {
         projectId: project.id,
         body: commentBody,
         time: currentTime,
-        timeEnd: commentAnchorMode === "range" ? currentTime + commentRangeSeconds : undefined,
+        timeEnd:
+          commentAnchorMode === "range"
+            ? currentTime + commentRangeSeconds
+            : undefined,
         layerId: selectedLayerId ?? undefined,
         canvasX: commentAnchorMode === "canvas" ? commentCanvasX : undefined,
         canvasY: commentAnchorMode === "canvas" ? commentCanvasY : undefined,
@@ -123,17 +166,25 @@ export function ReviewWorkspaceDialog() {
 
   async function toggleResolved(comment: ProjectComment) {
     await runReviewAction(async () => {
-      await setProjectCommentResolved(comment.id, !comment.resolvedAt, activeRole);
+      await setProjectCommentResolved(
+        comment.id,
+        !comment.resolvedAt,
+        activeRole,
+      );
       setComments(await listProjectComments(project.id));
     }, "Comment status could not be updated.");
   }
 
   async function submitFolder() {
     await runReviewAction(async () => {
-      const folder = await createProjectFolder(folderName, activeRole, { visibility: folderVisibility });
+      const folder = await createProjectFolder(folderName, activeRole, {
+        visibility: folderVisibility,
+      });
       setFolderName("");
       if (folder) {
-        await assignProjectFolder(project.id, folder.id, activeRole, { access: folderAccess });
+        await assignProjectFolder(project.id, folder.id, activeRole, {
+          access: folderAccess,
+        });
       }
       await refresh();
     }, "Folder could not be created.");
@@ -141,7 +192,12 @@ export function ReviewWorkspaceDialog() {
 
   async function updateFolder(folderId: string) {
     await runReviewAction(async () => {
-      await assignProjectFolder(project.id, folderId === "none" ? null : folderId, activeRole, { access: folderAccess });
+      await assignProjectFolder(
+        project.id,
+        folderId === "none" ? null : folderId,
+        activeRole,
+        { access: folderAccess },
+      );
       await refresh();
     }, "Project folder could not be updated.");
   }
@@ -150,12 +206,20 @@ export function ReviewWorkspaceDialog() {
     setFolderAccess(access);
     if (!folderAssignment) return;
     await runReviewAction(async () => {
-      await assignProjectFolder(project.id, folderAssignment.folderId, activeRole, { access });
+      await assignProjectFolder(
+        project.id,
+        folderAssignment.folderId,
+        activeRole,
+        { access },
+      );
       await refresh();
     }, "Project folder access could not be updated.");
   }
 
-  async function updateFolderVisibility(folderId: string, visibility: ProjectFolderVisibility) {
+  async function updateFolderVisibility(
+    folderId: string,
+    visibility: ProjectFolderVisibility,
+  ) {
     await runReviewAction(async () => {
       await updateProjectFolderVisibility(folderId, visibility, activeRole);
       await refresh();
@@ -164,7 +228,11 @@ export function ReviewWorkspaceDialog() {
 
   async function copyShareLink() {
     await runReviewAction(async () => {
-      const link = await getOrCreateShareLink(project.id, window.location.origin, activeRole);
+      const link = await getOrCreateShareLink(
+        project.id,
+        window.location.origin,
+        activeRole,
+      );
       setShareLink(link);
 
       try {
@@ -184,9 +252,17 @@ export function ReviewWorkspaceDialog() {
 
   async function submitMember() {
     await runReviewAction(async () => {
-      const member = await addWorkspaceMember({ name: memberName, email: memberEmail, role: memberRole, actorRole: activeRole });
+      const member = await addWorkspaceMember({
+        name: memberName,
+        email: memberEmail,
+        role: memberRole,
+        actorRole: activeRole,
+      });
       if (!member) {
-        setReviewMessage({ tone: "destructive", text: "Enter a valid workspace member name and email." });
+        setReviewMessage({
+          tone: "destructive",
+          text: "Enter a valid workspace member name and email.",
+        });
         return;
       }
 
@@ -203,7 +279,10 @@ export function ReviewWorkspaceDialog() {
     }, "Workspace member could not be removed.");
   }
 
-  async function runReviewAction(action: () => Promise<void>, failureMessage: string) {
+  async function runReviewAction(
+    action: () => Promise<void>,
+    failureMessage: string,
+  ) {
     setIsReviewActionPending(true);
     setReviewMessage(null);
 
@@ -234,18 +313,25 @@ export function ReviewWorkspaceDialog() {
               <ShieldCheck className="size-4" />
               Active access
             </div>
-            <p className="mt-1 text-xs text-muted-foreground">{workspaceRoleDescriptions[activeRole]}</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {workspaceRoleDescriptions[activeRole]}
+            </p>
           </div>
-          <Select value={activeRole} onValueChange={(value) => setActiveRole(value as WorkspaceRole)}>
+          <Select
+            value={activeRole}
+            onValueChange={(value) => setActiveRole(value as WorkspaceRole)}
+          >
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {(["owner", "editor", "viewer"] as WorkspaceRole[]).map((role) => (
-                <SelectItem key={role} value={role}>
-                  {workspaceRoleLabels[role]}
-                </SelectItem>
-              ))}
+              {(["owner", "editor", "viewer"] as WorkspaceRole[]).map(
+                (role) => (
+                  <SelectItem key={role} value={role}>
+                    {workspaceRoleLabels[role]}
+                  </SelectItem>
+                ),
+              )}
             </SelectContent>
           </Select>
         </div>
@@ -286,7 +372,12 @@ export function ReviewWorkspaceDialog() {
             <div className="grid gap-2 rounded-md border border-border p-2 sm:grid-cols-[150px_1fr_auto] sm:items-end">
               <label className="space-y-1 text-xs text-muted-foreground">
                 Anchor
-                <Select value={commentAnchorMode} onValueChange={(value) => setCommentAnchorMode(value as CommentAnchorMode)}>
+                <Select
+                  value={commentAnchorMode}
+                  onValueChange={(value) =>
+                    setCommentAnchorMode(value as CommentAnchorMode)
+                  }
+                >
                   <SelectTrigger className="h-8">
                     <SelectValue />
                   </SelectTrigger>
@@ -307,54 +398,90 @@ export function ReviewWorkspaceDialog() {
                 onCanvasXChange={setCommentCanvasX}
                 onCanvasYChange={setCommentCanvasY}
               />
-              <Button size="sm" onClick={submitComment} disabled={!commentBody.trim() || !permissions.canCreateComment || isReviewActionPending}>
+              <Button
+                size="sm"
+                onClick={submitComment}
+                disabled={
+                  !commentBody.trim() ||
+                  !permissions.canCreateComment ||
+                  isReviewActionPending
+                }
+              >
                 Add comment
               </Button>
             </div>
             <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
               {comments.length ? (
                 comments.map((comment) => (
-                  <div key={comment.id} className="rounded-md border border-border p-3 text-sm">
+                  <div
+                    key={comment.id}
+                    className="rounded-md border border-border p-3 text-sm"
+                  >
                     <div className="mb-2 flex items-center justify-between gap-2">
                       <div className="flex flex-wrap items-center gap-2">
-                        <Badge variant={comment.resolvedAt ? "secondary" : "default"}>
+                        <Badge
+                          variant={comment.resolvedAt ? "secondary" : "default"}
+                        >
                           {comment.resolvedAt ? "Resolved" : "Open"}
                         </Badge>
-                        <span className="text-xs text-muted-foreground">{projectCommentAnchorLabel(comment)}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {projectCommentAnchorLabel(comment)}
+                        </span>
                       </div>
                       <Button
                         size="icon"
                         variant="ghost"
                         className="size-7"
                         onClick={() => toggleResolved(comment)}
-                        disabled={!permissions.canResolveComment || isReviewActionPending}
+                        disabled={
+                          !permissions.canResolveComment ||
+                          isReviewActionPending
+                        }
                       >
-                        {comment.resolvedAt ? <CheckCircle2 className="size-4" /> : <Circle className="size-4" />}
+                        {comment.resolvedAt ? (
+                          <CheckCircle2 className="size-4" />
+                        ) : (
+                          <Circle className="size-4" />
+                        )}
                       </Button>
                     </div>
                     <p className="whitespace-pre-wrap">{comment.body}</p>
                   </div>
                 ))
               ) : (
-                <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">No comments yet.</div>
+                <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">
+                  No comments yet.
+                </div>
               )}
             </div>
           </TabsContent>
 
           <TabsContent value="folder" className="mt-3 space-y-3">
             <div className="grid gap-2 sm:grid-cols-[1fr_150px_auto]">
-              <Input value={folderName} onChange={(event) => setFolderName(event.target.value)} placeholder="New folder name" disabled={!permissions.canManageFolders} />
+              <Input
+                value={folderName}
+                onChange={(event) => setFolderName(event.target.value)}
+                placeholder="New folder name"
+                disabled={!permissions.canManageFolders}
+              />
               <Select
                 value={folderVisibility}
-                onValueChange={(value) => setFolderVisibility(value as ProjectFolderVisibility)}
-                disabled={!permissions.canManageFolders || isReviewActionPending}
+                onValueChange={(value) =>
+                  setFolderVisibility(value as ProjectFolderVisibility)
+                }
+                disabled={
+                  !permissions.canManageFolders || isReviewActionPending
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="workspace">Workspace</SelectItem>
-                  <SelectItem value="private" disabled={!permissions.canManagePrivateFolders}>
+                  <SelectItem
+                    value="private"
+                    disabled={!permissions.canManagePrivateFolders}
+                  >
                     Private
                   </SelectItem>
                 </SelectContent>
@@ -365,7 +492,8 @@ export function ReviewWorkspaceDialog() {
                 disabled={
                   !folderName.trim() ||
                   !permissions.canManageFolders ||
-                  (folderVisibility === "private" && !permissions.canManagePrivateFolders) ||
+                  (folderVisibility === "private" &&
+                    !permissions.canManagePrivateFolders) ||
                   isReviewActionPending
                 }
               >
@@ -373,8 +501,16 @@ export function ReviewWorkspaceDialog() {
               </Button>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs text-muted-foreground">Project folder</Label>
-              <Select value={folderAssignment?.folderId ?? "none"} onValueChange={updateFolder} disabled={!permissions.canManageFolders || isReviewActionPending}>
+              <Label className="text-xs text-muted-foreground">
+                Project folder
+              </Label>
+              <Select
+                value={folderAssignment?.folderId ?? "none"}
+                onValueChange={updateFolder}
+                disabled={
+                  !permissions.canManageFolders || isReviewActionPending
+                }
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
@@ -382,52 +518,95 @@ export function ReviewWorkspaceDialog() {
                   <SelectItem value="none">No folder</SelectItem>
                   {folders.map((folder) => (
                     <SelectItem key={folder.id} value={folder.id}>
-                      {folder.name} {folder.visibility === "private" ? "(private)" : ""}
+                      {folder.name}{" "}
+                      {folder.visibility === "private" ? "(private)" : ""}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs text-muted-foreground">Project folder access</Label>
+              <Label className="text-xs text-muted-foreground">
+                Project folder access
+              </Label>
               <Select
                 value={folderAccess}
-                onValueChange={(value) => updateFolderAccess(value as ProjectFolderAssignmentAccess)}
-                disabled={!folderAssignment || !permissions.canManageProjectPermissions || isReviewActionPending}
+                onValueChange={(value) =>
+                  updateFolderAccess(value as ProjectFolderAssignmentAccess)
+                }
+                disabled={
+                  !folderAssignment ||
+                  !permissions.canManageProjectPermissions ||
+                  isReviewActionPending
+                }
               >
                 <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="inherited">Inherit workspace role</SelectItem>
+                  <SelectItem value="inherited">
+                    Inherit workspace role
+                  </SelectItem>
                   <SelectItem value="shared">Shared with reviewers</SelectItem>
-                  <SelectItem value="private">Private project folder</SelectItem>
+                  <SelectItem value="private">
+                    Private project folder
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs text-muted-foreground">Folder privacy</Label>
+              <Label className="text-xs text-muted-foreground">
+                Folder privacy
+              </Label>
               {folders.length ? (
                 <div className="max-h-44 space-y-1 overflow-y-auto pr-1">
                   {folders.map((folder) => (
-                    <div key={folder.id} className="flex items-center justify-between gap-2 rounded-md border border-border px-2 py-1.5 text-sm">
+                    <div
+                      key={folder.id}
+                      className="flex items-center justify-between gap-2 rounded-md border border-border px-2 py-1.5 text-sm"
+                    >
                       <div className="min-w-0">
-                        <div className="truncate font-medium">{folder.name}</div>
-                        <div className="text-xs text-muted-foreground">{folder.visibility === "private" ? "Private folder" : "Workspace folder"}</div>
+                        <div className="truncate font-medium">
+                          {folder.name}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {folder.visibility === "private"
+                            ? "Private folder"
+                            : "Workspace folder"}
+                        </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Badge variant={folder.visibility === "private" ? "default" : "outline"}>{folder.visibility}</Badge>
+                        <Badge
+                          variant={
+                            folder.visibility === "private"
+                              ? "default"
+                              : "outline"
+                          }
+                        >
+                          {folder.visibility}
+                        </Badge>
                         <Select
                           value={folder.visibility}
-                          onValueChange={(value) => updateFolderVisibility(folder.id, value as ProjectFolderVisibility)}
-                          disabled={!permissions.canManageFolders || isReviewActionPending}
+                          onValueChange={(value) =>
+                            updateFolderVisibility(
+                              folder.id,
+                              value as ProjectFolderVisibility,
+                            )
+                          }
+                          disabled={
+                            !permissions.canManageFolders ||
+                            isReviewActionPending
+                          }
                         >
                           <SelectTrigger className="h-8 w-28">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="workspace">Workspace</SelectItem>
-                            <SelectItem value="private" disabled={!permissions.canManagePrivateFolders}>
+                            <SelectItem
+                              value="private"
+                              disabled={!permissions.canManagePrivateFolders}
+                            >
                               Private
                             </SelectItem>
                           </SelectContent>
@@ -437,7 +616,9 @@ export function ReviewWorkspaceDialog() {
                   ))}
                 </div>
               ) : (
-                <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">No folders yet.</div>
+                <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">
+                  No folders yet.
+                </div>
               )}
             </div>
           </TabsContent>
@@ -445,13 +626,25 @@ export function ReviewWorkspaceDialog() {
           <TabsContent value="share" className="mt-3 space-y-3">
             <div className="rounded-md border border-border p-3 text-sm">
               <div className="mb-2 font-medium">Local review link</div>
-              <p className="break-all text-muted-foreground">{shareLink?.url ?? "Create a link for this browser profile."}</p>
+              <p className="break-all text-muted-foreground">
+                {shareLink?.url ?? "Create a link for this browser profile."}
+              </p>
             </div>
-            <Button size="sm" onClick={copyShareLink} disabled={!permissions.canManageShareLinks || isReviewActionPending}>
+            <Button
+              size="sm"
+              onClick={copyShareLink}
+              disabled={
+                !permissions.canManageShareLinks || isReviewActionPending
+              }
+            >
               <Copy className="size-4" />
               Copy review link
             </Button>
-            {shareMessage ? <div className="text-sm text-muted-foreground">{shareMessage}</div> : null}
+            {shareMessage ? (
+              <div className="text-sm text-muted-foreground">
+                {shareMessage}
+              </div>
+            ) : null}
             <HostedReviewLinksPanel
               projectId={project.id}
               exportName={latestCompletedExportName(projectExports)}
@@ -464,9 +657,25 @@ export function ReviewWorkspaceDialog() {
             <section className="space-y-2">
               <div className="font-medium">Workspace members</div>
               <div className="grid grid-cols-[1fr_1fr_110px_auto] gap-2">
-                <Input value={memberName} onChange={(event) => setMemberName(event.target.value)} placeholder="Name" disabled={!permissions.canManageMembers} />
-                <Input value={memberEmail} onChange={(event) => setMemberEmail(event.target.value)} placeholder="Email" disabled={!permissions.canManageMembers} />
-                <Select value={memberRole} onValueChange={(value) => setMemberRole(value as WorkspaceMember["role"])} disabled={!permissions.canManageMembers}>
+                <Input
+                  value={memberName}
+                  onChange={(event) => setMemberName(event.target.value)}
+                  placeholder="Name"
+                  disabled={!permissions.canManageMembers}
+                />
+                <Input
+                  value={memberEmail}
+                  onChange={(event) => setMemberEmail(event.target.value)}
+                  placeholder="Email"
+                  disabled={!permissions.canManageMembers}
+                />
+                <Select
+                  value={memberRole}
+                  onValueChange={(value) =>
+                    setMemberRole(value as WorkspaceMember["role"])
+                  }
+                  disabled={!permissions.canManageMembers}
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -479,17 +688,27 @@ export function ReviewWorkspaceDialog() {
                 <Button
                   size="sm"
                   onClick={submitMember}
-                  disabled={!memberName.trim() || !memberEmail.trim() || !permissions.canManageMembers || isReviewActionPending}
+                  disabled={
+                    !memberName.trim() ||
+                    !memberEmail.trim() ||
+                    !permissions.canManageMembers ||
+                    isReviewActionPending
+                  }
                 >
                   Add
                 </Button>
               </div>
               <div className="space-y-1">
                 {members.map((member) => (
-                  <div key={member.id} className="flex items-center justify-between gap-2 rounded-md border border-border px-2 py-1.5 text-sm">
+                  <div
+                    key={member.id}
+                    className="flex items-center justify-between gap-2 rounded-md border border-border px-2 py-1.5 text-sm"
+                  >
                     <div className="min-w-0">
                       <div className="truncate font-medium">{member.name}</div>
-                      <div className="truncate text-xs text-muted-foreground">{member.email}</div>
+                      <div className="truncate text-xs text-muted-foreground">
+                        {member.email}
+                      </div>
                     </div>
                     <div className="flex items-center gap-1">
                       <Badge variant="outline">{member.role}</Badge>
@@ -498,7 +717,9 @@ export function ReviewWorkspaceDialog() {
                         variant="ghost"
                         className="size-7"
                         onClick={() => removeMember(member.id)}
-                        disabled={!permissions.canManageMembers || isReviewActionPending}
+                        disabled={
+                          !permissions.canManageMembers || isReviewActionPending
+                        }
                       >
                         <Trash2 className="size-4" />
                       </Button>
@@ -508,41 +729,85 @@ export function ReviewWorkspaceDialog() {
               </div>
             </section>
             <Separator />
-            <WorkspaceAccessPanel projectId={project.id} activeRole={activeRole} permissions={permissions} />
+            <WorkspaceAccessPanel
+              projectId={project.id}
+              activeRole={activeRole}
+              permissions={permissions}
+            />
             <Separator />
-            <CloudWorkspaceAccessPanel projectId={project.id} disabled={isReviewActionPending} />
+            <CloudWorkspaceAccessPanel
+              projectId={project.id}
+              disabled={isReviewActionPending}
+            />
             <Separator />
             <section className="space-y-2">
               <div className="font-medium">Export history</div>
               {!permissions.canViewExportHistory ? (
-                <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">Export history is hidden for this access level.</div>
+                <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">
+                  Export history is hidden for this access level.
+                </div>
               ) : projectExports.length ? (
                 <div className="max-h-40 space-y-1 overflow-y-auto pr-1">
                   {projectExports.map((job) => (
-                    <div key={job.id} className="flex items-center justify-between gap-3 rounded-md border border-border px-2 py-1.5 text-sm">
+                    <div
+                      key={job.id}
+                      className="flex items-center justify-between gap-3 rounded-md border border-border px-2 py-1.5 text-sm"
+                    >
                       <span className="truncate">{job.outputName}</span>
                       <div className="flex shrink-0 items-center gap-2">
                         {job.exportQaSnapshot ? (
-                          <Badge variant={job.exportQaSnapshot.status === "blocked" ? "destructive" : job.exportQaSnapshot.status === "review" ? "secondary" : "outline"}>
+                          <Badge
+                            variant={
+                              job.exportQaSnapshot.status === "blocked"
+                                ? "destructive"
+                                : job.exportQaSnapshot.status === "review"
+                                  ? "secondary"
+                                  : "outline"
+                            }
+                          >
                             Export QA {job.exportQaSnapshot.status}
                           </Badge>
                         ) : null}
                         {job.reviewSnapshot ? (
-                          <Badge variant={job.reviewSnapshot.status === "blocked" ? "destructive" : "outline"}>
+                          <Badge
+                            variant={
+                              job.reviewSnapshot.status === "blocked"
+                                ? "destructive"
+                                : "outline"
+                            }
+                          >
                             QA {job.reviewSnapshot.status}
                           </Badge>
                         ) : null}
                         {job.mediaAttributionSummary ? (
-                          <Badge variant={job.mediaAttributionSummary.status === "review" ? "secondary" : "outline"}>{job.mediaAttributionSummary.itemCount} media rights</Badge>
+                          <Badge
+                            variant={
+                              job.mediaAttributionSummary.status === "review"
+                                ? "secondary"
+                                : "outline"
+                            }
+                          >
+                            {job.mediaAttributionSummary.itemCount} media rights
+                          </Badge>
                         ) : null}
-                        <Badge variant={job.status === "complete" ? "default" : "secondary"}>{job.status}</Badge>
-                        <span className="text-xs text-muted-foreground">{job.progress}%</span>
+                        <Badge
+                          variant={
+                            job.status === "complete" ? "default" : "secondary"
+                          }
+                        >
+                          {job.status}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">
+                          {job.progress}%
+                        </span>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">No exports queued yet.</div>
+                <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">
+                  No exports queued yet.
+                </div>
               )}
             </section>
           </TabsContent>
@@ -577,7 +842,14 @@ function CommentAnchorControls({
         <div className="text-xs text-muted-foreground">
           {formatTime(currentTime)} - {formatTime(currentTime + rangeSeconds)}
         </div>
-        <NumberField label="Seconds" value={rangeSeconds} min={0.25} max={60} step={0.25} onChange={onRangeSecondsChange} />
+        <NumberField
+          label="Seconds"
+          value={rangeSeconds}
+          min={0.25}
+          max={60}
+          step={0.25}
+          onChange={onRangeSecondsChange}
+        />
       </div>
     );
   }
@@ -585,13 +857,32 @@ function CommentAnchorControls({
   if (mode === "canvas") {
     return (
       <div className="grid grid-cols-2 gap-2">
-        <NumberField label="Canvas X %" value={canvasX} min={0} max={100} step={1} onChange={onCanvasXChange} />
-        <NumberField label="Canvas Y %" value={canvasY} min={0} max={100} step={1} onChange={onCanvasYChange} />
+        <NumberField
+          label="Canvas X %"
+          value={canvasX}
+          min={0}
+          max={100}
+          step={1}
+          onChange={onCanvasXChange}
+        />
+        <NumberField
+          label="Canvas Y %"
+          value={canvasY}
+          min={0}
+          max={100}
+          step={1}
+          onChange={onCanvasYChange}
+        />
       </div>
     );
   }
 
-  return <div className="text-xs text-muted-foreground">Anchored at {formatTime(currentTime)} on the selected layer when one is active.</div>;
+  return (
+    <div className="text-xs text-muted-foreground">
+      Anchored at {formatTime(currentTime)} on the selected layer when one is
+      active.
+    </div>
+  );
 }
 
 function NumberField({
@@ -618,12 +909,26 @@ function NumberField({
   return (
     <label className="space-y-1 text-xs text-muted-foreground">
       {label}
-      <Input className="h-8 font-mono text-xs" type="number" min={min} max={max} step={step} value={value} onChange={(event) => handleChange(event.target.value)} />
+      <Input
+        className="h-8 font-mono text-xs"
+        type="number"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(event) => handleChange(event.target.value)}
+      />
     </label>
   );
 }
 
-function latestCompletedExportName(projectExports: Array<{ status: string; outputName: string; updatedAt: string }>) {
+function latestCompletedExportName(
+  projectExports: Array<{
+    status: string;
+    outputName: string;
+    updatedAt: string;
+  }>,
+) {
   return [...projectExports]
     .filter((job) => job.status === "complete")
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))[0]?.outputName;

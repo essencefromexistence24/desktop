@@ -12,11 +12,17 @@ type DashboardPageShellProps = {
 export function DashboardPageShell({ children }: DashboardPageShellProps) {
   return (
     <main className="min-h-screen bg-background" aria-label="Project dashboard">
-      <section className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-8" aria-labelledby="dashboard-projects-title">
+      <section
+        className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-8"
+        aria-labelledby="dashboard-projects-title"
+      >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-sm text-muted-foreground">Essence Studio</p>
-            <h1 id="dashboard-projects-title" className="text-3xl font-semibold tracking-tight">
+            <h1
+              id="dashboard-projects-title"
+              className="text-3xl font-semibold tracking-tight"
+            >
               Projects
             </h1>
           </div>

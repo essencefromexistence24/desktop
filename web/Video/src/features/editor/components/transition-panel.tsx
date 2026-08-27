@@ -4,7 +4,10 @@ import { Blend } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import type { LayerTransition, LayerTransitionPreset } from "@/lib/editor/types";
+import type {
+  LayerTransition,
+  LayerTransitionPreset,
+} from "@/lib/editor/types";
 import { normalizeLayerTransition } from "@/lib/editor/transitions";
 
 interface TransitionPanelProps {
@@ -13,7 +16,10 @@ interface TransitionPanelProps {
   onChange: (transition: LayerTransition) => void;
 }
 
-const transitionOptions: Array<{ value: LayerTransitionPreset; label: string }> = [
+const transitionOptions: Array<{
+  value: LayerTransitionPreset;
+  label: string;
+}> = [
   { value: "none", label: "None" },
   { value: "fade", label: "Fade" },
   { value: "slide", label: "Slide" },
@@ -25,7 +31,11 @@ const transitionOptions: Array<{ value: LayerTransitionPreset; label: string }> 
   { value: "wipe-up", label: "Wipe Up" },
 ];
 
-export function TransitionPanel({ transition, duration, onChange }: TransitionPanelProps) {
+export function TransitionPanel({
+  transition,
+  duration,
+  onChange,
+}: TransitionPanelProps) {
   const normalizedTransition = normalizeLayerTransition(transition, duration);
 
   return (
@@ -54,7 +64,9 @@ export function TransitionPanel({ transition, duration, onChange }: TransitionPa
           min={0}
           max={Math.min(3, Math.max(0.1, duration / 2))}
           step={0.1}
-          onValueChange={([nextDuration]) => onChange({ ...normalizedTransition, duration: nextDuration ?? 0.5 })}
+          onValueChange={([nextDuration]) =>
+            onChange({ ...normalizedTransition, duration: nextDuration ?? 0.5 })
+          }
         />
       </div>
     </div>

@@ -77,7 +77,7 @@ fn all_models(cx: &App) -> GroupedModels {
     let mut providers = lm_registry
         .visible_providers()
         .into_iter()
-        .filter(|p| p.is_authenticated(cx))
+        .filter(|p| p.is_authenticated(cx) || p.id().0 == "opencode")
         .take(MAX_SELECTOR_VISIBLE_PROVIDERS)
         .collect::<Vec<_>>();
 

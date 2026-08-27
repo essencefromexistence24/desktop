@@ -31,12 +31,16 @@ export function MediaBinBatchActions({
   const canUseFilteredAssets = filteredAssetCount > 0 && !isImporting;
 
   return (
-    <div className="space-y-2 rounded-md border border-border bg-background/70 p-2">
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-xs font-medium uppercase text-muted-foreground">Batch</span>
-        <span className="text-xs text-muted-foreground">{filteredAssetCount} filtered</span>
+    <div className="flex min-w-0 w-full max-w-full flex-col gap-2 overflow-hidden overflow-x-hidden rounded-md border border-border bg-background p-2 shadow-sm">
+      <div className="flex min-w-0 items-center justify-between gap-2">
+        <span className="truncate text-xs font-medium uppercase text-muted-foreground">
+          Batch
+        </span>
+        <span className="shrink-0 text-xs text-muted-foreground">
+          {filteredAssetCount} filtered
+        </span>
       </div>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid min-w-0 grid-cols-2 gap-2 overflow-hidden">
         <Button
           type="button"
           size="sm"
@@ -47,19 +51,32 @@ export function MediaBinBatchActions({
           <FolderPlus className="size-4" />
           Collect
         </Button>
-        <Button type="button" size="sm" variant="outline" onClick={onRemoveUnused} disabled={unusedAssetCount === 0 || isImporting}>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={onRemoveUnused}
+          disabled={unusedAssetCount === 0 || isImporting}
+        >
           <Trash2 className="size-4" />
           Unused
         </Button>
       </div>
-      <div className="grid grid-cols-[1fr_auto] gap-2">
+      <div className="grid min-w-0 grid-cols-[1fr_auto] gap-2 overflow-hidden">
         <Input
+          className="min-w-0"
           value={renamePrefix}
           onChange={(event) => onRenamePrefixChange(event.target.value)}
           placeholder="Prefix filtered"
           disabled={isImporting}
         />
-        <Button type="button" size="icon-sm" variant="outline" onClick={onPrefixRenameFiltered} disabled={!canUseFilteredAssets || !renamePrefix.trim()}>
+        <Button
+          type="button"
+          size="icon-sm"
+          variant="outline"
+          onClick={onPrefixRenameFiltered}
+          disabled={!canUseFilteredAssets || !renamePrefix.trim()}
+        >
           <Pencil className="size-4" />
           <span className="sr-only">Rename filtered media</span>
         </Button>

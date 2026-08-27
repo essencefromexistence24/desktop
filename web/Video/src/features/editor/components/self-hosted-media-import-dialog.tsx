@@ -13,7 +13,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { MediaType } from "@/lib/editor/types";
 import type { SelfHostedMediaImportInput } from "@/lib/media/self-hosted-media";
 
@@ -62,7 +68,9 @@ export function SelfHostedMediaImportDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Link Self-Hosted Media</DialogTitle>
-          <DialogDescription>Use a direct media file URL from storage you control.</DialogDescription>
+          <DialogDescription>
+            Use a direct media file URL from storage you control.
+          </DialogDescription>
         </DialogHeader>
         <form className="space-y-4" onSubmit={submit}>
           <div className="space-y-2">
@@ -78,7 +86,11 @@ export function SelfHostedMediaImportDialog({
           <div className="grid grid-cols-[120px_1fr] gap-3">
             <div className="space-y-2">
               <Label>Type</Label>
-              <Select value={mediaType} onValueChange={(value) => setMediaType(value as MediaType)} disabled={isImporting}>
+              <Select
+                value={mediaType}
+                onValueChange={(value) => setMediaType(value as MediaType)}
+                disabled={isImporting}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
@@ -102,7 +114,12 @@ export function SelfHostedMediaImportDialog({
           </div>
           {error ? <p className="text-xs text-destructive">{error}</p> : null}
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isImporting}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              disabled={isImporting}
+            >
               Cancel
             </Button>
             <Button type="submit" disabled={isImporting}>

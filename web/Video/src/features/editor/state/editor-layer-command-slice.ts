@@ -2,7 +2,11 @@
 
 import type { EditorProject, TimelineLayer } from "@/lib/editor/types";
 import { createEditorDocumentSnapshot } from "@/features/editor/state/editor-store-core";
-import type { EditorState, EditorStoreGet, EditorStoreSet } from "@/features/editor/state/editor-store-types";
+import type {
+  EditorState,
+  EditorStoreGet,
+  EditorStoreSet,
+} from "@/features/editor/state/editor-store-types";
 
 type EditorLayerCommandSlice = Pick<
   EditorState,
@@ -18,10 +22,21 @@ type EditorLayerCommandSlice = Pick<
 
 type EditorLayerCommandDeps = {
   commit: (mutator: (project: EditorProject) => EditorProject) => void;
-  getSelectedLayerIds: (state: Pick<EditorState, "selectedLayerId" | "selectedLayerIds">) => string[];
-  projectDurationForLayers: (baseDuration: number, layers: TimelineLayer[]) => number;
-  cloneLayer: (layer: TimelineLayer, patch: Partial<TimelineLayer>) => TimelineLayer;
-  duplicatedGroupId: (groupId: string | undefined, groupIds: Map<string, string>) => string | undefined;
+  getSelectedLayerIds: (
+    state: Pick<EditorState, "selectedLayerId" | "selectedLayerIds">,
+  ) => string[];
+  projectDurationForLayers: (
+    baseDuration: number,
+    layers: TimelineLayer[],
+  ) => number;
+  cloneLayer: (
+    layer: TimelineLayer,
+    patch: Partial<TimelineLayer>,
+  ) => TimelineLayer;
+  duplicatedGroupId: (
+    groupId: string | undefined,
+    groupIds: Map<string, string>,
+  ) => string | undefined;
   snapProjectTime: (project: EditorProject, time: number) => number;
   projectSnapInterval: (project: Pick<EditorProject, "snapInterval">) => number;
 };
@@ -95,7 +110,10 @@ export function createEditorLayerCommandSlice(
             id: crypto.randomUUID(),
             name: `${layer.name} copy`,
             groupId: deps.duplicatedGroupId(layer.groupId, duplicateGroupIds),
-            start: deps.snapProjectTime(state.project, layer.start + deps.projectSnapInterval(state.project)),
+            start: deps.snapProjectTime(
+              state.project,
+              layer.start + deps.projectSnapInterval(state.project),
+            ),
             track: layer.track + 1,
             createdAt: now,
             updatedAt: now,
@@ -105,11 +123,17 @@ export function createEditorLayerCommandSlice(
 
       deps.commit((project) => ({
         ...project,
-        duration: Math.max(project.duration, ...duplicates.map((layer) => layer.start + layer.duration)),
+        duration: Math.max(
+          project.duration,
+          ...duplicates.map((layer) => layer.start + layer.duration),
+        ),
         layers: [...project.layers, ...duplicates],
         updatedAt: now,
       }));
-      set({ selectedLayerId: duplicates.at(-1)?.id ?? null, selectedLayerIds: duplicates.map((layer) => layer.id) });
+      set({
+        selectedLayerId: duplicates.at(-1)?.id ?? null,
+        selectedLayerIds: duplicates.map((layer) => layer.id),
+      });
     },
     splitSelectedLayer: () => get().splitSelectedLayers(),
     splitSelectedLayers: () => {
@@ -150,23 +174,33 @@ export function createEditorLayerCommandSlice(
         updatedAt: new Date().toISOString(),
       }));
       if (rightIds.length) {
-        set({ selectedLayerId: rightIds.at(-1) ?? null, selectedLayerIds: rightIds });
+        set({
+          selectedLayerId: rightIds.at(-1) ?? null,
+          selectedLayerIds: rightIds,
+        });
       }
     },
     moveLayerTrack: (layerId, direction) => {
       const layer = get().project.layers.find((item) => item.id === layerId);
       if (!layer || layer.locked) return;
 
-      get().updateSelectedLayerTiming(layerId, { track: Math.max(0, layer.track + direction) });
+      get().updateSelectedLayerTiming(layerId, {
+        track: Math.max(0, layer.track + direction),
+      });
     },
   };
 }
 
-function removedRippleSpan(rippleMode: boolean, removedLayers: TimelineLayer[]) {
+function removedRippleSpan(
+  rippleMode: boolean,
+  removedLayers: TimelineLayer[],
+) {
   if (!rippleMode || removedLayers.length === 0) return null;
 
   const start = Math.min(...removedLayers.map((layer) => layer.start));
-  const end = Math.max(...removedLayers.map((layer) => layer.start + layer.duration));
+  const end = Math.max(
+    ...removedLayers.map((layer) => layer.start + layer.duration),
+  );
   const span = Math.max(0, end - start);
 
   if (span <= 0) return null;

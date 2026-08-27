@@ -7,8 +7,13 @@ import { loadBrandFontFaces } from "@/lib/media/brand-font-store";
 
 export function BrandFontLoader() {
   const brandKit = useEditorStore((state) => state.project.brandKit);
-  const fontAssets = useMemo(() => normalizeBrandKitSettings(brandKit).fontAssets, [brandKit]);
-  const fontAssetKey = fontAssets.map((asset) => `${asset.id}:${asset.storageKey}`).join("|");
+  const fontAssets = useMemo(
+    () => normalizeBrandKitSettings(brandKit).fontAssets,
+    [brandKit],
+  );
+  const fontAssetKey = fontAssets
+    .map((asset) => `${asset.id}:${asset.storageKey}`)
+    .join("|");
 
   useEffect(() => {
     if (!fontAssets.length) return;

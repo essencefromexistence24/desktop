@@ -35,7 +35,18 @@ impl AgentServer for CustomAgentServer {
     }
 
     fn logo(&self) -> IconName {
-        IconName::Terminal
+        // Brand icons for the well-known ACP agents so the thread header matches
+        // the sidebar and the new-thread menu. Mirrors agent_ui::default_agent_icon
+        // (agent_servers cannot depend on agent_ui). Registry-provided icon paths,
+        // when present, take precedence in ConversationView.
+        match self.agent_id.0.as_ref() {
+            "claude-acp" => IconName::AiClaude,
+            "codex-acp" => IconName::AiOpenAi,
+            "github-copilot-acp" => IconName::Copilot,
+            "cursor-acp" => IconName::EditorCursor,
+            "opencode-acp" => IconName::AiOpenCode,
+            _ => IconName::Terminal,
+        }
     }
 
     fn default_mode(&self, cx: &App) -> Option<acp::SessionModeId> {

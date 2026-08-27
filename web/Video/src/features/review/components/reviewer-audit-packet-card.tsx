@@ -6,7 +6,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { listHostedReviewComments, type HostedReviewComment } from "@/lib/projects/hosted-review-comment-client";
+import {
+  listHostedReviewComments,
+  type HostedReviewComment,
+} from "@/lib/projects/hosted-review-comment-client";
 import {
   listExportPublishPreps,
   type ExportPublishPrep,
@@ -14,7 +17,10 @@ import {
   type ExportReviewDownload,
   type ExportReviewPackage,
 } from "@/lib/projects/collaboration-store";
-import { createReviewerAuditPacket, downloadReviewerAuditPacket } from "@/lib/projects/reviewer-audit-packet";
+import {
+  createReviewerAuditPacket,
+  downloadReviewerAuditPacket,
+} from "@/lib/projects/reviewer-audit-packet";
 
 interface ReviewerAuditPacketCardProps {
   review: ExportReviewPackage;
@@ -22,10 +28,16 @@ interface ReviewerAuditPacketCardProps {
   downloads: ExportReviewDownload[];
 }
 
-export function ReviewerAuditPacketCard({ review, comments, downloads }: ReviewerAuditPacketCardProps) {
+export function ReviewerAuditPacketCard({
+  review,
+  comments,
+  downloads,
+}: ReviewerAuditPacketCardProps) {
   const [publishPreps, setPublishPreps] = useState<ExportPublishPrep[]>([]);
   const [hostedTokenInput, setHostedTokenInput] = useState("");
-  const [hostedComments, setHostedComments] = useState<HostedReviewComment[]>([]);
+  const [hostedComments, setHostedComments] = useState<HostedReviewComment[]>(
+    [],
+  );
   const [message, setMessage] = useState("");
   const [isLoadingHostedComments, setIsLoadingHostedComments] = useState(false);
 
@@ -34,13 +46,17 @@ export function ReviewerAuditPacketCard({ review, comments, downloads }: Reviewe
   }, [review.id]);
 
   useEffect(() => {
-    void refreshPublishPreps().catch(() => setMessage("Publish-prep audit records could not be loaded."));
+    void refreshPublishPreps().catch(() =>
+      setMessage("Publish-prep audit records could not be loaded."),
+    );
   }, [refreshPublishPreps]);
 
   async function loadHostedComments() {
     const token = extractHostedReviewToken(hostedTokenInput);
     if (!token) {
-      setMessage("Paste a hosted review URL or token before loading hosted comments.");
+      setMessage(
+        "Paste a hosted review URL or token before loading hosted comments.",
+      );
       return;
     }
 
@@ -50,9 +66,15 @@ export function ReviewerAuditPacketCard({ review, comments, downloads }: Reviewe
     try {
       const nextComments = await listHostedReviewComments(token);
       setHostedComments(nextComments);
-      setMessage(`Loaded ${nextComments.length} hosted ${nextComments.length === 1 ? "comment" : "comments"} for audit export.`);
+      setMessage(
+        `Loaded ${nextComments.length} hosted ${nextComments.length === 1 ? "comment" : "comments"} for audit export.`,
+      );
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Hosted comments could not be loaded.");
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Hosted comments could not be loaded.",
+      );
     } finally {
       setIsLoadingHostedComments(false);
     }
@@ -68,7 +90,11 @@ export function ReviewerAuditPacketCard({ review, comments, downloads }: Reviewe
       downloads,
       publishPreps: nextPublishPreps,
     });
-    setMessage(downloadReviewerAuditPacket(packet) ? "Reviewer audit packet exported." : "Reviewer audit export is unavailable in this runtime.");
+    setMessage(
+      downloadReviewerAuditPacket(packet)
+        ? "Reviewer audit packet exported."
+        : "Reviewer audit export is unavailable in this runtime.",
+    );
   }
 
   return (
@@ -79,15 +105,27 @@ export function ReviewerAuditPacketCard({ review, comments, downloads }: Reviewe
             <ShieldCheck className="size-5 text-muted-foreground" />
             Reviewer audit
           </span>
-          <Badge variant={review.reviewStatus === "approved" ? "default" : "secondary"}>{approvalLabel(review.reviewStatus)}</Badge>
+          <Badge
+            variant={
+              review.reviewStatus === "approved" ? "default" : "secondary"
+            }
+          >
+            {approvalLabel(review.reviewStatus)}
+          </Badge>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-          <AuditMetric label="Hosted comments" value={String(hostedComments.length)} />
+          <AuditMetric
+            label="Hosted comments"
+            value={String(hostedComments.length)}
+          />
           <AuditMetric label="Local comments" value={String(comments.length)} />
           <AuditMetric label="Downloads" value={String(downloads.length)} />
-          <AuditMetric label="Publish prep" value={String(publishPreps.length)} />
+          <AuditMetric
+            label="Publish prep"
+            value={String(publishPreps.length)}
+          />
         </div>
         <div className="grid gap-2 md:grid-cols-[1fr_auto_auto]">
           <Input
@@ -96,7 +134,12 @@ export function ReviewerAuditPacketCard({ review, comments, downloads }: Reviewe
             placeholder="Hosted review URL or token"
             aria-label="Hosted review URL or token"
           />
-          <Button type="button" variant="outline" onClick={loadHostedComments} disabled={isLoadingHostedComments}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={loadHostedComments}
+            disabled={isLoadingHostedComments}
+          >
             <RefreshCw className="size-4" />
             Load hosted comments
           </Button>
@@ -105,10 +148,17 @@ export function ReviewerAuditPacketCard({ review, comments, downloads }: Reviewe
             Export audit
           </Button>
         </div>
-        {message ? <div className="rounded-md border border-border p-2 text-xs text-muted-foreground">{message}</div> : null}
+        {message ? (
+          <div className="rounded-md border border-border p-2 text-xs text-muted-foreground">
+            {message}
+          </div>
+        ) : null}
         {hostedComments.length > 0 ? (
           <div className="rounded-md bg-muted/40 p-3 text-xs text-muted-foreground">
-            Hosted reviewer identities: {hostedComments.map((comment) => comment.reviewerEmail || comment.reviewerName).join(" / ")}
+            Hosted reviewer identities:{" "}
+            {hostedComments
+              .map((comment) => comment.reviewerEmail || comment.reviewerName)
+              .join(" / ")}
           </div>
         ) : null}
       </CardContent>
@@ -137,7 +187,9 @@ function extractHostedReviewToken(value: string) {
 
   try {
     const url = new URL(trimmed);
-    return decodeURIComponent(url.pathname.split("/").filter(Boolean).at(-1) ?? "");
+    return decodeURIComponent(
+      url.pathname.split("/").filter(Boolean).at(-1) ?? "",
+    );
   } catch {
     return trimmed;
   }

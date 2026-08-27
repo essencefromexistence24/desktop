@@ -26,13 +26,19 @@ export function InspectorLayerHeader({
   onRemoveSelectedLayers,
 }: InspectorLayerHeaderProps) {
   const subtitle =
-    selectedLayers.length > 1 ? `${selectedLayers.length} layers selected` : layer.groupId ? `${layer.kind} - grouped` : layer.kind;
+    selectedLayers.length > 1
+      ? `${selectedLayers.length} layers selected`
+      : layer.groupId
+        ? `${layer.kind} - grouped`
+        : layer.kind;
 
   return (
     <div className="flex items-start justify-between gap-2">
       <div>
         <h2 className="text-sm font-medium">Inspector</h2>
-        <p className="mt-1 text-xs uppercase tracking-wide text-muted-foreground">{subtitle}</p>
+        <p className="mt-1 text-xs uppercase tracking-wide text-muted-foreground">
+          {subtitle}
+        </p>
       </div>
       <div className="flex gap-1">
         <Button
@@ -44,7 +50,13 @@ export function InspectorLayerHeader({
         >
           <EyeOff className="size-4" />
         </Button>
-        <Button size="icon" variant="ghost" onClick={onShowAllLayers} disabled={!hasHiddenLayers} aria-label="Show all layers">
+        <Button
+          size="icon"
+          variant="ghost"
+          onClick={onShowAllLayers}
+          disabled={!hasHiddenLayers}
+          aria-label="Show all layers"
+        >
           <Eye className="size-4" />
         </Button>
         <Button

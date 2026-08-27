@@ -4,7 +4,14 @@ import { DownloadCloud, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { CloudProjectVersionDialog } from "@/features/dashboard/components/cloud-project-version-dialog";
 import { DashboardMessageView } from "@/features/dashboard/components/dashboard-message-view";
 import { ProjectReviewBadge } from "@/features/dashboard/components/project-library-badges";
@@ -14,7 +21,9 @@ type SignedInProjectLibraryCardProps = {
   library: DashboardCloudLibrary;
 };
 
-export function SignedInProjectLibraryCard({ library }: SignedInProjectLibraryCardProps) {
+export function SignedInProjectLibraryCard({
+  library,
+}: SignedInProjectLibraryCardProps) {
   const {
     canUseOnlineLibrary,
     cloudProjects,
@@ -31,7 +40,12 @@ export function SignedInProjectLibraryCard({ library }: SignedInProjectLibraryCa
     <Card className="shadow-none">
       <CardHeader className="gap-3 sm:flex-row sm:items-center sm:justify-between">
         <CardTitle className="text-lg">Signed-in project library</CardTitle>
-        <Button size="sm" variant="outline" onClick={refreshCloudProjects} disabled={!canUseOnlineLibrary || isCloudActionPending}>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={refreshCloudProjects}
+          disabled={!canUseOnlineLibrary || isCloudActionPending}
+        >
           <DownloadCloud className="size-4" />
           Refresh
         </Button>
@@ -64,11 +78,24 @@ export function SignedInProjectLibraryCard({ library }: SignedInProjectLibraryCa
                   <TableCell>{item.aspectRatio}</TableCell>
                   <TableCell>{item.layerCount}</TableCell>
                   <TableCell>{item.mediaCount}</TableCell>
-                  <TableCell>{item.reviewSummary ? <ProjectReviewBadge summary={item.reviewSummary} /> : <Badge variant="outline">Unknown</Badge>}</TableCell>
-                  <TableCell>{new Date(item.updatedAt).toLocaleString()}</TableCell>
+                  <TableCell>
+                    {item.reviewSummary ? (
+                      <ProjectReviewBadge summary={item.reviewSummary} />
+                    ) : (
+                      <Badge variant="outline">Unknown</Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(item.updatedAt).toLocaleString()}
+                  </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
-                      <Button size="sm" variant="outline" onClick={() => pullCloudProject(item.id)} disabled={isCloudActionPending}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => pullCloudProject(item.id)}
+                        disabled={isCloudActionPending}
+                      >
                         Open
                       </Button>
                       <CloudProjectVersionDialog

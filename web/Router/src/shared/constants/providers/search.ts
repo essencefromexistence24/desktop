@@ -133,4 +133,34 @@ export const SEARCH_PROVIDERS = {
     hasFree: true,
     authHint: "API key from dataforseo.com dashboard — SEO and SERP data API",
   },
+
+  firecrawl: {
+    id: "firecrawl",
+    alias: "fc",
+    name: "Firecrawl",
+    icon: "language",
+    color: "#FB923C",
+    textIcon: "FC",
+    website: "https://firecrawl.dev",
+    hasFree: true,
+    authHint: "API key from firecrawl.dev/app/api-keys (or set your self-hosted Firecrawl base URL)",
+    notice: {
+      text: "Free tier: 1,000 credits/month. Powers /v1/web/fetch and /v1/search.",
+      apiKeyUrl: "https://firecrawl.dev/app/api-keys",
+    },
+    serviceKinds: ["webSearch", "webFetch"],
+  },
+  "x-search": {
+    id: "x-search",
+    alias: "x_search",
+    name: "X Search (Grok)",
+    icon: "tag",
+    color: "#000000",
+    textIcon: "X",
+    website: "https://docs.x.ai/developers/tools/x-search",
+    authHint:
+      "SuperGrok OAuth (xai-oauth) or xAI API key. This is Grok X Search, not the X Developer MCP.",
+    serviceKinds: ["webSearch"],
+  },
+
 };

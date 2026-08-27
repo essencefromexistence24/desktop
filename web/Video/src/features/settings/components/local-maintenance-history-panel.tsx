@@ -33,15 +33,29 @@ export function LocalMaintenanceHistoryPanel({
         <div>
           <div className="text-sm font-medium">Maintenance evidence</div>
           <div className="text-xs text-muted-foreground">
-            {entries[0] ? `${localMaintenanceHistoryLabel(entries[0])} snapshot from ${formatHistoryTime(entries[0].savedAt)}` : "No maintenance snapshots saved yet"}
+            {entries[0]
+              ? `${localMaintenanceHistoryLabel(entries[0])} snapshot from ${formatHistoryTime(entries[0].savedAt)}`
+              : "No maintenance snapshots saved yet"}
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button type="button" size="sm" variant="outline" onClick={onSaveSnapshot} aria-label="Save maintenance snapshot">
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={onSaveSnapshot}
+            aria-label="Save maintenance snapshot"
+          >
             <Save className="size-3.5" />
             Save snapshot
           </Button>
-          <Button type="button" size="sm" variant="outline" onClick={onDownloadPacket} aria-label="Export maintenance evidence packet">
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={onDownloadPacket}
+            aria-label="Export maintenance evidence packet"
+          >
             <Download className="size-3.5" />
             Export packet
           </Button>
@@ -68,18 +82,25 @@ export function LocalMaintenanceHistoryPanel({
             <div key={entry.id} className="rounded-md bg-muted/40 p-2">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex min-w-0 flex-wrap items-center gap-2">
-                  <Badge variant={maintenanceHistoryBadgeVariant(entry)}>{localMaintenanceHistoryLabel(entry)}</Badge>
-                  <span className="text-xs text-muted-foreground">{formatHistoryTime(entry.savedAt)}</span>
+                  <Badge variant={maintenanceHistoryBadgeVariant(entry)}>
+                    {localMaintenanceHistoryLabel(entry)}
+                  </Badge>
+                  <span className="text-xs text-muted-foreground">
+                    {formatHistoryTime(entry.savedAt)}
+                  </span>
                 </div>
                 <Badge variant="outline">{entry.score}/100</Badge>
               </div>
               <div className="mt-1 truncate text-xs text-muted-foreground">
-                {entry.projectTitle} / {entry.readyCount} ready / {entry.attentionCount} draft / {entry.blockedCount} blocked
+                {entry.projectTitle} / {entry.readyCount} ready /{" "}
+                {entry.attentionCount} draft / {entry.blockedCount} blocked
               </div>
             </div>
           ))
         ) : (
-          <div className="rounded-md bg-muted/40 p-2 text-xs text-muted-foreground">No snapshots match this filter.</div>
+          <div className="rounded-md bg-muted/40 p-2 text-xs text-muted-foreground">
+            No snapshots match this filter.
+          </div>
         )}
       </div>
     </div>

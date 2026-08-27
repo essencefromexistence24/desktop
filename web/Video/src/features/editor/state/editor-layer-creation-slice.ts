@@ -1,15 +1,33 @@
 "use client";
 
-import { createLayerFromAsset, createProgressLayer, createShapeLayer, createTextLayer, createTimerLayer, cuesFromAi } from "@/lib/editor/factory";
-import type { EditorProject, MediaAsset, TimelineLayer } from "@/lib/editor/types";
-import { createMediaLayoutLayers, type MediaLayoutMode } from "@/lib/editor/media-layouts";
+import {
+  createLayerFromAsset,
+  createProgressLayer,
+  createShapeLayer,
+  createTextLayer,
+  createTimerLayer,
+  cuesFromAi,
+} from "@/lib/editor/factory";
+import type {
+  EditorProject,
+  MediaAsset,
+  TimelineLayer,
+} from "@/lib/editor/types";
+import {
+  createMediaLayoutLayers,
+  type MediaLayoutMode,
+} from "@/lib/editor/media-layouts";
 import { createMemeLayers, type MemeStyle } from "@/lib/editor/meme";
 import { createStickerLayer, stickerPresets } from "@/lib/editor/templates";
 import { TIMELINE_MIN_LAYER_SECONDS } from "@/lib/editor/timeline";
 import { normalizeLayerTransition } from "@/lib/editor/transitions";
 import { normalizeLayerVisualStyle } from "@/lib/editor/visual-effects";
 import { captureVideoFreezeFrame } from "@/lib/media/freeze-frame";
-import type { EditorState, EditorStoreGet, EditorStoreSet } from "@/features/editor/state/editor-store-types";
+import type {
+  EditorState,
+  EditorStoreGet,
+  EditorStoreSet,
+} from "@/features/editor/state/editor-store-types";
 
 type EditorLayerCreationSlice = Pick<
   EditorState,
@@ -33,7 +51,10 @@ type EditorLayerCreationDeps = {
   addLayer: (layer: TimelineLayer) => void;
   addLayers: (layers: TimelineLayer[]) => void;
   commit: (mutator: (project: EditorProject) => EditorProject) => void;
-  cloneLayer: (layer: TimelineLayer, patch: Partial<TimelineLayer>) => TimelineLayer;
+  cloneLayer: (
+    layer: TimelineLayer,
+    patch: Partial<TimelineLayer>,
+  ) => TimelineLayer;
   createReplacementAudioLayer: (
     sourceLayer: TimelineLayer,
     assetId: string,
@@ -43,10 +64,15 @@ type EditorLayerCreationDeps = {
     now: string,
   ) => TimelineLayer;
   formatFreezeFrameTime: (seconds: number) => string;
-  getSelectedLayerIds: (state: Pick<EditorState, "selectedLayerId" | "selectedLayerIds">) => string[];
+  getSelectedLayerIds: (
+    state: Pick<EditorState, "selectedLayerId" | "selectedLayerIds">,
+  ) => string[];
   groupAwareLayerIds: (layers: TimelineLayer[], layerIds: string[]) => string[];
   nextTrack: (layers: TimelineLayer[]) => number;
-  projectDurationForLayers: (baseDuration: number, layers: TimelineLayer[]) => number;
+  projectDurationForLayers: (
+    baseDuration: number,
+    layers: TimelineLayer[],
+  ) => number;
 };
 
 export function createEditorLayerCreationSlice(
@@ -59,12 +85,18 @@ export function createEditorLayerCreationSlice(
       const asset = get().mediaAssets.find((item) => item.id === assetId);
       if (!asset) return null;
       const now = new Date().toISOString();
-      const layer = createLayerFromAsset(asset, options?.track ?? deps.nextTrack(get().project.layers));
+      const layer = createLayerFromAsset(
+        asset,
+        options?.track ?? deps.nextTrack(get().project.layers),
+      );
       const optionTransform = options?.transform;
       const nextLayer = {
         ...layer,
         start: Math.max(0, options?.start ?? layer.start),
-        duration: Math.max(TIMELINE_MIN_LAYER_SECONDS, options?.duration ?? layer.duration),
+        duration: Math.max(
+          TIMELINE_MIN_LAYER_SECONDS,
+          options?.duration ?? layer.duration,
+        ),
         name: options?.name?.trim() || layer.name,
         notes: options?.notes ?? layer.notes,
         volume: options?.volume ?? layer.volume,
@@ -75,7 +107,9 @@ export function createEditorLayerCreationSlice(
           ? {
               ...layer.transform,
               ...optionTransform,
-              crop: optionTransform.crop ? { ...optionTransform.crop } : layer.transform.crop,
+              crop: optionTransform.crop
+                ? { ...optionTransform.crop }
+                : layer.transform.crop,
             }
           : layer.transform,
         updatedAt: now,
@@ -84,14 +118,29 @@ export function createEditorLayerCreationSlice(
       return nextLayer.id;
     },
     addTextLayer: () =>
-      deps.addLayer(placeLayerAtPlayhead(createTextLayer("text", deps.nextTrack(get().project.layers)), get().currentTime)),
+      deps.addLayer(
+        placeLayerAtPlayhead(
+          createTextLayer("text", deps.nextTrack(get().project.layers)),
+          get().currentTime,
+        ),
+      ),
     addSubtitleLayer: () =>
-      deps.addLayer(placeLayerAtPlayhead(createTextLayer("subtitle", deps.nextTrack(get().project.layers)), get().currentTime)),
+      deps.addLayer(
+        placeLayerAtPlayhead(
+          createTextLayer("subtitle", deps.nextTrack(get().project.layers)),
+          get().currentTime,
+        ),
+      ),
     addSubtitleLayerFromCues: (input) => {
-      const cues = input.cues.filter((cue) => cue.end > cue.start && cue.text.trim());
+      const cues = input.cues.filter(
+        (cue) => cue.end > cue.start && cue.text.trim(),
+      );
       if (!cues.length) return null;
 
-      const layer = createTextLayer("subtitle", deps.nextTrack(get().project.layers));
+      const layer = createTextLayer(
+        "subtitle",
+        deps.nextTrack(get().project.layers),
+      );
       layer.name = input.name.trim() || "Imported captions";
       layer.cues = cues;
       layer.duration = Math.max(...cues.map((cue) => cue.end), 5);
@@ -99,15 +148,39 @@ export function createEditorLayerCreationSlice(
       return layer.id;
     },
     addShapeLayer: () =>
-      deps.addLayer(placeLayerAtPlayhead(createShapeLayer(deps.nextTrack(get().project.layers)), get().currentTime)),
+      deps.addLayer(
+        placeLayerAtPlayhead(
+          createShapeLayer(deps.nextTrack(get().project.layers)),
+          get().currentTime,
+        ),
+      ),
     addProgressLayer: () =>
-      deps.addLayer(placeLayerAtPlayhead(createProgressLayer(deps.nextTrack(get().project.layers)), get().currentTime)),
+      deps.addLayer(
+        placeLayerAtPlayhead(
+          createProgressLayer(deps.nextTrack(get().project.layers)),
+          get().currentTime,
+        ),
+      ),
     addTimerLayer: () =>
-      deps.addLayer(placeLayerAtPlayhead(createTimerLayer(deps.nextTrack(get().project.layers)), get().currentTime)),
+      deps.addLayer(
+        placeLayerAtPlayhead(
+          createTimerLayer(deps.nextTrack(get().project.layers)),
+          get().currentTime,
+        ),
+      ),
     createFreezeFramesFromSelectedVideoLayers: async () => {
       const state = get();
-      const selectedIds = deps.groupAwareLayerIds(state.project.layers, deps.getSelectedLayerIds(state));
-      const sourceLayers = state.project.layers.filter((layer) => selectedIds.includes(layer.id) && layer.kind === "video" && layer.assetId && !layer.locked);
+      const selectedIds = deps.groupAwareLayerIds(
+        state.project.layers,
+        deps.getSelectedLayerIds(state),
+      );
+      const sourceLayers = state.project.layers.filter(
+        (layer) =>
+          selectedIds.includes(layer.id) &&
+          layer.kind === "video" &&
+          layer.assetId &&
+          !layer.locked,
+      );
       const now = new Date().toISOString();
       const createdAssets: MediaAsset[] = [];
       const createdLayers: TimelineLayer[] = [];
@@ -115,19 +188,30 @@ export function createEditorLayerCreationSlice(
       let track = deps.nextTrack(state.project.layers);
 
       for (const sourceLayer of sourceLayers) {
-        const sourceAsset = state.mediaAssets.find((asset) => asset.id === sourceLayer.assetId);
+        const sourceAsset = state.mediaAssets.find(
+          (asset) => asset.id === sourceLayer.assetId,
+        );
         if (!sourceAsset?.objectUrl) {
           skipped += 1;
           continue;
         }
 
         try {
-          const frame = await captureVideoFreezeFrame({ layer: sourceLayer, asset: sourceAsset, currentTime: state.currentTime });
+          const frame = await captureVideoFreezeFrame({
+            layer: sourceLayer,
+            asset: sourceAsset,
+            currentTime: state.currentTime,
+          });
           const start = Math.min(
-            sourceLayer.start + sourceLayer.duration - TIMELINE_MIN_LAYER_SECONDS,
+            sourceLayer.start +
+              sourceLayer.duration -
+              TIMELINE_MIN_LAYER_SECONDS,
             Math.max(sourceLayer.start, state.currentTime),
           );
-          const duration = Math.max(TIMELINE_MIN_LAYER_SECONDS, Math.min(2, sourceLayer.start + sourceLayer.duration - start));
+          const duration = Math.max(
+            TIMELINE_MIN_LAYER_SECONDS,
+            Math.min(2, sourceLayer.start + sourceLayer.duration - start),
+          );
           const freezeLayer = createLayerFromAsset(frame.asset, track++);
           createdAssets.push(frame.asset);
           createdLayers.push({
@@ -137,7 +221,10 @@ export function createEditorLayerCreationSlice(
             duration,
             transform: { ...sourceLayer.transform },
             motion: { preset: "none", intensity: 1 },
-            transition: normalizeLayerTransition(sourceLayer.transition, duration),
+            transition: normalizeLayerTransition(
+              sourceLayer.transition,
+              duration,
+            ),
             style: normalizeLayerVisualStyle(sourceLayer.style),
             notes: `Freeze frame from ${sourceLayer.name} at ${deps.formatFreezeFrameTime(frame.localTime)}.`,
             createdAt: now,
@@ -149,7 +236,9 @@ export function createEditorLayerCreationSlice(
       }
 
       if (createdAssets.length > 0) {
-        set((current) => ({ mediaAssets: [...current.mediaAssets, ...createdAssets] }));
+        set((current) => ({
+          mediaAssets: [...current.mediaAssets, ...createdAssets],
+        }));
         deps.addLayers(createdLayers);
       }
 
@@ -157,8 +246,17 @@ export function createEditorLayerCreationSlice(
     },
     extractAudioFromSelectedVideoLayers: () => {
       const state = get();
-      const selectedIds = deps.groupAwareLayerIds(state.project.layers, deps.getSelectedLayerIds(state));
-      const sourceLayers = state.project.layers.filter((layer) => selectedIds.includes(layer.id) && layer.kind === "video" && layer.assetId && !layer.locked);
+      const selectedIds = deps.groupAwareLayerIds(
+        state.project.layers,
+        deps.getSelectedLayerIds(state),
+      );
+      const sourceLayers = state.project.layers.filter(
+        (layer) =>
+          selectedIds.includes(layer.id) &&
+          layer.kind === "video" &&
+          layer.assetId &&
+          !layer.locked,
+      );
       if (!sourceLayers.length) return 0;
 
       const now = new Date().toISOString();
@@ -180,7 +278,11 @@ export function createEditorLayerCreationSlice(
 
       deps.commit((project) => {
         const layers = [
-          ...project.layers.map((layer) => (sourceIds.has(layer.id) ? { ...layer, muted: true, updatedAt: now } : layer)),
+          ...project.layers.map((layer) =>
+            sourceIds.has(layer.id)
+              ? { ...layer, muted: true, updatedAt: now }
+              : layer,
+          ),
           ...audioLayers,
         ];
 
@@ -192,30 +294,60 @@ export function createEditorLayerCreationSlice(
         };
       });
 
-      set({ selectedLayerId: audioLayers.at(-1)?.id ?? null, selectedLayerIds: audioLayers.map((layer) => layer.id) });
+      set({
+        selectedLayerId: audioLayers.at(-1)?.id ?? null,
+        selectedLayerIds: audioLayers.map((layer) => layer.id),
+      });
       return audioLayers.length;
     },
     replaceSelectedVideoAudio: (assetId) => {
       const state = get();
-      const asset = state.mediaAssets.find((item) => item.id === assetId && item.type === "audio");
+      const asset = state.mediaAssets.find(
+        (item) => item.id === assetId && item.type === "audio",
+      );
       if (!asset) return 0;
 
-      const selectedIds = deps.groupAwareLayerIds(state.project.layers, deps.getSelectedLayerIds(state));
-      const sourceLayers = state.project.layers.filter((layer) => selectedIds.includes(layer.id) && layer.kind === "video" && !layer.locked);
+      const selectedIds = deps.groupAwareLayerIds(
+        state.project.layers,
+        deps.getSelectedLayerIds(state),
+      );
+      const sourceLayers = state.project.layers.filter(
+        (layer) =>
+          selectedIds.includes(layer.id) &&
+          layer.kind === "video" &&
+          !layer.locked,
+      );
       if (!sourceLayers.length) return 0;
 
       const now = new Date().toISOString();
       const sourceIds = new Set(sourceLayers.map((layer) => layer.id));
       const firstTrack = deps.nextTrack(state.project.layers);
       const audioLayers = sourceLayers.map((layer, index) => {
-        const duration = Math.min(layer.duration, Math.max(asset.duration || layer.duration, TIMELINE_MIN_LAYER_SECONDS));
+        const duration = Math.min(
+          layer.duration,
+          Math.max(
+            asset.duration || layer.duration,
+            TIMELINE_MIN_LAYER_SECONDS,
+          ),
+        );
 
-        return deps.createReplacementAudioLayer(layer, asset.id, asset.name, firstTrack + index, duration, now);
+        return deps.createReplacementAudioLayer(
+          layer,
+          asset.id,
+          asset.name,
+          firstTrack + index,
+          duration,
+          now,
+        );
       });
 
       deps.commit((project) => {
         const layers = [
-          ...project.layers.map((layer) => (sourceIds.has(layer.id) ? { ...layer, muted: true, updatedAt: now } : layer)),
+          ...project.layers.map((layer) =>
+            sourceIds.has(layer.id)
+              ? { ...layer, muted: true, updatedAt: now }
+              : layer,
+          ),
           ...audioLayers,
         ];
 
@@ -227,7 +359,10 @@ export function createEditorLayerCreationSlice(
         };
       });
 
-      set({ selectedLayerId: audioLayers.at(-1)?.id ?? null, selectedLayerIds: audioLayers.map((layer) => layer.id) });
+      set({
+        selectedLayerId: audioLayers.at(-1)?.id ?? null,
+        selectedLayerIds: audioLayers.map((layer) => layer.id),
+      });
       return audioLayers.length;
     },
     addSticker: (stickerId) => {
@@ -241,8 +376,16 @@ export function createEditorLayerCreationSlice(
         ),
       );
     },
-    addMemeLayout: (input: { assetId?: string; topText: string; bottomText: string; duration: number; style: MemeStyle }) => {
-      const asset = input.assetId ? get().mediaAssets.find((item) => item.id === input.assetId) : undefined;
+    addMemeLayout: (input: {
+      assetId?: string;
+      topText: string;
+      bottomText: string;
+      duration: number;
+      style: MemeStyle;
+    }) => {
+      const asset = input.assetId
+        ? get().mediaAssets.find((item) => item.id === input.assetId)
+        : undefined;
       const layers = createMemeLayers({
         project: get().project,
         asset,
@@ -254,9 +397,15 @@ export function createEditorLayerCreationSlice(
       });
       deps.addLayers(layers);
     },
-    addMediaLayout: (input: { assetIds: string[]; mode: MediaLayoutMode; clipSeconds: number }) => {
+    addMediaLayout: (input: {
+      assetIds: string[];
+      mode: MediaLayoutMode;
+      clipSeconds: number;
+    }) => {
       const assets = input.assetIds
-        .map((assetId) => get().mediaAssets.find((asset) => asset.id === assetId))
+        .map((assetId) =>
+          get().mediaAssets.find((asset) => asset.id === assetId),
+        )
         .filter((asset): asset is MediaAsset => Boolean(asset));
       const layers = createMediaLayoutLayers({
         project: get().project,
@@ -268,7 +417,10 @@ export function createEditorLayerCreationSlice(
       deps.addLayers(layers);
     },
     addAiCaptions: (captions) => {
-      const layer = createTextLayer("subtitle", deps.nextTrack(get().project.layers));
+      const layer = createTextLayer(
+        "subtitle",
+        deps.nextTrack(get().project.layers),
+      );
       layer.cues = cuesFromAi(captions);
       layer.duration = Math.max(...layer.cues.map((cue) => cue.end), 5);
       deps.addLayer(layer);
@@ -276,7 +428,10 @@ export function createEditorLayerCreationSlice(
   };
 }
 
-function placeLayerAtPlayhead(layer: TimelineLayer, currentTime: number): TimelineLayer {
+function placeLayerAtPlayhead(
+  layer: TimelineLayer,
+  currentTime: number,
+): TimelineLayer {
   return {
     ...layer,
     start: Math.max(0, currentTime),

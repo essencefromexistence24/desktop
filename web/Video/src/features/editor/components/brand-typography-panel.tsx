@@ -5,7 +5,13 @@ import { Type, Trash2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useEditorStore } from "@/features/editor/state/editor-store";
 import { normalizeBrandKitSettings } from "@/lib/editor/brand-kit";
 import { saveBrowserBrandFont } from "@/lib/media/brand-font-store";
@@ -24,12 +30,22 @@ const systemFontOptions = [
 
 export function BrandTypographyPanel() {
   const project = useEditorStore((state) => state.project);
-  const saveBrandTypographyPreset = useEditorStore((state) => state.saveBrandTypographyPreset);
-  const applyBrandTypographyPreset = useEditorStore((state) => state.applyBrandTypographyPreset);
-  const removeBrandTypographyPreset = useEditorStore((state) => state.removeBrandTypographyPreset);
+  const saveBrandTypographyPreset = useEditorStore(
+    (state) => state.saveBrandTypographyPreset,
+  );
+  const applyBrandTypographyPreset = useEditorStore(
+    (state) => state.applyBrandTypographyPreset,
+  );
+  const removeBrandTypographyPreset = useEditorStore(
+    (state) => state.removeBrandTypographyPreset,
+  );
   const addBrandFontAsset = useEditorStore((state) => state.addBrandFontAsset);
-  const removeBrandFontAsset = useEditorStore((state) => state.removeBrandFontAsset);
-  const updateBrandKitSettings = useEditorStore((state) => state.updateBrandKitSettings);
+  const removeBrandFontAsset = useEditorStore(
+    (state) => state.removeBrandFontAsset,
+  );
+  const updateBrandKitSettings = useEditorStore(
+    (state) => state.updateBrandKitSettings,
+  );
   const presets = project.brandTypographyPresets ?? [];
   const brandKit = normalizeBrandKitSettings(project.brandKit);
   const fontInputRef = useRef<HTMLInputElement | null>(null);
@@ -39,12 +55,19 @@ export function BrandTypographyPanel() {
   const [captionFontFamily, setCaptionFontFamily] = useState("Geist");
   const [selectedPresetId, setSelectedPresetId] = useState("");
   const [message, setMessage] = useState<string | null>(null);
-  const activePresetId = presets.some((preset) => preset.id === selectedPresetId) ? selectedPresetId : (presets[0]?.id ?? "");
+  const activePresetId = presets.some(
+    (preset) => preset.id === selectedPresetId,
+  )
+    ? selectedPresetId
+    : (presets[0]?.id ?? "");
   const activePreset = presets.find((preset) => preset.id === activePresetId);
   const fontOptions = useMemo(
     () => [
       ...systemFontOptions.map((font) => ({ value: font, label: font })),
-      ...brandKit.fontAssets.map((font) => ({ value: font.family, label: `${font.name} (uploaded)` })),
+      ...brandKit.fontAssets.map((font) => ({
+        value: font.family,
+        label: `${font.name} (uploaded)`,
+      })),
     ],
     [brandKit.fontAssets],
   );
@@ -68,7 +91,9 @@ export function BrandTypographyPanel() {
       setCaptionFontFamily(asset.family);
       setMessage(`${asset.name} uploaded and loaded.`);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Font upload failed.");
+      setMessage(
+        error instanceof Error ? error.message : "Font upload failed.",
+      );
     }
   }
 
@@ -93,7 +118,11 @@ export function BrandTypographyPanel() {
   function applyPreset(role: "heading" | "body" | "caption") {
     if (!activePresetId) return;
     const changedCount = applyBrandTypographyPreset(activePresetId, role);
-    setMessage(changedCount > 0 ? `${roleLabel(role)} typography applied to ${changedCount} ${changedCount === 1 ? "layer" : "layers"}.` : "Select editable text, caption, or sticker layers.");
+    setMessage(
+      changedCount > 0
+        ? `${roleLabel(role)} typography applied to ${changedCount} ${changedCount === 1 ? "layer" : "layers"}.`
+        : "Select editable text, caption, or sticker layers.",
+    );
   }
 
   function removePreset() {
@@ -121,30 +150,80 @@ export function BrandTypographyPanel() {
         Typography
       </div>
       <div className="grid grid-cols-[1fr_auto] gap-2">
-        <Input className="h-8" value={name} onChange={(event) => setName(event.target.value)} placeholder="Typography preset" />
-        <Button size="sm" variant="outline" className="h-8" onClick={savePreset}>
+        <Input
+          className="h-8"
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+          placeholder="Typography preset"
+        />
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-8"
+          onClick={savePreset}
+        >
           Save
         </Button>
       </div>
-      <input ref={fontInputRef} hidden type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" onChange={importFont} />
-      <Button size="sm" variant="outline" className="h-8 w-full" onClick={() => fontInputRef.current?.click()}>
+      <input
+        ref={fontInputRef}
+        hidden
+        type="file"
+        accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2"
+        onChange={importFont}
+      />
+      <Button
+        size="sm"
+        variant="outline"
+        className="h-8 w-full"
+        onClick={() => fontInputRef.current?.click()}
+      >
         <Upload className="size-4" />
         Upload font
       </Button>
       <div className="grid gap-2">
-        <FontSelect label="Heading" value={headingFontFamily} options={fontOptions} onChange={setHeadingFontFamily} />
-        <FontSelect label="Body" value={bodyFontFamily} options={fontOptions} onChange={setBodyFontFamily} />
-        <FontSelect label="Caption" value={captionFontFamily} options={fontOptions} onChange={setCaptionFontFamily} />
+        <FontSelect
+          label="Heading"
+          value={headingFontFamily}
+          options={fontOptions}
+          onChange={setHeadingFontFamily}
+        />
+        <FontSelect
+          label="Body"
+          value={bodyFontFamily}
+          options={fontOptions}
+          onChange={setBodyFontFamily}
+        />
+        <FontSelect
+          label="Caption"
+          value={captionFontFamily}
+          options={fontOptions}
+          onChange={setCaptionFontFamily}
+        />
       </div>
       {brandKit.fontAssets.length ? (
         <div className="space-y-1">
-          <Label className="text-xs text-muted-foreground">Uploaded fonts</Label>
+          <Label className="text-xs text-muted-foreground">
+            Uploaded fonts
+          </Label>
           {brandKit.fontAssets.map((font) => (
-            <div key={font.id} className="flex items-center justify-between gap-2 rounded-md border border-border px-2 py-1 text-xs">
-              <span className="min-w-0 truncate" style={{ fontFamily: font.family }}>
+            <div
+              key={font.id}
+              className="flex items-center justify-between gap-2 rounded-md border border-border px-2 py-1 text-xs"
+            >
+              <span
+                className="min-w-0 truncate"
+                style={{ fontFamily: font.family }}
+              >
                 {font.name}
               </span>
-              <Button size="icon" variant="ghost" className="size-7" onClick={() => removeFont(font.id)} aria-label={`Remove ${font.name}`}>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="size-7"
+                onClick={() => removeFont(font.id)}
+                aria-label={`Remove ${font.name}`}
+              >
                 <Trash2 className="size-3.5" />
               </Button>
             </div>
@@ -165,35 +244,94 @@ export function BrandTypographyPanel() {
               ))}
             </SelectContent>
           </Select>
-          <Button size="icon" variant="ghost" className="size-8" onClick={removePreset} aria-label="Remove typography preset">
+          <Button
+            size="icon"
+            variant="ghost"
+            className="size-8"
+            onClick={removePreset}
+            aria-label="Remove typography preset"
+          >
             <Trash2 className="size-4" />
           </Button>
         </div>
       ) : null}
       <div className="grid grid-cols-3 gap-1">
-        <Button size="sm" variant="outline" className="h-8 px-1 text-xs" onClick={() => applyPreset("heading")} disabled={!activePresetId}>
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-8 px-1 text-xs"
+          onClick={() => applyPreset("heading")}
+          disabled={!activePresetId}
+        >
           Heading
         </Button>
-        <Button size="sm" variant="outline" className="h-8 px-1 text-xs" onClick={() => applyPreset("body")} disabled={!activePresetId}>
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-8 px-1 text-xs"
+          onClick={() => applyPreset("body")}
+          disabled={!activePresetId}
+        >
           Body
         </Button>
-        <Button size="sm" variant="outline" className="h-8 px-1 text-xs" onClick={() => applyPreset("caption")} disabled={!activePresetId}>
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-8 px-1 text-xs"
+          onClick={() => applyPreset("caption")}
+          disabled={!activePresetId}
+        >
           Caption
         </Button>
       </div>
       {activePreset ? (
         <div className="space-y-1 text-xs text-muted-foreground">
-          <div style={{ fontFamily: activePreset.headingFontFamily, fontWeight: activePreset.headingWeight }}>Heading: {activePreset.headingFontFamily}</div>
-          <div style={{ fontFamily: activePreset.bodyFontFamily, fontWeight: activePreset.bodyWeight }}>Body: {activePreset.bodyFontFamily}</div>
-          <div style={{ fontFamily: activePreset.captionFontFamily, fontWeight: activePreset.captionWeight }}>Caption: {activePreset.captionFontFamily}</div>
+          <div
+            style={{
+              fontFamily: activePreset.headingFontFamily,
+              fontWeight: activePreset.headingWeight,
+            }}
+          >
+            Heading: {activePreset.headingFontFamily}
+          </div>
+          <div
+            style={{
+              fontFamily: activePreset.bodyFontFamily,
+              fontWeight: activePreset.bodyWeight,
+            }}
+          >
+            Body: {activePreset.bodyFontFamily}
+          </div>
+          <div
+            style={{
+              fontFamily: activePreset.captionFontFamily,
+              fontWeight: activePreset.captionWeight,
+            }}
+          >
+            Caption: {activePreset.captionFontFamily}
+          </div>
         </div>
       ) : null}
-      {message ? <div className="rounded-md border border-border p-2 text-xs text-muted-foreground">{message}</div> : null}
+      {message ? (
+        <div className="rounded-md border border-border p-2 text-xs text-muted-foreground">
+          {message}
+        </div>
+      ) : null}
     </div>
   );
 }
 
-function FontSelect({ label, value, options, onChange }: { label: string; value: string; options: Array<{ value: string; label: string }>; onChange: (value: string) => void }) {
+function FontSelect({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  options: Array<{ value: string; label: string }>;
+  onChange: (value: string) => void;
+}) {
   return (
     <div className="space-y-1">
       <Label className="text-xs text-muted-foreground">{label}</Label>

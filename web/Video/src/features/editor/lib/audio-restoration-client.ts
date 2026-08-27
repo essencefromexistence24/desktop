@@ -1,4 +1,7 @@
-import { audioCleanupModes, type AudioCleanupMode } from "@/lib/audio/cleanup-contract";
+import {
+  audioCleanupModes,
+  type AudioCleanupMode,
+} from "@/lib/audio/cleanup-contract";
 import { clientApiUrl } from "@/lib/runtime/client-api";
 
 export type AudioRestorationStatus = {
@@ -23,7 +26,9 @@ export type GeneratedAudioRestorationOutput = {
 
 export async function fetchAudioRestorationStatus(): Promise<AudioRestorationStatus | null> {
   try {
-    const response = await fetch(clientApiUrl("/api/ai/audio-restoration"), { credentials: "include" });
+    const response = await fetch(clientApiUrl("/api/ai/audio-restoration"), {
+      credentials: "include",
+    });
     const data = await safeJson(response);
     if (response.ok && isAudioRestorationStatus(data)) return data;
   } catch {
@@ -63,7 +68,9 @@ export async function restoreAudioWithConnectedService(input: {
   if (!response.ok || !isAudioRestorationSuccess(data)) {
     return {
       ok: false as const,
-      reason: isAiFailure(data) ? data.reason : "Advanced audio restoration could not finish.",
+      reason: isAiFailure(data)
+        ? data.reason
+        : "Advanced audio restoration could not finish.",
     };
   }
 
@@ -73,13 +80,17 @@ export async function restoreAudioWithConnectedService(input: {
   };
 }
 
-export function fileFromAudioRestorationOutput(output: GeneratedAudioRestorationOutput) {
+export function fileFromAudioRestorationOutput(
+  output: GeneratedAudioRestorationOutput,
+) {
   const bytes = decodeBase64AudioPayload(output.base64, "Restored audio");
   const blob = new Blob([bytes], { type: output.mediaType });
   return new File([blob], output.filename, { type: output.mediaType });
 }
 
-function isAudioRestorationStatus(value: unknown): value is AudioRestorationStatus {
+function isAudioRestorationStatus(
+  value: unknown,
+): value is AudioRestorationStatus {
   if (
     typeof value !== "object" ||
     value === null ||
@@ -98,11 +109,24 @@ function isAudioRestorationStatus(value: unknown): value is AudioRestorationStat
   }
 
   const modes = value.modes as unknown[];
-  return modes.every((mode) => typeof mode === "string" && audioCleanupModes.includes(mode as AudioCleanupMode));
+  return modes.every(
+    (mode) =>
+      typeof mode === "string" &&
+      audioCleanupModes.includes(mode as AudioCleanupMode),
+  );
 }
 
-function isAudioRestorationSuccess(value: unknown): value is { ok: true; output: GeneratedAudioRestorationOutput } {
-  if (typeof value !== "object" || value === null || !("ok" in value) || value.ok !== true || !("output" in value)) return false;
+function isAudioRestorationSuccess(
+  value: unknown,
+): value is { ok: true; output: GeneratedAudioRestorationOutput } {
+  if (
+    typeof value !== "object" ||
+    value === null ||
+    !("ok" in value) ||
+    value.ok !== true ||
+    !("output" in value)
+  )
+    return false;
   const output = value.output;
   return (
     typeof output === "object" &&
@@ -127,7 +151,12 @@ function isAudioRestorationSuccess(value: unknown): value is { ok: true; output:
 }
 
 function isAiFailure(value: unknown): value is { reason: string } {
-  return typeof value === "object" && value !== null && "reason" in value && typeof value.reason === "string";
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "reason" in value &&
+    typeof value.reason === "string"
+  );
 }
 
 async function safeJson(response: Response) {

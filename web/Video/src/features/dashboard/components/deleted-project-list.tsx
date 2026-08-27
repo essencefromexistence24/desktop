@@ -28,7 +28,9 @@ export function DeletedProjectList({
       <div className="flex items-center justify-between gap-3">
         <div>
           <div className="font-medium">Recently deleted</div>
-          <div className="text-xs text-muted-foreground">Restore projects before permanently removing them.</div>
+          <div className="text-xs text-muted-foreground">
+            Restore projects before permanently removing them.
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <ProjectTrashManagerDialog
@@ -42,15 +44,24 @@ export function DeletedProjectList({
       </div>
       <div className="mt-3 space-y-2">
         {projects.slice(0, 5).map((item) => (
-          <div key={item.id} className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-md border border-border px-3 py-2">
+          <div
+            key={item.id}
+            className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-md border border-border px-3 py-2"
+          >
             <div className="min-w-0">
               <div className="truncate text-sm font-medium">{item.title}</div>
               <div className="text-xs text-muted-foreground">
-                {item.layerCount} layers / {item.mediaCount} media / deleted {new Date(item.deletedAt).toLocaleString()}
+                {item.layerCount} layers / {item.mediaCount} media / deleted{" "}
+                {new Date(item.deletedAt).toLocaleString()}
               </div>
             </div>
             <div className="flex gap-1">
-              <Button size="sm" variant="outline" onClick={() => void onRestore(item.id)} disabled={isPending}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => void onRestore(item.id)}
+                disabled={isPending}
+              >
                 <RotateCcw className="size-4" />
                 Restore
               </Button>

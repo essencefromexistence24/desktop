@@ -1,7 +1,13 @@
 "use client";
 
 import { type ChangeEvent, useEffect, useMemo, useState } from "react";
-import { Download, Monitor, MonitorCheck, RotateCw, Upload } from "lucide-react";
+import {
+  Download,
+  Monitor,
+  MonitorCheck,
+  RotateCw,
+  Upload,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,9 +16,15 @@ import {
   type DesktopVerificationUpdatedEventDetail,
 } from "@/features/settings/components/desktop-proof-autopilot";
 import { Input } from "@/components/ui/input";
-import { createDesktopLaunchProofSummary, type DesktopLaunchProofStatus } from "@/lib/desktop/desktop-launch-proof";
+import {
+  createDesktopLaunchProofSummary,
+  type DesktopLaunchProofStatus,
+} from "@/lib/desktop/desktop-launch-proof";
 import { createDesktopLaunchPreflight } from "@/lib/desktop/desktop-launch-preflight";
-import { createDesktopProofFreshnessReminder, type DesktopProofFreshnessStatus } from "@/lib/desktop/desktop-proof-freshness";
+import {
+  createDesktopProofFreshnessReminder,
+  type DesktopProofFreshnessStatus,
+} from "@/lib/desktop/desktop-proof-freshness";
 import { createDesktopReadinessReport } from "@/lib/desktop/desktop-readiness";
 import { auditDesktopVerificationEvidencePacket } from "@/lib/desktop/desktop-evidence-audit";
 import {
@@ -23,38 +35,65 @@ import {
   saveDesktopVerificationReport,
   type DesktopVerificationHistoryEntry,
 } from "@/lib/desktop/desktop-verification-history";
-import { runDesktopVerification, type DesktopVerificationReport } from "@/lib/desktop/desktop-verification";
+import {
+  runDesktopVerification,
+  type DesktopVerificationReport,
+} from "@/lib/desktop/desktop-verification";
 import type { DesktopDiagnosticStatus } from "@/lib/desktop/desktop-diagnostics";
-import { useHasClientApiRuntime, useIsDesktopRuntime } from "@/lib/runtime/client-api";
+import {
+  useHasClientApiRuntime,
+  useIsDesktopRuntime,
+} from "@/lib/runtime/client-api";
 
 export function DesktopReadinessCard() {
   const isDesktopRuntime = useIsDesktopRuntime();
   const hasOnlineActions = useHasClientApiRuntime();
-  const [verification, setVerification] = useState<DesktopVerificationReport | null>(null);
+  const [verification, setVerification] =
+    useState<DesktopVerificationReport | null>(null);
   const [history, setHistory] = useState<DesktopVerificationHistoryEntry[]>([]);
   const [isChecking, setIsChecking] = useState(false);
   const [evidenceImportMessage, setEvidenceImportMessage] = useState("");
-  const report = createDesktopReadinessReport({ isDesktopRuntime, hasOnlineActions });
+  const report = createDesktopReadinessReport({
+    isDesktopRuntime,
+    hasOnlineActions,
+  });
   const launchProof = createDesktopLaunchProofSummary(history[0] ?? null);
   const launchPreflight = createDesktopLaunchPreflight(launchProof);
-  const evidenceAudit = useMemo(() => auditDesktopVerificationEvidencePacket(history), [history]);
-  const freshnessReminder = useMemo(() => createDesktopProofFreshnessReminder(history), [history]);
+  const evidenceAudit = useMemo(
+    () => auditDesktopVerificationEvidencePacket(history),
+    [history],
+  );
+  const freshnessReminder = useMemo(
+    () => createDesktopProofFreshnessReminder(history),
+    [history],
+  );
   const Icon = report.status === "ready" ? MonitorCheck : Monitor;
 
   useEffect(() => {
     setHistory(loadDesktopVerificationHistory());
 
     function handleDesktopVerificationUpdate(event: Event) {
-      const detail = (event as CustomEvent<DesktopVerificationUpdatedEventDetail>).detail;
+      const detail = (
+        event as CustomEvent<DesktopVerificationUpdatedEventDetail>
+      ).detail;
       setHistory(loadDesktopVerificationHistory());
 
       if (detail?.evidenceFile) {
-        setEvidenceImportMessage(`Desktop evidence saved to ${detail.evidenceFile.path}.`);
+        setEvidenceImportMessage(
+          `Desktop evidence saved to ${detail.evidenceFile.path}.`,
+        );
       }
     }
 
-    window.addEventListener(desktopVerificationUpdatedEvent, handleDesktopVerificationUpdate);
-    return () => window.removeEventListener(desktopVerificationUpdatedEvent, handleDesktopVerificationUpdate);
+    window.addEventListener(
+      desktopVerificationUpdatedEvent,
+      handleDesktopVerificationUpdate,
+    );
+    return () =>
+      window.removeEventListener(
+        desktopVerificationUpdatedEvent,
+        handleDesktopVerificationUpdate,
+      );
   }, []);
 
   async function handleRunVerification() {
@@ -82,15 +121,21 @@ export function DesktopReadinessCard() {
       const entries = readDesktopVerificationEvidenceEntries(parsed);
 
       if (!entries.length) {
-        setEvidenceImportMessage("No desktop checks were found in that evidence packet.");
+        setEvidenceImportMessage(
+          "No desktop checks were found in that evidence packet.",
+        );
         return;
       }
 
       const nextHistory = importDesktopVerificationEvidencePacket(entries);
       setHistory(nextHistory);
-      setEvidenceImportMessage(`Imported ${entries.length} desktop ${entries.length === 1 ? "check" : "checks"}.`);
+      setEvidenceImportMessage(
+        `Imported ${entries.length} desktop ${entries.length === 1 ? "check" : "checks"}.`,
+      );
     } catch {
-      setEvidenceImportMessage("That desktop evidence packet could not be read.");
+      setEvidenceImportMessage(
+        "That desktop evidence packet could not be read.",
+      );
     }
   }
 
@@ -102,15 +147,24 @@ export function DesktopReadinessCard() {
             <Icon className="size-4 shrink-0" />
             Desktop app
           </span>
-          <Badge variant={report.status === "ready" ? "default" : "secondary"}>{report.runtimeLabel}</Badge>
+          <Badge variant={report.status === "ready" ? "default" : "secondary"}>
+            {report.runtimeLabel}
+          </Badge>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <p className="text-sm text-muted-foreground">{report.summary}</p>
           <div className="flex flex-wrap gap-2">
-            <Button size="sm" variant="outline" onClick={handleRunVerification} disabled={isChecking}>
-              <RotateCw className={`size-3.5 ${isChecking ? "animate-spin" : ""}`} />
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleRunVerification}
+              disabled={isChecking}
+            >
+              <RotateCw
+                className={`size-3.5 ${isChecking ? "animate-spin" : ""}`}
+              />
               {isChecking ? "Checking" : "Run checks"}
             </Button>
             <div className="relative">
@@ -125,50 +179,90 @@ export function DesktopReadinessCard() {
             </div>
           </div>
         </div>
-        {evidenceImportMessage ? <div className="rounded-md bg-muted/40 p-2 text-xs text-muted-foreground">{evidenceImportMessage}</div> : null}
+        {evidenceImportMessage ? (
+          <div className="rounded-md bg-muted/40 p-2 text-xs text-muted-foreground">
+            {evidenceImportMessage}
+          </div>
+        ) : null}
         <div className="rounded-md border border-border p-3">
           <div className="flex items-center justify-between gap-3">
             <div>
               <div className="text-sm font-medium">Evidence verifier</div>
-              <div className="text-xs text-muted-foreground">{evidenceAudit.summary}</div>
+              <div className="text-xs text-muted-foreground">
+                {evidenceAudit.summary}
+              </div>
             </div>
-            <Badge variant={evidenceAudit.status === "ready" ? "default" : "secondary"}>{evidenceAudit.status === "ready" ? "Ready" : "Blocked"}</Badge>
+            <Badge
+              variant={
+                evidenceAudit.status === "ready" ? "default" : "secondary"
+              }
+            >
+              {evidenceAudit.status === "ready" ? "Ready" : "Blocked"}
+            </Badge>
           </div>
           {evidenceAudit.status !== "ready" ? (
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
               {evidenceAudit.errors.map((error) => (
-                <div key={error} className="rounded-md bg-muted/40 p-2 text-xs text-muted-foreground">
+                <div
+                  key={error}
+                  className="rounded-md bg-muted/40 p-2 text-xs text-muted-foreground"
+                >
                   {error}
                 </div>
               ))}
               {evidenceAudit.missingRequirements.map((requirement) => (
-                <div key={requirement.id} className="rounded-md bg-muted/40 p-2">
-                  <div className="text-xs font-medium">Missing {requirement.label}</div>
-                  <p className="mt-1 text-xs text-muted-foreground">{requirement.detail}</p>
+                <div
+                  key={requirement.id}
+                  className="rounded-md bg-muted/40 p-2"
+                >
+                  <div className="text-xs font-medium">
+                    Missing {requirement.label}
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {requirement.detail}
+                  </p>
                 </div>
               ))}
               {evidenceAudit.limitedRequirements.map((requirement) => (
-                <div key={requirement.id} className="rounded-md bg-muted/40 p-2">
-                  <div className="text-xs font-medium">Limited {requirement.label}</div>
-                  <p className="mt-1 text-xs text-muted-foreground">{requirement.detail}</p>
+                <div
+                  key={requirement.id}
+                  className="rounded-md bg-muted/40 p-2"
+                >
+                  <div className="text-xs font-medium">
+                    Limited {requirement.label}
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {requirement.detail}
+                  </p>
                 </div>
               ))}
               {evidenceAudit.failedRequirements.map((requirement) => (
-                <div key={requirement.id} className="rounded-md bg-muted/40 p-2">
-                  <div className="text-xs font-medium">Failed {requirement.label}</div>
-                  <p className="mt-1 text-xs text-muted-foreground">{requirement.detail}</p>
+                <div
+                  key={requirement.id}
+                  className="rounded-md bg-muted/40 p-2"
+                >
+                  <div className="text-xs font-medium">
+                    Failed {requirement.label}
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {requirement.detail}
+                  </p>
                 </div>
               ))}
             </div>
-            ) : null}
+          ) : null}
         </div>
         <div className="rounded-md border border-border p-3">
           <div className="flex items-center justify-between gap-3">
             <div>
               <div className="text-sm font-medium">Proof freshness</div>
-              <div className="text-xs text-muted-foreground">{freshnessReminder.detail}</div>
+              <div className="text-xs text-muted-foreground">
+                {freshnessReminder.detail}
+              </div>
             </div>
-            <Badge variant={freshnessBadgeVariant(freshnessReminder.status)}>{freshnessLabel(freshnessReminder.status)}</Badge>
+            <Badge variant={freshnessBadgeVariant(freshnessReminder.status)}>
+              {freshnessLabel(freshnessReminder.status)}
+            </Badge>
           </div>
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
             <div className="rounded-md bg-muted/40 p-2 text-xs text-muted-foreground">
@@ -177,20 +271,34 @@ export function DesktopReadinessCard() {
                 : "No ready desktop proof has been captured yet."}
             </div>
             <div className="rounded-md bg-muted/40 p-2 text-xs text-muted-foreground">
-              Refresh without rebuilding: <span className="font-medium text-foreground">{freshnessReminder.command}</span>
+              Refresh without rebuilding:{" "}
+              <span className="font-medium text-foreground">
+                {freshnessReminder.command}
+              </span>
             </div>
           </div>
         </div>
         <div className="grid gap-2 sm:grid-cols-2">
           {report.capabilities.map((capability) => (
-            <div key={capability.id} className="rounded-md border border-border p-3">
+            <div
+              key={capability.id}
+              className="rounded-md border border-border p-3"
+            >
               <div className="flex items-center justify-between gap-2">
-                <div className="min-w-0 truncate text-sm font-medium">{capability.label}</div>
-                <Badge variant={capability.status === "ready" ? "default" : "secondary"}>
+                <div className="min-w-0 truncate text-sm font-medium">
+                  {capability.label}
+                </div>
+                <Badge
+                  variant={
+                    capability.status === "ready" ? "default" : "secondary"
+                  }
+                >
                   {capability.status === "ready" ? "Ready" : "Limited"}
                 </Badge>
               </div>
-              <p className="mt-2 text-xs text-muted-foreground">{capability.detail}</p>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {capability.detail}
+              </p>
             </div>
           ))}
         </div>
@@ -199,18 +307,28 @@ export function DesktopReadinessCard() {
             <div className="flex items-center justify-between gap-3">
               <div className="min-w-0">
                 <div className="text-sm font-medium">Last check</div>
-                <div className="text-xs text-muted-foreground">{formatDiagnosticTime(verification.checkedAt)}</div>
+                <div className="text-xs text-muted-foreground">
+                  {formatDiagnosticTime(verification.checkedAt)}
+                </div>
               </div>
-              <Badge variant={diagnosticBadgeVariant(verification.status)}>{diagnosticLabel(verification.status)}</Badge>
+              <Badge variant={diagnosticBadgeVariant(verification.status)}>
+                {diagnosticLabel(verification.status)}
+              </Badge>
             </div>
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
               {verification.steps.map((step) => (
                 <div key={step.id} className="rounded-md bg-muted/40 p-2">
                   <div className="flex items-center justify-between gap-2">
-                    <div className="min-w-0 truncate text-xs font-medium">{step.label}</div>
-                    <Badge variant={diagnosticBadgeVariant(step.status)}>{diagnosticLabel(step.status)}</Badge>
+                    <div className="min-w-0 truncate text-xs font-medium">
+                      {step.label}
+                    </div>
+                    <Badge variant={diagnosticBadgeVariant(step.status)}>
+                      {diagnosticLabel(step.status)}
+                    </Badge>
                   </div>
-                  <p className="mt-1 text-xs text-muted-foreground">{step.detail}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {step.detail}
+                  </p>
                 </div>
               ))}
             </div>
@@ -220,21 +338,33 @@ export function DesktopReadinessCard() {
           <div className="rounded-md border border-border p-3">
             <div className="flex items-center justify-between gap-3">
               <div className="text-sm font-medium">Saved evidence</div>
-              <Button size="sm" variant="outline" onClick={handleExportEvidence}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleExportEvidence}
+              >
                 <Download className="size-3.5" />
                 Export
               </Button>
             </div>
             <div className="mt-3 grid gap-2">
               {history.slice(0, 3).map((entry) => (
-                <div key={entry.id} className="flex items-center justify-between gap-3 rounded-md bg-muted/40 p-2">
+                <div
+                  key={entry.id}
+                  className="flex items-center justify-between gap-3 rounded-md bg-muted/40 p-2"
+                >
                   <div className="min-w-0">
-                    <div className="text-xs font-medium">{formatDiagnosticTime(entry.checkedAt)}</div>
+                    <div className="text-xs font-medium">
+                      {formatDiagnosticTime(entry.checkedAt)}
+                    </div>
                     <div className="text-xs text-muted-foreground">
-                      {entry.readyCount} ready, {entry.limitedCount} limited, {entry.failedCount} failed
+                      {entry.readyCount} ready, {entry.limitedCount} limited,{" "}
+                      {entry.failedCount} failed
                     </div>
                   </div>
-                  <Badge variant={diagnosticBadgeVariant(entry.status)}>{diagnosticLabel(entry.status)}</Badge>
+                  <Badge variant={diagnosticBadgeVariant(entry.status)}>
+                    {diagnosticLabel(entry.status)}
+                  </Badge>
                 </div>
               ))}
             </div>
@@ -246,19 +376,31 @@ export function DesktopReadinessCard() {
               <div>
                 <div className="text-sm font-medium">Desktop launch proof</div>
                 <div className="text-xs text-muted-foreground">
-                  {launchProof.readyCount} of {launchProof.total} required checks ready
+                  {launchProof.readyCount} of {launchProof.total} required
+                  checks ready
                 </div>
               </div>
-              <Badge variant={proofBadgeVariant(launchProof.status)}>{proofStatusLabel(launchProof.status)}</Badge>
+              <Badge variant={proofBadgeVariant(launchProof.status)}>
+                {proofStatusLabel(launchProof.status)}
+              </Badge>
             </div>
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
               {launchProof.requirements.map((requirement) => (
-                <div key={requirement.id} className="rounded-md bg-muted/40 p-2">
+                <div
+                  key={requirement.id}
+                  className="rounded-md bg-muted/40 p-2"
+                >
                   <div className="flex items-center justify-between gap-2">
-                    <div className="min-w-0 truncate text-xs font-medium">{requirement.label}</div>
-                    <Badge variant={proofBadgeVariant(requirement.status)}>{proofStatusLabel(requirement.status)}</Badge>
+                    <div className="min-w-0 truncate text-xs font-medium">
+                      {requirement.label}
+                    </div>
+                    <Badge variant={proofBadgeVariant(requirement.status)}>
+                      {proofStatusLabel(requirement.status)}
+                    </Badge>
                   </div>
-                  <p className="mt-1 text-xs text-muted-foreground">{requirement.detail}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {requirement.detail}
+                  </p>
                 </div>
               ))}
             </div>
@@ -269,18 +411,28 @@ export function DesktopReadinessCard() {
             <div className="flex items-center justify-between gap-3">
               <div>
                 <div className="text-sm font-medium">Launch preflight</div>
-                <div className="text-xs text-muted-foreground">{launchPreflight.summary}</div>
+                <div className="text-xs text-muted-foreground">
+                  {launchPreflight.summary}
+                </div>
               </div>
-              <Badge variant={proofBadgeVariant(launchPreflight.status)}>{proofStatusLabel(launchPreflight.status)}</Badge>
+              <Badge variant={proofBadgeVariant(launchPreflight.status)}>
+                {proofStatusLabel(launchPreflight.status)}
+              </Badge>
             </div>
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
               {launchPreflight.steps.map((step) => (
                 <div key={step.id} className="rounded-md bg-muted/40 p-2">
                   <div className="flex items-center justify-between gap-2">
-                    <div className="min-w-0 truncate text-xs font-medium">{step.label}</div>
-                    <Badge variant={proofBadgeVariant(step.status)}>{proofStatusLabel(step.status)}</Badge>
+                    <div className="min-w-0 truncate text-xs font-medium">
+                      {step.label}
+                    </div>
+                    <Badge variant={proofBadgeVariant(step.status)}>
+                      {proofStatusLabel(step.status)}
+                    </Badge>
                   </div>
-                  <p className="mt-1 text-xs text-muted-foreground">{step.detail}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {step.detail}
+                  </p>
                 </div>
               ))}
             </div>

@@ -7,7 +7,9 @@ import type { TimelineLayer } from "@/lib/editor/types";
 
 export function useCoalescedLayerEdit(layerId: string | null) {
   const updateLayer = useEditorStore((state) => state.updateLayer);
-  const pushHistorySnapshot = useEditorStore((state) => state.pushHistorySnapshot);
+  const pushHistorySnapshot = useEditorStore(
+    (state) => state.pushHistorySnapshot,
+  );
   const sessionStartedRef = useRef(false);
 
   useEffect(() => {

@@ -9,7 +9,12 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { TimelineAlignmentMode } from "@/lib/editor/types";
 
 interface TimelineAlignmentControlsProps {
@@ -17,14 +22,37 @@ interface TimelineAlignmentControlsProps {
   onAlign: (mode: TimelineAlignmentMode) => void;
 }
 
-const alignmentActions: Array<{ mode: TimelineAlignmentMode; label: string; Icon: LucideIcon }> = [
-  { mode: "start", label: "Align selected layers to start", Icon: AlignStartHorizontal },
-  { mode: "center", label: "Align selected layers to center", Icon: AlignCenterHorizontal },
-  { mode: "end", label: "Align selected layers to end", Icon: AlignEndHorizontal },
-  { mode: "playhead", label: "Align selected layers to playhead", Icon: Target },
+const alignmentActions: Array<{
+  mode: TimelineAlignmentMode;
+  label: string;
+  Icon: LucideIcon;
+}> = [
+  {
+    mode: "start",
+    label: "Align selected layers to start",
+    Icon: AlignStartHorizontal,
+  },
+  {
+    mode: "center",
+    label: "Align selected layers to center",
+    Icon: AlignCenterHorizontal,
+  },
+  {
+    mode: "end",
+    label: "Align selected layers to end",
+    Icon: AlignEndHorizontal,
+  },
+  {
+    mode: "playhead",
+    label: "Align selected layers to playhead",
+    Icon: Target,
+  },
 ];
 
-export function TimelineAlignmentControls({ disabled, onAlign }: TimelineAlignmentControlsProps) {
+export function TimelineAlignmentControls({
+  disabled,
+  onAlign,
+}: TimelineAlignmentControlsProps) {
   return (
     <TooltipProvider>
       <ButtonGroup className="hidden xl:flex">

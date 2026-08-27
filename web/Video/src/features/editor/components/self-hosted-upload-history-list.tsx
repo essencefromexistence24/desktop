@@ -15,7 +15,10 @@ type SelfHostedUploadHistoryListProps = {
   onEntriesChange?: (entries: SelfHostedUploadHistoryEntry[]) => void;
 };
 
-export function SelfHostedUploadHistoryList({ entries, onEntriesChange }: SelfHostedUploadHistoryListProps) {
+export function SelfHostedUploadHistoryList({
+  entries,
+  onEntriesChange,
+}: SelfHostedUploadHistoryListProps) {
   const importInputRef = useRef<HTMLInputElement>(null);
   const [importError, setImportError] = useState<string | null>(null);
   const visibleEntries = entries.slice(0, 3);
@@ -50,10 +53,23 @@ export function SelfHostedUploadHistoryList({ entries, onEntriesChange }: SelfHo
           >
             <Download className="size-4" />
           </Button>
-          <Button type="button" size="icon" variant="ghost" className="size-7" onClick={() => importInputRef.current?.click()} aria-label="Import upload evidence">
+          <Button
+            type="button"
+            size="icon"
+            variant="ghost"
+            className="size-7"
+            onClick={() => importInputRef.current?.click()}
+            aria-label="Import upload evidence"
+          >
             <Upload className="size-4" />
           </Button>
-          <input ref={importInputRef} type="file" accept="application/json,.json" className="hidden" onChange={importEvidence} />
+          <input
+            ref={importInputRef}
+            type="file"
+            accept="application/json,.json"
+            className="hidden"
+            onChange={importEvidence}
+          />
         </div>
       </div>
       {visibleEntries.length === 0 ? (
@@ -64,15 +80,23 @@ export function SelfHostedUploadHistoryList({ entries, onEntriesChange }: SelfHo
             <div key={entry.id} className="grid gap-1 text-xs">
               <div className="flex items-center justify-between gap-2">
                 <span className="truncate font-medium">{entry.assetName}</span>
-                <Badge variant={uploadStatusVariant(entry.status)}>{uploadStatusLabel(entry)}</Badge>
+                <Badge variant={uploadStatusVariant(entry.status)}>
+                  {uploadStatusLabel(entry)}
+                </Badge>
               </div>
-              <span className="truncate text-muted-foreground">{entry.publicUrl}</span>
-              <span className="text-muted-foreground">{formatUploadCheckTime(entry.checkedAt)}</span>
+              <span className="truncate text-muted-foreground">
+                {entry.publicUrl}
+              </span>
+              <span className="text-muted-foreground">
+                {formatUploadCheckTime(entry.checkedAt)}
+              </span>
             </div>
           ))}
         </div>
       )}
-      {importError ? <p className="text-xs text-destructive">{importError}</p> : null}
+      {importError ? (
+        <p className="text-xs text-destructive">{importError}</p>
+      ) : null}
     </div>
   );
 }
@@ -85,7 +109,8 @@ function uploadStatusVariant(status: SelfHostedUploadHistoryEntry["status"]) {
 
 function uploadStatusLabel(entry: SelfHostedUploadHistoryEntry) {
   if (entry.status === "verified") return "Verified";
-  if (entry.status === "failed") return entry.httpStatus ? `HTTP ${entry.httpStatus}` : "Failed";
+  if (entry.status === "failed")
+    return entry.httpStatus ? `HTTP ${entry.httpStatus}` : "Failed";
   return "Limited";
 }
 

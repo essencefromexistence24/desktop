@@ -65,42 +65,99 @@ import {
   type VideoProjectOutput,
 } from "@/features/editor/components/ai-result-types";
 import { useEditorStore } from "@/features/editor/state/editor-store";
-import type { AiAction, AiImageEditMode, AiImageOutpaintPreset } from "@/lib/ai/schemas";
-import { videoEnhancementStrength, type VideoEnhancementMode } from "@/lib/ai/video-enhancement-contract";
-import { AudioCleanupError, createCleanedAudioFile, type AudioCleanupResult } from "@/lib/audio/cleanup";
+import type {
+  AiAction,
+  AiImageEditMode,
+  AiImageOutpaintPreset,
+} from "@/lib/ai/schemas";
+import {
+  videoEnhancementStrength,
+  type VideoEnhancementMode,
+} from "@/lib/ai/video-enhancement-contract";
+import {
+  AudioCleanupError,
+  createCleanedAudioFile,
+  type AudioCleanupResult,
+} from "@/lib/audio/cleanup";
 import type { AudioCleanupMode } from "@/lib/audio/cleanup-contract";
 import { createTimelineCleanupCutOutput } from "@/lib/editor/cleanup-cuts";
-import { AiSourceIngestError, createVideoProjectPromptFromSource, readAiSourceBrief } from "@/lib/ai/source-ingest";
+import {
+  AiSourceIngestError,
+  createVideoProjectPromptFromSource,
+  readAiSourceBrief,
+} from "@/lib/ai/source-ingest";
 import { createAiVideoProject } from "@/lib/editor/ai-video-project";
-import { addAiVideoSceneMediaLayer, createAiVideoSceneMediaSlots } from "@/lib/editor/ai-video-media-placement";
+import {
+  addAiVideoSceneMediaLayer,
+  createAiVideoSceneMediaSlots,
+} from "@/lib/editor/ai-video-media-placement";
 import { createAiVideoSceneImageSlots } from "@/lib/editor/ai-video-scene-images";
 import { createAiVideoSceneVideoSlots } from "@/lib/editor/ai-video-scene-videos";
 import { formatTime } from "@/lib/editor/factory";
 import { createStockMediaAttribution } from "@/lib/editor/media-attribution";
 import { createRepurposeClipProjectVariants } from "@/lib/editor/project-variants";
 import type { MediaAsset, TimelineLayer } from "@/lib/editor/types";
-import { loadBrowserMediaBlob, saveBrowserMedia } from "@/lib/media/browser-media-store";
-import { decodeBase64ImagePayload, isValidBase64ImagePayload, normalizeBase64ImageData } from "@/lib/media/base64-image";
-import { activeImageObjectMaskCount, renderImageObjectMaskBlob } from "@/lib/media/image-edit-mask";
+import {
+  loadBrowserMediaBlob,
+  saveBrowserMedia,
+} from "@/lib/media/browser-media-store";
+import {
+  decodeBase64ImagePayload,
+  isValidBase64ImagePayload,
+  normalizeBase64ImageData,
+} from "@/lib/media/base64-image";
+import {
+  activeImageObjectMaskCount,
+  renderImageObjectMaskBlob,
+} from "@/lib/media/image-edit-mask";
 import { removeImageBackgroundLocally } from "@/lib/media/local-background-removal";
 import { loadTauriMediaBlob } from "@/lib/media/tauri-media";
 import { saveLocalProject } from "@/lib/projects/local-project-store";
-import { assertClientApiRuntime, clientApiUrl, isClientApiUnavailableError, useHasClientApiRuntime } from "@/lib/runtime/client-api";
+import {
+  assertClientApiRuntime,
+  clientApiUrl,
+  isClientApiUnavailableError,
+  useHasClientApiRuntime,
+} from "@/lib/runtime/client-api";
 import type { StockAsset } from "@/lib/stock/stock-assets";
 
 const actions: Array<{ id: AiAction; label: string; icon: ReactNode }> = [
   { id: "script", label: "Script", icon: <Sparkles className="size-4" /> },
   { id: "captions", label: "Captions", icon: <Captions className="size-4" /> },
-  { id: "transcript-cleanup", label: "Clean", icon: <FileText className="size-4" /> },
-  { id: "subtitle-translation", label: "Translate", icon: <Languages className="size-4" /> },
+  {
+    id: "transcript-cleanup",
+    label: "Clean",
+    icon: <FileText className="size-4" />,
+  },
+  {
+    id: "subtitle-translation",
+    label: "Translate",
+    icon: <Languages className="size-4" />,
+  },
   { id: "smart-cut", label: "Cuts", icon: <Scissors className="size-4" /> },
-  { id: "subtitle-style", label: "Style", icon: <Paintbrush className="size-4" /> },
+  {
+    id: "subtitle-style",
+    label: "Style",
+    icon: <Paintbrush className="size-4" />,
+  },
   { id: "image", label: "Image", icon: <ImagePlus className="size-4" /> },
   { id: "image-edit", label: "Edit Img", icon: <Eraser className="size-4" /> },
   { id: "b-roll", label: "B-roll", icon: <Video className="size-4" /> },
-  { id: "video-project", label: "Video", icon: <Clapperboard className="size-4" /> },
-  { id: "repurpose", label: "Repurpose", icon: <WandSparkles className="size-4" /> },
-  { id: "edit-plan", label: "Plan", icon: <ClipboardList className="size-4" /> },
+  {
+    id: "video-project",
+    label: "Video",
+    icon: <Clapperboard className="size-4" />,
+  },
+  {
+    id: "repurpose",
+    label: "Repurpose",
+    icon: <WandSparkles className="size-4" />,
+  },
+  {
+    id: "edit-plan",
+    label: "Plan",
+    icon: <ClipboardList className="size-4" />,
+  },
 ];
 
 type AiAssetImportMessage = {
@@ -133,7 +190,11 @@ type GeneratedSpeechOutput = {
   warnings?: string[];
 };
 
-const VIDEO_PROJECT_IMAGE_SOURCE_TYPES = new Set(["image/png", "image/jpeg", "image/webp"]);
+const VIDEO_PROJECT_IMAGE_SOURCE_TYPES = new Set([
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+]);
 
 export function AiAssistantPanel() {
   const project = useEditorStore((state) => state.project);
@@ -143,24 +204,38 @@ export function AiAssistantPanel() {
   const addMediaAsset = useEditorStore((state) => state.addMediaAsset);
   const addLayerFromAsset = useEditorStore((state) => state.addLayerFromAsset);
   const addAiCaptions = useEditorStore((state) => state.addAiCaptions);
-  const applyTimelineCutRanges = useEditorStore((state) => state.applyTimelineCutRanges);
+  const applyTimelineCutRanges = useEditorStore(
+    (state) => state.applyTimelineCutRanges,
+  );
   const updateLayer = useEditorStore((state) => state.updateLayer);
   const loadProject = useEditorStore((state) => state.loadProject);
   const [prompt, setPrompt] = useState("");
   const [activeAction, setActiveAction] = useState<AiAction>("edit-plan");
-  const [imageEditMode, setImageEditMode] = useState<AiImageEditMode>("cleanup");
-  const [imageOutpaintPreset, setImageOutpaintPreset] = useState<AiImageOutpaintPreset>("project");
-  const [imageTranslationLanguage, setImageTranslationLanguage] = useState("English");
-  const [audioCleanupMode, setAudioCleanupMode] = useState<AudioCleanupMode>("noise-reduction");
-  const [audioCleanupEngine, setAudioCleanupEngine] = useState<AudioCleanupEngine>("local");
+  const [imageEditMode, setImageEditMode] =
+    useState<AiImageEditMode>("cleanup");
+  const [imageOutpaintPreset, setImageOutpaintPreset] =
+    useState<AiImageOutpaintPreset>("project");
+  const [imageTranslationLanguage, setImageTranslationLanguage] =
+    useState("English");
+  const [audioCleanupMode, setAudioCleanupMode] =
+    useState<AudioCleanupMode>("noise-reduction");
+  const [audioCleanupEngine, setAudioCleanupEngine] =
+    useState<AudioCleanupEngine>("local");
   const [audioCleanupIntensity, setAudioCleanupIntensity] = useState(1);
-  const [audioCleanupPreview, setAudioCleanupPreview] = useState<AiAudioCleanupPreview | null>(null);
-  const [audioRestorationStatus, setAudioRestorationStatus] = useState<AudioRestorationStatus | null>(null);
-  const [videoEnhancementMode, setVideoEnhancementMode] = useState<VideoEnhancementMode>("stabilization");
-  const [videoEnhancementStrengthValue, setVideoEnhancementStrengthValue] = useState<number>(videoEnhancementStrength.defaultValue);
-  const [videoEnhancementStatus, setVideoEnhancementStatus] = useState<VideoEnhancementStatus | null>(null);
-  const [sceneVideoGenerationStatus, setSceneVideoGenerationStatus] = useState<SceneVideoGenerationStatus | null>(null);
-  const [videoProjectSourceImage, setVideoProjectSourceImage] = useState<ImageEditSource | null>(null);
+  const [audioCleanupPreview, setAudioCleanupPreview] =
+    useState<AiAudioCleanupPreview | null>(null);
+  const [audioRestorationStatus, setAudioRestorationStatus] =
+    useState<AudioRestorationStatus | null>(null);
+  const [videoEnhancementMode, setVideoEnhancementMode] =
+    useState<VideoEnhancementMode>("stabilization");
+  const [videoEnhancementStrengthValue, setVideoEnhancementStrengthValue] =
+    useState<number>(videoEnhancementStrength.defaultValue);
+  const [videoEnhancementStatus, setVideoEnhancementStatus] =
+    useState<VideoEnhancementStatus | null>(null);
+  const [sceneVideoGenerationStatus, setSceneVideoGenerationStatus] =
+    useState<SceneVideoGenerationStatus | null>(null);
+  const [videoProjectSourceImage, setVideoProjectSourceImage] =
+    useState<ImageEditSource | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [isReadingSource, setIsReadingSource] = useState(false);
@@ -169,37 +244,63 @@ export function AiAssistantPanel() {
   const [isEnhancingVideo, setIsEnhancingVideo] = useState(false);
   const [result, setResult] = useState<AiResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [assetImportMessage, setAssetImportMessage] = useState<AiAssetImportMessage | null>(null);
+  const [assetImportMessage, setAssetImportMessage] =
+    useState<AiAssetImportMessage | null>(null);
   const sourceInputRef = useRef<HTMLInputElement | null>(null);
-  const transcript = useMemo(() => projectTranscript(project.layers), [project.layers]);
+  const transcript = useMemo(
+    () => projectTranscript(project.layers),
+    [project.layers],
+  );
   const transcriptionTarget = useMemo(
     () => findTranscriptionTarget(project.layers, mediaAssets, selectedLayerId),
     [mediaAssets, project.layers, selectedLayerId],
   );
-  const imageEditTarget = useMemo(() => findImageEditTarget(project.layers, mediaAssets, selectedLayerId), [
-    mediaAssets,
-    project.layers,
-    selectedLayerId,
-  ]);
+  const imageEditTarget = useMemo(
+    () => findImageEditTarget(project.layers, mediaAssets, selectedLayerId),
+    [mediaAssets, project.layers, selectedLayerId],
+  );
   const audioCleanupTarget = useMemo(
     () => findAudioCleanupTarget(project.layers, mediaAssets, selectedLayerId),
     [mediaAssets, project.layers, selectedLayerId],
   );
   const videoEnhancementTarget = useMemo(
-    () => findVideoEnhancementTarget(project.layers, mediaAssets, selectedLayerId),
+    () =>
+      findVideoEnhancementTarget(project.layers, mediaAssets, selectedLayerId),
     [mediaAssets, project.layers, selectedLayerId],
   );
-  const imageEditMaskCount = useMemo(() => activeImageObjectMaskCount(imageEditTarget?.layer), [imageEditTarget]);
+  const imageEditMaskCount = useMemo(
+    () => activeImageObjectMaskCount(imageEditTarget?.layer),
+    [imageEditTarget],
+  );
   const canUseOnlineActions = useHasClientApiRuntime();
-  const isBusy = isLoading || isTranscribing || isReadingSource || isGeneratingVoiceover || isCleaningAudio || isEnhancingVideo;
-  const hasPromptForActiveAction = Boolean(prompt.trim()) || (activeAction === "image-edit" && imageEditMode === "background-removal");
+  const isBusy =
+    isLoading ||
+    isTranscribing ||
+    isReadingSource ||
+    isGeneratingVoiceover ||
+    isCleaningAudio ||
+    isEnhancingVideo;
+  const hasPromptForActiveAction =
+    Boolean(prompt.trim()) ||
+    (activeAction === "image-edit" && imageEditMode === "background-removal");
   const canRunActiveAction =
     hasPromptForActiveAction &&
-    (activeAction !== "image-edit" || (Boolean(imageEditTarget) && (imageEditMode !== "inpaint" || imageEditMaskCount > 0)));
-  const canRunLocalBackgroundRemoval = activeAction === "image-edit" && imageEditMode === "background-removal" && Boolean(imageEditTarget);
-  const canUseAudioRestorationService = Boolean(audioRestorationStatus?.configured);
-  const canUseVideoEnhancementService = Boolean(videoEnhancementStatus?.configured);
-  const canUseSceneVideoGenerationService = Boolean(sceneVideoGenerationStatus?.configured);
+    (activeAction !== "image-edit" ||
+      (Boolean(imageEditTarget) &&
+        (imageEditMode !== "inpaint" || imageEditMaskCount > 0)));
+  const canRunLocalBackgroundRemoval =
+    activeAction === "image-edit" &&
+    imageEditMode === "background-removal" &&
+    Boolean(imageEditTarget);
+  const canUseAudioRestorationService = Boolean(
+    audioRestorationStatus?.configured,
+  );
+  const canUseVideoEnhancementService = Boolean(
+    videoEnhancementStatus?.configured,
+  );
+  const canUseSceneVideoGenerationService = Boolean(
+    sceneVideoGenerationStatus?.configured,
+  );
 
   useEffect(() => {
     if (!canUseOnlineActions) {
@@ -250,7 +351,10 @@ export function AiAssistantPanel() {
   }, [canUseOnlineActions]);
 
   useEffect(() => {
-    if (audioCleanupEngine === "service" && audioRestorationStatus?.configured === false) {
+    if (
+      audioCleanupEngine === "service" &&
+      audioRestorationStatus?.configured === false
+    ) {
       setAudioCleanupEngine("local");
     }
   }, [audioCleanupEngine, audioRestorationStatus?.configured]);
@@ -263,7 +367,12 @@ export function AiAssistantPanel() {
     setAudioCleanupPreview(null);
 
     try {
-      if (action === "image-edit" && imageEditMode === "background-removal" && imageEditTarget && !canUseOnlineActions) {
+      if (
+        action === "image-edit" &&
+        imageEditMode === "background-removal" &&
+        imageEditTarget &&
+        !canUseOnlineActions
+      ) {
         await runLocalImageBackgroundRemoval();
         return;
       }
@@ -284,10 +393,16 @@ export function AiAssistantPanel() {
           ? {
               mode: imageEditMode,
               outpaintPreset: imageOutpaintPreset,
-              targetLanguage: imageEditMode === "translate" ? imageTranslationLanguage.trim() || "English" : undefined,
+              targetLanguage:
+                imageEditMode === "translate"
+                  ? imageTranslationLanguage.trim() || "English"
+                  : undefined,
               mask:
                 imageEditMode === "inpaint"
-                  ? await prepareImageEditMaskSource(imageEditTarget?.layer ?? null, imageEditTarget?.asset ?? null)
+                  ? await prepareImageEditMaskSource(
+                      imageEditTarget?.layer ?? null,
+                      imageEditTarget?.asset ?? null,
+                    )
                   : undefined,
             }
           : undefined;
@@ -312,7 +427,12 @@ export function AiAssistantPanel() {
       });
       const data = await readAiResponse(response);
       if (!response.ok || !isAiSuccess(data)) {
-        if (action === "image-edit" && imageEditMode === "background-removal" && imageEditTarget && isImageProviderUnavailable(data)) {
+        if (
+          action === "image-edit" &&
+          imageEditMode === "background-removal" &&
+          imageEditTarget &&
+          isImageProviderUnavailable(data)
+        ) {
           await runLocalImageBackgroundRemoval();
           return;
         }
@@ -327,7 +447,10 @@ export function AiAssistantPanel() {
       if (action === "subtitle-style" && isSubtitleStyleOutput(data.output)) {
         applySubtitleStyle(data.output);
       }
-      if ((action === "image" || action === "image-edit") && isGeneratedImageOutput(data.output)) {
+      if (
+        (action === "image" || action === "image-edit") &&
+        isGeneratedImageOutput(data.output)
+      ) {
         await importGeneratedImages(data.output);
       }
     } catch (requestError) {
@@ -362,10 +485,16 @@ export function AiAssistantPanel() {
       setPrompt(createVideoProjectPromptFromSource(brief));
       setAssetImportMessage({
         tone: "default",
-        text: brief.warning ? `${brief.filename} imported. ${brief.warning}` : `${brief.filename} imported for video project generation.`,
+        text: brief.warning
+          ? `${brief.filename} imported. ${brief.warning}`
+          : `${brief.filename} imported for video project generation.`,
       });
     } catch (ingestError) {
-      setError(ingestError instanceof AiSourceIngestError ? ingestError.message : "Source file could not be read.");
+      setError(
+        ingestError instanceof AiSourceIngestError
+          ? ingestError.message
+          : "Source file could not be read.",
+      );
     } finally {
       setIsReadingSource(false);
       if (sourceInputRef.current) {
@@ -397,7 +526,10 @@ export function AiAssistantPanel() {
       formData.set(
         "file",
         new File([blob], transcriptionTarget.asset.name, {
-          type: transcriptionTarget.asset.mimeType || blob.type || "application/octet-stream",
+          type:
+            transcriptionTarget.asset.mimeType ||
+            blob.type ||
+            "application/octet-stream",
         }),
       );
       formData.set("projectId", project.id);
@@ -465,7 +597,10 @@ export function AiAssistantPanel() {
       const asset = await saveBrowserMedia(file);
       addMediaAsset(asset);
       addLayerFromAsset(asset.id);
-      const chunkNote = data.output.chunkCount && data.output.chunkCount > 1 ? ` from ${data.output.chunkCount} generated speech chunks` : "";
+      const chunkNote =
+        data.output.chunkCount && data.output.chunkCount > 1
+          ? ` from ${data.output.chunkCount} generated speech chunks`
+          : "";
       setAssetImportMessage({
         tone: "default",
         text: `${asset.name} added as a voiceover audio layer${chunkNote}.`,
@@ -510,7 +645,11 @@ export function AiAssistantPanel() {
       addMediaAsset(asset);
       const layerId = addLayerFromAsset(asset.id, {
         start: audioCleanupTarget.layer?.start ?? 0,
-        duration: audioCleanupTarget.layer?.duration ?? asset.duration ?? audioCleanupTarget.asset.duration ?? 5,
+        duration:
+          audioCleanupTarget.layer?.duration ??
+          asset.duration ??
+          audioCleanupTarget.asset.duration ??
+          5,
         name: `${audioCleanupTarget.asset.name} cleaned`,
         notes: cleanup.summary,
       });
@@ -529,7 +668,9 @@ export function AiAssistantPanel() {
 
       setAssetImportMessage({
         tone: layerId ? "default" : "destructive",
-        text: layerId ? `${asset.name} saved as a cleaned audio layer. ${cleanup.summary}` : `${asset.name} was saved, but the layer could not be added.`,
+        text: layerId
+          ? `${asset.name} saved as a cleaned audio layer. ${cleanup.summary}`
+          : `${asset.name} was saved, but the layer could not be added.`,
       });
     } catch (requestError) {
       setError(aiAssistantExceptionMessage(requestError));
@@ -538,10 +679,15 @@ export function AiAssistantPanel() {
     }
   }
 
-  async function runConnectedAudioRestoration(sourceBlob: Blob, target: { asset: MediaAsset; layer: TimelineLayer | null }) {
+  async function runConnectedAudioRestoration(
+    sourceBlob: Blob,
+    target: { asset: MediaAsset; layer: TimelineLayer | null },
+  ) {
     assertClientApiRuntime();
     if (!canUseAudioRestorationService) {
-      setError("Connect an advanced audio restoration service before using this mode.");
+      setError(
+        "Connect an advanced audio restoration service before using this mode.",
+      );
       return;
     }
 
@@ -563,7 +709,8 @@ export function AiAssistantPanel() {
     addMediaAsset(asset);
     const layerId = addLayerFromAsset(asset.id, {
       start: target.layer?.start ?? 0,
-      duration: target.layer?.duration ?? asset.duration ?? target.asset.duration ?? 5,
+      duration:
+        target.layer?.duration ?? asset.duration ?? target.asset.duration ?? 5,
       name: `${target.asset.name} restored`,
       notes: result.output.summary,
     });
@@ -580,10 +727,14 @@ export function AiAssistantPanel() {
       },
     });
 
-    const warnings = result.output.warnings?.length ? ` ${result.output.warnings.join(" ")}` : "";
+    const warnings = result.output.warnings?.length
+      ? ` ${result.output.warnings.join(" ")}`
+      : "";
     setAssetImportMessage({
       tone: layerId ? "default" : "destructive",
-      text: layerId ? `${asset.name} saved as a restored audio layer. ${result.output.summary}${warnings}` : `${asset.name} was saved, but the layer could not be added.`,
+      text: layerId
+        ? `${asset.name} saved as a restored audio layer. ${result.output.summary}${warnings}`
+        : `${asset.name} was saved, but the layer could not be added.`,
     });
   }
 
@@ -596,7 +747,9 @@ export function AiAssistantPanel() {
     try {
       assertClientApiRuntime();
       if (!canUseVideoEnhancementService) {
-        setError("Connect a video enhancement service before using stabilization, eye-contact, or lip-sync.");
+        setError(
+          "Connect a video enhancement service before using stabilization, eye-contact, or lip-sync.",
+        );
         return;
       }
       if (!videoEnhancementTarget) {
@@ -629,12 +782,18 @@ export function AiAssistantPanel() {
       addMediaAsset(asset);
       const layerId = addLayerFromAsset(asset.id, {
         start: videoEnhancementTarget.layer?.start ?? 0,
-        duration: videoEnhancementTarget.layer?.duration ?? asset.duration ?? videoEnhancementTarget.asset.duration ?? 5,
+        duration:
+          videoEnhancementTarget.layer?.duration ??
+          asset.duration ??
+          videoEnhancementTarget.asset.duration ??
+          5,
         name: `${videoEnhancementTarget.asset.name} enhanced`,
         notes: enhancement.output.summary,
       });
 
-      const warnings = enhancement.output.warnings?.length ? ` ${enhancement.output.warnings.join(" ")}` : "";
+      const warnings = enhancement.output.warnings?.length
+        ? ` ${enhancement.output.warnings.join(" ")}`
+        : "";
       setAssetImportMessage({
         tone: layerId ? "default" : "destructive",
         text: layerId
@@ -677,7 +836,11 @@ export function AiAssistantPanel() {
     }
 
     const message = generatedImageImportMessage(importedCount, failedCount);
-    setAssetImportMessage(message ? { tone: failedCount > 0 ? "destructive" : "default", text: message } : null);
+    setAssetImportMessage(
+      message
+        ? { tone: failedCount > 0 ? "destructive" : "default", text: message }
+        : null,
+    );
   }
 
   async function runLocalImageBackgroundRemoval() {
@@ -702,7 +865,9 @@ export function AiAssistantPanel() {
           filename: file.name,
           mediaType: "image/png",
           base64: await readBlobAsBase64Payload(file),
-          prompt: prompt.trim() || "Remove the edge-connected background from the selected image.",
+          prompt:
+            prompt.trim() ||
+            "Remove the edge-connected background from the selected image.",
           model: "Local transparent background",
           editMode: "background-removal",
           sourceImageName: imageEditTarget.asset.name,
@@ -752,7 +917,10 @@ export function AiAssistantPanel() {
         }
 
         const file = await downloadStockAsset(stockAsset);
-        const asset = { ...(await saveBrowserMedia(file)), attribution: createStockMediaAttribution(stockAsset) };
+        const asset = {
+          ...(await saveBrowserMedia(file)),
+          attribution: createStockMediaAttribution(stockAsset),
+        };
         addMediaAsset(asset);
         const layerId = addLayerFromAsset(asset.id, {
           start: suggestion.start,
@@ -779,7 +947,10 @@ export function AiAssistantPanel() {
     return { insertedCount, skippedCount, failedCount };
   }
 
-  async function saveGeneratedVideoProject(output: VideoProjectOutput, options?: VideoProjectSaveOptions) {
+  async function saveGeneratedVideoProject(
+    output: VideoProjectOutput,
+    options?: VideoProjectSaveOptions,
+  ) {
     const generatedProject = createAiVideoProject(output);
     const mediaMode = videoProjectMediaMode(options);
     const generatedMediaResult =
@@ -787,7 +958,13 @@ export function AiAssistantPanel() {
         ? await importGeneratedProjectSceneImages(generatedProject, output)
         : mediaMode === "generated-videos"
           ? await importGeneratedProjectSceneVideos(generatedProject, output)
-          : { assets: await importGeneratedProjectSceneMedia(generatedProject, output), failedCount: 0 };
+          : {
+              assets: await importGeneratedProjectSceneMedia(
+                generatedProject,
+                output,
+              ),
+              failedCount: 0,
+            };
     const generatedAssets = generatedMediaResult.assets;
 
     if (mediaMode === "generated-images" && generatedAssets.length === 0) {
@@ -804,21 +981,37 @@ export function AiAssistantPanel() {
       title: generatedProject.title,
       layerCount: generatedProject.layers.length,
       duration: generatedProject.duration,
-      generatedSceneImageCount: mediaMode === "generated-images" ? generatedAssets.length : undefined,
-      failedSceneImageCount: mediaMode === "generated-images" ? generatedMediaResult.failedCount : undefined,
-      generatedSceneVideoCount: mediaMode === "generated-videos" ? generatedAssets.length : undefined,
-      failedSceneVideoCount: mediaMode === "generated-videos" ? generatedMediaResult.failedCount : undefined,
+      generatedSceneImageCount:
+        mediaMode === "generated-images" ? generatedAssets.length : undefined,
+      failedSceneImageCount:
+        mediaMode === "generated-images"
+          ? generatedMediaResult.failedCount
+          : undefined,
+      generatedSceneVideoCount:
+        mediaMode === "generated-videos" ? generatedAssets.length : undefined,
+      failedSceneVideoCount:
+        mediaMode === "generated-videos"
+          ? generatedMediaResult.failedCount
+          : undefined,
     };
 
     setAssetImportMessage({
       tone: "default",
-      text: videoProjectSaveMessage(summary.title, mediaMode, generatedAssets.length, generatedMediaResult.failedCount),
+      text: videoProjectSaveMessage(
+        summary.title,
+        mediaMode,
+        generatedAssets.length,
+        generatedMediaResult.failedCount,
+      ),
     });
 
     return summary;
   }
 
-  async function importGeneratedProjectSceneVideos(generatedProject: ReturnType<typeof createAiVideoProject>, output: VideoProjectOutput) {
+  async function importGeneratedProjectSceneVideos(
+    generatedProject: ReturnType<typeof createAiVideoProject>,
+    output: VideoProjectOutput,
+  ) {
     assertClientApiRuntime();
     const assets: MediaAsset[] = [];
     let failedCount = 0;
@@ -840,7 +1033,9 @@ export function AiAssistantPanel() {
           continue;
         }
 
-        const asset = await saveBrowserMedia(fileFromSceneVideoOutput(result.output));
+        const asset = await saveBrowserMedia(
+          fileFromSceneVideoOutput(result.output),
+        );
         assets.push(asset);
         addAiVideoSceneMediaLayer(generatedProject, asset, slot);
       } catch {
@@ -851,7 +1046,10 @@ export function AiAssistantPanel() {
     return { assets, failedCount };
   }
 
-  async function importGeneratedProjectSceneImages(generatedProject: ReturnType<typeof createAiVideoProject>, output: VideoProjectOutput) {
+  async function importGeneratedProjectSceneImages(
+    generatedProject: ReturnType<typeof createAiVideoProject>,
+    output: VideoProjectOutput,
+  ) {
     assertClientApiRuntime();
     const assets: MediaAsset[] = [];
     let failedCount = 0;
@@ -868,12 +1066,22 @@ export function AiAssistantPanel() {
             projectTitle: output.title,
             projectId: generatedProject.id,
             aspectRatio: output.aspectRatio,
-            duration: output.scenes.reduce((total, scene) => total + scene.duration, 0),
-            brandColors: [output.scenes[slot.sceneIndex]?.backgroundColor, output.scenes[slot.sceneIndex]?.accentColor].filter(Boolean),
+            duration: output.scenes.reduce(
+              (total, scene) => total + scene.duration,
+              0,
+            ),
+            brandColors: [
+              output.scenes[slot.sceneIndex]?.backgroundColor,
+              output.scenes[slot.sceneIndex]?.accentColor,
+            ].filter(Boolean),
           }),
         });
         const data = await readAiResponse(response);
-        if (!response.ok || !isAiSuccess(data) || !isGeneratedImageOutput(data.output)) {
+        if (
+          !response.ok ||
+          !isAiSuccess(data) ||
+          !isGeneratedImageOutput(data.output)
+        ) {
           failedCount += 1;
           continue;
         }
@@ -895,16 +1103,24 @@ export function AiAssistantPanel() {
     return { assets, failedCount };
   }
 
-  async function importGeneratedProjectSceneMedia(generatedProject: ReturnType<typeof createAiVideoProject>, output: VideoProjectOutput) {
+  async function importGeneratedProjectSceneMedia(
+    generatedProject: ReturnType<typeof createAiVideoProject>,
+    output: VideoProjectOutput,
+  ) {
     const assets: MediaAsset[] = [];
 
     for (const slot of createAiVideoSceneMediaSlots(output)) {
       try {
-        const stockAsset = (await findStockAssetForQuery(slot.query, "video")) ?? (await findStockAssetForQuery(slot.query, "image"));
+        const stockAsset =
+          (await findStockAssetForQuery(slot.query, "video")) ??
+          (await findStockAssetForQuery(slot.query, "image"));
         if (!stockAsset) continue;
 
         const file = await downloadStockAsset(stockAsset);
-        const asset = { ...(await saveBrowserMedia(file)), attribution: createStockMediaAttribution(stockAsset) };
+        const asset = {
+          ...(await saveBrowserMedia(file)),
+          attribution: createStockMediaAttribution(stockAsset),
+        };
         assets.push(asset);
         addAiVideoSceneMediaLayer(generatedProject, asset, slot);
       } catch {
@@ -917,8 +1133,16 @@ export function AiAssistantPanel() {
 
   function applySubtitleStyle(output: SubtitleStyleOutput) {
     const layer =
-      project.layers.find((item) => item.id === selectedLayerId && ["subtitle", "text", "sticker", "timer"].includes(item.kind)) ??
-      [...project.layers].reverse().find((item) => ["subtitle", "text", "sticker", "timer"].includes(item.kind));
+      project.layers.find(
+        (item) =>
+          item.id === selectedLayerId &&
+          ["subtitle", "text", "sticker", "timer"].includes(item.kind),
+      ) ??
+      [...project.layers]
+        .reverse()
+        .find((item) =>
+          ["subtitle", "text", "sticker", "timer"].includes(item.kind),
+        );
     if (!layer) return;
 
     updateLayer(layer.id, {
@@ -968,7 +1192,9 @@ export function AiAssistantPanel() {
             className="hidden"
             type="file"
             accept=".txt,.md,.markdown,.html,.htm,.srt,.vtt,.pdf,.png,.jpg,.jpeg,.webp,text/plain,text/markdown,text/html,application/pdf,image/png,image/jpeg,image/webp"
-            onChange={(event) => void importSourceForVideoProject(event.target.files?.[0])}
+            onChange={(event) =>
+              void importSourceForVideoProject(event.target.files?.[0])
+            }
           />
           <Button
             className="flex-1 justify-start"
@@ -976,7 +1202,11 @@ export function AiAssistantPanel() {
             onClick={() => sourceInputRef.current?.click()}
             disabled={isBusy}
           >
-            {isReadingSource ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}
+            {isReadingSource ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Upload className="size-4" />
+            )}
             Import source
           </Button>
         </div>
@@ -1013,8 +1243,20 @@ export function AiAssistantPanel() {
           onModeChange={setVideoEnhancementMode}
           onStrengthChange={setVideoEnhancementStrengthValue}
         />
-        <Button className="w-full" onClick={() => runAi()} disabled={isBusy || !canRunActiveAction || (!canUseOnlineActions && !canRunLocalBackgroundRemoval)}>
-          {isLoading ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
+        <Button
+          className="w-full"
+          onClick={() => runAi()}
+          disabled={
+            isBusy ||
+            !canRunActiveAction ||
+            (!canUseOnlineActions && !canRunLocalBackgroundRemoval)
+          }
+        >
+          {isLoading ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <Sparkles className="size-4" />
+          )}
           Run {actions.find((action) => action.id === activeAction)?.label}
         </Button>
         <Button
@@ -1023,8 +1265,14 @@ export function AiAssistantPanel() {
           onClick={() => void runAutoCaptions()}
           disabled={isBusy || !canUseOnlineActions || !transcriptionTarget}
         >
-          {isTranscribing ? <Loader2 className="size-4 animate-spin" /> : <Captions className="size-4" />}
-          <span className="truncate">Auto-caption {transcriptionTarget?.asset.name ?? "media"}</span>
+          {isTranscribing ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <Captions className="size-4" />
+          )}
+          <span className="truncate">
+            Auto-caption {transcriptionTarget?.asset.name ?? "media"}
+          </span>
         </Button>
         <Button
           className="w-full justify-start"
@@ -1032,7 +1280,11 @@ export function AiAssistantPanel() {
           onClick={() => void runVoiceover()}
           disabled={isBusy || !canUseOnlineActions || !prompt.trim()}
         >
-          {isGeneratingVoiceover ? <Loader2 className="size-4 animate-spin" /> : <Mic2 className="size-4" />}
+          {isGeneratingVoiceover ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <Mic2 className="size-4" />
+          )}
           <span className="truncate">Generate voiceover</span>
         </Button>
         <Button
@@ -1041,19 +1293,41 @@ export function AiAssistantPanel() {
           onClick={() => void runAudioCleanup()}
           disabled={isBusy || !audioCleanupTarget}
         >
-          {isCleaningAudio ? <Loader2 className="size-4 animate-spin" /> : <SlidersHorizontal className="size-4" />}
-          <span className="truncate">Clean audio {audioCleanupTarget?.asset.name ?? "layer"}</span>
+          {isCleaningAudio ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <SlidersHorizontal className="size-4" />
+          )}
+          <span className="truncate">
+            Clean audio {audioCleanupTarget?.asset.name ?? "layer"}
+          </span>
         </Button>
         <Button
           className="w-full justify-start"
           variant="outline"
           onClick={() => void runVideoEnhancement()}
-          disabled={isBusy || !canUseOnlineActions || !canUseVideoEnhancementService || !videoEnhancementTarget}
+          disabled={
+            isBusy ||
+            !canUseOnlineActions ||
+            !canUseVideoEnhancementService ||
+            !videoEnhancementTarget
+          }
         >
-          {isEnhancingVideo ? <Loader2 className="size-4 animate-spin" /> : <Video className="size-4" />}
-          <span className="truncate">Enhance video {videoEnhancementTarget?.asset.name ?? "layer"}</span>
+          {isEnhancingVideo ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <Video className="size-4" />
+          )}
+          <span className="truncate">
+            Enhance video {videoEnhancementTarget?.asset.name ?? "layer"}
+          </span>
         </Button>
-        <Button className="w-full justify-start" variant="outline" onClick={reviewCleanupCuts} disabled={isBusy}>
+        <Button
+          className="w-full justify-start"
+          variant="outline"
+          onClick={reviewCleanupCuts}
+          disabled={isBusy}
+        >
           <Scissors className="size-4" />
           Review silence/fillers
         </Button>
@@ -1065,7 +1339,11 @@ export function AiAssistantPanel() {
       </div>
       <ScrollArea className="min-h-0 flex-1 border-t border-border">
         <div className="space-y-3 p-3">
-          {error ? <div className="rounded-md border border-destructive/40 p-3 text-sm text-destructive">{error}</div> : null}
+          {error ? (
+            <div className="rounded-md border border-destructive/40 p-3 text-sm text-destructive">
+              {error}
+            </div>
+          ) : null}
           {assetImportMessage ? (
             <div
               className={`rounded-md border p-3 text-sm ${
@@ -1094,7 +1372,10 @@ export function AiAssistantPanel() {
               }
               onSaveClipVariants={saveClipVariants}
               sceneVideoConfigured={canUseSceneVideoGenerationService}
-              sceneVideoStatusLabel={sceneVideoGenerationStatus?.label ?? "Connect a scene video service to generate scene clips."}
+              sceneVideoStatusLabel={
+                sceneVideoGenerationStatus?.label ??
+                "Connect a scene video service to generate scene clips."
+              }
             />
           ) : null}
         </div>
@@ -1111,17 +1392,36 @@ async function readAiResponse(response: Response) {
   }
 }
 
-function isAiSuccess(value: unknown): value is { ok: true; output: AiResult["output"] } {
-  return typeof value === "object" && value !== null && "ok" in value && value.ok === true && "output" in value;
+function isAiSuccess(
+  value: unknown,
+): value is { ok: true; output: AiResult["output"] } {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "ok" in value &&
+    value.ok === true &&
+    "output" in value
+  );
 }
 
-function isAiTranscriptionSuccess(value: unknown): value is { ok: true; output: { captions: CaptionChunk[] } } {
+function isAiTranscriptionSuccess(
+  value: unknown,
+): value is { ok: true; output: { captions: CaptionChunk[] } } {
   if (!isAiSuccess(value)) return false;
   return isCaptionOutput(value.output);
 }
 
-function isAiSpeechSuccess(value: unknown): value is { ok: true; output: GeneratedSpeechOutput } {
-  if (typeof value !== "object" || value === null || !("ok" in value) || value.ok !== true || !("output" in value)) return false;
+function isAiSpeechSuccess(
+  value: unknown,
+): value is { ok: true; output: GeneratedSpeechOutput } {
+  if (
+    typeof value !== "object" ||
+    value === null ||
+    !("ok" in value) ||
+    value.ok !== true ||
+    !("output" in value)
+  )
+    return false;
   const output = value.output;
   return (
     typeof output === "object" &&
@@ -1137,15 +1437,27 @@ function isAiSpeechSuccess(value: unknown): value is { ok: true; output: Generat
 }
 
 function isAiFailure(value: unknown): value is { reason: string } {
-  return typeof value === "object" && value !== null && "reason" in value && typeof value.reason === "string";
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "reason" in value &&
+    typeof value.reason === "string"
+  );
 }
 
 function aiAssistantFailureMessage(value: unknown) {
-  return isAiFailure(value) ? value.reason : "Creative AI request could not finish. Try again.";
+  return isAiFailure(value)
+    ? value.reason
+    : "Creative AI request could not finish. Try again.";
 }
 
 function isImageProviderUnavailable(value: unknown) {
-  return isAiFailure(value) && /image generation|image-model|image model|not configured/i.test(value.reason);
+  return (
+    isAiFailure(value) &&
+    /image generation|image-model|image model|not configured/i.test(
+      value.reason,
+    )
+  );
 }
 
 function aiAssistantExceptionMessage(error: unknown) {
@@ -1162,7 +1474,10 @@ function fileFromBase64(image: GeneratedImageOutput["images"][number]) {
 }
 
 function fileFromGeneratedSpeech(output: GeneratedSpeechOutput) {
-  const bytes = decodeBase64AudioPayload(output.base64, "Generated voiceover audio");
+  const bytes = decodeBase64AudioPayload(
+    output.base64,
+    "Generated voiceover audio",
+  );
   const blob = new Blob([bytes], { type: output.mediaType });
   return new File([blob], output.filename, { type: output.mediaType });
 }
@@ -1185,7 +1500,10 @@ function decodeBase64AudioPayload(value: string, label: string) {
   return bytes;
 }
 
-function generatedImageImportMessage(importedCount: number, failedCount: number) {
+function generatedImageImportMessage(
+  importedCount: number,
+  failedCount: number,
+) {
   if (importedCount === 0 && failedCount === 0) return null;
 
   const imageLabel = importedCount === 1 ? "image" : "images";
@@ -1203,19 +1521,31 @@ function generatedImageImportMessage(importedCount: number, failedCount: number)
 }
 
 function videoProjectMediaMode(options?: VideoProjectSaveOptions) {
-  return options?.sceneMediaMode ?? (options?.sceneImageMode === "generated" ? "generated-images" : "stock");
+  return (
+    options?.sceneMediaMode ??
+    (options?.sceneImageMode === "generated" ? "generated-images" : "stock")
+  );
 }
 
-function videoProjectSaveMessage(title: string, mode: ReturnType<typeof videoProjectMediaMode>, generatedCount: number, failedCount: number) {
+function videoProjectSaveMessage(
+  title: string,
+  mode: ReturnType<typeof videoProjectMediaMode>,
+  generatedCount: number,
+  failedCount: number,
+) {
   if (mode === "generated-images") {
     return `${title} created with ${generatedCount} AI scene image${generatedCount === 1 ? "" : "s"}${
-      failedCount > 0 ? `; ${failedCount} scene${failedCount === 1 ? "" : "s"} kept the generated text layout.` : ""
+      failedCount > 0
+        ? `; ${failedCount} scene${failedCount === 1 ? "" : "s"} kept the generated text layout.`
+        : ""
     }.`;
   }
 
   if (mode === "generated-videos") {
     return `${title} created with ${generatedCount} AI scene video${generatedCount === 1 ? "" : "s"}${
-      failedCount > 0 ? `; ${failedCount} scene${failedCount === 1 ? "" : "s"} kept the generated text layout.` : ""
+      failedCount > 0
+        ? `; ${failedCount} scene${failedCount === 1 ? "" : "s"} kept the generated text layout.`
+        : ""
     }.`;
   }
 
@@ -1226,12 +1556,17 @@ async function findStockAssetForBroll(suggestion: BrollSuggestion) {
   return findStockAssetForQuery(suggestion.query, suggestion.mediaType);
 }
 
-async function findStockAssetForQuery(query: string, mediaType: "image" | "video" = "video") {
+async function findStockAssetForQuery(
+  query: string,
+  mediaType: "image" | "video" = "video",
+) {
   const params = new URLSearchParams({
     q: query,
     type: mediaType,
   });
-  const response = await fetch(clientApiUrl(`/api/stock/search?${params}`), { credentials: "include" });
+  const response = await fetch(clientApiUrl(`/api/stock/search?${params}`), {
+    credentials: "include",
+  });
   const data = await readAiResponse(response);
 
   if (!response.ok || !isStockSearchSuccess(data)) return null;
@@ -1240,7 +1575,9 @@ async function findStockAssetForQuery(query: string, mediaType: "image" | "video
 
 async function downloadStockAsset(asset: StockAsset) {
   const params = new URLSearchParams({ title: asset.title });
-  const response = await fetch(clientApiUrl(`/api/stock/download?${params}`), { credentials: "include" });
+  const response = await fetch(clientApiUrl(`/api/stock/download?${params}`), {
+    credentials: "include",
+  });
   if (!response.ok) {
     throw new Error("Stock media could not be downloaded.");
   }
@@ -1249,7 +1586,9 @@ async function downloadStockAsset(asset: StockAsset) {
   return new File([blob], asset.name, { type: asset.mimeType || blob.type });
 }
 
-function isStockSearchSuccess(value: unknown): value is { ok: true; results: StockAsset[] } {
+function isStockSearchSuccess(
+  value: unknown,
+): value is { ok: true; results: StockAsset[] } {
   return (
     typeof value === "object" &&
     value !== null &&
@@ -1260,28 +1599,47 @@ function isStockSearchSuccess(value: unknown): value is { ok: true; results: Sto
   );
 }
 
-function brollImportMessage(summary: { insertedCount: number; skippedCount: number; failedCount: number }) {
+function brollImportMessage(summary: {
+  insertedCount: number;
+  skippedCount: number;
+  failedCount: number;
+}) {
   if (summary.insertedCount === 0) {
-    if (summary.skippedCount > 0) return "No usable stock result was found for the accepted B-roll suggestions.";
+    if (summary.skippedCount > 0)
+      return "No usable stock result was found for the accepted B-roll suggestions.";
     return "Accepted B-roll could not be inserted.";
   }
 
-  const skipped = summary.skippedCount > 0 ? ` ${summary.skippedCount} search${summary.skippedCount === 1 ? "" : "es"} had no usable stock result.` : "";
-  const failed = summary.failedCount > 0 ? ` ${summary.failedCount} import${summary.failedCount === 1 ? "" : "s"} failed.` : "";
+  const skipped =
+    summary.skippedCount > 0
+      ? ` ${summary.skippedCount} search${summary.skippedCount === 1 ? "" : "es"} had no usable stock result.`
+      : "";
+  const failed =
+    summary.failedCount > 0
+      ? ` ${summary.failedCount} import${summary.failedCount === 1 ? "" : "s"} failed.`
+      : "";
   return `${summary.insertedCount} B-roll layer${summary.insertedCount === 1 ? "" : "s"} inserted.${skipped}${failed}`;
 }
 
 function projectMediaBrief(assets: MediaAsset[]) {
   return assets
     .slice(0, 40)
-    .map((asset) => `${asset.type}: ${asset.name}${asset.duration ? `, ${formatTime(asset.duration)}` : ""}`)
+    .map(
+      (asset) =>
+        `${asset.type}: ${asset.name}${asset.duration ? `, ${formatTime(asset.duration)}` : ""}`,
+    )
     .join("\n")
     .slice(0, 6000);
 }
 
 async function recordAudioCleanupGeneration(
   cleanup: AudioCleanupResult,
-  input: { projectId: string; sourceAssetName: string; outputAssetName: string; duration?: number },
+  input: {
+    projectId: string;
+    sourceAssetName: string;
+    outputAssetName: string;
+    duration?: number;
+  },
 ) {
   try {
     assertClientApiRuntime();
@@ -1304,22 +1662,30 @@ async function recordAudioCleanupGeneration(
   }
 }
 
-async function prepareImageEditSource(target: { asset: MediaAsset; layer: TimelineLayer } | null): Promise<ImageEditSource | null> {
+async function prepareImageEditSource(
+  target: { asset: MediaAsset; layer: TimelineLayer } | null,
+): Promise<ImageEditSource | null> {
   if (!target) return null;
 
   const blob = await loadMediaAssetBlob(target.asset);
   if (!blob) {
-    throw new ClientAiInputError("Reconnect this image file before running an AI image edit.");
+    throw new ClientAiInputError(
+      "Reconnect this image file before running an AI image edit.",
+    );
   }
 
   const mediaType = imageMediaType(target.asset, blob);
   if (!mediaType) {
-    throw new ClientAiInputError("Choose a supported image layer before running an AI image edit.");
+    throw new ClientAiInputError(
+      "Choose a supported image layer before running an AI image edit.",
+    );
   }
 
   const base64 = await readBlobAsBase64Payload(blob);
   if (!isValidBase64ImagePayload(base64)) {
-    throw new ClientAiInputError("This image is too large or unsupported for AI image editing.");
+    throw new ClientAiInputError(
+      "This image is too large or unsupported for AI image editing.",
+    );
   }
 
   return {
@@ -1329,15 +1695,21 @@ async function prepareImageEditSource(target: { asset: MediaAsset; layer: Timeli
   };
 }
 
-async function prepareVideoProjectSourceImage(file: File): Promise<ImageEditSource> {
+async function prepareVideoProjectSourceImage(
+  file: File,
+): Promise<ImageEditSource> {
   const mediaType = videoProjectSourceImageMediaType(file);
   if (!mediaType) {
-    throw new ClientAiInputError("Choose a PNG, JPG, or WebP image source for video project generation.");
+    throw new ClientAiInputError(
+      "Choose a PNG, JPG, or WebP image source for video project generation.",
+    );
   }
 
   const base64 = await readBlobAsBase64Payload(file);
   if (!isValidBase64ImagePayload(base64)) {
-    throw new ClientAiInputError("This image source is too large or unsupported for AI video project generation.");
+    throw new ClientAiInputError(
+      "This image source is too large or unsupported for AI video project generation.",
+    );
   }
 
   return {
@@ -1347,13 +1719,21 @@ async function prepareVideoProjectSourceImage(file: File): Promise<ImageEditSour
   };
 }
 
-async function prepareImageEditMaskSource(layer: TimelineLayer | null, asset: MediaAsset | null): Promise<ImageEditMaskSource> {
+async function prepareImageEditMaskSource(
+  layer: TimelineLayer | null,
+  asset: MediaAsset | null,
+): Promise<ImageEditMaskSource> {
   if (!layer || !asset) {
-    throw new ClientAiInputError("Add an object mask to the selected image before running inpaint.");
+    throw new ClientAiInputError(
+      "Add an object mask to the selected image before running inpaint.",
+    );
   }
 
   const blob = await renderImageObjectMaskBlob(layer, asset);
-  if (!blob) throw new ClientAiInputError("Add an object mask to the selected image before running inpaint.");
+  if (!blob)
+    throw new ClientAiInputError(
+      "Add an object mask to the selected image before running inpaint.",
+    );
 
   return {
     filename: `${asset.name.replace(/\.[^.]+$/, "")}-mask.png`,
@@ -1407,9 +1787,21 @@ async function readBlobAsBase64Payload(blob: Blob) {
   return normalizeBase64ImageData(dataUrl);
 }
 
-function findTranscriptionTarget(layers: TimelineLayer[], assets: MediaAsset[], selectedLayerId: string | null) {
-  const selectedLayer = layers.find((layer) => layer.id === selectedLayerId && isAudioVideoLayer(layer) && layer.assetId);
-  const selectedAsset = selectedLayer ? assets.find((asset) => asset.id === selectedLayer.assetId && isAudioVideoAsset(asset)) : undefined;
+function findTranscriptionTarget(
+  layers: TimelineLayer[],
+  assets: MediaAsset[],
+  selectedLayerId: string | null,
+) {
+  const selectedLayer = layers.find(
+    (layer) =>
+      layer.id === selectedLayerId && isAudioVideoLayer(layer) && layer.assetId,
+  );
+  const selectedAsset = selectedLayer
+    ? assets.find(
+        (asset) =>
+          asset.id === selectedLayer.assetId && isAudioVideoAsset(asset),
+      )
+    : undefined;
 
   if (selectedAsset) {
     return { asset: selectedAsset, layer: selectedLayer };
@@ -1419,26 +1811,63 @@ function findTranscriptionTarget(layers: TimelineLayer[], assets: MediaAsset[], 
   return firstAsset ? { asset: firstAsset, layer: null } : null;
 }
 
-function findImageEditTarget(layers: TimelineLayer[], assets: MediaAsset[], selectedLayerId: string | null) {
-  const selectedLayer = layers.find((layer) => layer.id === selectedLayerId && layer.kind === "image" && layer.assetId);
-  const selectedAsset = selectedLayer ? assets.find((asset) => asset.id === selectedLayer.assetId && isImageAsset(asset)) : undefined;
+function findImageEditTarget(
+  layers: TimelineLayer[],
+  assets: MediaAsset[],
+  selectedLayerId: string | null,
+) {
+  const selectedLayer = layers.find(
+    (layer) =>
+      layer.id === selectedLayerId && layer.kind === "image" && layer.assetId,
+  );
+  const selectedAsset = selectedLayer
+    ? assets.find(
+        (asset) => asset.id === selectedLayer.assetId && isImageAsset(asset),
+      )
+    : undefined;
 
-  return selectedAsset && selectedLayer ? { asset: selectedAsset, layer: selectedLayer } : null;
+  return selectedAsset && selectedLayer
+    ? { asset: selectedAsset, layer: selectedLayer }
+    : null;
 }
 
-function findAudioCleanupTarget(layers: TimelineLayer[], assets: MediaAsset[], selectedLayerId: string | null) {
-  const selectedLayer = layers.find((layer) => layer.id === selectedLayerId && layer.kind === "audio" && layer.assetId);
-  const selectedAsset = selectedLayer ? assets.find((asset) => asset.id === selectedLayer.assetId && isAudioAsset(asset)) : undefined;
-  if (selectedAsset && selectedLayer) return { asset: selectedAsset, layer: selectedLayer };
+function findAudioCleanupTarget(
+  layers: TimelineLayer[],
+  assets: MediaAsset[],
+  selectedLayerId: string | null,
+) {
+  const selectedLayer = layers.find(
+    (layer) =>
+      layer.id === selectedLayerId && layer.kind === "audio" && layer.assetId,
+  );
+  const selectedAsset = selectedLayer
+    ? assets.find(
+        (asset) => asset.id === selectedLayer.assetId && isAudioAsset(asset),
+      )
+    : undefined;
+  if (selectedAsset && selectedLayer)
+    return { asset: selectedAsset, layer: selectedLayer };
 
   const firstAsset = assets.find(isAudioAsset);
   return firstAsset ? { asset: firstAsset, layer: null } : null;
 }
 
-function findVideoEnhancementTarget(layers: TimelineLayer[], assets: MediaAsset[], selectedLayerId: string | null) {
-  const selectedLayer = layers.find((layer) => layer.id === selectedLayerId && layer.kind === "video" && layer.assetId);
-  const selectedAsset = selectedLayer ? assets.find((asset) => asset.id === selectedLayer.assetId && isVideoAsset(asset)) : undefined;
-  if (selectedAsset && selectedLayer) return { asset: selectedAsset, layer: selectedLayer };
+function findVideoEnhancementTarget(
+  layers: TimelineLayer[],
+  assets: MediaAsset[],
+  selectedLayerId: string | null,
+) {
+  const selectedLayer = layers.find(
+    (layer) =>
+      layer.id === selectedLayerId && layer.kind === "video" && layer.assetId,
+  );
+  const selectedAsset = selectedLayer
+    ? assets.find(
+        (asset) => asset.id === selectedLayer.assetId && isVideoAsset(asset),
+      )
+    : undefined;
+  if (selectedAsset && selectedLayer)
+    return { asset: selectedAsset, layer: selectedLayer };
 
   const firstAsset = assets.find(isVideoAsset);
   return firstAsset ? { asset: firstAsset, layer: null } : null;
@@ -1478,11 +1907,16 @@ async function loadMediaAssetBlob(asset: MediaAsset) {
   return response.ok ? response.blob() : null;
 }
 
-function projectTranscript(layers: Array<{ name: string; text?: string; cues?: CaptionChunk[] }>) {
+function projectTranscript(
+  layers: Array<{ name: string; text?: string; cues?: CaptionChunk[] }>,
+) {
   return layers
     .flatMap((layer) => {
       if (layer.cues?.length) {
-        return layer.cues.map((cue) => `${formatTime(cue.start)}-${formatTime(cue.end)} ${cue.text}`);
+        return layer.cues.map(
+          (cue) =>
+            `${formatTime(cue.start)}-${formatTime(cue.end)} ${cue.text}`,
+        );
       }
       return layer.text ? [`${layer.name}: ${layer.text}`] : [];
     })
@@ -1492,10 +1926,14 @@ function projectTranscript(layers: Array<{ name: string; text?: string; cues?: C
 
 function aiPromptPlaceholder(action: AiAction, imageEditMode: AiImageEditMode) {
   if (action === "image-edit") {
-    if (imageEditMode === "inpaint") return "Describe what should replace the masked area.";
-    if (imageEditMode === "outpaint") return "Describe how to extend the scene beyond the current image edges.";
-    if (imageEditMode === "background-removal") return "Describe the subject to keep while removing the background.";
-    if (imageEditMode === "translate") return "Describe any text/layout constraints for the translated image.";
+    if (imageEditMode === "inpaint")
+      return "Describe what should replace the masked area.";
+    if (imageEditMode === "outpaint")
+      return "Describe how to extend the scene beyond the current image edges.";
+    if (imageEditMode === "background-removal")
+      return "Describe the subject to keep while removing the background.";
+    if (imageEditMode === "translate")
+      return "Describe any text/layout constraints for the translated image.";
     return "Describe the edit for the selected image: remove background, extend edges, clean up an object, recolor, translate text, or restyle it.";
   }
 

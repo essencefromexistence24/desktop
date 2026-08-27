@@ -1379,7 +1379,7 @@ mod tests {
             model_groups
                 .get(&AgentModelGroupName("Groq".into()))
                 .and_then(|models| models.first())
-                .map(|model| model.id.0.as_ref()),
+                .map(|model| model.id.as_str()),
             Some("groq/llama-3.3-70b-versatile")
         );
     }
@@ -1449,11 +1449,11 @@ mod tests {
             "agent bridge should preserve full provider groups for large copied catalogs"
         );
         assert_eq!(
-            models.first().map(|model| model.id.0.as_ref()),
+            models.first().map(|model| model.id.as_str()),
             Some("nano-gpt/model-000")
         );
         assert_eq!(
-            models.last().map(|model| model.id.0.as_ref()),
+            models.last().map(|model| model.id.as_str()),
             Some("nano-gpt/model-079")
         );
     }
@@ -1545,7 +1545,7 @@ mod tests {
 
     fn agent_model_info(id: &str, name: &str) -> AgentModelInfo {
         AgentModelInfo {
-            id: acp::ModelId::new(id),
+            id: acp_thread::AgentModelId::new(id.to_string()),
             name: name.into(),
             description: None,
             icon: None,

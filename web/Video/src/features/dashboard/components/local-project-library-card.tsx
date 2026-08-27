@@ -5,14 +5,36 @@ import { Copy, DownloadCloud, Search, Trash2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { DeletedProjectList } from "@/features/dashboard/components/deleted-project-list";
 import { ProjectBulkActionsBar } from "@/features/dashboard/components/project-bulk-actions-bar";
 import { ProjectFolderDialog } from "@/features/dashboard/components/project-folder-dialog";
 import { ProjectFolderManagerDialog } from "@/features/dashboard/components/project-folder-manager-dialog";
-import { ProjectHealthBadge, ProjectLibraryHealthSummary, healthFilterLabels, type HealthFilter } from "@/features/dashboard/components/project-health-dashboard";
-import { ProjectFolderBadge, ProjectReviewBadge, SnapshotCountBadge } from "@/features/dashboard/components/project-library-badges";
+import {
+  ProjectHealthBadge,
+  ProjectLibraryHealthSummary,
+  healthFilterLabels,
+  type HealthFilter,
+} from "@/features/dashboard/components/project-health-dashboard";
+import {
+  ProjectFolderBadge,
+  ProjectReviewBadge,
+  SnapshotCountBadge,
+} from "@/features/dashboard/components/project-library-badges";
 import { ProjectSnapshotDialog } from "@/features/dashboard/components/project-snapshot-dialog";
 import { DashboardMessageView } from "@/features/dashboard/components/dashboard-message-view";
 import {
@@ -30,7 +52,10 @@ type LocalProjectLibraryCardProps = {
   bundleInputRef: RefObject<HTMLInputElement | null>;
 };
 
-export function LocalProjectLibraryCard({ library, bundleInputRef }: LocalProjectLibraryCardProps) {
+export function LocalProjectLibraryCard({
+  library,
+  bundleInputRef,
+}: LocalProjectLibraryCardProps) {
   const {
     allVisibleProjectsSelected,
     assignProjectToFolder,
@@ -88,7 +113,13 @@ export function LocalProjectLibraryCard({ library, bundleInputRef }: LocalProjec
       <CardHeader className="gap-3 sm:flex-row sm:items-center sm:justify-between">
         <CardTitle className="text-lg">Local library</CardTitle>
         <div className="flex flex-wrap gap-2">
-          <input ref={bundleInputRef} hidden type="file" accept="application/json,.json" onChange={importBundle} />
+          <input
+            ref={bundleInputRef}
+            hidden
+            type="file"
+            accept="application/json,.json"
+            onChange={importBundle}
+          />
           <ProjectFolderManagerDialog
             folders={folders}
             folderCounts={folderCounts}
@@ -97,15 +128,28 @@ export function LocalProjectLibraryCard({ library, bundleInputRef }: LocalProjec
             onRenameFolder={renameLibraryFolder}
             onDeleteFolder={deleteLibraryFolder}
           />
-          <Button size="sm" variant="outline" onClick={() => bundleInputRef.current?.click()} disabled={isLibraryActionPending}>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => bundleInputRef.current?.click()}
+            disabled={isLibraryActionPending}
+          >
             <Upload className="size-4" />
             Import bundle
           </Button>
           <div className="relative">
             <Search className="pointer-events-none absolute left-2 top-2.5 size-4 text-muted-foreground" />
-            <Input className="w-64 pl-8" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search projects" />
+            <Input
+              className="w-64 pl-8"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search projects"
+            />
           </div>
-          <Select value={sortMode} onValueChange={(value) => setSortMode(value as SortMode)}>
+          <Select
+            value={sortMode}
+            onValueChange={(value) => setSortMode(value as SortMode)}
+          >
             <SelectTrigger className="w-36">
               <SelectValue />
             </SelectTrigger>
@@ -115,7 +159,10 @@ export function LocalProjectLibraryCard({ library, bundleInputRef }: LocalProjec
               <SelectItem value="duration">Duration</SelectItem>
             </SelectContent>
           </Select>
-          <Select value={folderFilter} onValueChange={(value) => setFolderFilter(value as FolderFilter)}>
+          <Select
+            value={folderFilter}
+            onValueChange={(value) => setFolderFilter(value as FolderFilter)}
+          >
             <SelectTrigger className="w-40">
               <SelectValue />
             </SelectTrigger>
@@ -129,7 +176,10 @@ export function LocalProjectLibraryCard({ library, bundleInputRef }: LocalProjec
               ))}
             </SelectContent>
           </Select>
-          <Select value={reviewFilter} onValueChange={(value) => setReviewFilter(value as ReviewFilter)}>
+          <Select
+            value={reviewFilter}
+            onValueChange={(value) => setReviewFilter(value as ReviewFilter)}
+          >
             <SelectTrigger className="w-40">
               <SelectValue />
             </SelectTrigger>
@@ -141,7 +191,10 @@ export function LocalProjectLibraryCard({ library, bundleInputRef }: LocalProjec
               ))}
             </SelectContent>
           </Select>
-          <Select value={healthFilter} onValueChange={(value) => setHealthFilter(value as HealthFilter)}>
+          <Select
+            value={healthFilter}
+            onValueChange={(value) => setHealthFilter(value as HealthFilter)}
+          >
             <SelectTrigger className="w-40">
               <SelectValue />
             </SelectTrigger>
@@ -156,7 +209,9 @@ export function LocalProjectLibraryCard({ library, bundleInputRef }: LocalProjec
         </div>
       </CardHeader>
       <CardContent>
-        {libraryMessage ? <DashboardMessageView message={libraryMessage} className="mb-3" /> : null}
+        {libraryMessage ? (
+          <DashboardMessageView message={libraryMessage} className="mb-3" />
+        ) : null}
         <ProjectLibraryHealthSummary report={libraryHealth} className="mb-3" />
         <ProjectBulkActionsBar
           selectedCount={selectedProjectIds.length}
@@ -173,7 +228,8 @@ export function LocalProjectLibraryCard({ library, bundleInputRef }: LocalProjec
         />
         {filteredProjects.length === 0 ? (
           <div className="rounded-md border border-dashed border-border p-6 text-sm text-muted-foreground">
-            No saved local projects yet. Open the editor and it will autosave here.
+            No saved local projects yet. Open the editor and it will autosave
+            here.
           </div>
         ) : (
           <Table>
@@ -191,7 +247,9 @@ export function LocalProjectLibraryCard({ library, bundleInputRef }: LocalProjec
                       }
                       deselectVisibleProjects();
                     }}
-                    disabled={isLibraryActionPending || filteredProjectIds.length === 0}
+                    disabled={
+                      isLibraryActionPending || filteredProjectIds.length === 0
+                    }
                     aria-label="Select visible projects"
                   />
                 </TableHead>
@@ -209,8 +267,12 @@ export function LocalProjectLibraryCard({ library, bundleInputRef }: LocalProjec
             </TableHeader>
             <TableBody>
               {filteredProjects.map((item) => {
-                const health = healthByProjectId.get(item.id) ?? createProjectHealthSummary(item);
-                const assignedFolder = folderById.get(folderAssignments[item.id]?.folderId);
+                const health =
+                  healthByProjectId.get(item.id) ??
+                  createProjectHealthSummary(item);
+                const assignedFolder = folderById.get(
+                  folderAssignments[item.id]?.folderId,
+                );
 
                 return (
                   <TableRow key={item.id}>
@@ -219,18 +281,26 @@ export function LocalProjectLibraryCard({ library, bundleInputRef }: LocalProjec
                         type="checkbox"
                         className="size-4 rounded border-border"
                         checked={selectedProjectIdSet.has(item.id)}
-                        onChange={(event) => toggleProjectSelection(item.id, event.target.checked)}
+                        onChange={(event) =>
+                          toggleProjectSelection(item.id, event.target.checked)
+                        }
                         disabled={isLibraryActionPending}
                         aria-label={`Select ${item.title}`}
                       />
                     </TableCell>
                     <TableCell>
                       <div className="min-w-0 space-y-1">
-                        <button className="font-medium hover:text-primary" onClick={() => openProject(item.id)} disabled={isLibraryActionPending}>
+                        <button
+                          className="font-medium hover:text-primary"
+                          onClick={() => openProject(item.id)}
+                          disabled={isLibraryActionPending}
+                        >
                           {item.title}
                         </button>
                         {health.details.length ? (
-                          <div className="max-w-72 truncate text-xs text-muted-foreground">{health.details.slice(0, 2).join(" / ")}</div>
+                          <div className="max-w-72 truncate text-xs text-muted-foreground">
+                            {health.details.slice(0, 2).join(" / ")}
+                          </div>
                         ) : null}
                       </div>
                     </TableCell>
@@ -241,18 +311,29 @@ export function LocalProjectLibraryCard({ library, bundleInputRef }: LocalProjec
                     <TableCell>{item.layerCount}</TableCell>
                     <TableCell>{item.mediaCount}</TableCell>
                     <TableCell>
-                      <SnapshotCountBadge count={snapshotCounts[item.id] ?? 0} />
+                      <SnapshotCountBadge
+                        count={snapshotCounts[item.id] ?? 0}
+                      />
                     </TableCell>
                     <TableCell>
-                      <ProjectReviewBadge summary={createProjectReviewSummary(item.project)} />
+                      <ProjectReviewBadge
+                        summary={createProjectReviewSummary(item.project)}
+                      />
                     </TableCell>
                     <TableCell>
                       <ProjectHealthBadge summary={health} />
                     </TableCell>
-                    <TableCell>{new Date(item.updatedAt).toLocaleString()}</TableCell>
+                    <TableCell>
+                      {new Date(item.updatedAt).toLocaleString()}
+                    </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
-                        <Button size="sm" variant="outline" onClick={() => openProject(item.id)} disabled={isLibraryActionPending}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => openProject(item.id)}
+                          disabled={isLibraryActionPending}
+                        >
                           Open
                         </Button>
                         <ProjectSnapshotDialog
@@ -266,15 +347,23 @@ export function LocalProjectLibraryCard({ library, bundleInputRef }: LocalProjec
                         <ProjectFolderDialog
                           projectTitle={item.title}
                           folders={folders}
-                          assignedFolderId={folderAssignments[item.id]?.folderId ?? null}
+                          assignedFolderId={
+                            folderAssignments[item.id]?.folderId ?? null
+                          }
                           isPending={isLibraryActionPending}
-                          onAssignFolder={(folderId) => assignProjectToFolder(item.id, folderId)}
-                          onCreateFolder={(name) => createAndAssignProjectFolder(item.id, name)}
+                          onAssignFolder={(folderId) =>
+                            assignProjectToFolder(item.id, folderId)
+                          }
+                          onCreateFolder={(name) =>
+                            createAndAssignProjectFolder(item.id, name)
+                          }
                         />
                         <Button
                           size="icon"
                           variant="ghost"
-                          onClick={() => exportProjectBundleFromLibrary(item.id)}
+                          onClick={() =>
+                            exportProjectBundleFromLibrary(item.id)
+                          }
                           disabled={isLibraryActionPending}
                           aria-label={`Export ${item.title} bundle`}
                         >

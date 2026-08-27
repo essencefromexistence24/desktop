@@ -342,6 +342,267 @@ export const WEB_COOKIE_PROVIDERS = {
     riskNoticeVariant: "webCookie",
     authHint: "Paste the full Cookie header from chat.z.ai (must include the token=<JWT> cookie)",
   },
+  "adobe-firefly": {
+    id: "adobe-firefly",
+    alias: "firefly",
+    name: "Adobe Firefly (Image/Video)",
+    icon: "auto_awesome",
+    color: "#EB1000",
+    textIcon: "FF",
+    website: "https://firefly.adobe.com",
+    authHint:
+      "RECOMMENDED: firefly.adobe.com signed-in → F12 → Network → click firefly-3p.ff.adobe.io (generate-async or models/discovery) → Request Headers → Authorization → copy the token AFTER 'Bearer ' (starts with eyJ…). Cookie-only from firefly.adobe.com mints a GUEST token → 401/403; only multi-domain IMS cookies (adobelogin.com) or that Bearer JWT work. Unofficial/experimental media + Limits.",
+    subscriptionRisk: true,
+    riskNoticeVariant: "webCookie",
+  },
+    "chatgpt-web-codex": {
+    id: "chatgpt-web-codex",
+    alias: "cgpt-codex",
+    name: "ChatGPT Web (Codex)",
+    icon: "terminal",
+    color: "#10A37F",
+    textIcon: "CC",
+    website: "https://chatgpt.com",
+    authHint:
+      "Paste the full ChatGPT Cookie header. OmniRoute verifies it in an isolated headless browser profile.",
+    subscriptionRisk: true,
+    riskNoticeVariant: "webCookie",
+    toolCalling: "native",
+  },
+    "conol-web": {
+    id: "conol-web",
+    alias: "cnl",
+    name: "Conol (Unofficial/Experimental)",
+    icon: "auto_awesome",
+    color: "#F6C945",
+    textIcon: "CO",
+    website: "https://conol.ai",
+    subscriptionRisk: true,
+    riskNoticeVariant: "webCookie",
+    authHint:
+      "Use browser sign-in, or paste the full Cookie header from conol.ai. The __Secure-better-auth.session_token cookie is required.",
+  },
+  "hailuo-web": {
+    id: "hailuo-web",
+    // Distinct alias: avoid colliding with the existing API-key "minimax"/
+    // "minimax-cn" providers (src/shared/constants/providers/apikey/regional.ts).
+    alias: "hailuo-web",
+    name: "Hailuo Web (MiniMax)",
+    icon: "auto_awesome",
+    color: "#5B21B6",
+    textIcon: "HL",
+    website: "https://hailuo.ai",
+    authHint:
+      "Open hailuo.ai, log in, then open DevTools → Application → Local Storage → copy the " +
+      '"_token" value. device_id/uuid fingerprint fields are derived automatically; if ' +
+      "requests fail, re-capture _token (sessions can expire).",
+    subscriptionRisk: true,
+    riskNoticeVariant: "webCookie",
+  },
+    hyperagent: {
+    id: "hyperagent",
+    alias: "ha",
+    name: "HyperAgent (Unofficial/Experimental)",
+    icon: "auto_awesome",
+    color: "#6C5CE7",
+    textIcon: "HA",
+    website: "https://hyperagent.com",
+    subscriptionRisk: true,
+    riskNoticeVariant: "webCookie",
+    authHint:
+      "Paste the full Cookie header from hyperagent.com (DevTools → Network → any request → Request Headers → Cookie). Session cookies power chat + billing usage.",
+  },
+    "microsoft-designer-web": {
+    id: "microsoft-designer-web",
+    alias: "msdesigner",
+    name: "Microsoft Designer (Image Generation)",
+    icon: "auto_awesome",
+    color: "#0078D4",
+    textIcon: "MSD",
+    website: "https://designer.microsoft.com",
+    authHint:
+      "Sign in at designer.microsoft.com, then open DevTools → Network, generate an image, and find the request to DallE.ashx?action=GetDallEImagesCogSci. Copy the value of its Authorization: Bearer header (the access_token — no 'Bearer ' prefix). The token is short-lived; this is an unofficial, reverse-engineered integration.",
+    subscriptionRisk: true,
+    riskNoticeVariant: "webCookie",
+  },
+    "notion-web": {
+    id: "notion-web",
+    alias: "nw",
+    name: "Notion AI Web (Unofficial/Experimental)",
+    icon: "auto_awesome",
+    color: "#000000",
+    textIcon: "NW",
+    website: "https://www.notion.so",
+    // #6758: Notion has no public inference API (see closed request #3272) — this
+    // reverse-engineers the same undocumented internal endpoint two independent
+    // open-source projects already use. Undocumented endpoints can change without
+    // notice; label clearly so operators understand the risk before pasting a
+    // session cookie of an account they already pay for.
+    subscriptionRisk: true,
+    riskNoticeVariant: "webCookie",
+    authHint:
+      "Paste only the token_v2 cookie VALUE from app.notion.com (DevTools → Application → Cookies → token_v2). " +
+      "Do not paste token_v2= or the full Cookie header. Workspace is auto-detected; space_id / notion_user_id are optional.",
+  },
+    promptql: {
+    id: "promptql",
+    alias: "pql",
+    name: "PromptQL (Unofficial/Experimental)",
+    icon: "auto_awesome",
+    color: "#5B21B6",
+    textIcon: "PQL",
+    website: "https://prompt.ql.app",
+    subscriptionRisk: true,
+    riskNoticeVariant: "webCookie",
+    authHint:
+      "Paste the Bearer JWT from prompt.ql.app DevTools → Network → graphql → Authorization (token only). Optional projectId + session Cookie for refresh.",
+  },
+    "tencent-aistudio-web": {
+    id: "tencent-aistudio-web",
+    alias: "tasw",
+    name: "Tencent AI Studio (Free)",
+    icon: "auto_awesome",
+    color: "#0052D9",
+    textIcon: "TAS",
+    website: "https://aistudio.tencent.ai",
+    hasFree: true,
+    freeNote:
+      "Free web session on Tencent AI Studio (aistudio.tencent.ai) — Direct chat with Hunyuan models (hy3-g, HunyuanDefault, Hunyuan3D). Cookie authentication.",
+    authHint:
+      "Log in to aistudio.tencent.ai, open DevTools -> Network, copy any request Cookie header containing session tokens.",
+    riskNoticeVariant: "webCookie",
+  },
+    "tinycms-web": {
+    id: "tinycms-web",
+    alias: "tcw",
+    name: "TinyCMS Web (Free/Sub)",
+    icon: "layers",
+    color: "#ED8936",
+    textIcon: "TC",
+    website: "https://site.tinycms.xyz",
+    hasFree: true,
+    freeNote:
+      "Free tier has access to GPT 5.4, Gemini 3.5, and Grok 4.20 models. No login required. Subscription grants 300 requests/day for advanced models.",
+    authHint:
+      "Go to site.tinycms.xyz, open DevTools → Application → Local Storage, copy the value of 'app-config-uuid' (starts with 'R'), and paste it here.",
+  },
+  
+
+  "chatgpt-web-codex": {
+    id: "chatgpt-web-codex",
+    alias: "cgpt-codex",
+    name: "ChatGPT Web (Codex)",
+    icon: "terminal",
+    color: "#10A37F",
+    textIcon: "CC",
+    website: "https://chatgpt.com",
+    authHint:
+      "Paste the full ChatGPT Cookie header. OmniRoute verifies it in an isolated headless browser profile.",
+    subscriptionRisk: true,
+    riskNoticeVariant: "webCookie",
+    toolCalling: "native",
+  },
+  "microsoft-designer-web": {
+    id: "microsoft-designer-web",
+    alias: "msdesigner",
+    name: "Microsoft Designer (Image Generation)",
+    icon: "auto_awesome",
+    color: "#0078D4",
+    textIcon: "MSD",
+    website: "https://designer.microsoft.com",
+    authHint:
+      "Sign in at designer.microsoft.com, then open DevTools → Network, generate an image, and find the request to DallE.ashx?action=GetDallEImagesCogSci. Copy the value of its Authorization: Bearer header (the access_token — no 'Bearer ' prefix). The token is short-lived; this is an unofficial, reverse-engineered integration.",
+    subscriptionRisk: true,
+    riskNoticeVariant: "webCookie",
+  },
+  "tencent-aistudio-web": {
+    id: "tencent-aistudio-web",
+    alias: "tasw",
+    name: "Tencent AI Studio (Free)",
+    icon: "auto_awesome",
+    color: "#0052D9",
+    textIcon: "TAS",
+    website: "https://aistudio.tencent.ai",
+    hasFree: true,
+    freeNote:
+      "Free web session on Tencent AI Studio (aistudio.tencent.ai) — Direct chat with Hunyuan models (hy3-g, HunyuanDefault, Hunyuan3D). Cookie authentication.",
+    authHint:
+      "Log in to aistudio.tencent.ai, open DevTools -> Network, copy any request Cookie header containing session tokens.",
+    riskNoticeVariant: "webCookie",
+  },
+  "tinycms-web": {
+    id: "tinycms-web",
+    alias: "tcw",
+    name: "TinyCMS Web (Free/Sub)",
+    icon: "layers",
+    color: "#ED8936",
+    textIcon: "TC",
+    website: "https://site.tinycms.xyz",
+    hasFree: true,
+    freeNote:
+      "Free tier has access to GPT 5.4, Gemini 3.5, and Grok 4.20 models. No login required. Subscription grants 300 requests/day for advanced models.",
+    authHint:
+      "Go to site.tinycms.xyz, open DevTools → Application → Local Storage, copy the value of 'app-config-uuid' (starts with 'R'), and paste it here.",
+  },
+  promptql: {
+    id: "promptql",
+    alias: "pql",
+    name: "PromptQL (Unofficial/Experimental)",
+    icon: "auto_awesome",
+    color: "#5B21B6",
+    textIcon: "PQL",
+    website: "https://prompt.ql.app",
+    subscriptionRisk: true,
+    riskNoticeVariant: "webCookie",
+    authHint:
+      "Paste the Bearer JWT from prompt.ql.app DevTools → Network → graphql → Authorization (token only). Optional projectId + session Cookie for refresh.",
+  },
+  "notion-web": {
+    id: "notion-web",
+    alias: "nw",
+    name: "Notion AI Web (Unofficial/Experimental)",
+    icon: "auto_awesome",
+    color: "#000000",
+    textIcon: "NW",
+    website: "https://www.notion.so",
+    // #6758: Notion has no public inference API (see closed request #3272) — this
+    // reverse-engineers the same undocumented internal endpoint two independent
+    // open-source projects already use. Undocumented endpoints can change without
+    // notice; label clearly so operators understand the risk before pasting a
+    // session cookie of an account they already pay for.
+    subscriptionRisk: true,
+    riskNoticeVariant: "webCookie",
+    authHint:
+      "Paste only the token_v2 cookie VALUE from app.notion.com (DevTools → Application → Cookies → token_v2). " +
+      "Do not paste token_v2= or the full Cookie header. Workspace is auto-detected; space_id / notion_user_id are optional.",
+  },
+  hyperagent: {
+    id: "hyperagent",
+    alias: "ha",
+    name: "HyperAgent (Unofficial/Experimental)",
+    icon: "auto_awesome",
+    color: "#6C5CE7",
+    textIcon: "HA",
+    website: "https://hyperagent.com",
+    subscriptionRisk: true,
+    riskNoticeVariant: "webCookie",
+    authHint:
+      "Paste the full Cookie header from hyperagent.com (DevTools → Network → any request → Request Headers → Cookie). Session cookies power chat + billing usage.",
+  },
+  "conol-web": {
+    id: "conol-web",
+    alias: "cnl",
+    name: "Conol (Unofficial/Experimental)",
+    icon: "auto_awesome",
+    color: "#F6C945",
+    textIcon: "CO",
+    website: "https://conol.ai",
+    subscriptionRisk: true,
+    riskNoticeVariant: "webCookie",
+    authHint:
+      "Use browser sign-in, or paste the full Cookie header from conol.ai. The __Secure-better-auth.session_token cookie is required.",
+  },
+
 };
 
 /** Resolved public site for a web-session provider (href + display host). */

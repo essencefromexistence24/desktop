@@ -767,8 +767,10 @@ impl TitleBar {
         let icon = match active_screen_kind {
             WorkspaceScreenKind::Agent => IconName::NewThread,
             WorkspaceScreenKind::Browser => dx_icon(DxUiIcon::Browser),
-            WorkspaceScreenKind::Terminal => dx_icon(DxUiIcon::Commands),
-            WorkspaceScreenKind::Editor => IconName::File,
+            // Keep these aligned with ScreenCarousel::screen_kind_icon so the
+            // dock button and the carousel preview show the same glyph.
+            WorkspaceScreenKind::Terminal => IconName::Terminal,
+            WorkspaceScreenKind::Editor => IconName::Code,
             _ => IconName::Plus,
         };
 

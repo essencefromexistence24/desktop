@@ -40,21 +40,41 @@ export function AiImageEditControls({
 }) {
   return (
     <div className="space-y-2 rounded-md border border-border p-2 text-xs text-muted-foreground">
-      <div className="truncate">{targetName ? `Editing ${targetName}` : "Select an image layer to edit."}</div>
+      <div className="truncate">
+        {targetName
+          ? `Editing ${targetName}`
+          : "Select an image layer to edit."}
+      </div>
       <div className="grid grid-cols-3 gap-1">
         {editModes.map((item) => (
-          <Button key={item.id} size="sm" variant={mode === item.id ? "secondary" : "outline"} onClick={() => onModeChange(item.id)}>
+          <Button
+            key={item.id}
+            size="sm"
+            variant={mode === item.id ? "secondary" : "outline"}
+            onClick={() => onModeChange(item.id)}
+          >
             {item.label}
           </Button>
         ))}
       </div>
       {mode === "inpaint" ? (
-        <div className={maskCount > 0 ? "text-muted-foreground" : "text-destructive"}>{maskCount} object mask{maskCount === 1 ? "" : "s"} selected</div>
+        <div
+          className={
+            maskCount > 0 ? "text-muted-foreground" : "text-destructive"
+          }
+        >
+          {maskCount} object mask{maskCount === 1 ? "" : "s"} selected
+        </div>
       ) : null}
       {mode === "outpaint" ? (
         <div className="grid grid-cols-4 gap-1">
           {outpaintPresets.map((item) => (
-            <Button key={item.id} size="sm" variant={outpaintPreset === item.id ? "secondary" : "outline"} onClick={() => onOutpaintPresetChange(item.id)}>
+            <Button
+              key={item.id}
+              size="sm"
+              variant={outpaintPreset === item.id ? "secondary" : "outline"}
+              onClick={() => onOutpaintPresetChange(item.id)}
+            >
               {item.label}
             </Button>
           ))}

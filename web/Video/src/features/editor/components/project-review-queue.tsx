@@ -5,8 +5,16 @@ import { Download } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatTime } from "@/lib/editor/factory";
-import { createHandoffSummary, handoffSummaryFilename } from "@/lib/editor/handoff-summary";
-import type { EditorProject, LayerReviewStatus, MediaAsset, TimelineLayer } from "@/lib/editor/types";
+import {
+  createHandoffSummary,
+  handoffSummaryFilename,
+} from "@/lib/editor/handoff-summary";
+import type {
+  EditorProject,
+  LayerReviewStatus,
+  MediaAsset,
+  TimelineLayer,
+} from "@/lib/editor/types";
 import { downloadTextFile } from "@/lib/files/download";
 
 interface ProjectReviewQueueProps {
@@ -22,19 +30,29 @@ const reviewStatusLabels: Record<LayerReviewStatus, string> = {
   approved: "Approved",
 };
 
-const reviewStatusVariants: Record<LayerReviewStatus, "outline" | "secondary" | "destructive" | "default"> = {
+const reviewStatusVariants: Record<
+  LayerReviewStatus,
+  "outline" | "secondary" | "destructive" | "default"
+> = {
   none: "outline",
   "needs-review": "secondary",
   "changes-requested": "destructive",
   approved: "default",
 };
 
-export function ProjectReviewQueue({ project, mediaAssets, onSelect }: ProjectReviewQueueProps) {
+export function ProjectReviewQueue({
+  project,
+  mediaAssets,
+  onSelect,
+}: ProjectReviewQueueProps) {
   const [downloadMessage, setDownloadMessage] = useState<string | null>(null);
   const layers = project.layers;
   const reviewLayers = layers
     .filter(hasReviewSignal)
-    .sort((a, b) => a.track - b.track || a.start - b.start || a.name.localeCompare(b.name));
+    .sort(
+      (a, b) =>
+        a.track - b.track || a.start - b.start || a.name.localeCompare(b.name),
+    );
   const counts = countReviewStates(layers);
 
   function exportHandoffSummary() {
@@ -53,13 +71,19 @@ export function ProjectReviewQueue({ project, mediaAssets, onSelect }: ProjectRe
   return (
     <div className="mt-4 space-y-3">
       <div className="flex items-center justify-between gap-2">
-        <div className="text-xs text-muted-foreground">Review and delivery handoff</div>
+        <div className="text-xs text-muted-foreground">
+          Review and delivery handoff
+        </div>
         <Button size="sm" variant="outline" onClick={exportHandoffSummary}>
           <Download className="size-4" />
           Handoff
         </Button>
       </div>
-      {downloadMessage ? <div className="rounded-md border border-border p-2 text-xs text-muted-foreground">{downloadMessage}</div> : null}
+      {downloadMessage ? (
+        <div className="rounded-md border border-border p-2 text-xs text-muted-foreground">
+          {downloadMessage}
+        </div>
+      ) : null}
       <div className="grid grid-cols-3 gap-2 text-center text-xs">
         <ReviewCount label="Review" value={counts.needsReview} />
         <ReviewCount label="Changes" value={counts.changesRequested} />
@@ -77,13 +101,22 @@ export function ProjectReviewQueue({ project, mediaAssets, onSelect }: ProjectRe
                 onClick={() => onSelect(layer.id)}
               >
                 <div className="flex min-w-0 items-center justify-between gap-2">
-                  <span className="truncate text-sm font-medium">{layer.name}</span>
-                  <Badge variant={reviewStatusVariants[status]}>{reviewStatusLabels[status]}</Badge>
+                  <span className="truncate text-sm font-medium">
+                    {layer.name}
+                  </span>
+                  <Badge variant={reviewStatusVariants[status]}>
+                    {reviewStatusLabels[status]}
+                  </Badge>
                 </div>
                 <div className="mt-1 text-xs text-muted-foreground">
-                  Track {layer.track + 1} · {formatTime(layer.start)} · {layer.kind}
+                  Track {layer.track + 1} · {formatTime(layer.start)} ·{" "}
+                  {layer.kind}
                 </div>
-                {layer.notes?.trim() ? <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">{layer.notes}</p> : null}
+                {layer.notes?.trim() ? (
+                  <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">
+                    {layer.notes}
+                  </p>
+                ) : null}
               </button>
             );
           })}
@@ -94,7 +127,11 @@ export function ProjectReviewQueue({ project, mediaAssets, onSelect }: ProjectRe
         </div>
       )}
       {reviewLayers.length ? (
-        <Button variant="outline" className="w-full" onClick={() => onSelect(reviewLayers[0].id)}>
+        <Button
+          variant="outline"
+          className="w-full"
+          onClick={() => onSelect(reviewLayers[0].id)}
+        >
           Open first review item
         </Button>
       ) : null}
@@ -112,14 +149,20 @@ function ReviewCount({ label, value }: { label: string; value: number }) {
 }
 
 function hasReviewSignal(layer: TimelineLayer) {
-  return Boolean(layer.notes?.trim()) || Boolean(layer.reviewStatus && layer.reviewStatus !== "none");
+  return (
+    Boolean(layer.notes?.trim()) ||
+    Boolean(layer.reviewStatus && layer.reviewStatus !== "none")
+  );
 }
 
 function countReviewStates(layers: TimelineLayer[]) {
   return layers.reduce(
     (counts, layer) => ({
-      needsReview: counts.needsReview + (layer.reviewStatus === "needs-review" ? 1 : 0),
-      changesRequested: counts.changesRequested + (layer.reviewStatus === "changes-requested" ? 1 : 0),
+      needsReview:
+        counts.needsReview + (layer.reviewStatus === "needs-review" ? 1 : 0),
+      changesRequested:
+        counts.changesRequested +
+        (layer.reviewStatus === "changes-requested" ? 1 : 0),
       approved: counts.approved + (layer.reviewStatus === "approved" ? 1 : 0),
     }),
     { needsReview: 0, changesRequested: 0, approved: 0 },

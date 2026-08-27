@@ -241,4 +241,126 @@ export const OAUTH_PROVIDERS = {
     authHint:
       "Tencent CodeBuddy CN (copilot.tencent.com). Sign in via the official CLI device-code flow, or paste a direct API key (sent as Authorization: Bearer). Catalog: GLM / Kimi / MiniMax / DeepSeek / Hunyuan.",
   },
+  "devin-desktop": {
+    id: "devin-desktop",
+    alias: undefined,
+    name: "Devin Desktop",
+    icon: "terminal",
+    color: "#6366F1",
+    textIcon: "DD",
+    subscriptionRisk: true,
+    riskNoticeVariant: "oauth",
+    authHint:
+      "Paste an existing Devin API key from an authenticated Devin session. Key export availability and steps vary by Devin version and account.",
+    website: "https://devin.ai",
+  },
+    "ghe-copilot": {
+    id: "ghe-copilot",
+    alias: "ghe-copilot",
+    name: "GitHub Enterprise Copilot",
+    icon: "code",
+    color: "#10B981",
+    subscriptionRisk: true,
+    riskNoticeVariant: "oauth",
+    authHint:
+      "Enter your GHE instance URL (e.g., https://ghe.company.com) in provider settings, then authenticate via device flow.",
+  },
+    openference: {
+    id: "openference",
+    alias: "of",
+    name: "Openference",
+    icon: "openference",
+    color: "#6366F1",
+    textIcon: "OF",
+    website: "https://openference.com",
+    hasFree: true,
+    freeNote: "Free plan: 3-day trial with open-source models — no credit card required",
+    authHint:
+      "Sign in with your Openference account to route requests through api.openference.com. An active plan is required for inference — OAuth may authenticate but return 402 without one.",
+  },
+    raycast: {
+    id: "raycast",
+    alias: "rc",
+    name: "Raycast Pro AI",
+    icon: "terminal",
+    color: "#FF6363",
+    textIcon: "RC",
+    website: "https://raycast.com/ai",
+    subscriptionRisk: true,
+    riskNoticeVariant: "oauth",
+    authHint:
+      "Unofficial integration — uses your Raycast Pro subscription via credentials from the macOS app (Auto-Import or manual capture). May break on Raycast updates. Not for redistribution; personal use only.",
+  },
+    "xai-oauth": {
+    id: "xai-oauth",
+    alias: "xao",
+    name: "xAI OAuth (Grok)",
+    icon: "auto_awesome",
+    color: "#1DA1F2",
+    textIcon: "XA",
+    website: "https://x.ai",
+    subscriptionRisk: true,
+    riskNoticeVariant: "oauth",
+    // Render xAI OAuth through the unified xAI dashboard card. Keep this
+    // catalog entry addressable for existing routes and stored connections.
+    hiddenFromDashboard: true,
+    authHint:
+      "Sign in with xAI to use api.x.ai models such as Grok 4.5. This is separate from Grok Build JWT sessions, which use cli-chat-proxy.grok.com and grok-build model aliases.",
+  },
+  
+
+  "ghe-copilot": {
+    id: "ghe-copilot",
+    alias: "ghe-copilot",
+    name: "GitHub Enterprise Copilot",
+    icon: "code",
+    color: "#10B981",
+    subscriptionRisk: true,
+    riskNoticeVariant: "oauth",
+    authHint:
+      "Enter your GHE instance URL (e.g., https://ghe.company.com) in provider settings, then authenticate via device flow.",
+  },
+  "xai-oauth": {
+    id: "xai-oauth",
+    alias: "xao",
+    name: "xAI OAuth (Grok)",
+    icon: "auto_awesome",
+    color: "#1DA1F2",
+    textIcon: "XA",
+    website: "https://x.ai",
+    subscriptionRisk: true,
+    riskNoticeVariant: "oauth",
+    // Render xAI OAuth through the unified xAI dashboard card. Keep this
+    // catalog entry addressable for existing routes and stored connections.
+    hiddenFromDashboard: true,
+    authHint:
+      "Sign in with xAI to use api.x.ai models such as Grok 4.5. This is separate from Grok Build JWT sessions, which use cli-chat-proxy.grok.com and grok-build model aliases.",
+  },
+  openference: {
+    id: "openference",
+    alias: "of",
+    name: "Openference",
+    icon: "openference",
+    color: "#6366F1",
+    textIcon: "OF",
+    website: "https://openference.com",
+    hasFree: true,
+    freeNote: "Free plan: 3-day trial with open-source models — no credit card required",
+    authHint:
+      "Sign in with your Openference account to route requests through api.openference.com. An active plan is required for inference — OAuth may authenticate but return 402 without one.",
+  },
+  raycast: {
+    id: "raycast",
+    alias: "rc",
+    name: "Raycast Pro AI",
+    icon: "terminal",
+    color: "#FF6363",
+    textIcon: "RC",
+    website: "https://raycast.com/ai",
+    subscriptionRisk: true,
+    riskNoticeVariant: "oauth",
+    authHint:
+      "Unofficial integration — uses your Raycast Pro subscription via credentials from the macOS app (Auto-Import or manual capture). May break on Raycast updates. Not for redistribution; personal use only.",
+  },
+
 };

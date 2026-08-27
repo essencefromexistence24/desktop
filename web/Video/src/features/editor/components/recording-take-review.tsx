@@ -4,8 +4,17 @@ import { useMemo, useState } from "react";
 import { CheckCircle2, GitCompareArrows } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { recordingTimelinePresets, type RecordingTimelinePreset } from "@/lib/editor/recording-layouts";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  recordingTimelinePresets,
+  type RecordingTimelinePreset,
+} from "@/lib/editor/recording-layouts";
 import { formatTime } from "@/lib/editor/factory";
 import type { MediaAsset } from "@/lib/editor/types";
 
@@ -15,20 +24,35 @@ type RecordingTakeReviewProps = {
   onPromoteTake: (asset: MediaAsset, preset: RecordingTimelinePreset) => void;
 };
 
-const reviewLayoutPresets = recordingTimelinePresets.filter((preset) => preset.id !== "save-only");
+const reviewLayoutPresets = recordingTimelinePresets.filter(
+  (preset) => preset.id !== "save-only",
+);
 
-export function RecordingTakeReview({ takes, isImporting, onPromoteTake }: RecordingTakeReviewProps) {
-  const playableTakes = useMemo(() => takes.filter((take) => take.type === "video" || take.type === "audio"), [takes]);
+export function RecordingTakeReview({
+  takes,
+  isImporting,
+  onPromoteTake,
+}: RecordingTakeReviewProps) {
+  const playableTakes = useMemo(
+    () =>
+      takes.filter((take) => take.type === "video" || take.type === "audio"),
+    [takes],
+  );
   const [primaryTakeId, setPrimaryTakeId] = useState("");
   const [comparisonTakeId, setComparisonTakeId] = useState("");
-  const [layoutPreset, setLayoutPreset] = useState<RecordingTimelinePreset>("full-frame");
-  const primaryTake = playableTakes.find((take) => take.id === primaryTakeId) ?? playableTakes[0];
+  const [layoutPreset, setLayoutPreset] =
+    useState<RecordingTimelinePreset>("full-frame");
+  const primaryTake =
+    playableTakes.find((take) => take.id === primaryTakeId) ?? playableTakes[0];
   const comparisonTake =
-    playableTakes.find((take) => take.id === comparisonTakeId && take.id !== primaryTake?.id) ??
+    playableTakes.find(
+      (take) => take.id === comparisonTakeId && take.id !== primaryTake?.id,
+    ) ??
     playableTakes.find((take) => take.id !== primaryTake?.id) ??
     null;
   const canPromotePrimary = Boolean(primaryTake?.objectUrl) && !isImporting;
-  const canPromoteComparison = Boolean(comparisonTake?.objectUrl) && !isImporting;
+  const canPromoteComparison =
+    Boolean(comparisonTake?.objectUrl) && !isImporting;
 
   if (!playableTakes.length) {
     return (
@@ -53,7 +77,12 @@ export function RecordingTakeReview({ takes, isImporting, onPromoteTake }: Recor
         </Badge>
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <TakeSelect label="A" value={primaryTake?.id ?? ""} takes={playableTakes} onChange={setPrimaryTakeId} />
+        <TakeSelect
+          label="A"
+          value={primaryTake?.id ?? ""}
+          takes={playableTakes}
+          onChange={setPrimaryTakeId}
+        />
         <TakeSelect
           label="B"
           value={comparisonTake?.id ?? ""}
@@ -83,7 +112,15 @@ export function RecordingTakeReview({ takes, isImporting, onPromoteTake }: Recor
         </div>
       ) : null}
       <div className="grid grid-cols-2 gap-2">
-        <Button type="button" size="sm" variant="outline" disabled={!canPromotePrimary} onClick={() => primaryTake && onPromoteTake(primaryTake, layoutPreset)}>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          disabled={!canPromotePrimary}
+          onClick={() =>
+            primaryTake && onPromoteTake(primaryTake, layoutPreset)
+          }
+        >
           <CheckCircle2 className="size-4" />
           Best A
         </Button>
@@ -92,7 +129,9 @@ export function RecordingTakeReview({ takes, isImporting, onPromoteTake }: Recor
           size="sm"
           variant="outline"
           disabled={!canPromoteComparison}
-          onClick={() => comparisonTake && onPromoteTake(comparisonTake, layoutPreset)}
+          onClick={() =>
+            comparisonTake && onPromoteTake(comparisonTake, layoutPreset)
+          }
         >
           <CheckCircle2 className="size-4" />
           Best B
@@ -118,7 +157,11 @@ function TakeSelect({
   return (
     <div className="space-y-1">
       <span className="text-xs text-muted-foreground">{label}</span>
-      <Select value={value} onValueChange={onChange} disabled={disabled || takes.length === 0}>
+      <Select
+        value={value}
+        onValueChange={onChange}
+        disabled={disabled || takes.length === 0}
+      >
         <SelectTrigger size="sm" className="w-full">
           <SelectValue placeholder="Take" />
         </SelectTrigger>
@@ -134,23 +177,43 @@ function TakeSelect({
   );
 }
 
-function TakePreview({ label, take }: { label: string; take: MediaAsset | null }) {
+function TakePreview({
+  label,
+  take,
+}: {
+  label: string;
+  take: MediaAsset | null;
+}) {
   if (!take) {
-    return <div className="grid min-h-24 place-items-center rounded-md border border-dashed border-border text-xs text-muted-foreground">{label}</div>;
+    return (
+      <div className="grid min-h-24 place-items-center rounded-md border border-dashed border-border text-xs text-muted-foreground">
+        {label}
+      </div>
+    );
   }
 
   return (
     <div className="space-y-1 rounded-md border border-border bg-card/50 p-1.5">
       <div className="flex items-center justify-between gap-2 text-xs">
         <span className="truncate font-medium">{label}</span>
-        <span className="text-muted-foreground">{formatTime(take.duration)}</span>
+        <span className="text-muted-foreground">
+          {formatTime(take.duration)}
+        </span>
       </div>
       {take.objectUrl && take.type === "video" ? (
-        <video src={take.objectUrl} controls className="aspect-video w-full rounded-sm bg-muted object-contain" />
+        <video
+          src={take.objectUrl}
+          controls
+          className="aspect-video w-full rounded-sm bg-muted object-contain"
+        />
       ) : null}
-      {take.objectUrl && take.type === "audio" ? <audio src={take.objectUrl} controls className="w-full" /> : null}
+      {take.objectUrl && take.type === "audio" ? (
+        <audio src={take.objectUrl} controls className="w-full" />
+      ) : null}
       {!take.objectUrl ? (
-        <div className="grid min-h-20 place-items-center rounded-sm bg-muted/40 text-xs text-muted-foreground">Reconnect</div>
+        <div className="grid min-h-20 place-items-center rounded-sm bg-muted/40 text-xs text-muted-foreground">
+          Reconnect
+        </div>
       ) : null}
       <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
         <Badge variant="outline" className="capitalize">

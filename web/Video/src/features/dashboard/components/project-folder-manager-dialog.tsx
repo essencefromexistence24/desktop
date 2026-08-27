@@ -33,7 +33,9 @@ export function ProjectFolderManagerDialog({
 }: ProjectFolderManagerDialogProps) {
   const [open, setOpen] = useState(false);
   const [folderName, setFolderName] = useState("");
-  const [folderNamesById, setFolderNamesById] = useState<Record<string, string>>({});
+  const [folderNamesById, setFolderNamesById] = useState<
+    Record<string, string>
+  >({});
   const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -65,7 +67,10 @@ export function ProjectFolderManagerDialog({
     setMessage(null);
     setActiveFolderId(folder.id);
     try {
-      const wasRenamed = await onRenameFolder(folder.id, folderNamesById[folder.id] ?? folder.name);
+      const wasRenamed = await onRenameFolder(
+        folder.id,
+        folderNamesById[folder.id] ?? folder.name,
+      );
       if (!wasRenamed) setMessage("Folder could not be renamed.");
     } catch {
       setMessage("Folder could not be renamed.");
@@ -98,35 +103,67 @@ export function ProjectFolderManagerDialog({
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>Manage folders</DialogTitle>
-          <DialogDescription>Organize saved local projects without leaving the dashboard.</DialogDescription>
+          <DialogDescription>
+            Organize saved local projects without leaving the dashboard.
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
-          {message ? <div className="rounded-md border border-destructive/40 p-3 text-sm text-destructive">{message}</div> : null}
+          {message ? (
+            <div className="rounded-md border border-destructive/40 p-3 text-sm text-destructive">
+              {message}
+            </div>
+          ) : null}
           <div className="grid grid-cols-[1fr_auto] gap-2">
-            <Input value={folderName} onChange={(event) => setFolderName(event.target.value)} placeholder="New folder name" />
-            <Button size="sm" onClick={handleCreateFolder} disabled={!folderName.trim() || isPending || activeFolderId !== null}>
+            <Input
+              value={folderName}
+              onChange={(event) => setFolderName(event.target.value)}
+              placeholder="New folder name"
+            />
+            <Button
+              size="sm"
+              onClick={handleCreateFolder}
+              disabled={
+                !folderName.trim() || isPending || activeFolderId !== null
+              }
+            >
               Create
             </Button>
           </div>
           <div className="space-y-2">
             {folders.length === 0 ? (
-              <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">No folders yet.</div>
+              <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">
+                No folders yet.
+              </div>
             ) : (
               folders.map((folder) => (
-                <div key={folder.id} className="grid grid-cols-[1fr_auto_auto] items-center gap-2 rounded-md border border-border p-2">
+                <div
+                  key={folder.id}
+                  className="grid grid-cols-[1fr_auto_auto] items-center gap-2 rounded-md border border-border p-2"
+                >
                   <Input
                     value={folderNamesById[folder.id] ?? folder.name}
-                    onChange={(event) => setFolderNamesById((current) => ({ ...current, [folder.id]: event.target.value }))}
+                    onChange={(event) =>
+                      setFolderNamesById((current) => ({
+                        ...current,
+                        [folder.id]: event.target.value,
+                      }))
+                    }
                     disabled={isPending || activeFolderId !== null}
                     aria-label={`Rename ${folder.name}`}
                   />
-                  <div className="text-xs text-muted-foreground">{folderCounts[folder.id] ?? 0} projects</div>
+                  <div className="text-xs text-muted-foreground">
+                    {folderCounts[folder.id] ?? 0} projects
+                  </div>
                   <div className="flex gap-1">
                     <Button
                       size="icon-sm"
                       variant="ghost"
                       onClick={() => handleRenameFolder(folder)}
-                      disabled={isPending || activeFolderId !== null || !(folderNamesById[folder.id] ?? folder.name).trim()}
+                      disabled={
+                        isPending ||
+                        activeFolderId !== null ||
+                        !(folderNamesById[folder.id] ?? folder.name).trim()
+                      }
                       aria-label={`Save ${folder.name}`}
                     >
                       <Pencil className="size-4" />

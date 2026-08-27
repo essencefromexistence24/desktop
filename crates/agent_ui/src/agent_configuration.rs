@@ -1629,11 +1629,11 @@ impl AgentConfiguration {
 
         let mut stack = v_flex()
             .gap_1()
-            .child(Label::new("Provider Catalog").size(LabelSize::Small))
+            .child(Label::new("Provider Catalog").size(LabelSize::Default))
             .child(catalog_item)
             .child(
                 Label::new(active_provider)
-                    .size(LabelSize::Small)
+                    .size(LabelSize::Default)
                     .color(Color::Muted),
             )
             .child(
@@ -1641,19 +1641,19 @@ impl AgentConfiguration {
                     "Receipt status: {}",
                     catalog_receipt_status_label(&snapshot.catalog.receipt_status)
                 ))
-                .size(LabelSize::Small)
+                .size(LabelSize::Default)
                 .color(Color::Muted),
             )
             .child(
                 Label::new(snapshot.catalog.path.display().to_string())
-                    .size(LabelSize::Small)
+                    .size(LabelSize::Default)
                     .color(Color::Muted),
             );
 
         if let Some(source_hash) = snapshot.catalog.source_hash.as_ref() {
             stack = stack.child(
                 Label::new(format!("Source hash: {source_hash}"))
-                    .size(LabelSize::Small)
+                    .size(LabelSize::Default)
                     .color(Color::Muted),
             );
         }
@@ -1661,7 +1661,7 @@ impl AgentConfiguration {
         if let Some(generated_at) = snapshot.catalog.generated_at.as_ref() {
             stack = stack.child(
                 Label::new(format!("Generated at: {generated_at}"))
-                    .size(LabelSize::Small)
+                    .size(LabelSize::Default)
                     .color(Color::Muted),
             );
         }
@@ -1672,7 +1672,7 @@ impl AgentConfiguration {
                     "Refresh command: {}",
                     snapshot.catalog.safe_regeneration_command
                 ))
-                .size(LabelSize::Small)
+                .size(LabelSize::Default)
                 .color(Color::Muted),
             )
             .into_any_element()

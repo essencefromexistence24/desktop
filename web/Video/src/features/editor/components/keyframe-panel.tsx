@@ -2,9 +2,19 @@
 
 import { Plus, RefreshCcw, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Field, NumberField } from "@/features/editor/components/inspector-fields";
-import { createLayerKeyframeSnapshot, normalizeLayerKeyframes } from "@/lib/editor/keyframes";
-import type { LayerKeyframe, LayerKeyframeEasing, TimelineLayer } from "@/lib/editor/types";
+import {
+  Field,
+  NumberField,
+} from "@/features/editor/components/inspector-fields";
+import {
+  createLayerKeyframeSnapshot,
+  normalizeLayerKeyframes,
+} from "@/lib/editor/keyframes";
+import type {
+  LayerKeyframe,
+  LayerKeyframeEasing,
+  TimelineLayer,
+} from "@/lib/editor/types";
 
 const easingOptions: Array<{ value: LayerKeyframeEasing; label: string }> = [
   { value: "linear", label: "Linear" },
@@ -19,25 +29,49 @@ type KeyframePanelProps = {
   onChange: (keyframes: LayerKeyframe[]) => void;
 };
 
-export function KeyframePanel({ layer, currentTime, onChange }: KeyframePanelProps) {
+export function KeyframePanel({
+  layer,
+  currentTime,
+  onChange,
+}: KeyframePanelProps) {
   const keyframes = normalizeLayerKeyframes(layer.keyframes, layer.duration);
   const localTime = clamp(currentTime - layer.start, 0, layer.duration);
 
   function addKeyframe(time = localTime) {
     const snapshot = createLayerKeyframeSnapshot(layer, time);
-    const nextKeyframes = keyframes.filter((keyframe) => Math.abs(keyframe.time - snapshot.time) > 0.05);
-    onChange(normalizeLayerKeyframes([...nextKeyframes, snapshot], layer.duration));
+    const nextKeyframes = keyframes.filter(
+      (keyframe) => Math.abs(keyframe.time - snapshot.time) > 0.05,
+    );
+    onChange(
+      normalizeLayerKeyframes([...nextKeyframes, snapshot], layer.duration),
+    );
   }
 
   function captureKeyframe(keyframeId: string) {
     const current = keyframes.find((keyframe) => keyframe.id === keyframeId);
     if (!current) return;
     const snapshot = createLayerKeyframeSnapshot(layer, current.time);
-    onChange(keyframes.map((keyframe) => (keyframe.id === keyframeId ? { ...snapshot, id: keyframe.id, easing: keyframe.easing } : keyframe)));
+    onChange(
+      keyframes.map((keyframe) =>
+        keyframe.id === keyframeId
+          ? { ...snapshot, id: keyframe.id, easing: keyframe.easing }
+          : keyframe,
+      ),
+    );
   }
 
-  function updateKeyframe(keyframeId: string, patch: Partial<Pick<LayerKeyframe, "time" | "easing">>) {
-    onChange(normalizeLayerKeyframes(keyframes.map((keyframe) => (keyframe.id === keyframeId ? { ...keyframe, ...patch } : keyframe)), layer.duration));
+  function updateKeyframe(
+    keyframeId: string,
+    patch: Partial<Pick<LayerKeyframe, "time" | "easing">>,
+  ) {
+    onChange(
+      normalizeLayerKeyframes(
+        keyframes.map((keyframe) =>
+          keyframe.id === keyframeId ? { ...keyframe, ...patch } : keyframe,
+        ),
+        layer.duration,
+      ),
+    );
   }
 
   function removeKeyframe(keyframeId: string) {
@@ -62,7 +96,10 @@ export function KeyframePanel({ layer, currentTime, onChange }: KeyframePanelPro
         {keyframes.length ? (
           <div className="space-y-2">
             {keyframes.map((keyframe) => (
-              <div key={keyframe.id} className="rounded-md border border-border p-2">
+              <div
+                key={keyframe.id}
+                className="rounded-md border border-border p-2"
+              >
                 <div className="grid grid-cols-[1fr_auto_auto] items-end gap-2">
                   <NumberField
                     label="Time"
@@ -72,10 +109,20 @@ export function KeyframePanel({ layer, currentTime, onChange }: KeyframePanelPro
                     step={0.05}
                     onChange={(time) => updateKeyframe(keyframe.id, { time })}
                   />
-                  <Button size="icon" variant="outline" title="Capture current values" onClick={() => captureKeyframe(keyframe.id)}>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    title="Capture current values"
+                    onClick={() => captureKeyframe(keyframe.id)}
+                  >
                     <RefreshCcw className="size-4" />
                   </Button>
-                  <Button size="icon" variant="outline" title="Remove keyframe" onClick={() => removeKeyframe(keyframe.id)}>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    title="Remove keyframe"
+                    onClick={() => removeKeyframe(keyframe.id)}
+                  >
                     <Trash2 className="size-4" />
                   </Button>
                 </div>
@@ -84,8 +131,14 @@ export function KeyframePanel({ layer, currentTime, onChange }: KeyframePanelPro
                     <Button
                       key={option.value}
                       size="sm"
-                      variant={keyframe.easing === option.value ? "secondary" : "outline"}
-                      onClick={() => updateKeyframe(keyframe.id, { easing: option.value })}
+                      variant={
+                        keyframe.easing === option.value
+                          ? "secondary"
+                          : "outline"
+                      }
+                      onClick={() =>
+                        updateKeyframe(keyframe.id, { easing: option.value })
+                      }
                     >
                       {option.label}
                     </Button>

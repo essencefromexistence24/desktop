@@ -4,10 +4,17 @@ import { Download, ShieldCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { ExportProofBundle, ExportProofBundleStatus } from "@/lib/projects/export-proof-bundle";
+import type {
+  ExportProofBundle,
+  ExportProofBundleStatus,
+} from "@/lib/projects/export-proof-bundle";
 import { downloadExportProofBundle } from "@/lib/projects/export-proof-bundle-download";
 
-export function ExportProofBundleCard({ bundle }: { bundle: ExportProofBundle }) {
+export function ExportProofBundleCard({
+  bundle,
+}: {
+  bundle: ExportProofBundle;
+}) {
   return (
     <Card>
       <CardHeader>
@@ -18,9 +25,16 @@ export function ExportProofBundleCard({ bundle }: { bundle: ExportProofBundle })
           </span>
           <span className="flex flex-wrap items-center gap-2">
             <Badge variant={proofBadgeVariant(bundle.status)}>
-              {bundle.readyCount} ready / {bundle.reviewCount} review / {bundle.blockedCount} blocked
+              {bundle.readyCount} ready / {bundle.reviewCount} review /{" "}
+              {bundle.blockedCount} blocked
             </Badge>
-            <Button type="button" variant="outline" size="sm" onClick={() => downloadExportProofBundle(bundle)} aria-label="Download proof bundle">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => downloadExportProofBundle(bundle)}
+              aria-label="Download proof bundle"
+            >
               <Download className="size-4" />
               Export proof
             </Button>
@@ -36,15 +50,24 @@ export function ExportProofBundleCard({ bundle }: { bundle: ExportProofBundle })
         </div>
         <div className="grid gap-2 lg:grid-cols-2">
           {bundle.sections.map((section) => (
-            <div key={section.id} className="rounded-md border border-border p-3">
+            <div
+              key={section.id}
+              className="rounded-md border border-border p-3"
+            >
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
                   <div className="text-sm font-medium">{section.label}</div>
-                  <div className="mt-1 text-xs text-muted-foreground">{section.summary}</div>
+                  <div className="mt-1 text-xs text-muted-foreground">
+                    {section.summary}
+                  </div>
                 </div>
-                <Badge variant={proofBadgeVariant(section.status)}>{proofStatusLabel(section.status)}</Badge>
+                <Badge variant={proofBadgeVariant(section.status)}>
+                  {proofStatusLabel(section.status)}
+                </Badge>
               </div>
-              <p className="mt-2 text-xs text-muted-foreground">{section.detail}</p>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {section.detail}
+              </p>
             </div>
           ))}
         </div>

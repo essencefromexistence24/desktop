@@ -82,7 +82,10 @@ export function ProjectSnapshotDialog({
     setMessage(null);
     try {
       const wasDeleted = await onDeleteSnapshot(snapshotId);
-      if (wasDeleted) setSnapshots((current) => current.filter((snapshot) => snapshot.id !== snapshotId));
+      if (wasDeleted)
+        setSnapshots((current) =>
+          current.filter((snapshot) => snapshot.id !== snapshotId),
+        );
     } catch {
       setMessage("Checkpoint could not be removed.");
     } finally {
@@ -108,22 +111,45 @@ export function ProjectSnapshotDialog({
           <DialogDescription>{projectTitle}</DialogDescription>
         </DialogHeader>
         <div className="space-y-3">
-          {message ? <div className="rounded-md border border-destructive/40 p-3 text-sm text-destructive">{message}</div> : null}
-          {isLoading ? <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">Loading checkpoints...</div> : null}
+          {message ? (
+            <div className="rounded-md border border-destructive/40 p-3 text-sm text-destructive">
+              {message}
+            </div>
+          ) : null}
+          {isLoading ? (
+            <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">
+              Loading checkpoints...
+            </div>
+          ) : null}
           {!isLoading && snapshots.length === 0 ? (
-            <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">No checkpoints yet.</div>
+            <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">
+              No checkpoints yet.
+            </div>
           ) : null}
           {!isLoading && snapshots.length > 0 ? (
             <div className="max-h-96 space-y-2 overflow-y-auto pr-1">
               {snapshots.map((snapshot) => (
-                <div key={snapshot.id} className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-md border border-border p-3">
+                <div
+                  key={snapshot.id}
+                  className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-md border border-border p-3"
+                >
                   <div className="min-w-0 space-y-1">
-                    <div className="truncate text-sm font-medium">{snapshot.label ?? "Manual checkpoint"}</div>
-                    <div className="text-xs text-muted-foreground">{new Date(snapshot.createdAt).toLocaleString()}</div>
+                    <div className="truncate text-sm font-medium">
+                      {snapshot.label ?? "Manual checkpoint"}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {new Date(snapshot.createdAt).toLocaleString()}
+                    </div>
                     <div className="flex flex-wrap gap-1">
-                      <Badge variant="secondary">{snapshot.layerCount} layers</Badge>
-                      <Badge variant="secondary">{snapshot.mediaCount} media</Badge>
-                      <Badge variant="outline">{Math.round(snapshot.duration)}s</Badge>
+                      <Badge variant="secondary">
+                        {snapshot.layerCount} layers
+                      </Badge>
+                      <Badge variant="secondary">
+                        {snapshot.mediaCount} media
+                      </Badge>
+                      <Badge variant="outline">
+                        {Math.round(snapshot.duration)}s
+                      </Badge>
                     </div>
                   </div>
                   <div className="flex gap-1">

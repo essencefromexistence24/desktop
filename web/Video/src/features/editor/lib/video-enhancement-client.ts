@@ -26,7 +26,9 @@ export type GeneratedVideoEnhancementOutput = {
 
 export async function fetchVideoEnhancementStatus(): Promise<VideoEnhancementStatus | null> {
   try {
-    const response = await fetch(clientApiUrl("/api/ai/video-enhancement"), { credentials: "include" });
+    const response = await fetch(clientApiUrl("/api/ai/video-enhancement"), {
+      credentials: "include",
+    });
     const data = await safeJson(response);
     if (response.ok && isVideoEnhancementStatus(data)) return data;
   } catch {
@@ -68,7 +70,9 @@ export async function enhanceVideoWithConnectedService(input: {
   if (!response.ok || !isVideoEnhancementSuccess(data)) {
     return {
       ok: false as const,
-      reason: isAiFailure(data) ? data.reason : "Video enhancement could not finish.",
+      reason: isAiFailure(data)
+        ? data.reason
+        : "Video enhancement could not finish.",
     };
   }
 
@@ -78,13 +82,17 @@ export async function enhanceVideoWithConnectedService(input: {
   };
 }
 
-export function fileFromVideoEnhancementOutput(output: GeneratedVideoEnhancementOutput) {
+export function fileFromVideoEnhancementOutput(
+  output: GeneratedVideoEnhancementOutput,
+) {
   const bytes = decodeBase64VideoPayload(output.base64);
   const blob = new Blob([bytes], { type: output.mediaType });
   return new File([blob], output.filename, { type: output.mediaType });
 }
 
-function isVideoEnhancementStatus(value: unknown): value is VideoEnhancementStatus {
+function isVideoEnhancementStatus(
+  value: unknown,
+): value is VideoEnhancementStatus {
   if (
     typeof value !== "object" ||
     value === null ||
@@ -103,11 +111,24 @@ function isVideoEnhancementStatus(value: unknown): value is VideoEnhancementStat
   }
 
   const modes = value.modes as unknown[];
-  return modes.every((mode) => typeof mode === "string" && videoEnhancementModes.includes(mode as VideoEnhancementMode));
+  return modes.every(
+    (mode) =>
+      typeof mode === "string" &&
+      videoEnhancementModes.includes(mode as VideoEnhancementMode),
+  );
 }
 
-function isVideoEnhancementSuccess(value: unknown): value is { ok: true; output: GeneratedVideoEnhancementOutput } {
-  if (typeof value !== "object" || value === null || !("ok" in value) || value.ok !== true || !("output" in value)) return false;
+function isVideoEnhancementSuccess(
+  value: unknown,
+): value is { ok: true; output: GeneratedVideoEnhancementOutput } {
+  if (
+    typeof value !== "object" ||
+    value === null ||
+    !("ok" in value) ||
+    value.ok !== true ||
+    !("output" in value)
+  )
+    return false;
   const output = value.output;
   return (
     typeof output === "object" &&
@@ -132,7 +153,12 @@ function isVideoEnhancementSuccess(value: unknown): value is { ok: true; output:
 }
 
 function isAiFailure(value: unknown): value is { reason: string } {
-  return typeof value === "object" && value !== null && "reason" in value && typeof value.reason === "string";
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "reason" in value &&
+    typeof value.reason === "string"
+  );
 }
 
 async function safeJson(response: Response) {

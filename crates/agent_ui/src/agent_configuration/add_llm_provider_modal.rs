@@ -567,8 +567,7 @@ impl AddLlmProviderModal {
             .gap_2()
             .rounded_sm()
             .border_1()
-            .border_dashed()
-            .border_color(cx.theme().colors().border.opacity(0.6))
+            .border_color(cx.theme().colors().border)
             .bg(cx.theme().colors().element_active.opacity(0.15))
             .child(model.name.clone())
             .child(

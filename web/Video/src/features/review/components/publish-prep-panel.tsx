@@ -11,19 +11,26 @@ import {
   type ExportPublishPrep,
   type ExportReviewPackage,
 } from "@/lib/projects/collaboration-store";
-import { createPublishPrepPlan, publishPrepTargets, type PublishTargetId } from "@/lib/publishing/publish-prep";
+import {
+  createPublishPrepPlan,
+  publishPrepTargets,
+  type PublishTargetId,
+} from "@/lib/publishing/publish-prep";
 
 export function PublishPrepPanel({ review }: { review: ExportReviewPackage }) {
   const [records, setRecords] = useState<ExportPublishPrep[]>([]);
   const [message, setMessage] = useState<string | null>(null);
-  const [pendingTargetId, setPendingTargetId] = useState<PublishTargetId | null>(null);
+  const [pendingTargetId, setPendingTargetId] =
+    useState<PublishTargetId | null>(null);
 
   const refresh = useCallback(async () => {
     setRecords(await listExportPublishPreps(review.id));
   }, [review.id]);
 
   useEffect(() => {
-    void refresh().catch(() => setMessage("Publish prep records could not be loaded."));
+    void refresh().catch(() =>
+      setMessage("Publish prep records could not be loaded."),
+    );
   }, [refresh]);
 
   async function prepareTarget(targetId: PublishTargetId) {
@@ -32,7 +39,9 @@ export function PublishPrepPanel({ review }: { review: ExportReviewPackage }) {
 
     try {
       const record = await createExportPublishPrep(review, targetId);
-      setMessage(`${record.targetLabel} prep saved. ${publishPrepStatusMessage(record.status)}`);
+      setMessage(
+        `${record.targetLabel} prep saved. ${publishPrepStatusMessage(record.status)}`,
+      );
       await refresh();
     } catch {
       setMessage("Publish prep could not be saved.");
@@ -60,32 +69,68 @@ export function PublishPrepPanel({ review }: { review: ExportReviewPackage }) {
               >
                 <span className="flex items-center justify-between gap-2">
                   <span className="font-medium">{target.label}</span>
-                  <Badge variant={plan.status === "needs-changes" ? "destructive" : "outline"}>{plan.status}</Badge>
+                  <Badge
+                    variant={
+                      plan.status === "needs-changes"
+                        ? "destructive"
+                        : "outline"
+                    }
+                  >
+                    {plan.status}
+                  </Badge>
                 </span>
-                <span className="mt-1 block text-muted-foreground">{target.destination}</span>
+                <span className="mt-1 block text-muted-foreground">
+                  {target.destination}
+                </span>
               </button>
             );
           })}
         </div>
-        {message ? <div className="rounded-md border border-border p-2 text-xs text-muted-foreground">{message}</div> : null}
+        {message ? (
+          <div className="rounded-md border border-border p-2 text-xs text-muted-foreground">
+            {message}
+          </div>
+        ) : null}
         <div className="space-y-2">
           {records.length ? (
             records.map((record) => (
-              <div key={record.id} className="rounded-md border border-border p-3 text-sm">
+              <div
+                key={record.id}
+                className="rounded-md border border-border p-3 text-sm"
+              >
                 <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                   <div>
                     <div className="font-medium">{record.targetLabel}</div>
-                    <div className="text-xs text-muted-foreground">{record.suggestedFilename}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {record.suggestedFilename}
+                    </div>
                   </div>
-                  <Badge variant={record.status === "needs-changes" ? "destructive" : "outline"}>{publishPrepStatusMessage(record.status)}</Badge>
+                  <Badge
+                    variant={
+                      record.status === "needs-changes"
+                        ? "destructive"
+                        : "outline"
+                    }
+                  >
+                    {publishPrepStatusMessage(record.status)}
+                  </Badge>
                 </div>
                 <div className="grid gap-1 md:grid-cols-2">
                   {record.checklist.map((item) => (
-                    <div key={item.id} className="flex items-start gap-2 rounded-sm bg-muted/40 p-2 text-xs">
-                      {item.complete ? <CheckCircle2 className="mt-0.5 size-3.5 text-primary" /> : <CircleAlert className="mt-0.5 size-3.5 text-amber-300" />}
+                    <div
+                      key={item.id}
+                      className="flex items-start gap-2 rounded-sm bg-muted/40 p-2 text-xs"
+                    >
+                      {item.complete ? (
+                        <CheckCircle2 className="mt-0.5 size-3.5 text-primary" />
+                      ) : (
+                        <CircleAlert className="mt-0.5 size-3.5 text-amber-300" />
+                      )}
                       <div>
                         <div className="font-medium">{item.label}</div>
-                        <div className="text-muted-foreground">{item.detail}</div>
+                        <div className="text-muted-foreground">
+                          {item.detail}
+                        </div>
                       </div>
                     </div>
                   ))}

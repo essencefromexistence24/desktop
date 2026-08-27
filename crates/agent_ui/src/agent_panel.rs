@@ -6613,6 +6613,160 @@ impl AgentPanel {
         })
     }
 
+    fn render_idle_task_cards(
+        &self,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) -> impl IntoElement {
+        // Shown when agent screen is idle (Uninitialized + has project) — centered 4 cards.
+        // Clicking inserts the preset prompt into the message editor (no auto-submit).
+        let tasks: &[(&str, IconName, &str, &str, &str)] = &[
+            (
+                "review-codebase",
+                IconName::ToolSearch,
+                "Review this codebase",
+                "Analyze structure, find issues & improvements",
+                "Please review this codebase thoroughly. Analyze the structure, architecture, key files, and identify any bugs, issues, or improvement opportunities. Provide a detailed summary.",
+            ),
+            (
+                "create-website",
+                IconName::Public,
+                "Create a website",
+                "Build a modern responsive site from scratch",
+                "Create a modern, responsive website for me. Ask me what kind of website I need, then generate a complete site with HTML, CSS and JavaScript using best practices.",
+            ),
+            (
+                "build-feature",
+                IconName::ToolHammer,
+                "Build a feature",
+                "Plan and implement a new feature step-by-step",
+                "Help me build a new feature. Ask what feature I want, then plan and implement it step-by-step with clean, production-ready code.",
+            ),
+            (
+                "explain-debug",
+                IconName::Code,
+                "Explain & fix",
+                "Understand how it works and fix bugs",
+                "Explain how this project works in simple terms, summarize the key components, then help me debug or improve it.",
+            ),
+        ];
+
+        let cards = tasks.iter().map(|(id, icon, title, desc, prompt)| {
+            let prompt = prompt.to_string();
+            let card_id = format!("idle-task-{id}");
+            v_flex()
+                .id(card_id)
+                .w(px(380.))
+                .px_4()
+                .py_3()
+                .gap_1p5()
+                .rounded_xl()
+                .border_1()
+                .border_color(cx.theme().colors().border_variant)
+                .bg(cx.theme().colors().elevated_surface_background)
+                .shadow_sm()
+                .hover(|s| {
+                    s.bg(cx.theme().colors().element_hover)
+                        .border_color(cx.theme().colors().border)
+                        .shadow_md()
+                })
+                .active(|s| s.bg(cx.theme().colors().element_active))
+                .cursor_pointer()
+                .on_click(cx.listener(move |this, _, window, cx| {
+                    this.insert_dx_launch_prompt(prompt.clone(), window, cx);
+                }))
+                .child(
+                    h_flex()
+                        .items_center()
+                        .gap_2()
+                        .child(
+                            div()
+                                .size(px(26.))
+                                .flex_none()
+                                .rounded_full()
+                                .bg(cx.theme().colors().element_background)
+                                .flex()
+                                .items_center()
+                                .justify_center()
+                                .child(
+                                    Icon::new(*icon).size(IconSize::XSmall).color(Color::Accent),
+                                ),
+                        )
+                        .child(
+                            Label::new(*title)
+                                .size(LabelSize::Small)
+                                .color(Color::Default),
+                        ),
+                )
+                .child(
+                    div().w_full().child(
+                        Label::new(*desc)
+                            .size(LabelSize::XSmall)
+                            .color(Color::Muted),
+                    ),
+                )
+        });
+
+        v_flex()
+            .id("idle-task-cards")
+            .size_full()
+            .items_center()
+            .justify_center()
+            .gap_5()
+            .p_6()
+            .child(
+                v_flex()
+                    .gap_1p5()
+                    .items_center()
+                    .child(
+                        div()
+                            .text_size(rems(1.9))
+                            .font_weight(gpui::FontWeight::BOLD)
+                            .line_height(rems(2.1))
+                            .child({
+                                let folder = self
+                                    .project
+                                    .read(cx)
+                                    .visible_worktrees(cx)
+                                    .next()
+                                    .map(|w| {
+                                        let abs_path = w.read(cx).abs_path().to_path_buf();
+                                        let raw = abs_path
+                                            .file_name()
+                                            .and_then(|n| n.to_str())
+                                            .unwrap_or("this project");
+                                        let mut chars = raw.chars();
+                                        match chars.next() {
+                                            Some(first) => {
+                                                let upper: String = first.to_uppercase().collect();
+                                                format!("{}{}", upper, chars.as_str())
+                                            }
+                                            None => raw.to_string(),
+                                        }
+                                    })
+                                    .unwrap_or_else(|| "This project".to_string());
+                                format!("What you want to build in {}?", folder)
+                            }),
+                    )
+                    .child(
+                        Label::new(
+                            "Pick a task to get started — prompt will be inserted into the editor.",
+                        )
+                        .size(LabelSize::Small)
+                        .color(Color::Muted),
+                    ),
+            )
+            .child(
+                div()
+                    .flex()
+                    .flex_wrap()
+                    .justify_center()
+                    .gap_3()
+                    .max_w(px(784.))
+                    .children(cards),
+            )
+    }
+
     fn render_toolbar(&self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let agent_server_store = self.project.read(cx).agent_server_store().clone();
 
@@ -9367,7 +9521,17 @@ impl Render for AgentPanel {
                     let no_project_state = self.render_no_project_state(cx).into_any_element();
                     parent.child(self.render_dx_launch_workspace(no_project_state, window, cx))
                 }
-                VisibleSurface::Uninitialized => parent,
+                VisibleSurface::Uninitialized => {
+                    let idle = self.render_idle_task_cards(window, cx).into_any_element();
+                    parent.child(
+                        div()
+                            .flex_grow_1()
+                            .min_h_0()
+                            .w_full()
+                            .overflow_hidden()
+                            .child(idle),
+                    )
+                }
                 VisibleSurface::AgentThread(conversation_view) => {
                     let is_full_screen = self.should_render_dx_launch_chrome(cx);
                     if is_full_screen {

@@ -7,7 +7,11 @@ import {
 } from "@/lib/editor/project-review-summary";
 import type { ProjectFolder } from "@/lib/projects/collaboration-store";
 
-export function ProjectReviewBadge({ summary }: { summary: ProjectReviewSummary }) {
+export function ProjectReviewBadge({
+  summary,
+}: {
+  summary: ProjectReviewSummary;
+}) {
   return (
     <Badge variant={reviewBadgeVariant(summary.status)}>
       {projectReviewStatusLabels[summary.status]}

@@ -22,7 +22,10 @@ export function DashboardOverviewSection({
   onSyncCurrentProject,
 }: DashboardOverviewSectionProps) {
   return (
-    <section className="grid gap-4 md:grid-cols-[1.3fr_0.7fr]" aria-label="Project overview">
+    <section
+      className="grid gap-4 md:grid-cols-[1.3fr_0.7fr]"
+      aria-label="Project overview"
+    >
       <CurrentProjectCard
         project={project}
         canUseOnlineLibrary={canUseOnlineLibrary}

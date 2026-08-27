@@ -20,7 +20,10 @@ const motionPresets: Array<{ preset: LayerMotionPreset; label: string }> = [
   { preset: "settle", label: "Settle" },
 ];
 
-export function MotionPresetPanel({ motion, onChange }: MotionPresetPanelProps) {
+export function MotionPresetPanel({
+  motion,
+  onChange,
+}: MotionPresetPanelProps) {
   const normalizedMotion = normalizeLayerMotion(motion);
 
   return (
@@ -34,9 +37,13 @@ export function MotionPresetPanel({ motion, onChange }: MotionPresetPanelProps) 
           <Button
             key={item.preset}
             size="sm"
-            variant={normalizedMotion.preset === item.preset ? "secondary" : "outline"}
+            variant={
+              normalizedMotion.preset === item.preset ? "secondary" : "outline"
+            }
             className="h-8 px-2 text-xs"
-            onClick={() => onChange({ ...normalizedMotion, preset: item.preset })}
+            onClick={() =>
+              onChange({ ...normalizedMotion, preset: item.preset })
+            }
           >
             {item.label}
           </Button>
@@ -52,7 +59,9 @@ export function MotionPresetPanel({ motion, onChange }: MotionPresetPanelProps) 
           min={0.1}
           max={3}
           step={0.1}
-          onValueChange={([intensity]) => onChange({ ...normalizedMotion, intensity: intensity ?? 1 })}
+          onValueChange={([intensity]) =>
+            onChange({ ...normalizedMotion, intensity: intensity ?? 1 })
+          }
         />
       </div>
     </div>

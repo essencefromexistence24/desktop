@@ -13,7 +13,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { ProjectFolder } from "@/lib/projects/collaboration-store";
 
 type ProjectFolderDialogProps = {
@@ -34,7 +40,9 @@ export function ProjectFolderDialog({
   onCreateFolder,
 }: ProjectFolderDialogProps) {
   const [open, setOpen] = useState(false);
-  const [selectedFolderId, setSelectedFolderId] = useState(assignedFolderId ?? "none");
+  const [selectedFolderId, setSelectedFolderId] = useState(
+    assignedFolderId ?? "none",
+  );
   const [folderName, setFolderName] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [isFolderActionPending, setIsFolderActionPending] = useState(false);
@@ -78,7 +86,12 @@ export function ProjectFolderDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="icon" variant="ghost" disabled={isPending} aria-label={`Organize ${projectTitle}`}>
+        <Button
+          size="icon"
+          variant="ghost"
+          disabled={isPending}
+          aria-label={`Organize ${projectTitle}`}
+        >
           <Folder className="size-4" />
         </Button>
       </DialogTrigger>
@@ -88,10 +101,18 @@ export function ProjectFolderDialog({
           <DialogDescription>{projectTitle}</DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
-          {message ? <div className="rounded-md border border-destructive/40 p-3 text-sm text-destructive">{message}</div> : null}
+          {message ? (
+            <div className="rounded-md border border-destructive/40 p-3 text-sm text-destructive">
+              {message}
+            </div>
+          ) : null}
           <div className="space-y-1.5">
             <Label className="text-xs text-muted-foreground">Move to</Label>
-            <Select value={selectedFolderId} onValueChange={(value) => void handleFolderChange(value)} disabled={isPending || isFolderActionPending}>
+            <Select
+              value={selectedFolderId}
+              onValueChange={(value) => void handleFolderChange(value)}
+              disabled={isPending || isFolderActionPending}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
@@ -106,8 +127,18 @@ export function ProjectFolderDialog({
             </Select>
           </div>
           <div className="grid grid-cols-[1fr_auto] gap-2">
-            <Input value={folderName} onChange={(event) => setFolderName(event.target.value)} placeholder="New folder name" />
-            <Button size="sm" onClick={handleCreateFolder} disabled={!folderName.trim() || isPending || isFolderActionPending}>
+            <Input
+              value={folderName}
+              onChange={(event) => setFolderName(event.target.value)}
+              placeholder="New folder name"
+            />
+            <Button
+              size="sm"
+              onClick={handleCreateFolder}
+              disabled={
+                !folderName.trim() || isPending || isFolderActionPending
+              }
+            >
               <FolderPlus className="size-4" />
               Create
             </Button>

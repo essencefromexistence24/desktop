@@ -78,7 +78,7 @@ export const aiCapabilities = [
     status: "partial",
     priority: "p1",
     ownerPath: "src/lib/ai/speech.ts, src/app/api/ai/speech, src/features/editor/components/ai-assistant-panel.tsx",
-    evidence: ["subtitle-translation output contract", "AI SDK speech", "Groq speech adapter", "long-script chunking", "concatenated WAV output", "replaceable audio layer"],
+    evidence: ["subtitle-translation output contract", "AI SDK speech", "Groq speech adapter", "long-script chunking", "concatenated WAV output", "replaceable audio layer", "SRT/VTT sidecar export"],
     nextStep: "Add full dubbing and real provider verification for long voiceover scripts.",
   },
   {

@@ -4,10 +4,17 @@ import { useMemo, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEditorStore } from "@/features/editor/state/editor-store";
 import type { MediaAsset, TimelineLayer } from "@/lib/editor/types";
-import { TimelineCommandBar, type TimelineFilter } from "@/features/editor/components/timeline-command-bar";
+import {
+  TimelineCommandBar,
+  type TimelineFilter,
+} from "@/features/editor/components/timeline-command-bar";
 import { TimelineMarkerRail } from "@/features/editor/components/timeline-marker-rail";
 import { TimelineRuler } from "@/features/editor/components/timeline-ruler";
-import { TimelineTrackList, getLayerLaneKind, trackLaneMetadata } from "@/features/editor/components/timeline-track-list";
+import {
+  TimelineTrackList,
+  getLayerLaneKind,
+  trackLaneMetadata,
+} from "@/features/editor/components/timeline-track-list";
 import { useTimelineDrag } from "@/features/editor/hooks/use-timeline-drag";
 
 const BASE_TIMELINE_WIDTH = 720;
@@ -29,31 +36,62 @@ export function TimelinePanel() {
   const mediaAssets = useEditorStore((state) => state.mediaAssets);
   const currentTime = useEditorStore((state) => state.currentTime);
   const setCurrentTime = useEditorStore((state) => state.setCurrentTime);
-  const setTimelineSnapInterval = useEditorStore((state) => state.setTimelineSnapInterval);
-  const setTimelineRippleMode = useEditorStore((state) => state.setTimelineRippleMode);
+  const setTimelineSnapInterval = useEditorStore(
+    (state) => state.setTimelineSnapInterval,
+  );
+  const setTimelineRippleMode = useEditorStore(
+    (state) => state.setTimelineRippleMode,
+  );
   const addTimelineMarker = useEditorStore((state) => state.addTimelineMarker);
-  const updateTimelineMarker = useEditorStore((state) => state.updateTimelineMarker);
-  const removeTimelineMarker = useEditorStore((state) => state.removeTimelineMarker);
+  const updateTimelineMarker = useEditorStore(
+    (state) => state.updateTimelineMarker,
+  );
+  const removeTimelineMarker = useEditorStore(
+    (state) => state.removeTimelineMarker,
+  );
   const isPlaying = useEditorStore((state) => state.isPlaying);
   const togglePlayback = useEditorStore((state) => state.togglePlayback);
   const selectedLayerIds = useEditorStore((state) => state.selectedLayerIds);
   const selectLayer = useEditorStore((state) => state.selectLayer);
   const selectLayerRange = useEditorStore((state) => state.selectLayerRange);
-  const splitSelectedLayers = useEditorStore((state) => state.splitSelectedLayers);
-  const updateSelectedLayerTiming = useEditorStore((state) => state.updateSelectedLayerTiming);
-  const alignSelectedLayers = useEditorStore((state) => state.alignSelectedLayers);
-  const distributeSelectedLayerDurations = useEditorStore((state) => state.distributeSelectedLayerDurations);
-  const pushHistorySnapshot = useEditorStore((state) => state.pushHistorySnapshot);
-  const assetById = useMemo(() => new Map(mediaAssets.map((asset) => [asset.id, asset])), [mediaAssets]);
+  const splitSelectedLayers = useEditorStore(
+    (state) => state.splitSelectedLayers,
+  );
+  const updateSelectedLayerTiming = useEditorStore(
+    (state) => state.updateSelectedLayerTiming,
+  );
+  const alignSelectedLayers = useEditorStore(
+    (state) => state.alignSelectedLayers,
+  );
+  const distributeSelectedLayerDurations = useEditorStore(
+    (state) => state.distributeSelectedLayerDurations,
+  );
+  const pushHistorySnapshot = useEditorStore(
+    (state) => state.pushHistorySnapshot,
+  );
+  const assetById = useMemo(
+    () => new Map(mediaAssets.map((asset) => [asset.id, asset])),
+    [mediaAssets],
+  );
   const visibleLayers = useMemo(
-    () => filterTimelineLayers(project.layers, assetById, timelineQuery, timelineFilter),
+    () =>
+      filterTimelineLayers(
+        project.layers,
+        assetById,
+        timelineQuery,
+        timelineFilter,
+      ),
     [assetById, project.layers, timelineFilter, timelineQuery],
   );
   const tracks = groupTracks(visibleLayers);
   const markers = useMemo(() => project.markers ?? [], [project.markers]);
-  const sortedMarkers = useMemo(() => [...markers].sort((a, b) => a.time - b.time), [markers]);
+  const sortedMarkers = useMemo(
+    () => [...markers].sort((a, b) => a.time - b.time),
+    [markers],
+  );
   const snapInterval = project.snapInterval ?? 0.25;
-  const selectedMarker = markers.find((marker) => marker.id === selectedMarkerId) ?? null;
+  const selectedMarker =
+    markers.find((marker) => marker.id === selectedMarkerId) ?? null;
   const timelineWidth = Math.round(BASE_TIMELINE_WIDTH * timelineZoom);
   const timelineLeft = TIMELINE_PADDING + TIMELINE_LABEL_WIDTH + TIMELINE_GAP;
   const timelineMinWidth = timelineLeft + timelineWidth + TIMELINE_PADDING;
@@ -61,20 +99,33 @@ export function TimelinePanel() {
   const layerTop = Math.max(4, (trackHeight - layerHeight) / 2);
   const trackStep = trackHeight + 8;
   const canSplitSelection = project.layers.some(
-    (layer) => selectedLayerIds.includes(layer.id) && !layer.locked && currentTime > layer.start && currentTime < layer.start + layer.duration,
+    (layer) =>
+      selectedLayerIds.includes(layer.id) &&
+      !layer.locked &&
+      currentTime > layer.start &&
+      currentTime < layer.start + layer.duration,
   );
-  const canAlignSelection = project.layers.some((layer) => selectedLayerIds.includes(layer.id) && !layer.locked);
-  const canDistributeSelection = project.layers.filter((layer) => selectedLayerIds.includes(layer.id) && !layer.locked).length >= 2;
-  const { beginTimelineDrag, updateTimelineDrag, endTimelineDrag } = useTimelineDrag({
-    projectDuration: project.duration,
-    snapInterval,
-    trackStep,
-    onSelectLayer: selectTimelineLayer,
-    onPushHistorySnapshot: pushHistorySnapshot,
-    onUpdateLayerTiming: updateSelectedLayerTiming,
-  });
+  const canAlignSelection = project.layers.some(
+    (layer) => selectedLayerIds.includes(layer.id) && !layer.locked,
+  );
+  const canDistributeSelection =
+    project.layers.filter(
+      (layer) => selectedLayerIds.includes(layer.id) && !layer.locked,
+    ).length >= 2;
+  const { beginTimelineDrag, updateTimelineDrag, endTimelineDrag } =
+    useTimelineDrag({
+      projectDuration: project.duration,
+      snapInterval,
+      trackStep,
+      onSelectLayer: selectTimelineLayer,
+      onPushHistorySnapshot: pushHistorySnapshot,
+      onUpdateLayerTiming: updateSelectedLayerTiming,
+    });
 
-  function selectTimelineLayer(event: { shiftKey: boolean; ctrlKey: boolean; metaKey: boolean }, layerId: string) {
+  function selectTimelineLayer(
+    event: { shiftKey: boolean; ctrlKey: boolean; metaKey: boolean },
+    layerId: string,
+  ) {
     if (event.shiftKey) {
       selectLayerRange(layerId);
       return;
@@ -98,8 +149,12 @@ export function TimelinePanel() {
 
     const marker =
       direction < 0
-        ? [...sortedMarkers].reverse().find((item) => item.time < currentTime - 0.001) ?? sortedMarkers.at(-1)
-        : sortedMarkers.find((item) => item.time > currentTime + 0.001) ?? sortedMarkers[0];
+        ? ([...sortedMarkers]
+            .reverse()
+            .find((item) => item.time < currentTime - 0.001) ??
+          sortedMarkers.at(-1))
+        : (sortedMarkers.find((item) => item.time > currentTime + 0.001) ??
+          sortedMarkers[0]);
     if (!marker) return;
 
     setSelectedMarkerId(marker.id);
@@ -107,7 +162,10 @@ export function TimelinePanel() {
   }
 
   return (
-    <section className="h-[260px] border-t border-border bg-card" aria-label="Timeline editor">
+    <section
+      className="h-[200px] shrink-0 border-t border-border bg-card"
+      aria-label="Timeline editor"
+    >
       <TimelineCommandBar
         isPlaying={isPlaying}
         canSplitSelection={canSplitSelection}
@@ -143,9 +201,17 @@ export function TimelinePanel() {
         onSnapIntervalChange={setTimelineSnapInterval}
         onRippleModeChange={setTimelineRippleMode}
       />
-      <ScrollArea className="h-[208px]" role="region" aria-label="Timeline tracks">
+      <ScrollArea
+        className="h-[148px] overflow-x-auto"
+        role="region"
+        aria-label="Timeline tracks"
+      >
         <div className="relative p-3" style={{ minWidth: timelineMinWidth }}>
-          <TimelineRuler duration={project.duration} labelWidth={TIMELINE_LABEL_WIDTH} width={timelineWidth} />
+          <TimelineRuler
+            duration={project.duration}
+            labelWidth={TIMELINE_LABEL_WIDTH}
+            width={timelineWidth}
+          />
           <TimelineMarkerRail
             markers={markers}
             selectedMarkerId={selectedMarkerId}
@@ -160,12 +226,18 @@ export function TimelinePanel() {
             }}
           />
           {project.layers.length === 0 ? (
-            <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground" role="status">
+            <div
+              className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground"
+              role="status"
+            >
               Add media, text, captions, or shapes.
             </div>
           ) : null}
           {project.layers.length > 0 && tracks.length === 0 ? (
-            <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground" role="status">
+            <div
+              className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground"
+              role="status"
+            >
               No layers match the current timeline filter.
             </div>
           ) : null}
@@ -209,10 +281,17 @@ function filterTimelineLayers(
   return layers.filter((layer) => {
     const asset = layer.assetId ? assetById.get(layer.assetId) : undefined;
     if (filter === "grouped" && !layer.groupId) return false;
-    if (filter === "missing" && (!layer.assetId || asset?.objectUrl)) return false;
-    if (filter === "media" && !["video", "image", "audio"].includes(layer.kind)) return false;
-    if (filter === "text" && ["video", "image", "audio"].includes(layer.kind)) return false;
-    if (filter === "review" && (!layer.reviewStatus || layer.reviewStatus === "none")) return false;
+    if (filter === "missing" && (!layer.assetId || asset?.objectUrl))
+      return false;
+    if (filter === "media" && !["video", "image", "audio"].includes(layer.kind))
+      return false;
+    if (filter === "text" && ["video", "image", "audio"].includes(layer.kind))
+      return false;
+    if (
+      filter === "review" &&
+      (!layer.reviewStatus || layer.reviewStatus === "none")
+    )
+      return false;
     if (filter === "notes" && !layer.notes?.trim()) return false;
     if (!query) return true;
 

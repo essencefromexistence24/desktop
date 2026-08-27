@@ -1,7 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { AudioLines, Loader2, Save, Scissors, Trash2, Volume2, VolumeX } from "lucide-react";
+import {
+  AudioLines,
+  Loader2,
+  Save,
+  Scissors,
+  Trash2,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,12 +19,20 @@ import { WaveformBars } from "@/features/editor/components/waveform-bars";
 import { useEditorStore } from "@/features/editor/state/editor-store";
 import type { MediaAsset, TimelineLayer } from "@/lib/editor/types";
 import { formatTime } from "@/lib/editor/factory";
-import { beatMarkerColor, beatMarkerLabel, detectBeatMarkerTimes, isBeatMarker } from "@/lib/audio/beat-markers";
+import {
+  beatMarkerColor,
+  beatMarkerLabel,
+  detectBeatMarkerTimes,
+  isBeatMarker,
+} from "@/lib/audio/beat-markers";
 import { isLikelyMusicLayer } from "@/lib/audio/auto-ducking";
 import { normalizeLayerAudioMix } from "@/lib/audio/mix";
 import { audioMixPresets } from "@/lib/audio/mix-presets";
 import { createVocalSplitFiles } from "@/lib/audio/vocal-split";
-import { loadBrowserMediaBlob, saveBrowserMedia } from "@/lib/media/browser-media-store";
+import {
+  loadBrowserMediaBlob,
+  saveBrowserMedia,
+} from "@/lib/media/browser-media-store";
 import { loadTauriMediaBlob } from "@/lib/media/tauri-media";
 
 interface AudioMixPanelProps {
@@ -33,22 +49,44 @@ export function AudioMixPanel({ layer, asset, onChange }: AudioMixPanelProps) {
   const [beatMessage, setBeatMessage] = useState<string | null>(null);
   const [duckingMessage, setDuckingMessage] = useState<string | null>(null);
   const [isSplittingVocals, setIsSplittingVocals] = useState(false);
-  const [vocalSplitMessage, setVocalSplitMessage] = useState<string | null>(null);
-  const projectAudioMixPresets = useEditorStore((state) => state.project.audioMixPresets ?? []);
+  const [vocalSplitMessage, setVocalSplitMessage] = useState<string | null>(
+    null,
+  );
+  const projectAudioMixPresets = useEditorStore(
+    (state) => state.project.audioMixPresets ?? [],
+  );
   const markers = useEditorStore((state) => state.project.markers ?? []);
   const addMediaAsset = useEditorStore((state) => state.addMediaAsset);
   const addLayerFromAsset = useEditorStore((state) => state.addLayerFromAsset);
   const addTimelineMarker = useEditorStore((state) => state.addTimelineMarker);
-  const updateTimelineMarker = useEditorStore((state) => state.updateTimelineMarker);
-  const removeTimelineMarker = useEditorStore((state) => state.removeTimelineMarker);
-  const applyAutoDuckingToLayer = useEditorStore((state) => state.applyAutoDuckingToLayer);
-  const saveSelectedAudioMixPreset = useEditorStore((state) => state.saveSelectedAudioMixPreset);
-  const applyAudioMixPreset = useEditorStore((state) => state.applyAudioMixPreset);
-  const removeAudioMixPreset = useEditorStore((state) => state.removeAudioMixPreset);
+  const updateTimelineMarker = useEditorStore(
+    (state) => state.updateTimelineMarker,
+  );
+  const removeTimelineMarker = useEditorStore(
+    (state) => state.removeTimelineMarker,
+  );
+  const applyAutoDuckingToLayer = useEditorStore(
+    (state) => state.applyAutoDuckingToLayer,
+  );
+  const saveSelectedAudioMixPreset = useEditorStore(
+    (state) => state.saveSelectedAudioMixPreset,
+  );
+  const applyAudioMixPreset = useEditorStore(
+    (state) => state.applyAudioMixPreset,
+  );
+  const removeAudioMixPreset = useEditorStore(
+    (state) => state.removeAudioMixPreset,
+  );
   const mix = normalizeLayerAudioMix(layer);
   const sourceStart = layer.trimStart;
   const sourceEnd = layer.trimStart + layer.duration * layer.playbackRate;
-  const visiblePeaks = waveformPeaksForRegion(asset?.waveformPeaks, asset?.duration ?? sourceEnd, sourceStart, sourceEnd, waveformZoom);
+  const visiblePeaks = waveformPeaksForRegion(
+    asset?.waveformPeaks,
+    asset?.duration ?? sourceEnd,
+    sourceStart,
+    sourceEnd,
+    waveformZoom,
+  );
   const beatMarkerCount = markers.filter(isBeatMarker).length;
   const likelyMusicLayer = isLikelyMusicLayer(layer, asset);
 
@@ -59,10 +97,15 @@ export function AudioMixPanel({ layer, asset, onChange }: AudioMixPanelProps) {
       return;
     }
 
-    markers.filter(isBeatMarker).forEach((marker) => removeTimelineMarker(marker.id));
+    markers
+      .filter(isBeatMarker)
+      .forEach((marker) => removeTimelineMarker(marker.id));
     times.forEach((time, index) => {
       const marker = addTimelineMarker(time);
-      updateTimelineMarker(marker.id, { label: beatMarkerLabel(index), color: beatMarkerColor });
+      updateTimelineMarker(marker.id, {
+        label: beatMarkerLabel(index),
+        color: beatMarkerColor,
+      });
     });
     setBeatMessage(`${times.length} beat markers added.`);
   }
@@ -70,17 +113,25 @@ export function AudioMixPanel({ layer, asset, onChange }: AudioMixPanelProps) {
   function clearBeatMarkers() {
     const beatMarkers = markers.filter(isBeatMarker);
     beatMarkers.forEach((marker) => removeTimelineMarker(marker.id));
-    setBeatMessage(beatMarkers.length ? `${beatMarkers.length} beat markers removed.` : "No beat markers to remove.");
+    setBeatMessage(
+      beatMarkers.length
+        ? `${beatMarkers.length} beat markers removed.`
+        : "No beat markers to remove.",
+    );
   }
 
   function applyAutoDucking() {
     const summary = applyAutoDuckingToLayer(layer.id);
     if (summary.changedLayerCount === 0) {
-      setDuckingMessage(summary.skippedReason ?? "Auto-ducking could not find a useful split.");
+      setDuckingMessage(
+        summary.skippedReason ?? "Auto-ducking could not find a useful split.",
+      );
       return;
     }
 
-    setDuckingMessage(`${summary.duckedRegionCount} dialogue region${summary.duckedRegionCount === 1 ? "" : "s"} ducked into ${summary.createdLayerCount} music segments.`);
+    setDuckingMessage(
+      `${summary.duckedRegionCount} dialogue region${summary.duckedRegionCount === 1 ? "" : "s"} ducked into ${summary.createdLayerCount} music segments.`,
+    );
   }
 
   async function splitVocals() {
@@ -95,12 +146,19 @@ export function AudioMixPanel({ layer, asset, onChange }: AudioMixPanelProps) {
 
       const sourceBlob = await loadAudioAssetBlob(asset);
       if (!sourceBlob) {
-        setVocalSplitMessage("Reconnect this audio file before splitting vocals.");
+        setVocalSplitMessage(
+          "Reconnect this audio file before splitting vocals.",
+        );
         return;
       }
 
-      const split = await createVocalSplitFiles(sourceBlob, { filename: asset.name });
-      const [voiceAsset, instrumentalAsset] = await Promise.all([saveBrowserMedia(split.vocalFile), saveBrowserMedia(split.instrumentalFile)]);
+      const split = await createVocalSplitFiles(sourceBlob, {
+        filename: asset.name,
+      });
+      const [voiceAsset, instrumentalAsset] = await Promise.all([
+        saveBrowserMedia(split.vocalFile),
+        saveBrowserMedia(split.instrumentalFile),
+      ]);
       addMediaAsset(voiceAsset);
       addMediaAsset(instrumentalAsset);
 
@@ -130,7 +188,11 @@ export function AudioMixPanel({ layer, asset, onChange }: AudioMixPanelProps) {
           : "Stem files were saved, but one timeline layer could not be added.",
       );
     } catch (error) {
-      setVocalSplitMessage(error instanceof Error ? error.message : "The vocal split could not be completed.");
+      setVocalSplitMessage(
+        error instanceof Error
+          ? error.message
+          : "The vocal split could not be completed.",
+      );
     } finally {
       setIsSplittingVocals(false);
     }
@@ -147,11 +209,27 @@ export function AudioMixPanel({ layer, asset, onChange }: AudioMixPanelProps) {
           <Label>Volume</Label>
           <span>{Math.round(mix.volume * 100)}%</span>
         </div>
-        <Slider value={[mix.volume]} min={0} max={2} step={0.01} onValueChange={([volume]) => onChange({ volume: volume ?? 1 })} />
+        <Slider
+          value={[mix.volume]}
+          min={0}
+          max={2}
+          step={0.01}
+          onValueChange={([volume]) => onChange({ volume: volume ?? 1 })}
+        />
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <FadeField label="Fade in" value={mix.fadeIn} max={layer.duration} onChange={(fadeIn) => onChange({ fadeIn })} />
-        <FadeField label="Fade out" value={mix.fadeOut} max={layer.duration} onChange={(fadeOut) => onChange({ fadeOut })} />
+        <FadeField
+          label="Fade in"
+          value={mix.fadeIn}
+          max={layer.duration}
+          onChange={(fadeIn) => onChange({ fadeIn })}
+        />
+        <FadeField
+          label="Fade out"
+          value={mix.fadeOut}
+          max={layer.duration}
+          onChange={(fadeOut) => onChange({ fadeOut })}
+        />
       </div>
       <div className="grid grid-cols-3 gap-1">
         {audioMixPresets.map((preset) => (
@@ -163,7 +241,9 @@ export function AudioMixPanel({ layer, asset, onChange }: AudioMixPanelProps) {
             onClick={() => onChange(preset.patch)}
           >
             <span className="text-xs font-medium">{preset.label}</span>
-            <span className="line-clamp-2 text-[10px] font-normal text-muted-foreground">{preset.description}</span>
+            <span className="line-clamp-2 text-[10px] font-normal text-muted-foreground">
+              {preset.description}
+            </span>
           </Button>
         ))}
       </div>
@@ -191,12 +271,26 @@ export function AudioMixPanel({ layer, asset, onChange }: AudioMixPanelProps) {
         {projectAudioMixPresets.length ? (
           <div className="grid gap-1">
             {projectAudioMixPresets.slice(0, 5).map((preset) => (
-              <div key={preset.id} className="grid grid-cols-[1fr_auto_auto] items-center gap-1 rounded-md border border-border bg-background px-2 py-1">
-                <button className="truncate text-left text-xs" onClick={() => applyAudioMixPreset(preset.id)}>
+              <div
+                key={preset.id}
+                className="grid grid-cols-[1fr_auto_auto] items-center gap-1 rounded-md border border-border bg-background px-2 py-1"
+              >
+                <button
+                  className="truncate text-left text-xs"
+                  onClick={() => applyAudioMixPreset(preset.id)}
+                >
                   {preset.name}
                 </button>
-                <span className="text-[10px] text-muted-foreground">{Math.round(preset.volume * 100)}%</span>
-                <Button size="icon" variant="ghost" className="size-7" onClick={() => removeAudioMixPreset(preset.id)} aria-label={`Remove ${preset.name}`}>
+                <span className="text-[10px] text-muted-foreground">
+                  {Math.round(preset.volume * 100)}%
+                </span>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="size-7"
+                  onClick={() => removeAudioMixPreset(preset.id)}
+                  aria-label={`Remove ${preset.name}`}
+                >
                   <Trash2 className="size-3.5" />
                 </Button>
               </div>
@@ -213,14 +307,26 @@ export function AudioMixPanel({ layer, asset, onChange }: AudioMixPanelProps) {
           <Badge variant="outline">{beatMarkerCount}</Badge>
         </div>
         <div className="grid grid-cols-2 gap-2">
-          <Button size="sm" variant="outline" onClick={replaceBeatMarkers} disabled={!asset?.waveformPeaks?.length}>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={replaceBeatMarkers}
+            disabled={!asset?.waveformPeaks?.length}
+          >
             Generate
           </Button>
-          <Button size="sm" variant="ghost" onClick={clearBeatMarkers} disabled={beatMarkerCount === 0}>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={clearBeatMarkers}
+            disabled={beatMarkerCount === 0}
+          >
             Clear
           </Button>
         </div>
-        {beatMessage ? <div className="text-[11px] text-muted-foreground">{beatMessage}</div> : null}
+        {beatMessage ? (
+          <div className="text-[11px] text-muted-foreground">{beatMessage}</div>
+        ) : null}
       </div>
       <div className="space-y-2 rounded-md bg-muted/40 p-2">
         <div className="flex items-center justify-between gap-2">
@@ -228,12 +334,24 @@ export function AudioMixPanel({ layer, asset, onChange }: AudioMixPanelProps) {
             <VolumeX className="size-3.5 text-muted-foreground" />
             Auto-duck music
           </div>
-          <Badge variant={likelyMusicLayer ? "secondary" : "outline"}>{likelyMusicLayer ? "Music" : "Audio"}</Badge>
+          <Badge variant={likelyMusicLayer ? "secondary" : "outline"}>
+            {likelyMusicLayer ? "Music" : "Audio"}
+          </Badge>
         </div>
-        <Button size="sm" variant="outline" className="w-full" onClick={applyAutoDucking} disabled={layer.kind !== "audio"}>
+        <Button
+          size="sm"
+          variant="outline"
+          className="w-full"
+          onClick={applyAutoDucking}
+          disabled={layer.kind !== "audio"}
+        >
           Analyze dialogue regions
         </Button>
-        {duckingMessage ? <div className="text-[11px] text-muted-foreground">{duckingMessage}</div> : null}
+        {duckingMessage ? (
+          <div className="text-[11px] text-muted-foreground">
+            {duckingMessage}
+          </div>
+        ) : null}
       </div>
       <div className="space-y-2 rounded-md bg-muted/40 p-2">
         <div className="flex items-center justify-between gap-2">
@@ -241,13 +359,29 @@ export function AudioMixPanel({ layer, asset, onChange }: AudioMixPanelProps) {
             <Scissors className="size-3.5 text-muted-foreground" />
             Split vocals
           </div>
-          <Badge variant={asset?.type === "audio" ? "secondary" : "outline"}>{asset?.type === "audio" ? "Stereo" : "Audio only"}</Badge>
+          <Badge variant={asset?.type === "audio" ? "secondary" : "outline"}>
+            {asset?.type === "audio" ? "Stereo" : "Audio only"}
+          </Badge>
         </div>
-        <Button size="sm" variant="outline" className="w-full" onClick={splitVocals} disabled={asset?.type !== "audio" || isSplittingVocals}>
-          {isSplittingVocals ? <Loader2 className="size-3.5 animate-spin" /> : <Scissors className="size-3.5" />}
+        <Button
+          size="sm"
+          variant="outline"
+          className="w-full"
+          onClick={splitVocals}
+          disabled={asset?.type !== "audio" || isSplittingVocals}
+        >
+          {isSplittingVocals ? (
+            <Loader2 className="size-3.5 animate-spin" />
+          ) : (
+            <Scissors className="size-3.5" />
+          )}
           Create voice and instrumental stems
         </Button>
-        {vocalSplitMessage ? <div className="text-[11px] text-muted-foreground">{vocalSplitMessage}</div> : null}
+        {vocalSplitMessage ? (
+          <div className="text-[11px] text-muted-foreground">
+            {vocalSplitMessage}
+          </div>
+        ) : null}
       </div>
       <div className="space-y-2 rounded-md bg-muted/40 p-2">
         <div className="flex items-center justify-between gap-2">
@@ -266,10 +400,15 @@ export function AudioMixPanel({ layer, asset, onChange }: AudioMixPanelProps) {
             ))}
           </div>
         </div>
-        <WaveformBars peaks={visiblePeaks} className="h-10 text-primary" barClassName="w-0.5" />
+        <WaveformBars
+          peaks={visiblePeaks}
+          className="h-10 text-primary"
+          barClassName="w-0.5"
+        />
         <div className="grid grid-cols-2 gap-2 text-[11px] text-muted-foreground">
           <div>
-            Timeline {formatTime(layer.start)} - {formatTime(layer.start + layer.duration)}
+            Timeline {formatTime(layer.start)} -{" "}
+            {formatTime(layer.start + layer.duration)}
           </div>
           <div>
             Source {formatTime(sourceStart)} - {formatTime(sourceEnd)}
@@ -299,19 +438,43 @@ async function loadAudioAssetBlob(asset: MediaAsset) {
   return null;
 }
 
-function waveformPeaksForRegion(peaks: number[] | undefined, assetDuration: number, sourceStart: number, sourceEnd: number, zoom: number) {
+function waveformPeaksForRegion(
+  peaks: number[] | undefined,
+  assetDuration: number,
+  sourceStart: number,
+  sourceEnd: number,
+  zoom: number,
+) {
   if (!peaks?.length) return undefined;
 
   const safeDuration = Math.max(assetDuration, sourceEnd, 0.001);
-  const startIndex = Math.max(0, Math.floor((sourceStart / safeDuration) * peaks.length));
-  const endIndex = Math.min(peaks.length, Math.ceil((Math.min(sourceEnd, safeDuration) / safeDuration) * peaks.length));
+  const startIndex = Math.max(
+    0,
+    Math.floor((sourceStart / safeDuration) * peaks.length),
+  );
+  const endIndex = Math.min(
+    peaks.length,
+    Math.ceil(
+      (Math.min(sourceEnd, safeDuration) / safeDuration) * peaks.length,
+    ),
+  );
   const region = peaks.slice(startIndex, Math.max(startIndex + 1, endIndex));
   const targetLength = Math.max(8, Math.floor(region.length / zoom));
 
   return region.slice(0, targetLength);
 }
 
-function FadeField({ label, value, max, onChange }: { label: string; value: number; max: number; onChange: (value: number) => void }) {
+function FadeField({
+  label,
+  value,
+  max,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  max: number;
+  onChange: (value: number) => void;
+}) {
   function handleChange(rawValue: string) {
     const parsed = Number(rawValue);
     if (!Number.isFinite(parsed)) return;
@@ -321,7 +484,15 @@ function FadeField({ label, value, max, onChange }: { label: string; value: numb
   return (
     <label className="space-y-1 text-[11px] text-muted-foreground">
       <span>{label}</span>
-      <Input className="h-8 font-mono text-xs" type="number" min={0} max={max} step={0.05} value={value} onChange={(event) => handleChange(event.target.value)} />
+      <Input
+        className="h-8 font-mono text-xs"
+        type="number"
+        min={0}
+        max={max}
+        step={0.05}
+        value={value}
+        onChange={(event) => handleChange(event.target.value)}
+      />
     </label>
   );
 }

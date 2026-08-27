@@ -7,7 +7,9 @@ import type {
   EditorStoreSet,
 } from "@/features/editor/state/editor-store-types";
 
-export type EditorProjectCommit = (mutator: (project: EditorProject) => EditorProject) => void;
+export type EditorProjectCommit = (
+  mutator: (project: EditorProject) => EditorProject,
+) => void;
 
 export type EditorLayerWriters = {
   addLayer: (layer: TimelineLayer) => void;
@@ -28,7 +30,9 @@ export function createEditorDocumentSnapshot(
   };
 }
 
-export function createEditorProjectCommit(set: EditorStoreSet): EditorProjectCommit {
+export function createEditorProjectCommit(
+  set: EditorStoreSet,
+): EditorProjectCommit {
   return (mutator) => {
     set((state) => ({
       project: mutator(state.project),
@@ -38,7 +42,10 @@ export function createEditorProjectCommit(set: EditorStoreSet): EditorProjectCom
   };
 }
 
-export function createEditorLayerWriters(set: EditorStoreSet, commit: EditorProjectCommit): EditorLayerWriters {
+export function createEditorLayerWriters(
+  set: EditorStoreSet,
+  commit: EditorProjectCommit,
+): EditorLayerWriters {
   return {
     addLayer: (layer) => {
       commit((project) => ({
@@ -54,7 +61,10 @@ export function createEditorLayerWriters(set: EditorStoreSet, commit: EditorProj
 
       commit((project) => ({
         ...project,
-        duration: Math.max(project.duration, ...layers.map((layer) => layer.start + layer.duration)),
+        duration: Math.max(
+          project.duration,
+          ...layers.map((layer) => layer.start + layer.duration),
+        ),
         layers: [...project.layers, ...layers],
         updatedAt: new Date().toISOString(),
       }));

@@ -5,10 +5,19 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { useEditorStore } from "@/features/editor/state/editor-store";
-import { createGifFramePreview, type GifFramePreview } from "@/lib/editor/gif-frame-preview";
+import {
+  createGifFramePreview,
+  type GifFramePreview,
+} from "@/lib/editor/gif-frame-preview";
 import {
   canExtractGifFrameThumbnails,
   createGifFrameThumbnails,
@@ -29,8 +38,12 @@ export function GifWorkflowPanel() {
   const [duration, setDuration] = useState("4");
   const [trimStart, setTrimStart] = useState("0");
   const [message, setMessage] = useState<string | null>(null);
-  const [frameThumbnails, setFrameThumbnails] = useState<GifFrameThumbnail[]>([]);
-  const [thumbnailState, setThumbnailState] = useState<"idle" | "loading" | "ready" | "unavailable">("idle");
+  const [frameThumbnails, setFrameThumbnails] = useState<GifFrameThumbnail[]>(
+    [],
+  );
+  const [thumbnailState, setThumbnailState] = useState<
+    "idle" | "loading" | "ready" | "unavailable"
+  >("idle");
   const mediaAssets = useEditorStore((state) => state.mediaAssets);
   const setAspectRatio = useEditorStore((state) => state.setAspectRatio);
   const addLayerFromAsset = useEditorStore((state) => state.addLayerFromAsset);
@@ -39,15 +52,25 @@ export function GifWorkflowPanel() {
   const queueExport = useEditorStore((state) => state.queueExport);
   const setCurrentTime = useEditorStore((state) => state.setCurrentTime);
   const selectedWorkflow = findGifWorkflowPreset(workflowId);
-  const selectedExportPreset = exportPresets.find((preset) => preset.id === selectedWorkflow.exportPresetId);
+  const selectedExportPreset = exportPresets.find(
+    (preset) => preset.id === selectedWorkflow.exportPresetId,
+  );
   const eligibleAssets = useMemo(
-    () => mediaAssets.filter((asset) => gifWorkflowSupportsAsset(selectedWorkflow, asset)),
+    () =>
+      mediaAssets.filter((asset) =>
+        gifWorkflowSupportsAsset(selectedWorkflow, asset),
+      ),
     [mediaAssets, selectedWorkflow],
   );
-  const selectedAsset = eligibleAssets.find((asset) => asset.id === assetId) ?? eligibleAssets[0];
+  const selectedAsset =
+    eligibleAssets.find((asset) => asset.id === assetId) ?? eligibleAssets[0];
   const effectiveAssetIds = selectedAssetIds.length
-    ? eligibleAssets.filter((asset) => selectedAssetIds.includes(asset.id)).map((asset) => asset.id)
-    : eligibleAssets.slice(0, selectedWorkflow.assetLimit).map((asset) => asset.id);
+    ? eligibleAssets
+        .filter((asset) => selectedAssetIds.includes(asset.id))
+        .map((asset) => asset.id)
+    : eligibleAssets
+        .slice(0, selectedWorkflow.assetLimit)
+        .map((asset) => asset.id);
   const framePreview = useMemo(
     () =>
       createGifFramePreview({
@@ -57,7 +80,13 @@ export function GifWorkflowPanel() {
         duration: Number(duration),
         trimStart: Number(trimStart),
       }),
-    [duration, selectedAsset, selectedExportPreset, selectedWorkflow, trimStart],
+    [
+      duration,
+      selectedAsset,
+      selectedExportPreset,
+      selectedWorkflow,
+      trimStart,
+    ],
   );
 
   useEffect(() => {
@@ -101,7 +130,13 @@ export function GifWorkflowPanel() {
     setDuration(workflow.defaultDuration.toString());
     setTrimStart(workflow.defaultTrimStart.toString());
     setSelectedAssetIds((current) =>
-      current.filter((currentAssetId) => mediaAssets.some((asset) => asset.id === currentAssetId && gifWorkflowSupportsAsset(workflow, asset))),
+      current.filter((currentAssetId) =>
+        mediaAssets.some(
+          (asset) =>
+            asset.id === currentAssetId &&
+            gifWorkflowSupportsAsset(workflow, asset),
+        ),
+      ),
     );
     setMessage(null);
   }
@@ -126,9 +161,15 @@ export function GifWorkflowPanel() {
         return;
       }
 
-      addMediaLayout({ assetIds, mode: selectedWorkflow.layoutMode, clipSeconds: seconds });
+      addMediaLayout({
+        assetIds,
+        mode: selectedWorkflow.layoutMode,
+        clipSeconds: seconds,
+      });
       queueExport(exportPreset.format, exportPreset.id);
-      setMessage(`${assetIds.length} source${assetIds.length === 1 ? "" : "s"} added and ${exportPreset.label} queued.`);
+      setMessage(
+        `${assetIds.length} source${assetIds.length === 1 ? "" : "s"} added and ${exportPreset.label} queued.`,
+      );
       return;
     }
 
@@ -142,7 +183,11 @@ export function GifWorkflowPanel() {
       name: `${selectedAsset.name} ${selectedWorkflow.label}`,
       notes: `${selectedWorkflow.label} workflow. Recommended export: ${exportPreset.id}.`,
     });
-    const layer = layerId ? useEditorStore.getState().project.layers.find((item) => item.id === layerId) : null;
+    const layer = layerId
+      ? useEditorStore
+          .getState()
+          .project.layers.find((item) => item.id === layerId)
+      : null;
     if (!layerId || !layer) {
       setMessage("The workflow could not create an editable layer.");
       return;
@@ -161,7 +206,9 @@ export function GifWorkflowPanel() {
       { history: false },
     );
     queueExport(exportPreset.format, exportPreset.id);
-    setMessage(`${selectedWorkflow.label} layer added and ${exportPreset.label} queued.`);
+    setMessage(
+      `${selectedWorkflow.label} layer added and ${exportPreset.label} queued.`,
+    );
   }
 
   function updateTrimStart(value: number) {
@@ -179,7 +226,9 @@ export function GifWorkflowPanel() {
       <div className="flex items-center justify-between gap-2">
         <div>
           <h4 className="text-sm font-medium">GIF tools</h4>
-          <p className="text-xs text-muted-foreground">{selectedExportPreset?.label ?? selectedWorkflow.exportPresetId}</p>
+          <p className="text-xs text-muted-foreground">
+            {selectedExportPreset?.label ?? selectedWorkflow.exportPresetId}
+          </p>
         </div>
         <Badge variant="outline">{selectedWorkflow.aspectRatio}</Badge>
       </div>
@@ -189,12 +238,16 @@ export function GifWorkflowPanel() {
             key={workflow.id}
             type="button"
             className={`rounded-md border p-2 text-left text-xs transition ${
-              selectedWorkflow.id === workflow.id ? "border-primary bg-primary/10" : "border-border hover:border-primary/60"
+              selectedWorkflow.id === workflow.id
+                ? "border-primary bg-primary/10"
+                : "border-border hover:border-primary/60"
             }`}
             onClick={() => chooseWorkflow(workflow.id)}
           >
             <span className="font-medium">{workflow.label}</span>
-            <span className="mt-1 block text-muted-foreground">{workflow.bestFor}</span>
+            <span className="mt-1 block text-muted-foreground">
+              {workflow.bestFor}
+            </span>
           </button>
         ))}
       </div>
@@ -203,7 +256,10 @@ export function GifWorkflowPanel() {
           <Label className="text-xs text-muted-foreground">Sources</Label>
           <div className="space-y-1">
             {eligibleAssets.slice(0, 12).map((asset) => {
-              const selected = selectedAssetIds.includes(asset.id) || (!selectedAssetIds.length && effectiveAssetIds.includes(asset.id));
+              const selected =
+                selectedAssetIds.includes(asset.id) ||
+                (!selectedAssetIds.length &&
+                  effectiveAssetIds.includes(asset.id));
               return (
                 <button
                   key={asset.id}
@@ -212,7 +268,9 @@ export function GifWorkflowPanel() {
                   onClick={() => toggleAsset(asset.id)}
                 >
                   <span className="truncate">{asset.name}</span>
-                  <Badge variant={selected ? "default" : "outline"}>{asset.type}</Badge>
+                  <Badge variant={selected ? "default" : "outline"}>
+                    {asset.type}
+                  </Badge>
                 </button>
               );
             })}
@@ -238,11 +296,25 @@ export function GifWorkflowPanel() {
       <div className="grid grid-cols-2 gap-2">
         <label className="space-y-1 text-xs text-muted-foreground">
           <span>Trim start</span>
-          <Input type="number" min={0} max={120} step={0.1} value={trimStart} onChange={(event) => setTrimStart(event.target.value)} />
+          <Input
+            type="number"
+            min={0}
+            max={120}
+            step={0.1}
+            value={trimStart}
+            onChange={(event) => setTrimStart(event.target.value)}
+          />
         </label>
         <label className="space-y-1 text-xs text-muted-foreground">
           <span>Seconds</span>
-          <Input type="number" min={0.5} max={30} step={0.5} value={duration} onChange={(event) => setDuration(event.target.value)} />
+          <Input
+            type="number"
+            min={0.5}
+            max={30}
+            step={0.5}
+            value={duration}
+            onChange={(event) => setDuration(event.target.value)}
+          />
         </label>
       </div>
       <GifFrameStrip
@@ -252,11 +324,22 @@ export function GifWorkflowPanel() {
         onTrimChange={updateTrimStart}
         onChooseFrame={choosePreviewFrame}
       />
-      <Button className="w-full" size="sm" onClick={applyWorkflow} disabled={eligibleAssets.length === 0}>
+      <Button
+        className="w-full"
+        size="sm"
+        onClick={applyWorkflow}
+        disabled={eligibleAssets.length === 0}
+      >
         Apply and queue export
       </Button>
-      {message ? <p className="text-xs text-muted-foreground">{message}</p> : null}
-      {!eligibleAssets.length ? <p className="text-xs text-muted-foreground">Import a supported GIF, image, or video source.</p> : null}
+      {message ? (
+        <p className="text-xs text-muted-foreground">{message}</p>
+      ) : null}
+      {!eligibleAssets.length ? (
+        <p className="text-xs text-muted-foreground">
+          Import a supported GIF, image, or video source.
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -275,9 +358,17 @@ function GifFrameStrip({
   onChooseFrame: (sourceTime: number, projectTime: number) => void;
 }) {
   const canScrub = preview.maxTrimStart > 0;
-  const thumbnailsByFrame = new Map(thumbnails.map((thumbnail) => [thumbnail.frameIndex, thumbnail]));
+  const thumbnailsByFrame = new Map(
+    thumbnails.map((thumbnail) => [thumbnail.frameIndex, thumbnail]),
+  );
   const thumbnailLabel =
-    thumbnailState === "ready" ? "Thumbnails" : thumbnailState === "loading" ? "Loading" : thumbnailState === "unavailable" ? "No thumbnails" : "Preview";
+    thumbnailState === "ready"
+      ? "Thumbnails"
+      : thumbnailState === "loading"
+        ? "Loading"
+        : thumbnailState === "unavailable"
+          ? "No thumbnails"
+          : "Preview";
 
   return (
     <div className="space-y-2 rounded-md border border-border bg-background/70 p-2">
@@ -286,8 +377,18 @@ function GifFrameStrip({
         <div className="flex shrink-0 items-center gap-1">
           <Badge variant="outline">{preview.frameCount} frames</Badge>
           <Badge variant="outline">{preview.fps} fps</Badge>
-          <Badge variant={thumbnailState === "ready" ? "default" : "outline"}>{thumbnailLabel}</Badge>
-          <Badge variant={preview.transparency.status === "alpha-ready" ? "default" : "secondary"}>{preview.transparency.label}</Badge>
+          <Badge variant={thumbnailState === "ready" ? "default" : "outline"}>
+            {thumbnailLabel}
+          </Badge>
+          <Badge
+            variant={
+              preview.transparency.status === "alpha-ready"
+                ? "default"
+                : "secondary"
+            }
+          >
+            {preview.transparency.label}
+          </Badge>
         </div>
       </div>
       <Slider
@@ -315,13 +416,20 @@ function GifFrameStrip({
             >
               <span className="flex aspect-video w-full items-center justify-center overflow-hidden rounded-sm bg-muted text-[10px] text-muted-foreground">
                 {thumbnail ? (
-                  <img src={thumbnail.dataUrl} alt="" className="h-full w-full object-cover" draggable={false} />
+                  <img
+                    src={thumbnail.dataUrl}
+                    alt=""
+                    className="h-full w-full object-cover"
+                    draggable={false}
+                  />
                 ) : (
                   `${frame.positionPercent}%`
                 )}
               </span>
               <span className="text-[11px] font-medium">{frame.label}</span>
-              <span className="font-mono text-[10px] text-muted-foreground">{frame.timeLabel}</span>
+              <span className="font-mono text-[10px] text-muted-foreground">
+                {frame.timeLabel}
+              </span>
             </Button>
           );
         })}

@@ -262,11 +262,11 @@ fn runtime_proof_evidence_template(snapshot: &DxRuntimeProofStatusSnapshot) -> S
             bounded_join(
                 &plan.accepted_evidence_examples,
                 5,
-                "final command exit status, visible Zed/DX window title, Agent panel route or action exercised",
+                "final command exit status, visible Dx window title, Agent panel route or action exercised",
             )
         })
         .unwrap_or_else(|| {
-            "final command exit status, visible Zed/DX window title, Agent panel route or action exercised"
+            "final command exit status, visible Dx window title, Agent panel route or action exercised"
                 .to_string()
         });
 

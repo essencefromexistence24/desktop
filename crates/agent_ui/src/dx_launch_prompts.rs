@@ -45,7 +45,7 @@ pub(crate) fn launch_handoff_prompt(
     let receipt_context = launch_receipt_review_prompt_context(launch_receipts);
 
     format!(
-        "Review the DX launch handoff for this Zed workspace. Launch contract metadata: {contract_context}. Launch gate readiness: {readiness_context}. Launch aggregate: {launch_context}. Launch receipt diagnostics: {receipt_context}. Use the visible source-owned import-manifest, handoff, import-summary, release-gate, and fallback-drill metadata to summarize packet coverage, polling order, diagnostics commands, action-map safety, cached receipt fallback states, command fanout, redaction posture, and missing proof. If the operator asks for a refresh, draft the exact `dx launch import-manifest --json`, `dx launch handoff --json`, `dx launch import-summary --json`, `dx launch release-gate --json`, `dx launch fallback-drill --json`, `dx launch status --json`, or `dx launch receipts --json` step, but do not run CLI commands, builds, local servers, browser input, deploys, shell commands, providers, agents, DX-WWW, Forge, external serializer/RLM code, model calls, or restore-to-target actions."
+        "Review the DX launch handoff for this Dx workspace. Launch contract metadata: {contract_context}. Launch gate readiness: {readiness_context}. Launch aggregate: {launch_context}. Launch receipt diagnostics: {receipt_context}. Use the visible source-owned import-manifest, handoff, import-summary, release-gate, and fallback-drill metadata to summarize packet coverage, polling order, diagnostics commands, action-map safety, cached receipt fallback states, command fanout, redaction posture, and missing proof. If the operator asks for a refresh, draft the exact `dx launch import-manifest --json`, `dx launch handoff --json`, `dx launch import-summary --json`, `dx launch release-gate --json`, `dx launch fallback-drill --json`, `dx launch status --json`, or `dx launch receipts --json` step, but do not run CLI commands, builds, local servers, browser input, deploys, shell commands, providers, agents, DX-WWW, Forge, external serializer/RLM code, model calls, or restore-to-target actions."
     )
 }
 
@@ -61,7 +61,7 @@ pub(crate) fn launch_readiness_prompt(
     let receipt_context = launch_receipt_review_prompt_context(launch_receipts);
 
     format!(
-        "Review the DX launch import gate for this Zed workspace. Launch gate readiness: {readiness_context}. Launch contract metadata: {contract_context}. Launch aggregate: {launch_context}. Launch receipt diagnostics: {receipt_context}. Summarize whether Zed can safely render the import-summary, release-gate, and fallback-drill states, which cached receipt states are represented, what recovery commands should be shown, and what governed runtime proof is still missing. Do not run CLI commands, builds, local servers, browser input, deploys, shell commands, providers, agents, DX-WWW, Forge, external serializer/RLM code, model calls, or restore-to-target actions."
+        "Review the DX launch import gate for this Dx workspace. Launch gate readiness: {readiness_context}. Launch contract metadata: {contract_context}. Launch aggregate: {launch_context}. Launch receipt diagnostics: {receipt_context}. Summarize whether Dx can safely render the import-summary, release-gate, and fallback-drill states, which cached receipt states are represented, what recovery commands should be shown, and what governed runtime proof is still missing. Do not run CLI commands, builds, local servers, browser input, deploys, shell commands, providers, agents, DX-WWW, Forge, external serializer/RLM code, model calls, or restore-to-target actions."
     )
 }
 
@@ -77,7 +77,7 @@ pub(crate) fn launch_audit_prompt(
     let launch_context = launch_status_prompt_context(launch_status);
 
     format!(
-        "Review the DX launch CLI audit for this Zed workspace. Launch audit: {audit_context}. Launch gate readiness: {readiness_context}. Launch handoff contracts: {contract_context}. Launch aggregate: {launch_context}. Summarize command schema coverage, startup polling commands, fixture render states, smoke checks, write/fanout risk, redaction posture, and the next safe operator command. Do not run CLI commands, builds, local servers, browser input, deploys, shell commands, providers, agents, DX-WWW, Forge, external serializer/RLM code, model calls, or restore-to-target actions."
+        "Review the DX launch CLI audit for this Dx workspace. Launch audit: {audit_context}. Launch gate readiness: {readiness_context}. Launch handoff contracts: {contract_context}. Launch aggregate: {launch_context}. Summarize command schema coverage, startup polling commands, fixture render states, smoke checks, write/fanout risk, redaction posture, and the next safe operator command. Do not run CLI commands, builds, local servers, browser input, deploys, shell commands, providers, agents, DX-WWW, Forge, external serializer/RLM code, model calls, or restore-to-target actions."
     )
 }
 
@@ -85,7 +85,7 @@ pub(crate) fn launch_www_evidence_prompt(snapshot: &DxWwwLaunchEvidenceSnapshot)
     let www_context = launch_www_evidence_prompt_context(snapshot);
 
     format!(
-        "Review the DX-WWW launch evidence handoff for this Zed workspace. WWW evidence: {www_context}. Summarize the release packet, operator index, timeline, handoff digest, release seal, restart handoff, acceptance artifacts, missing commands, and whether the visible evidence is safe to treat as no-execution handoff metadata. If artifacts are missing, draft the exact DX-WWW operator command sequence from the visible next commands and stop. Do not run DX-WWW, Forge, CLI commands, builds, local servers, browser input, deploys, shell commands, providers, agents, external serializer/RLM code, model calls, or restore-to-target actions."
+        "Review the DX-WWW launch evidence handoff for this Dx workspace. WWW evidence: {www_context}. Summarize the release packet, operator index, timeline, handoff digest, release seal, restart handoff, acceptance artifacts, missing commands, and whether the visible evidence is safe to treat as no-execution handoff metadata. If artifacts are missing, draft the exact DX-WWW operator command sequence from the visible next commands and stop. Do not run DX-WWW, Forge, CLI commands, builds, local servers, browser input, deploys, shell commands, providers, agents, external serializer/RLM code, model calls, or restore-to-target actions."
     )
 }
 
@@ -93,7 +93,7 @@ pub(crate) fn launch_source_audit_prompt(snapshot: &DxLaunchSourceAuditSnapshot)
     let source_context = launch_source_audit_prompt_context(snapshot);
 
     format!(
-        "Review the DX launch source audit for this Zed workspace. Source audit: {source_context}. Summarize the hub coordination verdict, worker-output ledger, source-clean repos, risk-review blockers, template trust scan, DX Studio WWW QA status, latest deltas, and the next safe Friday action. Do not touch G:\\Dx\\www package work, run builds, run local servers, run browser automation, execute CLI commands, deploy, mutate other repos, import secrets, call providers, or restore-to-target actions."
+        "Review the DX launch source audit for this Dx workspace. Source audit: {source_context}. Summarize the hub coordination verdict, worker-output ledger, source-clean repos, risk-review blockers, template trust scan, DX Studio WWW QA status, latest deltas, and the next safe Friday action. Do not touch G:\\Dx\\www package work, run builds, run local servers, run browser automation, execute CLI commands, deploy, mutate other repos, import secrets, call providers, or restore-to-target actions."
     )
 }
 

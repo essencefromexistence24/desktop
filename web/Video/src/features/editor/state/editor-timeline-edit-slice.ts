@@ -7,8 +7,15 @@ import { normalizeLayerMotion } from "@/lib/editor/motion";
 import { normalizeLayerSpeed, normalizePlaybackRate } from "@/lib/editor/speed";
 import { normalizeLayerTrackingAttachment } from "@/lib/editor/tracking";
 import { normalizeLayerTransition } from "@/lib/editor/transitions";
-import { clampLayerTiming, TIMELINE_MIN_LAYER_SECONDS } from "@/lib/editor/timeline";
-import { applyTimelineCutRangesToLayers, shiftTimeAfterCuts, type TimelineCutRange } from "@/lib/editor/timeline-cuts";
+import {
+  clampLayerTiming,
+  TIMELINE_MIN_LAYER_SECONDS,
+} from "@/lib/editor/timeline";
+import {
+  applyTimelineCutRangesToLayers,
+  shiftTimeAfterCuts,
+  type TimelineCutRange,
+} from "@/lib/editor/timeline-cuts";
 import { normalizeLayerVisualStyle } from "@/lib/editor/visual-effects";
 import type {
   EditorProject,
@@ -18,7 +25,11 @@ import type {
   TimelineDurationDistributionMode,
   TimelineLayer,
 } from "@/lib/editor/types";
-import type { EditorState, EditorStoreGet, EditorStoreSet } from "@/features/editor/state/editor-store-types";
+import type {
+  EditorState,
+  EditorStoreGet,
+  EditorStoreSet,
+} from "@/features/editor/state/editor-store-types";
 
 type EditorTimelineEditSlice = Pick<
   EditorState,
@@ -37,9 +48,14 @@ type EditorTimelineEditSlice = Pick<
 
 type EditorTimelineEditDeps = {
   commit: (mutator: (project: EditorProject) => EditorProject) => void;
-  getSelectedLayerIds: (state: Pick<EditorState, "selectedLayerId" | "selectedLayerIds">) => string[];
+  getSelectedLayerIds: (
+    state: Pick<EditorState, "selectedLayerId" | "selectedLayerIds">,
+  ) => string[];
   groupAwareLayerIds: (layers: TimelineLayer[], layerIds: string[]) => string[];
-  projectDurationForLayers: (baseDuration: number, layers: TimelineLayer[]) => number;
+  projectDurationForLayers: (
+    baseDuration: number,
+    layers: TimelineLayer[],
+  ) => number;
   snapProjectTime: (project: EditorProject, time: number) => number;
 };
 
@@ -52,7 +68,9 @@ export function createEditorTimelineEditSlice(
     updateLayer: (layerId, patch, options) => {
       const mutator = (project: EditorProject) => {
         const now = new Date().toISOString();
-        const layers = project.layers.map((layer) => (layer.id === layerId ? applyLayerPatch(layer, patch, now) : layer));
+        const layers = project.layers.map((layer) =>
+          layer.id === layerId ? applyLayerPatch(layer, patch, now) : layer,
+        );
 
         return {
           ...project,
@@ -71,20 +89,39 @@ export function createEditorTimelineEditSlice(
     },
     updateSelectedLayerTiming: (layerId, patch, options) => {
       const state = get();
-      const baseSelectedIds = state.selectedLayerIds.includes(layerId) ? state.selectedLayerIds : [layerId];
-      const selectedIds = deps.groupAwareLayerIds(state.project.layers, baseSelectedIds);
+      const baseSelectedIds = state.selectedLayerIds.includes(layerId)
+        ? state.selectedLayerIds
+        : [layerId];
+      const selectedIds = deps.groupAwareLayerIds(
+        state.project.layers,
+        baseSelectedIds,
+      );
       const source = state.project.layers.find((layer) => layer.id === layerId);
       if (!source || source.locked) return;
 
-      const startDelta = patch.start === undefined ? 0 : patch.start - source.start;
-      const durationDelta = patch.duration === undefined ? 0 : patch.duration - source.duration;
-      const trimStartDelta = patch.trimStart === undefined ? 0 : patch.trimStart - source.trimStart;
-      const trackDelta = patch.track === undefined ? 0 : patch.track - source.track;
+      const startDelta =
+        patch.start === undefined ? 0 : patch.start - source.start;
+      const durationDelta =
+        patch.duration === undefined ? 0 : patch.duration - source.duration;
+      const trimStartDelta =
+        patch.trimStart === undefined ? 0 : patch.trimStart - source.trimStart;
+      const trackDelta =
+        patch.track === undefined ? 0 : patch.track - source.track;
       const mutator = (project: EditorProject) => {
         let maxEnd = project.duration;
-        const rippleBoundary = rippleMoveBoundary(project, selectedIds, startDelta, patch);
+        const rippleBoundary = rippleMoveBoundary(
+          project,
+          selectedIds,
+          startDelta,
+          patch,
+        );
         const layers = project.layers.map((layer) => {
-          if (rippleBoundary !== null && !selectedIds.includes(layer.id) && !layer.locked && layer.start >= rippleBoundary) {
+          if (
+            rippleBoundary !== null &&
+            !selectedIds.includes(layer.id) &&
+            !layer.locked &&
+            layer.start >= rippleBoundary
+          ) {
             const nextStart = Math.max(0, layer.start + startDelta);
             maxEnd = Math.max(maxEnd, nextStart + layer.duration);
             return {
@@ -112,7 +149,9 @@ export function createEditorTimelineEditSlice(
                 ? patch.duration
                 : layer.duration + durationDelta;
           const timing = clampLayerTiming(
-            options?.snap === false ? requestedStart : deps.snapProjectTime(project, requestedStart),
+            options?.snap === false
+              ? requestedStart
+              : deps.snapProjectTime(project, requestedStart),
             requestedDuration,
           );
           maxEnd = Math.max(maxEnd, timing.start + timing.duration);
@@ -124,7 +163,12 @@ export function createEditorTimelineEditSlice(
             trimStart:
               patch.trimStart === undefined
                 ? layer.trimStart
-                : Math.max(0, layer.id === layerId ? patch.trimStart : layer.trimStart + trimStartDelta),
+                : Math.max(
+                    0,
+                    layer.id === layerId
+                      ? patch.trimStart
+                      : layer.trimStart + trimStartDelta,
+                  ),
             track: Math.max(0, layer.track + trackDelta),
             updatedAt: new Date().toISOString(),
           };
@@ -147,8 +191,13 @@ export function createEditorTimelineEditSlice(
     },
     updateSelectedLayersBounds: (patch) => {
       const state = get();
-      const selectedIds = deps.groupAwareLayerIds(state.project.layers, deps.getSelectedLayerIds(state));
-      const editableLayers = state.project.layers.filter((layer) => selectedIds.includes(layer.id) && !layer.locked);
+      const selectedIds = deps.groupAwareLayerIds(
+        state.project.layers,
+        deps.getSelectedLayerIds(state),
+      );
+      const editableLayers = state.project.layers.filter(
+        (layer) => selectedIds.includes(layer.id) && !layer.locked,
+      );
       const bounds = selectedLayerBounds(editableLayers);
       if (!bounds) return 0;
 
@@ -156,9 +205,13 @@ export function createEditorTimelineEditSlice(
       const targetEnd = finiteNumber(patch.end, bounds.end);
       const targetDuration = Math.max(
         TIMELINE_MIN_LAYER_SECONDS,
-        finiteNumber(patch.duration, patch.end === undefined ? bounds.duration : targetEnd - targetStart),
+        finiteNumber(
+          patch.duration,
+          patch.end === undefined ? bounds.duration : targetEnd - targetStart,
+        ),
       );
-      const scale = targetDuration / Math.max(bounds.duration, TIMELINE_MIN_LAYER_SECONDS);
+      const scale =
+        targetDuration / Math.max(bounds.duration, TIMELINE_MIN_LAYER_SECONDS);
       const editableIds = new Set(editableLayers.map((layer) => layer.id));
       const now = new Date().toISOString();
       let changedCount = 0;
@@ -167,8 +220,12 @@ export function createEditorTimelineEditSlice(
         if (!editableIds.has(layer.id)) return layer;
 
         const nextStart = targetStart + (layer.start - bounds.start) * scale;
-        const nextDuration = Math.max(TIMELINE_MIN_LAYER_SECONDS, layer.duration * scale);
-        if (nextStart === layer.start && nextDuration === layer.duration) return layer;
+        const nextDuration = Math.max(
+          TIMELINE_MIN_LAYER_SECONDS,
+          layer.duration * scale,
+        );
+        if (nextStart === layer.start && nextDuration === layer.duration)
+          return layer;
 
         changedCount += 1;
         return {
@@ -192,20 +249,33 @@ export function createEditorTimelineEditSlice(
     },
     nudgeSelectedLayers: (input) => {
       const state = get();
-      const selectedIds = deps.groupAwareLayerIds(state.project.layers, deps.getSelectedLayerIds(state));
+      const selectedIds = deps.groupAwareLayerIds(
+        state.project.layers,
+        deps.getSelectedLayerIds(state),
+      );
       if (!selectedIds.length) return 0;
 
       const selected = new Set(selectedIds);
-      const selectedBounds = selectedLayerBounds(state.project.layers.filter((layer) => selected.has(layer.id)));
+      const selectedBounds = selectedLayerBounds(
+        state.project.layers.filter((layer) => selected.has(layer.id)),
+      );
       const rippleBoundary =
-        state.project.rippleMode && selectedBounds && typeof input.timeDelta === "number" && input.timeDelta !== 0
+        state.project.rippleMode &&
+        selectedBounds &&
+        typeof input.timeDelta === "number" &&
+        input.timeDelta !== 0
           ? selectedBounds.end
           : null;
       let movedCount = 0;
       const now = new Date().toISOString();
 
       const layers = state.project.layers.map((layer) => {
-        if (rippleBoundary !== null && !selected.has(layer.id) && !layer.locked && layer.start >= rippleBoundary) {
+        if (
+          rippleBoundary !== null &&
+          !selected.has(layer.id) &&
+          !layer.locked &&
+          layer.start >= rippleBoundary
+        ) {
           movedCount += 1;
           return {
             ...layer,
@@ -216,9 +286,13 @@ export function createEditorTimelineEditSlice(
 
         if (!selected.has(layer.id) || layer.locked) return layer;
 
-        const nextStart = deps.snapProjectTime(state.project, Math.max(0, layer.start + (input.timeDelta ?? 0)));
+        const nextStart = deps.snapProjectTime(
+          state.project,
+          Math.max(0, layer.start + (input.timeDelta ?? 0)),
+        );
         const nextTrack = Math.max(0, layer.track + (input.trackDelta ?? 0));
-        if (nextStart === layer.start && nextTrack === layer.track) return layer;
+        if (nextStart === layer.start && nextTrack === layer.track)
+          return layer;
 
         movedCount += 1;
         return {
@@ -242,8 +316,13 @@ export function createEditorTimelineEditSlice(
     },
     alignSelectedLayers: (mode) => {
       const state = get();
-      const selectedIds = deps.groupAwareLayerIds(state.project.layers, deps.getSelectedLayerIds(state));
-      const editableLayers = state.project.layers.filter((layer) => selectedIds.includes(layer.id) && !layer.locked);
+      const selectedIds = deps.groupAwareLayerIds(
+        state.project.layers,
+        deps.getSelectedLayerIds(state),
+      );
+      const editableLayers = state.project.layers.filter(
+        (layer) => selectedIds.includes(layer.id) && !layer.locked,
+      );
       const bounds = selectedLayerBounds(editableLayers);
       if (!bounds) return 0;
 
@@ -254,7 +333,10 @@ export function createEditorTimelineEditSlice(
       const layers = state.project.layers.map((layer) => {
         if (!editableIds.has(layer.id)) return layer;
 
-        const nextStart = Math.max(0, alignedLayerStart(layer, bounds, mode, state.currentTime));
+        const nextStart = Math.max(
+          0,
+          alignedLayerStart(layer, bounds, mode, state.currentTime),
+        );
         if (Math.abs(nextStart - layer.start) < 0.0001) return layer;
 
         alignedCount += 1;
@@ -278,15 +360,22 @@ export function createEditorTimelineEditSlice(
     },
     distributeSelectedLayerDurations: (mode) => {
       const state = get();
-      const selectedIds = deps.groupAwareLayerIds(state.project.layers, deps.getSelectedLayerIds(state));
-      const editableLayers = state.project.layers.filter((layer) => selectedIds.includes(layer.id) && !layer.locked);
+      const selectedIds = deps.groupAwareLayerIds(
+        state.project.layers,
+        deps.getSelectedLayerIds(state),
+      );
+      const editableLayers = state.project.layers.filter(
+        (layer) => selectedIds.includes(layer.id) && !layer.locked,
+      );
       const bounds = selectedLayerBounds(editableLayers);
       if (!bounds || editableLayers.length < 2) return 0;
 
       const now = new Date().toISOString();
       const editableIds = new Set(editableLayers.map((layer) => layer.id));
       const distributedTiming =
-        mode === "fill-selection" ? fillSelectionTiming(editableLayers, bounds) : equalDurationTiming(editableLayers);
+        mode === "fill-selection"
+          ? fillSelectionTiming(editableLayers, bounds)
+          : equalDurationTiming(editableLayers);
       let distributedCount = 0;
 
       const layers = state.project.layers.map((layer) => {
@@ -294,7 +383,10 @@ export function createEditorTimelineEditSlice(
 
         const timing = distributedTiming.get(layer.id);
         if (!timing) return layer;
-        if (Math.abs(timing.start - layer.start) < 0.0001 && Math.abs(timing.duration - layer.duration) < 0.0001) {
+        if (
+          Math.abs(timing.start - layer.start) < 0.0001 &&
+          Math.abs(timing.duration - layer.duration) < 0.0001
+        ) {
           return layer;
         }
 
@@ -320,9 +412,14 @@ export function createEditorTimelineEditSlice(
     },
     centerSelectedLayers: () => {
       const state = get();
-      const selectedIds = deps.groupAwareLayerIds(state.project.layers, deps.getSelectedLayerIds(state));
+      const selectedIds = deps.groupAwareLayerIds(
+        state.project.layers,
+        deps.getSelectedLayerIds(state),
+      );
       const editableIds = new Set(
-        state.project.layers.filter((layer) => selectedIds.includes(layer.id) && !layer.locked).map((layer) => layer.id),
+        state.project.layers
+          .filter((layer) => selectedIds.includes(layer.id) && !layer.locked)
+          .map((layer) => layer.id),
       );
       if (!editableIds.size) return 0;
 
@@ -331,7 +428,8 @@ export function createEditorTimelineEditSlice(
 
       const layers = state.project.layers.map((layer) => {
         if (!editableIds.has(layer.id)) return layer;
-        if (layer.transform.x === 0.5 && layer.transform.y === 0.5) return layer;
+        if (layer.transform.x === 0.5 && layer.transform.y === 0.5)
+          return layer;
 
         centeredCount += 1;
         return {
@@ -353,9 +451,14 @@ export function createEditorTimelineEditSlice(
     },
     fitSelectedLayersToCanvas: (mode) => {
       const state = get();
-      const selectedIds = deps.groupAwareLayerIds(state.project.layers, deps.getSelectedLayerIds(state));
+      const selectedIds = deps.groupAwareLayerIds(
+        state.project.layers,
+        deps.getSelectedLayerIds(state),
+      );
       const editableIds = new Set(
-        state.project.layers.filter((layer) => selectedIds.includes(layer.id) && !layer.locked).map((layer) => layer.id),
+        state.project.layers
+          .filter((layer) => selectedIds.includes(layer.id) && !layer.locked)
+          .map((layer) => layer.id),
       );
       if (!editableIds.size) return 0;
 
@@ -368,8 +471,14 @@ export function createEditorTimelineEditSlice(
         const source = layerSourceDimensions(layer, state.mediaAssets);
         const scale =
           mode === "cover"
-            ? Math.max(state.project.width / source.width, state.project.height / source.height)
-            : Math.min(state.project.width / source.width, state.project.height / source.height);
+            ? Math.max(
+                state.project.width / source.width,
+                state.project.height / source.height,
+              )
+            : Math.min(
+                state.project.width / source.width,
+                state.project.height / source.height,
+              );
         fittedCount += 1;
         return {
           ...layer,
@@ -397,7 +506,12 @@ export function createEditorTimelineEditSlice(
     },
     addBlurredBackgroundForSelectedMediaLayers: () => {
       const state = get();
-      const selectedIds = new Set(deps.groupAwareLayerIds(state.project.layers, deps.getSelectedLayerIds(state)));
+      const selectedIds = new Set(
+        deps.groupAwareLayerIds(
+          state.project.layers,
+          deps.getSelectedLayerIds(state),
+        ),
+      );
       if (!selectedIds.size) return 0;
 
       const now = new Date().toISOString();
@@ -405,11 +519,20 @@ export function createEditorTimelineEditSlice(
       let createdCount = 0;
 
       const layers = state.project.layers.flatMap((layer) => {
-        if (!selectedIds.has(layer.id) || layer.locked || (layer.kind !== "image" && layer.kind !== "video") || !layer.assetId) {
+        if (
+          !selectedIds.has(layer.id) ||
+          layer.locked ||
+          (layer.kind !== "image" && layer.kind !== "video") ||
+          !layer.assetId
+        ) {
           return [layer];
         }
 
-        const background = createBlurredBackgroundLayer(layer, state.project, now);
+        const background = createBlurredBackgroundLayer(
+          layer,
+          state.project,
+          now,
+        );
         createdIds.push(background.id);
         createdCount += 1;
         return [background, layer];
@@ -429,9 +552,13 @@ export function createEditorTimelineEditSlice(
     },
     applyTimelineCutRanges: (ranges: TimelineCutRange[]) => {
       const state = get();
-      const result = applyTimelineCutRangesToLayers(state.project.layers, ranges);
+      const result = applyTimelineCutRangesToLayers(
+        state.project.layers,
+        ranges,
+      );
       const rangeCount = result.ranges.length;
-      const hasTimelineChange = result.changedLayerCount > 0 || result.removedLayerCount > 0;
+      const hasTimelineChange =
+        result.changedLayerCount > 0 || result.removedLayerCount > 0;
 
       if (!rangeCount || !hasTimelineChange) {
         return {
@@ -442,11 +569,17 @@ export function createEditorTimelineEditSlice(
         };
       }
 
-      const nextCurrentTime = shiftTimeAfterCuts(state.currentTime, result.ranges);
+      const nextCurrentTime = shiftTimeAfterCuts(
+        state.currentTime,
+        result.ranges,
+      );
 
       deps.commit((project) => {
         const nextDuration = deps.projectDurationForLayers(
-          Math.max(TIMELINE_MIN_LAYER_SECONDS, project.duration - result.durationRemoved),
+          Math.max(
+            TIMELINE_MIN_LAYER_SECONDS,
+            project.duration - result.durationRemoved,
+          ),
           result.layers,
         );
 
@@ -462,7 +595,10 @@ export function createEditorTimelineEditSlice(
       set({
         selectedLayerId: selectedLayerIds.at(-1) ?? null,
         selectedLayerIds,
-        currentTime: Math.max(0, Math.min(nextCurrentTime, get().project.duration)),
+        currentTime: Math.max(
+          0,
+          Math.min(nextCurrentTime, get().project.duration),
+        ),
       });
 
       return {
@@ -484,7 +620,10 @@ export function createEditorTimelineEditSlice(
       deps.commit((project) => ({
         ...project,
         layers: result.layers,
-        duration: deps.projectDurationForLayers(project.duration, result.layers),
+        duration: deps.projectDurationForLayers(
+          project.duration,
+          result.layers,
+        ),
         updatedAt: new Date().toISOString(),
       }));
 
@@ -493,17 +632,30 @@ export function createEditorTimelineEditSlice(
   };
 }
 
-function applyLayerPatch(layer: TimelineLayer, patch: Partial<TimelineLayer>, updatedAt: string): TimelineLayer {
+function applyLayerPatch(
+  layer: TimelineLayer,
+  patch: Partial<TimelineLayer>,
+  updatedAt: string,
+): TimelineLayer {
   const next = { ...layer, ...patch, updatedAt };
-  const timing = clampLayerTiming(finiteNumber(next.start, layer.start), finiteNumber(next.duration, layer.duration));
+  const timing = clampLayerTiming(
+    finiteNumber(next.start, layer.start),
+    finiteNumber(next.duration, layer.duration),
+  );
 
   return {
     ...next,
     start: timing.start,
     duration: timing.duration,
     trimStart: Math.max(0, finiteNumber(next.trimStart, layer.trimStart)),
-    playbackRate: normalizePlaybackRate(finiteNumber(next.playbackRate, layer.playbackRate), layer.playbackRate),
-    speed: normalizeLayerSpeed(next.speed, finiteNumber(next.playbackRate, layer.playbackRate)),
+    playbackRate: normalizePlaybackRate(
+      finiteNumber(next.playbackRate, layer.playbackRate),
+      layer.playbackRate,
+    ),
+    speed: normalizeLayerSpeed(
+      next.speed,
+      finiteNumber(next.playbackRate, layer.playbackRate),
+    ),
     ...normalizeLayerAudioMix(next),
     motion: normalizeLayerMotion(next.motion),
     tracking: normalizeLayerTrackingAttachment(next.tracking),
@@ -513,7 +665,11 @@ function applyLayerPatch(layer: TimelineLayer, patch: Partial<TimelineLayer>, up
   };
 }
 
-function createBlurredBackgroundLayer(sourceLayer: TimelineLayer, project: EditorProject, now: string): TimelineLayer {
+function createBlurredBackgroundLayer(
+  sourceLayer: TimelineLayer,
+  project: EditorProject,
+  now: string,
+): TimelineLayer {
   return {
     ...sourceLayer,
     id: createId("layer"),
@@ -563,8 +719,13 @@ function selectedLayerBounds(layers: TimelineLayer[]) {
   };
 }
 
-function layerSourceDimensions(layer: TimelineLayer, mediaAssets: MediaAsset[]) {
-  const asset = layer.assetId ? mediaAssets.find((item) => item.id === layer.assetId) : undefined;
+function layerSourceDimensions(
+  layer: TimelineLayer,
+  mediaAssets: MediaAsset[],
+) {
+  const asset = layer.assetId
+    ? mediaAssets.find((item) => item.id === layer.assetId)
+    : undefined;
   const width = finiteNumber(asset?.width, layer.transform.width);
   const height = finiteNumber(asset?.height, layer.transform.height);
   return {
@@ -577,14 +738,25 @@ function rippleMoveBoundary(
   project: EditorProject,
   selectedIds: string[],
   startDelta: number,
-  patch: Partial<Pick<TimelineLayer, "start" | "duration" | "trimStart" | "track">>,
+  patch: Partial<
+    Pick<TimelineLayer, "start" | "duration" | "trimStart" | "track">
+  >,
 ) {
-  if (!project.rippleMode || Math.abs(startDelta) < 0.0001 || patch.duration !== undefined || patch.trimStart !== undefined) {
+  if (
+    !project.rippleMode ||
+    Math.abs(startDelta) < 0.0001 ||
+    patch.duration !== undefined ||
+    patch.trimStart !== undefined
+  ) {
     return null;
   }
 
   const selected = new Set(selectedIds);
-  return selectedLayerBounds(project.layers.filter((layer) => selected.has(layer.id)))?.end ?? null;
+  return (
+    selectedLayerBounds(
+      project.layers.filter((layer) => selected.has(layer.id)),
+    )?.end ?? null
+  );
 }
 
 function alignedLayerStart(
@@ -594,7 +766,8 @@ function alignedLayerStart(
   playheadTime: number,
 ) {
   if (mode === "end") return bounds.end - layer.duration;
-  if (mode === "center") return bounds.start + bounds.duration / 2 - layer.duration / 2;
+  if (mode === "center")
+    return bounds.start + bounds.duration / 2 - layer.duration / 2;
   if (mode === "playhead") return playheadTime;
   return bounds.start;
 }
@@ -602,15 +775,27 @@ function alignedLayerStart(
 function equalDurationTiming(layers: TimelineLayer[]) {
   const averageDuration = Math.max(
     TIMELINE_MIN_LAYER_SECONDS,
-    layers.reduce((sum, layer) => sum + layer.duration, 0) / Math.max(1, layers.length),
+    layers.reduce((sum, layer) => sum + layer.duration, 0) /
+      Math.max(1, layers.length),
   );
 
-  return new Map(layers.map((layer) => [layer.id, { start: layer.start, duration: averageDuration }]));
+  return new Map(
+    layers.map((layer) => [
+      layer.id,
+      { start: layer.start, duration: averageDuration },
+    ]),
+  );
 }
 
-function fillSelectionTiming(layers: TimelineLayer[], bounds: { start: number; duration: number }) {
+function fillSelectionTiming(
+  layers: TimelineLayer[],
+  bounds: { start: number; duration: number },
+) {
   const orderedLayers = timelineOrderedLayers(layers);
-  const segmentDuration = Math.max(TIMELINE_MIN_LAYER_SECONDS, bounds.duration / Math.max(1, orderedLayers.length));
+  const segmentDuration = Math.max(
+    TIMELINE_MIN_LAYER_SECONDS,
+    bounds.duration / Math.max(1, orderedLayers.length),
+  );
 
   return new Map(
     orderedLayers.map((layer, index) => [
@@ -624,7 +809,10 @@ function fillSelectionTiming(layers: TimelineLayer[], bounds: { start: number; d
 }
 
 function timelineOrderedLayers(layers: TimelineLayer[]) {
-  return [...layers].sort((a, b) => a.track - b.track || a.start - b.start || a.name.localeCompare(b.name));
+  return [...layers].sort(
+    (a, b) =>
+      a.track - b.track || a.start - b.start || a.name.localeCompare(b.name),
+  );
 }
 
 function finiteNumber(value: unknown, fallback: number) {

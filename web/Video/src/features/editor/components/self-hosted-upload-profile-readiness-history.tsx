@@ -27,8 +27,12 @@ export function SelfHostedUploadProfileReadinessHistory({
   const importInputRef = useRef<HTMLInputElement>(null);
   const [importError, setImportError] = useState<string | null>(null);
 
-  const activeHistory = activeProfileId ? history.filter((report) => report.profileId === activeProfileId) : [];
-  const visibleHistory = (activeHistory.length > 0 ? activeHistory : history).slice(0, 3);
+  const activeHistory = activeProfileId
+    ? history.filter((report) => report.profileId === activeProfileId)
+    : [];
+  const visibleHistory = (
+    activeHistory.length > 0 ? activeHistory : history
+  ).slice(0, 3);
 
   async function importEvidence(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -37,9 +41,13 @@ export function SelfHostedUploadProfileReadinessHistory({
 
     try {
       setImportError(null);
-      onHistoryChange?.(await importSelfHostedUploadProfileReadinessEvidenceFile(file));
+      onHistoryChange?.(
+        await importSelfHostedUploadProfileReadinessEvidenceFile(file),
+      );
     } catch {
-      setImportError("Profile readiness evidence packet could not be imported.");
+      setImportError(
+        "Profile readiness evidence packet could not be imported.",
+      );
     }
   }
 
@@ -47,9 +55,13 @@ export function SelfHostedUploadProfileReadinessHistory({
     <div className="grid gap-2 rounded-md border border-border p-3">
       <div className="flex items-center justify-between gap-2">
         <div className="min-w-0">
-          <div className="truncate text-sm font-medium">Recent profile checks</div>
+          <div className="truncate text-sm font-medium">
+            Recent profile checks
+          </div>
           <div className="truncate text-xs text-muted-foreground">
-            {activeHistory.length > 0 ? "Latest checks for this storage profile." : "Latest saved checks across storage profiles."}
+            {activeHistory.length > 0
+              ? "Latest checks for this storage profile."
+              : "Latest saved checks across storage profiles."}
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -60,7 +72,9 @@ export function SelfHostedUploadProfileReadinessHistory({
             variant="ghost"
             className="size-7"
             disabled={history.length === 0}
-            onClick={() => downloadSelfHostedUploadProfileReadinessEvidence(history)}
+            onClick={() =>
+              downloadSelfHostedUploadProfileReadinessEvidence(history)
+            }
             aria-label="Download profile readiness evidence"
           >
             <Download className="size-4" />
@@ -75,7 +89,13 @@ export function SelfHostedUploadProfileReadinessHistory({
           >
             <Upload className="size-4" />
           </Button>
-          <input ref={importInputRef} type="file" accept="application/json,.json" className="hidden" onChange={importEvidence} />
+          <input
+            ref={importInputRef}
+            type="file"
+            accept="application/json,.json"
+            className="hidden"
+            onChange={importEvidence}
+          />
         </div>
       </div>
       {visibleHistory.length === 0 ? (
@@ -83,21 +103,34 @@ export function SelfHostedUploadProfileReadinessHistory({
       ) : (
         <div className="grid gap-2">
           {visibleHistory.map((report) => (
-            <div key={`${report.profileId}:${report.checkedAt}`} className="grid gap-1 rounded-md bg-muted/40 p-2">
+            <div
+              key={`${report.profileId}:${report.checkedAt}`}
+              className="grid gap-1 rounded-md bg-muted/40 p-2"
+            >
               <div className="flex items-center justify-between gap-2">
-                <span className="min-w-0 truncate text-xs font-medium">{report.profileName}</span>
-                <Badge variant={readinessBadgeVariant(report.status)}>{readinessStatusLabel(report.status)}</Badge>
+                <span className="min-w-0 truncate text-xs font-medium">
+                  {report.profileName}
+                </span>
+                <Badge variant={readinessBadgeVariant(report.status)}>
+                  {readinessStatusLabel(report.status)}
+                </Badge>
               </div>
               <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
                 <span className="min-w-0 truncate">{report.probeUrl}</span>
-                <span className="shrink-0">{formatCheckedAt(report.checkedAt)}</span>
+                <span className="shrink-0">
+                  {formatCheckedAt(report.checkedAt)}
+                </span>
               </div>
-              <span className="text-xs text-muted-foreground">{report.steps.length} checks saved</span>
+              <span className="text-xs text-muted-foreground">
+                {report.steps.length} checks saved
+              </span>
             </div>
           ))}
         </div>
       )}
-      {importError ? <p className="text-xs text-destructive">{importError}</p> : null}
+      {importError ? (
+        <p className="text-xs text-destructive">{importError}</p>
+      ) : null}
     </div>
   );
 }

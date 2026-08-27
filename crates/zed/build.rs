@@ -88,6 +88,124 @@ fn main() {
             println!("cargo:rustc-link-arg=/stack:{}", 8 * 1024 * 1024);
         }
 
+        // Ensure WebView2Loader.dll is next to the binary (required for GNU targets where
+        // webview2-com-sys links dynamically; MSVC links WebView2LoaderStatic statically).
+        // Do this before the conpty download so the dll is present even if that download fails.
+        {
+            let out_dir = std::env::var("OUT_DIR").unwrap();
+            let out_dir: &std::path::Path = out_dir.as_ref();
+            if let Some(target_dir) = std::path::Path::new(&out_dir)
+                .parent()
+                .and_then(|p| p.parent())
+                .and_then(|p| p.parent())
+            {
+                let webview_dll_target = target_dir.join("WebView2Loader.dll");
+                if !webview_dll_target.exists() {
+                    // Best-effort: copy from the webview2-com-sys build output (if built already)
+                    if let Ok(entries) = std::fs::read_dir(target_dir.join("build")) {
+                        for entry in entries.flatten() {
+                            if !entry
+                                .file_name()
+                                .to_string_lossy()
+                                .starts_with("webview2-com-sys-")
+                            {
+                                continue;
+                            }
+                            let arch = if cfg!(target_arch = "x86_64") {
+                                "x64"
+                            } else if cfg!(target_arch = "aarch64") {
+                                "arm64"
+                            } else {
+                                "x64"
+                            };
+                            let candidate = entry
+                                .path()
+                                .join("out")
+                                .join(arch)
+                                .join("WebView2Loader.dll");
+                            if candidate.exists() {
+                                match std::fs::copy(&candidate, &webview_dll_target) {
+                                    Ok(_) => {
+                                        println!(
+                                            "Copied WebView2Loader.dll to {}",
+                                            webview_dll_target.display()
+                                        );
+                                        break;
+                                    }
+                                    Err(e) => println!(
+                                        "cargo::warning=Failed to copy WebView2Loader.dll from {}: {}",
+                                        candidate.display(),
+                                        e
+                                    ),
+                                }
+                            }
+                        }
+                    }
+                    // Fallback: copy directly from cargo registry checkout (no build output yet)
+                    if !webview_dll_target.exists() {
+                        if let Ok(cargo_home) = std::env::var("CARGO_HOME").or_else(|_| {
+                            std::env::var("USERPROFILE").map(|p| format!("{p}\\.cargo"))
+                        }) {
+                            // Also try G:\Dev\Caches\cargo which is this machine's cargo home
+                            let mut candidates = vec![std::path::PathBuf::from(&cargo_home)];
+                            candidates.push(std::path::PathBuf::from("G:\\Dev\\Caches\\cargo"));
+                            candidates.push(std::path::PathBuf::from(
+                                "G:\\Dev\\Caches\\cargo\\registry\\src",
+                            ));
+                            for base in candidates {
+                                let search_base = if base.join("registry").exists() {
+                                    base.join("registry").join("src")
+                                } else if base.to_string_lossy().contains("registry\\src") {
+                                    base.clone()
+                                } else {
+                                    base.clone()
+                                };
+                                if let Ok(registries) = std::fs::read_dir(&search_base) {
+                                    for reg in registries.flatten() {
+                                        let webview_dir =
+                                            reg.path().join("webview2-com-sys-0.38.2");
+                                        let arch = if cfg!(target_arch = "x86_64") {
+                                            "x64"
+                                        } else if cfg!(target_arch = "aarch64") {
+                                            "arm64"
+                                        } else {
+                                            "x64"
+                                        };
+                                        let candidate =
+                                            webview_dir.join(arch).join("WebView2Loader.dll");
+                                        if candidate.exists() {
+                                            match std::fs::copy(&candidate, &webview_dll_target) {
+                                                Ok(_) => {
+                                                    println!(
+                                                        "Copied WebView2Loader.dll from registry to {}",
+                                                        webview_dll_target.display()
+                                                    );
+                                                    break;
+                                                }
+                                                Err(e) => println!(
+                                                    "cargo::warning=Failed to copy WebView2Loader.dll from registry {}: {}",
+                                                    candidate.display(),
+                                                    e
+                                                ),
+                                            }
+                                        }
+                                    }
+                                }
+                                if webview_dll_target.exists() {
+                                    break;
+                                }
+                            }
+                        }
+                        if !webview_dll_target.exists() {
+                            println!(
+                                "cargo::warning=WebView2Loader.dll not found next to binary and no candidate found; runtime will fail with 0xC0000135 if using GNU toolchain"
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
         if cfg!(target_arch = "x86_64") || cfg!(target_arch = "aarch64") {
             let out_dir = std::env::var("OUT_DIR").unwrap();
             let out_dir: &std::path::Path = out_dir.as_ref();

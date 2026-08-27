@@ -4,6 +4,11 @@ import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { AlertCircle } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 import { useEditorStore } from "@/features/editor/state/editor-store";
 import { restoreBrowserMediaAssets } from "@/lib/media/browser-media-store";
 import { restoreTauriMediaAssets } from "@/lib/media/tauri-media";
@@ -16,6 +21,14 @@ import {
   loadLocalProject,
   trySaveLocalProject,
 } from "@/lib/projects/local-project-store";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { ProjectTopbar } from "@/features/editor/components/project-topbar";
 import { ToolRail } from "@/features/editor/components/tool-rail";
 import { MediaBin } from "@/features/editor/components/media-bin";
@@ -26,12 +39,6 @@ import { BrandFontLoader } from "@/features/editor/components/brand-font-loader"
 import { useEditorShortcuts } from "@/features/editor/hooks/use-editor-shortcuts";
 import { usePlaybackClock } from "@/features/editor/hooks/use-playback-clock";
 import { preloadFfmpeg } from "@/lib/render/ffmpeg-loader";
-
-const AiAssistantPanel = lazy(() =>
-  import("@/features/editor/components/ai-assistant-panel").then((m) => ({
-    default: m.AiAssistantPanel,
-  })),
-);
 
 const ExportPanel = lazy(() =>
   import("@/features/editor/components/export-panel").then((m) => ({
@@ -62,6 +69,7 @@ export function EditorShell({ embedded = false }: EditorShellProps) {
   const loadProject = useEditorStore((state) => state.loadProject);
   const restoreAttemptedRef = useRef(new Set<string>());
   const [notice, setNotice] = useState<EditorNotice | null>(null);
+  const [exportOpen, setExportOpen] = useState(false);
   usePlaybackClock();
   useEditorShortcuts();
   const visibleNotice =
@@ -168,23 +176,16 @@ export function EditorShell({ embedded = false }: EditorShellProps) {
     preloadFfmpeg().catch(() => {});
   }, []);
 
-  const workspaceClassName = embedded
-    ? "flex min-h-0 flex-1 overflow-hidden"
-    : "flex min-h-0 flex-1 overflow-hidden";
-  const mediaBinClassName = embedded
-    ? "hidden min-h-0 w-[clamp(220px,24vw,320px)] shrink-0 resize-x overflow-hidden lg:block"
-    : "hidden min-h-0 w-[clamp(220px,24vw,320px)] shrink-0 resize-x overflow-hidden lg:block";
-  const inspectorClassName = embedded
-    ? "hidden min-h-0 w-[clamp(280px,25vw,360px)] shrink-0 resize-x overflow-hidden border-l border-border xl:grid xl:grid-rows-[minmax(0,1fr)_minmax(180px,260px)]"
-    : "hidden min-h-0 w-[clamp(280px,25vw,360px)] shrink-0 resize-x overflow-hidden border-l border-border xl:grid xl:grid-rows-[minmax(0,1fr)_minmax(180px,260px)]";
-
   return (
     <main
       className="flex h-dvh min-h-0 flex-col overflow-hidden bg-background"
       aria-label="Essence Studio editor"
     >
       <BrandFontLoader />
-      <ProjectTopbar embedded={embedded} />
+      <ProjectTopbar
+        embedded={embedded}
+        onExportClick={() => setExportOpen(true)}
+      />
       {visibleNotice ? (
         <div className="border-t border-border bg-card px-3 py-2">
           <Alert variant={visibleNotice.tone} className="rounded-md py-2">
@@ -194,43 +195,84 @@ export function EditorShell({ embedded = false }: EditorShellProps) {
         </div>
       ) : null}
       <div
-        className={workspaceClassName}
+        className="flex min-h-0 flex-1 overflow-hidden"
         role="region"
         aria-label="Editor workspace"
       >
         {embedded ? null : <ToolRail />}
-        <div className={mediaBinClassName} data-editor-region="media-library" tabIndex={-1}>
-          <MediaBin />
-        </div>
-        <section
-          className="flex min-w-0 flex-1 flex-col bg-background"
-          aria-label="Preview and timeline workspace"
+        <ResizablePanelGroup
+          direction="horizontal"
+          className="min-h-0 flex-1 overflow-hidden"
         >
-          <div className="relative flex min-h-0 flex-1 flex-col">
-            <PreviewCanvas />
-            {embedded ? (
-              <div className="pointer-events-none absolute inset-x-0 bottom-3 z-20 flex justify-center px-3">
-                <ToolRail variant="bottom" />
-              </div>
-            ) : null}
-          </div>
-          <TimelinePanel />
-        </section>
-        <aside
-          className={inspectorClassName}
-          aria-label="Inspector and assistant"
-        >
-          <InspectorPanel />
-          <div
-            className="min-h-0 border-t border-border"
-            role="region"
-            aria-label="AI assistant"
+          <ResizablePanel
+            defaultSize={24}
+            minSize={18}
+            maxSize={38}
+            className="min-w-0"
           >
-            <Suspense fallback={null}><AiAssistantPanel /></Suspense>
-          </div>
-        </aside>
+            <div
+              data-editor-region="media-library"
+              tabIndex={-1}
+              className="flex h-full min-w-0 flex-col overflow-hidden"
+            >
+              <MediaBin />
+            </div>
+          </ResizablePanel>
+          <ResizableHandle />
+          <ResizablePanel defaultSize={48} minSize={32} className="min-w-0">
+            <ResizablePanelGroup
+              direction="vertical"
+              className="h-full min-h-0"
+            >
+              <ResizablePanel defaultSize={70} minSize={40} className="min-h-0">
+                <div className="relative flex h-full min-h-0 flex-col overflow-hidden bg-background">
+                  <PreviewCanvas showBottomTools={embedded} />
+                </div>
+              </ResizablePanel>
+              <ResizableHandle />
+              <ResizablePanel
+                defaultSize={30}
+                minSize={15}
+                maxSize={50}
+                className="min-h-0"
+              >
+                <TimelinePanel />
+              </ResizablePanel>
+            </ResizablePanelGroup>
+          </ResizablePanel>
+          <ResizableHandle />
+          <ResizablePanel
+            defaultSize={28}
+            minSize={18}
+            maxSize={36}
+            className="min-w-0"
+          >
+            <aside
+              className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden border-l border-border bg-background"
+              aria-label="Inspector and assistant"
+            >
+              <div className="h-full min-h-0 min-w-0 overflow-hidden">
+                <InspectorPanel />
+              </div>
+            </aside>
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </div>
-      <Suspense fallback={null}><ExportPanel /></Suspense>
+      <Dialog open={exportOpen} onOpenChange={setExportOpen}>
+        <DialogContent className="max-h-[90vh] w-full max-w-5xl overflow-hidden p-0">
+          <DialogHeader className="px-4 pt-4">
+            <DialogTitle>Export</DialogTitle>
+            <DialogDescription>
+              Choose preset, check QA, and render.
+            </DialogDescription>
+          </DialogHeader>
+          <ScrollArea className="max-h-[75vh] w-full max-w-full min-w-0 overflow-hidden px-4 pb-4">
+            <Suspense fallback={null}>
+              <ExportPanel />
+            </Suspense>
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }

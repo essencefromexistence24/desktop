@@ -1,7 +1,11 @@
 "use client";
 
 import { createId } from "@/lib/editor/factory";
-import type { EditorProject, MediaAsset, MediaCollection } from "@/lib/editor/types";
+import type {
+  EditorProject,
+  MediaAsset,
+  MediaCollection,
+} from "@/lib/editor/types";
 import { createEditorDocumentSnapshot } from "@/features/editor/state/editor-store-core";
 import type {
   EditorState,
@@ -27,13 +31,23 @@ type EditorMediaDeps = {
   cleanMediaCollectionName: (name: string) => string;
   upsertAsset: (assets: MediaAsset[], asset: MediaAsset) => MediaAsset[];
   revokeRemovedMediaRecovery: (recovery: RemovedMediaRecovery | null) => void;
-  projectDurationForLayers: (baseDuration: number, layers: EditorProject["layers"]) => number;
+  projectDurationForLayers: (
+    baseDuration: number,
+    layers: EditorProject["layers"],
+  ) => number;
   clamp: (value: number, min: number, max: number) => number;
 };
 
-export function createEditorMediaSlice(set: EditorStoreSet, get: EditorStoreGet, deps: EditorMediaDeps): EditorMediaSlice {
+export function createEditorMediaSlice(
+  set: EditorStoreSet,
+  get: EditorStoreGet,
+  deps: EditorMediaDeps,
+): EditorMediaSlice {
   return {
-    addMediaAsset: (asset) => set((state) => ({ mediaAssets: deps.upsertAsset(state.mediaAssets, asset) })),
+    addMediaAsset: (asset) =>
+      set((state) => ({
+        mediaAssets: deps.upsertAsset(state.mediaAssets, asset),
+      })),
     toggleFavoriteMediaAsset: (assetId) => {
       const state = get();
       const exists = state.mediaAssets.some((asset) => asset.id === assetId);
@@ -72,18 +86,26 @@ export function createEditorMediaSlice(set: EditorStoreSet, get: EditorStoreGet,
     },
     removeMediaCollection: (collectionId) => {
       const state = get();
-      if (!deps.mediaCollections(state.project).some((collection) => collection.id === collectionId)) return;
+      if (
+        !deps
+          .mediaCollections(state.project)
+          .some((collection) => collection.id === collectionId)
+      )
+        return;
 
       const now = new Date().toISOString();
       deps.commit((project) => ({
         ...project,
-        mediaCollections: deps.mediaCollections(project).filter((collection) => collection.id !== collectionId),
+        mediaCollections: deps
+          .mediaCollections(project)
+          .filter((collection) => collection.id !== collectionId),
         updatedAt: now,
       }));
     },
     toggleMediaAssetCollection: (collectionId, assetId) => {
       const state = get();
-      if (!state.mediaAssets.some((asset) => asset.id === assetId)) return false;
+      if (!state.mediaAssets.some((asset) => asset.id === assetId))
+        return false;
 
       let nextMembership = false;
       const now = new Date().toISOString();
@@ -120,18 +142,31 @@ export function createEditorMediaSlice(set: EditorStoreSet, get: EditorStoreGet,
       }
 
       const removedLayerIds = new Set(
-        state.project.layers.filter((layer) => layer.assetId === assetId).map((layer) => layer.id),
+        state.project.layers
+          .filter((layer) => layer.assetId === assetId)
+          .map((layer) => layer.id),
       );
-      const removedLayers = state.project.layers.filter((layer) => removedLayerIds.has(layer.id));
-      const layers = state.project.layers.filter((layer) => !removedLayerIds.has(layer.id));
-      const selectedLayerIds = state.selectedLayerIds.filter((layerId) => !removedLayerIds.has(layerId));
-      const duration = deps.projectDurationForLayers(state.project.duration, layers);
+      const removedLayers = state.project.layers.filter((layer) =>
+        removedLayerIds.has(layer.id),
+      );
+      const layers = state.project.layers.filter(
+        (layer) => !removedLayerIds.has(layer.id),
+      );
+      const selectedLayerIds = state.selectedLayerIds.filter(
+        (layerId) => !removedLayerIds.has(layerId),
+      );
+      const duration = deps.projectDurationForLayers(
+        state.project.duration,
+        layers,
+      );
       const now = new Date().toISOString();
 
       deps.revokeRemovedMediaRecovery(state.lastRemovedMedia);
       set({
         mediaAssets: state.mediaAssets.filter((item) => item.id !== assetId),
-        favoriteMediaAssetIds: state.favoriteMediaAssetIds.filter((id) => id !== assetId),
+        favoriteMediaAssetIds: state.favoriteMediaAssetIds.filter(
+          (id) => id !== assetId,
+        ),
         lastRemovedMedia: {
           asset,
           layers: removedLayers,
@@ -140,11 +175,13 @@ export function createEditorMediaSlice(set: EditorStoreSet, get: EditorStoreGet,
         project: {
           ...state.project,
           layers,
-          mediaCollections: deps.mediaCollections(state.project).map((collection) => ({
-            ...collection,
-            assetIds: collection.assetIds.filter((id) => id !== assetId),
-            updatedAt: now,
-          })),
+          mediaCollections: deps
+            .mediaCollections(state.project)
+            .map((collection) => ({
+              ...collection,
+              assetIds: collection.assetIds.filter((id) => id !== assetId),
+              updatedAt: now,
+            })),
           duration,
           updatedAt: now,
         },
@@ -165,8 +202,12 @@ export function createEditorMediaSlice(set: EditorStoreSet, get: EditorStoreGet,
       const recovery = state.lastRemovedMedia;
       if (!recovery) return false;
 
-      const existingLayerIds = new Set(state.project.layers.map((layer) => layer.id));
-      const restoredLayers = recovery.layers.filter((layer) => !existingLayerIds.has(layer.id));
+      const existingLayerIds = new Set(
+        state.project.layers.map((layer) => layer.id),
+      );
+      const restoredLayers = recovery.layers.filter(
+        (layer) => !existingLayerIds.has(layer.id),
+      );
       const layers = [...state.project.layers, ...restoredLayers];
       const now = new Date().toISOString();
 
@@ -176,7 +217,10 @@ export function createEditorMediaSlice(set: EditorStoreSet, get: EditorStoreGet,
         project: {
           ...state.project,
           layers,
-          duration: deps.projectDurationForLayers(state.project.duration, layers),
+          duration: deps.projectDurationForLayers(
+            state.project.duration,
+            layers,
+          ),
           updatedAt: now,
         },
         selectedLayerId: restoredLayers.at(-1)?.id ?? state.selectedLayerId,

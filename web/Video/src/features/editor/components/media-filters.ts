@@ -1,4 +1,12 @@
-export type MediaFilter = "all" | "available" | "favorites" | "collection" | "missing" | "recoverable" | "used" | "unused";
+export type MediaFilter =
+  | "all"
+  | "available"
+  | "favorites"
+  | "collection"
+  | "missing"
+  | "recoverable"
+  | "used"
+  | "unused";
 
 export const mediaFilters: Array<{ value: MediaFilter; label: string }> = [
   { value: "all", label: "All" },

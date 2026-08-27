@@ -2,7 +2,10 @@
 
 import type { MutableRefObject } from "react";
 import { useEffect, useRef, useState } from "react";
-import { drawChromaKeyedMedia, hasActiveChromaKey } from "@/lib/editor/chroma-key";
+import {
+  drawChromaKeyedMedia,
+  hasActiveChromaKey,
+} from "@/lib/editor/chroma-key";
 import type { TimelineLayer } from "@/lib/editor/types";
 
 type ChromaKeyPreviewMediaProps = {
@@ -13,7 +16,13 @@ type ChromaKeyPreviewMediaProps = {
   mediaRef: MutableRefObject<HTMLMediaElement | null>;
 };
 
-export function ChromaKeyPreviewMedia({ layer, assetUrl, localTime, isPlaying, mediaRef }: ChromaKeyPreviewMediaProps) {
+export function ChromaKeyPreviewMedia({
+  layer,
+  assetUrl,
+  localTime,
+  isPlaying,
+  mediaRef,
+}: ChromaKeyPreviewMediaProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
   const [readyVersion, setReadyVersion] = useState(0);
@@ -23,18 +32,36 @@ export function ChromaKeyPreviewMedia({ layer, assetUrl, localTime, isPlaying, m
 
     const paint = () => {
       const canvas = canvasRef.current;
-      const media = layer.kind === "video" ? videoElement(mediaRef.current) : imageRef.current;
-      if (!canvas || !media || !hasActiveChromaKey(layer.style.chromaKey)) return;
+      const media =
+        layer.kind === "video"
+          ? videoElement(mediaRef.current)
+          : imageRef.current;
+      if (!canvas || !media || !hasActiveChromaKey(layer.style.chromaKey))
+        return;
 
-      const width = Math.max(1, Math.round(canvas.clientWidth || layer.transform.width));
-      const height = Math.max(1, Math.round(canvas.clientHeight || layer.transform.height));
+      const width = Math.max(
+        1,
+        Math.round(canvas.clientWidth || layer.transform.width),
+      );
+      const height = Math.max(
+        1,
+        Math.round(canvas.clientHeight || layer.transform.height),
+      );
       if (canvas.width !== width) canvas.width = width;
       if (canvas.height !== height) canvas.height = height;
 
       const context = canvas.getContext("2d", { willReadFrequently: true });
       if (!context) return;
       context.clearRect(0, 0, canvas.width, canvas.height);
-      drawChromaKeyedMedia(context, media, layer, 0, 0, canvas.width, canvas.height);
+      drawChromaKeyedMedia(
+        context,
+        media,
+        layer,
+        0,
+        0,
+        canvas.width,
+        canvas.height,
+      );
     };
 
     const tick = () => {

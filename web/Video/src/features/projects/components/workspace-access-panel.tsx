@@ -5,7 +5,13 @@ import { KeyRound, RotateCcw, ShieldCheck, UserPlus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   createWorkspaceInvitation,
   listProjectPermissionOverrides,
@@ -18,7 +24,11 @@ import {
   type WorkspaceAuditEvent,
   type WorkspaceInvitation,
 } from "@/lib/projects/collaboration-store";
-import { createWorkspacePermissionSet, workspaceRoleLabels, type WorkspaceRole } from "@/lib/projects/workspace-permissions";
+import {
+  createWorkspacePermissionSet,
+  workspaceRoleLabels,
+  type WorkspaceRole,
+} from "@/lib/projects/workspace-permissions";
 
 type WorkspacePermissionSet = ReturnType<typeof createWorkspacePermissionSet>;
 
@@ -30,9 +40,15 @@ type WorkspaceAccessPanelProps = {
 
 const workspaceRoles: WorkspaceRole[] = ["owner", "editor", "viewer"];
 
-export function WorkspaceAccessPanel({ projectId, activeRole, permissions }: WorkspaceAccessPanelProps) {
+export function WorkspaceAccessPanel({
+  projectId,
+  activeRole,
+  permissions,
+}: WorkspaceAccessPanelProps) {
   const [invitations, setInvitations] = useState<WorkspaceInvitation[]>([]);
-  const [permissionOverrides, setPermissionOverrides] = useState<ProjectPermissionOverride[]>([]);
+  const [permissionOverrides, setPermissionOverrides] = useState<
+    ProjectPermissionOverride[]
+  >([]);
   const [auditEvents, setAuditEvents] = useState<WorkspaceAuditEvent[]>([]);
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<WorkspaceRole>("editor");
@@ -41,25 +57,48 @@ export function WorkspaceAccessPanel({ projectId, activeRole, permissions }: Wor
   const [message, setMessage] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
 
-  const canSeeAccessControls = permissions.canManageInvites || permissions.canManageProjectPermissions;
-  const pendingInvitations = useMemo(() => invitations.filter((invitation) => invitation.status === "pending"), [invitations]);
+  const canSeeAccessControls =
+    permissions.canManageInvites || permissions.canManageProjectPermissions;
+  const pendingInvitations = useMemo(
+    () => invitations.filter((invitation) => invitation.status === "pending"),
+    [invitations],
+  );
 
   async function refresh() {
-    const [nextInvitations, nextOverrides, nextAuditEvents] = await Promise.all([
-      permissions.canManageInvites ? listWorkspaceInvitations() : Promise.resolve([]),
-      permissions.canManageProjectPermissions ? listProjectPermissionOverrides(projectId) : Promise.resolve([]),
-      permissions.canViewAuditHistory ? listWorkspaceAuditEvents(24, activeRole) : Promise.resolve([]),
-    ]);
+    const [nextInvitations, nextOverrides, nextAuditEvents] = await Promise.all(
+      [
+        permissions.canManageInvites
+          ? listWorkspaceInvitations()
+          : Promise.resolve([]),
+        permissions.canManageProjectPermissions
+          ? listProjectPermissionOverrides(projectId)
+          : Promise.resolve([]),
+        permissions.canViewAuditHistory
+          ? listWorkspaceAuditEvents(24, activeRole)
+          : Promise.resolve([]),
+      ],
+    );
     setInvitations(nextInvitations);
     setPermissionOverrides(nextOverrides);
     setAuditEvents(nextAuditEvents);
   }
 
   useEffect(() => {
-    void refresh().catch(() => setMessage("Workspace access history could not be loaded."));
-  }, [projectId, activeRole, permissions.canManageInvites, permissions.canManageProjectPermissions, permissions.canViewAuditHistory]);
+    void refresh().catch(() =>
+      setMessage("Workspace access history could not be loaded."),
+    );
+  }, [
+    projectId,
+    activeRole,
+    permissions.canManageInvites,
+    permissions.canManageProjectPermissions,
+    permissions.canViewAuditHistory,
+  ]);
 
-  async function runAction(action: () => Promise<void>, failureMessage: string) {
+  async function runAction(
+    action: () => Promise<void>,
+    failureMessage: string,
+  ) {
     setIsPending(true);
     setMessage(null);
     try {
@@ -74,7 +113,11 @@ export function WorkspaceAccessPanel({ projectId, activeRole, permissions }: Wor
 
   async function inviteMember() {
     await runAction(async () => {
-      const invitation = await createWorkspaceInvitation({ email: inviteEmail, role: inviteRole, actorRole: activeRole });
+      const invitation = await createWorkspaceInvitation({
+        email: inviteEmail,
+        role: inviteRole,
+        actorRole: activeRole,
+      });
       if (!invitation) {
         setMessage("Enter a valid invitation email.");
         return;
@@ -91,7 +134,12 @@ export function WorkspaceAccessPanel({ projectId, activeRole, permissions }: Wor
 
   async function setProjectAccess() {
     await runAction(async () => {
-      const override = await setProjectPermissionOverride({ projectId, memberEmail: permissionEmail, role: permissionRole, actorRole: activeRole });
+      const override = await setProjectPermissionOverride({
+        projectId,
+        memberEmail: permissionEmail,
+        role: permissionRole,
+        actorRole: activeRole,
+      });
       if (!override) {
         setMessage("Enter a valid member email for project access.");
         return;
@@ -111,14 +159,24 @@ export function WorkspaceAccessPanel({ projectId, activeRole, permissions }: Wor
       <div className="flex items-center justify-between gap-3">
         <div>
           <div className="font-medium">Access controls</div>
-          <p className="text-xs text-muted-foreground">Invite reviewers, scope this project, and keep a local audit trail.</p>
+          <p className="text-xs text-muted-foreground">
+            Invite reviewers, scope this project, and keep a local audit trail.
+          </p>
         </div>
-        <Badge variant={permissions.canManageProjectPermissions ? "default" : "secondary"}>
+        <Badge
+          variant={
+            permissions.canManageProjectPermissions ? "default" : "secondary"
+          }
+        >
           {workspaceRoleLabels[activeRole]}
         </Badge>
       </div>
 
-      {message ? <div className="rounded-md border border-destructive/30 p-2 text-sm text-destructive">{message}</div> : null}
+      {message ? (
+        <div className="rounded-md border border-destructive/30 p-2 text-sm text-destructive">
+          {message}
+        </div>
+      ) : null}
 
       {!canSeeAccessControls ? (
         <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">
@@ -133,9 +191,22 @@ export function WorkspaceAccessPanel({ projectId, activeRole, permissions }: Wor
             Pending invites
           </div>
           <div className="grid gap-2 sm:grid-cols-[1fr_120px_auto]">
-            <Input value={inviteEmail} onChange={(event) => setInviteEmail(event.target.value)} placeholder="teammate@example.com" disabled={isPending} />
-            <RoleSelect value={inviteRole} onChange={setInviteRole} disabled={isPending} />
-            <Button size="sm" onClick={inviteMember} disabled={!inviteEmail.trim() || isPending}>
+            <Input
+              value={inviteEmail}
+              onChange={(event) => setInviteEmail(event.target.value)}
+              placeholder="teammate@example.com"
+              disabled={isPending}
+            />
+            <RoleSelect
+              value={inviteRole}
+              onChange={setInviteRole}
+              disabled={isPending}
+            />
+            <Button
+              size="sm"
+              onClick={inviteMember}
+              disabled={!inviteEmail.trim() || isPending}
+            >
               Invite
             </Button>
           </div>
@@ -160,9 +231,22 @@ export function WorkspaceAccessPanel({ projectId, activeRole, permissions }: Wor
             Project access overrides
           </div>
           <div className="grid gap-2 sm:grid-cols-[1fr_120px_auto]">
-            <Input value={permissionEmail} onChange={(event) => setPermissionEmail(event.target.value)} placeholder="member@example.com" disabled={isPending} />
-            <RoleSelect value={permissionRole} onChange={setPermissionRole} disabled={isPending} />
-            <Button size="sm" onClick={setProjectAccess} disabled={!permissionEmail.trim() || isPending}>
+            <Input
+              value={permissionEmail}
+              onChange={(event) => setPermissionEmail(event.target.value)}
+              placeholder="member@example.com"
+              disabled={isPending}
+            />
+            <RoleSelect
+              value={permissionRole}
+              onChange={setPermissionRole}
+              disabled={isPending}
+            />
+            <Button
+              size="sm"
+              onClick={setProjectAccess}
+              disabled={!permissionEmail.trim() || isPending}
+            >
               Set access
             </Button>
           </div>
@@ -189,19 +273,28 @@ export function WorkspaceAccessPanel({ projectId, activeRole, permissions }: Wor
           {auditEvents.length ? (
             <div className="max-h-44 space-y-1 overflow-y-auto pr-1">
               {auditEvents.map((event) => (
-                <div key={event.id} className="grid gap-1 rounded-md border border-border px-2 py-1.5 text-sm sm:grid-cols-[1fr_auto] sm:items-center">
+                <div
+                  key={event.id}
+                  className="grid gap-1 rounded-md border border-border px-2 py-1.5 text-sm sm:grid-cols-[1fr_auto] sm:items-center"
+                >
                   <div className="min-w-0">
                     <div className="truncate font-medium">
                       {event.targetType} {event.action}
                     </div>
-                    <div className="truncate text-xs text-muted-foreground">{event.detail}</div>
+                    <div className="truncate text-xs text-muted-foreground">
+                      {event.detail}
+                    </div>
                   </div>
-                  <div className="text-xs text-muted-foreground">{new Date(event.createdAt).toLocaleString()}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {new Date(event.createdAt).toLocaleString()}
+                  </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">No access events yet.</div>
+            <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">
+              No access events yet.
+            </div>
           )}
         </div>
       ) : null}
@@ -209,9 +302,21 @@ export function WorkspaceAccessPanel({ projectId, activeRole, permissions }: Wor
   );
 }
 
-function RoleSelect({ value, onChange, disabled }: { value: WorkspaceRole; onChange: (value: WorkspaceRole) => void; disabled?: boolean }) {
+function RoleSelect({
+  value,
+  onChange,
+  disabled,
+}: {
+  value: WorkspaceRole;
+  onChange: (value: WorkspaceRole) => void;
+  disabled?: boolean;
+}) {
   return (
-    <Select value={value} onValueChange={(nextValue) => onChange(nextValue as WorkspaceRole)} disabled={disabled}>
+    <Select
+      value={value}
+      onValueChange={(nextValue) => onChange(nextValue as WorkspaceRole)}
+      disabled={disabled}
+    >
       <SelectTrigger>
         <SelectValue />
       </SelectTrigger>
@@ -231,23 +336,43 @@ function AccessRows({
   empty,
   disabled,
 }: {
-  rows: Array<{ id: string; title: string; meta: string; actionLabel: string; onAction: () => void }>;
+  rows: Array<{
+    id: string;
+    title: string;
+    meta: string;
+    actionLabel: string;
+    onAction: () => void;
+  }>;
   empty: string;
   disabled?: boolean;
 }) {
   if (!rows.length) {
-    return <div className="rounded-md border border-dashed border-border p-3 text-sm text-muted-foreground">{empty}</div>;
+    return (
+      <div className="rounded-md border border-dashed border-border p-3 text-sm text-muted-foreground">
+        {empty}
+      </div>
+    );
   }
 
   return (
     <div className="space-y-1">
       {rows.map((row) => (
-        <div key={row.id} className="flex items-center justify-between gap-2 rounded-md border border-border px-2 py-1.5 text-sm">
+        <div
+          key={row.id}
+          className="flex items-center justify-between gap-2 rounded-md border border-border px-2 py-1.5 text-sm"
+        >
           <div className="min-w-0">
             <div className="truncate font-medium">{row.title}</div>
-            <div className="truncate text-xs text-muted-foreground">{row.meta}</div>
+            <div className="truncate text-xs text-muted-foreground">
+              {row.meta}
+            </div>
           </div>
-          <Button size="sm" variant="ghost" onClick={row.onAction} disabled={disabled}>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={row.onAction}
+            disabled={disabled}
+          >
             <RotateCcw className="size-3.5" />
             {row.actionLabel}
           </Button>

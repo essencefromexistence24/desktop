@@ -9,7 +9,7 @@ import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROUTE_DIR = path.resolve(__dirname, "..", "route");
+const ROUTE_DIR = path.resolve(__dirname, "..");
 const OUT_FILE = path.resolve(__dirname, "..", "src", "lib", "ai", "providers.generated.ts");
 
 interface ModelEntry {
@@ -82,7 +82,7 @@ function escapeRegex(s: string): string {
 
 function readRegistryModels(): Map<string, ModelEntry[]> {
   const models = new Map<string, ModelEntry[]>();
-  const registryDir = path.join(ROUTE_DIR, "open-sse", "config", "providers", "registry");
+  const registryDir = path.join(ROUTE_DIR, "route", "open-sse", "config", "providers", "registry");
   if (!fs.existsSync(registryDir)) return models;
 
   const entries = fs.readdirSync(registryDir, { withFileTypes: true });

@@ -8,7 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { authClient } from "@/lib/auth/client";
-import { assertClientApiRuntime, isClientApiUnavailableError, useHasClientApiRuntime } from "@/lib/runtime/client-api";
+import {
+  assertClientApiRuntime,
+  isClientApiUnavailableError,
+  useHasClientApiRuntime,
+} from "@/lib/runtime/client-api";
 
 export function AuthPanel() {
   const [mode, setMode] = useState("sign-in");
@@ -32,7 +36,11 @@ export function AuthPanel() {
       assertClientApiRuntime();
       const result =
         mode === "sign-up"
-          ? await authClient.signUp.email({ email, password, name: name || email.split("@")[0] })
+          ? await authClient.signUp.email({
+              email,
+              password,
+              name: name || email.split("@")[0],
+            })
           : await authClient.signIn.email({ email, password });
 
       if (result.error) {
@@ -40,9 +48,17 @@ export function AuthPanel() {
         return;
       }
 
-      setMessage(mode === "sign-up" ? "Account created. You are signed in." : "Signed in.");
+      setMessage(
+        mode === "sign-up"
+          ? "Account created. You are signed in."
+          : "Signed in.",
+      );
     } catch (error) {
-      setMessage(isClientApiUnavailableError(error) ? "Accounts are unavailable in this desktop build." : authFailureMessage(mode));
+      setMessage(
+        isClientApiUnavailableError(error)
+          ? "Accounts are unavailable in this desktop build."
+          : authFailureMessage(mode),
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -60,21 +76,51 @@ export function AuthPanel() {
             <TabsTrigger value="sign-up">Create</TabsTrigger>
           </TabsList>
           <TabsContent value="sign-in" className="mt-4 space-y-3">
-            <AuthFields email={email} password={password} setEmail={setEmail} setPassword={setPassword} />
+            <AuthFields
+              email={email}
+              password={password}
+              setEmail={setEmail}
+              setPassword={setPassword}
+            />
           </TabsContent>
           <TabsContent value="sign-up" className="mt-4 space-y-3">
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
-              <Input id="name" value={name} onChange={(event) => setName(event.target.value)} />
+              <Input
+                id="name"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+              />
             </div>
-            <AuthFields email={email} password={password} setEmail={setEmail} setPassword={setPassword} />
+            <AuthFields
+              email={email}
+              password={password}
+              setEmail={setEmail}
+              setPassword={setPassword}
+            />
           </TabsContent>
         </Tabs>
-        <Button className="mt-4 w-full" onClick={submit} disabled={isSubmitting || !email || !password || !canUseAccount}>
-          {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : mode === "sign-up" ? "Create account" : "Sign in"}
+        <Button
+          className="mt-4 w-full"
+          onClick={submit}
+          disabled={isSubmitting || !email || !password || !canUseAccount}
+        >
+          {isSubmitting ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : mode === "sign-up" ? (
+            "Create account"
+          ) : (
+            "Sign in"
+          )}
         </Button>
-        {!canUseAccount ? <p className="mt-3 text-sm text-muted-foreground">Accounts are unavailable in this desktop build.</p> : null}
-        {message ? <p className="mt-3 text-sm text-muted-foreground">{message}</p> : null}
+        {!canUseAccount ? (
+          <p className="mt-3 text-sm text-muted-foreground">
+            Accounts are unavailable in this desktop build.
+          </p>
+        ) : null}
+        {message ? (
+          <p className="mt-3 text-sm text-muted-foreground">{message}</p>
+        ) : null}
       </CardContent>
     </Card>
   );
@@ -101,11 +147,21 @@ function AuthFields({
     <>
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+        <Input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+        />
       </div>
       <div className="space-y-2">
         <Label htmlFor="password">Password</Label>
-        <Input id="password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+        <Input
+          id="password"
+          type="password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+        />
       </div>
     </>
   );

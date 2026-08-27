@@ -24,7 +24,10 @@ import {
   type ProjectFolder,
   type ProjectFolderAssignment,
 } from "@/lib/projects/collaboration-store";
-import type { LocalProjectRecord, LocalProjectTrashRecord } from "@/lib/projects/local-project-record";
+import type {
+  LocalProjectRecord,
+  LocalProjectTrashRecord,
+} from "@/lib/projects/local-project-record";
 import { saveProjectBundle } from "@/lib/projects/project-bundle-export";
 import {
   createProjectHealthSummary,
@@ -63,19 +66,30 @@ interface UseDashboardLocalLibraryInput {
   openEditor: () => void;
 }
 
-export function useDashboardLocalLibrary({ loadProject, openEditor }: UseDashboardLocalLibraryInput) {
+export function useDashboardLocalLibrary({
+  loadProject,
+  openEditor,
+}: UseDashboardLocalLibraryInput) {
   const [projects, setProjects] = useState<LocalProjectRecord[]>([]);
   const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([]);
   const [folders, setFolders] = useState<ProjectFolder[]>([]);
-  const [folderAssignments, setFolderAssignments] = useState<Record<string, ProjectFolderAssignment>>({});
-  const [snapshotCounts, setSnapshotCounts] = useState<Record<string, number>>({});
-  const [trashProjects, setTrashProjects] = useState<LocalProjectTrashRecord[]>([]);
+  const [folderAssignments, setFolderAssignments] = useState<
+    Record<string, ProjectFolderAssignment>
+  >({});
+  const [snapshotCounts, setSnapshotCounts] = useState<Record<string, number>>(
+    {},
+  );
+  const [trashProjects, setTrashProjects] = useState<LocalProjectTrashRecord[]>(
+    [],
+  );
   const [query, setQuery] = useState("");
   const [sortMode, setSortMode] = useState<SortMode>("updated");
   const [folderFilter, setFolderFilter] = useState<FolderFilter>("all");
   const [reviewFilter, setReviewFilter] = useState<ReviewFilter>("all");
   const [healthFilter, setHealthFilter] = useState<HealthFilter>("all");
-  const [libraryMessage, setLibraryMessage] = useState<DashboardMessage | null>(null);
+  const [libraryMessage, setLibraryMessage] = useState<DashboardMessage | null>(
+    null,
+  );
   const [isLibraryActionPending, setIsLibraryActionPending] = useState(false);
 
   useEffect(() => {
@@ -84,42 +98,87 @@ export function useDashboardLocalLibrary({ loadProject, openEditor }: UseDashboa
 
   useEffect(() => {
     const projectIds = new Set(projects.map((item) => item.id));
-    setSelectedProjectIds((current) => current.filter((id) => projectIds.has(id)));
+    setSelectedProjectIds((current) =>
+      current.filter((id) => projectIds.has(id)),
+    );
   }, [projects]);
 
   const healthByProjectId = useMemo(
-    () => new Map(projects.map((item) => [item.id, createProjectHealthSummary(item)])),
+    () =>
+      new Map(
+        projects.map((item) => [item.id, createProjectHealthSummary(item)]),
+      ),
     [projects],
   );
-  const folderById = useMemo(() => new Map(folders.map((folder) => [folder.id, folder])), [folders]);
+  const folderById = useMemo(
+    () => new Map(folders.map((folder) => [folder.id, folder])),
+    [folders],
+  );
   const folderCounts = useMemo(
     () =>
-      Object.values(folderAssignments).reduce<Record<string, number>>((counts, assignment) => {
-        counts[assignment.folderId] = (counts[assignment.folderId] ?? 0) + 1;
-        return counts;
-      }, {}),
+      Object.values(folderAssignments).reduce<Record<string, number>>(
+        (counts, assignment) => {
+          counts[assignment.folderId] = (counts[assignment.folderId] ?? 0) + 1;
+          return counts;
+        },
+        {},
+      ),
     [folderAssignments],
   );
-  const libraryHealth = useMemo(() => createProjectLibraryHealthReport(projects), [projects]);
+  const libraryHealth = useMemo(
+    () => createProjectLibraryHealthReport(projects),
+    [projects],
+  );
   const filteredProjects = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     const matches = normalized
-      ? projects.filter((item) => item.title.toLowerCase().includes(normalized) || item.aspectRatio.includes(normalized))
+      ? projects.filter(
+          (item) =>
+            item.title.toLowerCase().includes(normalized) ||
+            item.aspectRatio.includes(normalized),
+        )
       : projects;
-    const folderMatches = matches.filter((item) => matchesFolderFilter(folderAssignments[item.id], folderFilter));
-    const healthMatches = folderMatches.filter((item) => matchesHealthFilter(healthByProjectId.get(item.id), healthFilter));
-    const reviewMatches = healthMatches.filter((item) => matchesReviewFilter(createProjectReviewSummary(item.project), reviewFilter));
+    const folderMatches = matches.filter((item) =>
+      matchesFolderFilter(folderAssignments[item.id], folderFilter),
+    );
+    const healthMatches = folderMatches.filter((item) =>
+      matchesHealthFilter(healthByProjectId.get(item.id), healthFilter),
+    );
+    const reviewMatches = healthMatches.filter((item) =>
+      matchesReviewFilter(
+        createProjectReviewSummary(item.project),
+        reviewFilter,
+      ),
+    );
 
     return [...reviewMatches].sort((a, b) => {
       if (sortMode === "title") return a.title.localeCompare(b.title);
       if (sortMode === "duration") return b.duration - a.duration;
       return b.updatedAt.localeCompare(a.updatedAt);
     });
-  }, [folderAssignments, folderFilter, healthByProjectId, healthFilter, projects, query, reviewFilter, sortMode]);
-  const selectedProjectIdSet = useMemo(() => new Set(selectedProjectIds), [selectedProjectIds]);
-  const filteredProjectIds = useMemo(() => filteredProjects.map((item) => item.id), [filteredProjects]);
+  }, [
+    folderAssignments,
+    folderFilter,
+    healthByProjectId,
+    healthFilter,
+    projects,
+    query,
+    reviewFilter,
+    sortMode,
+  ]);
+  const selectedProjectIdSet = useMemo(
+    () => new Set(selectedProjectIds),
+    [selectedProjectIds],
+  );
+  const filteredProjectIds = useMemo(
+    () => filteredProjects.map((item) => item.id),
+    [filteredProjects],
+  );
   const allVisibleProjectsSelected =
-    filteredProjectIds.length > 0 && filteredProjectIds.every((projectId) => selectedProjectIdSet.has(projectId));
+    filteredProjectIds.length > 0 &&
+    filteredProjectIds.every((projectId) =>
+      selectedProjectIdSet.has(projectId),
+    );
 
   async function refreshProjects() {
     try {
@@ -130,24 +189,37 @@ export function useDashboardLocalLibrary({ loadProject, openEditor }: UseDashboa
         listProjectFolders(),
       ]);
       const assignments = await Promise.all(
-        records.map(async (record) => [record.id, await getProjectFolderAssignment(record.id)] as const),
+        records.map(
+          async (record) =>
+            [record.id, await getProjectFolderAssignment(record.id)] as const,
+        ),
       );
-      const counts = snapshots.reduce<Record<string, number>>((nextCounts, snapshot) => {
-        nextCounts[snapshot.projectId] = (nextCounts[snapshot.projectId] ?? 0) + 1;
-        return nextCounts;
-      }, {});
+      const counts = snapshots.reduce<Record<string, number>>(
+        (nextCounts, snapshot) => {
+          nextCounts[snapshot.projectId] =
+            (nextCounts[snapshot.projectId] ?? 0) + 1;
+          return nextCounts;
+        },
+        {},
+      );
       setProjects(records);
       setFolders(nextFolders);
       setFolderAssignments(
-        assignments.reduce<Record<string, ProjectFolderAssignment>>((nextAssignments, [projectId, assignment]) => {
-          if (assignment) nextAssignments[projectId] = assignment;
-          return nextAssignments;
-        }, {}),
+        assignments.reduce<Record<string, ProjectFolderAssignment>>(
+          (nextAssignments, [projectId, assignment]) => {
+            if (assignment) nextAssignments[projectId] = assignment;
+            return nextAssignments;
+          },
+          {},
+        ),
       );
       setSnapshotCounts(counts);
       setTrashProjects(trash);
     } catch {
-      setLibraryMessage({ tone: "destructive", text: "Local project library could not be loaded." });
+      setLibraryMessage({
+        tone: "destructive",
+        text: "Local project library could not be loaded.",
+      });
     }
   }
 
@@ -155,7 +227,10 @@ export function useDashboardLocalLibrary({ loadProject, openEditor }: UseDashboa
     await runLocalLibraryAction(async () => {
       const record = await loadLocalProject(id);
       if (!record) {
-        setLibraryMessage({ tone: "destructive", text: "Project could not be opened." });
+        setLibraryMessage({
+          tone: "destructive",
+          text: "Project could not be opened.",
+        });
         return;
       }
       loadProject(record.project, record.mediaAssets);
@@ -177,11 +252,17 @@ export function useDashboardLocalLibrary({ loadProject, openEditor }: UseDashboa
     await runLocalLibraryAction(async () => {
       const duplicate = await duplicateLocalProject(id);
       if (!duplicate) {
-        setLibraryMessage({ tone: "destructive", text: "Project could not be duplicated." });
+        setLibraryMessage({
+          tone: "destructive",
+          text: "Project could not be duplicated.",
+        });
         return;
       }
       await refreshProjects();
-      setLibraryMessage({ tone: "default", text: `${duplicate.title} duplicated.` });
+      setLibraryMessage({
+        tone: "default",
+        text: `${duplicate.title} duplicated.`,
+      });
     }, "Project could not be duplicated.");
   }
 
@@ -193,7 +274,10 @@ export function useDashboardLocalLibrary({ loadProject, openEditor }: UseDashboa
       }
 
       await saveProjectBundle(record.project, record.mediaAssets);
-      setLibraryMessage({ tone: "default", text: `${record.title} bundle exported.` });
+      setLibraryMessage({
+        tone: "default",
+        text: `${record.title} bundle exported.`,
+      });
     }, "Project bundle could not be exported.");
   }
 
@@ -201,31 +285,48 @@ export function useDashboardLocalLibrary({ loadProject, openEditor }: UseDashboa
     await runLocalLibraryAction(async () => {
       const removed = await deleteLocalProject(id);
       if (!removed) {
-        setLibraryMessage({ tone: "destructive", text: "Project could not be moved to trash." });
+        setLibraryMessage({
+          tone: "destructive",
+          text: "Project could not be moved to trash.",
+        });
         return;
       }
       await refreshProjects();
-      setLibraryMessage({ tone: "default", text: `${removed.title} moved to trash.` });
+      setLibraryMessage({
+        tone: "default",
+        text: `${removed.title} moved to trash.`,
+      });
     }, "Project could not be deleted.");
   }
 
   async function bulkAssignSelectedProjects(folderId: string | null) {
-    const projectIds = selectedProjectIds.filter((id) => projects.some((item) => item.id === id));
+    const projectIds = selectedProjectIds.filter((id) =>
+      projects.some((item) => item.id === id),
+    );
     if (projectIds.length === 0) return false;
 
     return runLocalLibraryAction(async () => {
-      await Promise.all(projectIds.map((projectId) => assignProjectFolder(projectId, folderId)));
+      await Promise.all(
+        projectIds.map((projectId) => assignProjectFolder(projectId, folderId)),
+      );
       await refreshProjects();
-      setLibraryMessage({ tone: "default", text: `${projectIds.length} projects moved.` });
+      setLibraryMessage({
+        tone: "default",
+        text: `${projectIds.length} projects moved.`,
+      });
     }, "Selected projects could not be moved.");
   }
 
   async function bulkDuplicateSelectedProjects() {
-    const projectIds = selectedProjectIds.filter((id) => projects.some((item) => item.id === id));
+    const projectIds = selectedProjectIds.filter((id) =>
+      projects.some((item) => item.id === id),
+    );
     if (projectIds.length === 0) return false;
 
     return runLocalLibraryAction(async () => {
-      const duplicates = await Promise.all(projectIds.map((projectId) => duplicateLocalProject(projectId)));
+      const duplicates = await Promise.all(
+        projectIds.map((projectId) => duplicateLocalProject(projectId)),
+      );
       const createdCount = duplicates.filter(Boolean).length;
       if (createdCount === 0) {
         throw new Error("No selected projects could be duplicated.");
@@ -233,12 +334,17 @@ export function useDashboardLocalLibrary({ loadProject, openEditor }: UseDashboa
 
       setSelectedProjectIds([]);
       await refreshProjects();
-      setLibraryMessage({ tone: "default", text: `${createdCount} projects duplicated.` });
+      setLibraryMessage({
+        tone: "default",
+        text: `${createdCount} projects duplicated.`,
+      });
     }, "Selected projects could not be duplicated.");
   }
 
   async function bulkExportSelectedProjectBundles() {
-    const projectIds = selectedProjectIds.filter((id) => projects.some((item) => item.id === id));
+    const projectIds = selectedProjectIds.filter((id) =>
+      projects.some((item) => item.id === id),
+    );
     if (projectIds.length === 0) return false;
 
     return runLocalLibraryAction(async () => {
@@ -255,16 +361,23 @@ export function useDashboardLocalLibrary({ loadProject, openEditor }: UseDashboa
         throw new Error("No selected project bundles could be exported.");
       }
 
-      setLibraryMessage({ tone: "default", text: `${exportedCount} project bundles exported.` });
+      setLibraryMessage({
+        tone: "default",
+        text: `${exportedCount} project bundles exported.`,
+      });
     }, "Selected project bundles could not be exported.");
   }
 
   async function bulkMoveSelectedProjectsToTrash() {
-    const projectIds = selectedProjectIds.filter((id) => projects.some((item) => item.id === id));
+    const projectIds = selectedProjectIds.filter((id) =>
+      projects.some((item) => item.id === id),
+    );
     if (projectIds.length === 0) return false;
 
     return runLocalLibraryAction(async () => {
-      const removed = await Promise.all(projectIds.map((projectId) => deleteLocalProject(projectId)));
+      const removed = await Promise.all(
+        projectIds.map((projectId) => deleteLocalProject(projectId)),
+      );
       const removedCount = removed.filter(Boolean).length;
       if (removedCount === 0) {
         throw new Error("No selected projects could be moved to trash.");
@@ -272,7 +385,10 @@ export function useDashboardLocalLibrary({ loadProject, openEditor }: UseDashboa
 
       setSelectedProjectIds([]);
       await refreshProjects();
-      setLibraryMessage({ tone: "default", text: `${removedCount} projects moved to trash.` });
+      setLibraryMessage({
+        tone: "default",
+        text: `${removedCount} projects moved to trash.`,
+      });
     }, "Selected projects could not be moved to trash.");
   }
 
@@ -280,14 +396,19 @@ export function useDashboardLocalLibrary({ loadProject, openEditor }: UseDashboa
     if (ids.length === 0) return false;
 
     return runLocalLibraryAction(async () => {
-      const restored = await Promise.all(ids.map((id) => restoreLocalProjectFromTrash(id)));
+      const restored = await Promise.all(
+        ids.map((id) => restoreLocalProjectFromTrash(id)),
+      );
       const restoredProjects = restored.filter(Boolean);
       if (restoredProjects.length === 0) {
         throw new Error("Projects could not be restored.");
       }
 
       await refreshProjects();
-      setLibraryMessage({ tone: "default", text: `${restoredProjects.length} projects restored.` });
+      setLibraryMessage({
+        tone: "default",
+        text: `${restoredProjects.length} projects restored.`,
+      });
     }, "Projects could not be restored.");
   }
 
@@ -301,7 +422,10 @@ export function useDashboardLocalLibrary({ loadProject, openEditor }: UseDashboa
     return runLocalLibraryAction(async () => {
       await Promise.all(ids.map((id) => permanentlyDeleteLocalProject(id)));
       await refreshProjects();
-      setLibraryMessage({ tone: "default", text: `${ids.length} projects permanently deleted.` });
+      setLibraryMessage({
+        tone: "default",
+        text: `${ids.length} projects permanently deleted.`,
+      });
     }, "Projects could not be permanently deleted.");
   }
 
@@ -318,7 +442,10 @@ export function useDashboardLocalLibrary({ loadProject, openEditor }: UseDashboa
 
       loadProject(restored.project, restored.mediaAssets);
       await refreshProjects();
-      setLibraryMessage({ tone: "default", text: `${restored.title} restored from checkpoint.` });
+      setLibraryMessage({
+        tone: "default",
+        text: `${restored.title} restored from checkpoint.`,
+      });
     }, "Checkpoint could not be restored.");
   }
 
@@ -330,7 +457,10 @@ export function useDashboardLocalLibrary({ loadProject, openEditor }: UseDashboa
     }, "Checkpoint could not be removed.");
   }
 
-  async function assignProjectToFolder(projectId: string, folderId: string | null) {
+  async function assignProjectToFolder(
+    projectId: string,
+    folderId: string | null,
+  ) {
     return runLocalLibraryAction(async () => {
       await assignProjectFolder(projectId, folderId);
       await refreshProjects();
@@ -348,7 +478,10 @@ export function useDashboardLocalLibrary({ loadProject, openEditor }: UseDashboa
       await assignProjectFolder(projectId, folder.id);
       await refreshProjects();
       setFolderFilter(folder.id);
-      setLibraryMessage({ tone: "default", text: `${folder.name} created and assigned.` });
+      setLibraryMessage({
+        tone: "default",
+        text: `${folder.name} created and assigned.`,
+      });
     }, "Folder could not be created.");
   }
 
@@ -384,7 +517,10 @@ export function useDashboardLocalLibrary({ loadProject, openEditor }: UseDashboa
         setFolderFilter("all");
       }
       await refreshProjects();
-      setLibraryMessage({ tone: "default", text: "Folder removed and projects left unfiled." });
+      setLibraryMessage({
+        tone: "default",
+        text: "Folder removed and projects left unfiled.",
+      });
     }, "Folder could not be removed.");
   }
 
@@ -398,9 +534,15 @@ export function useDashboardLocalLibrary({ loadProject, openEditor }: UseDashboa
       const record = await importLocalProjectBundleFile(file);
       loadProject(record.project, record.mediaAssets);
       await refreshProjects();
-      setLibraryMessage({ tone: "default", text: `${record.title} imported. Reconnect media files if this bundle only contains metadata.` });
+      setLibraryMessage({
+        tone: "default",
+        text: `${record.title} imported. Reconnect media files if this bundle only contains metadata.`,
+      });
     } catch {
-      setLibraryMessage({ tone: "destructive", text: "Project bundle could not be imported." });
+      setLibraryMessage({
+        tone: "destructive",
+        text: "Project bundle could not be imported.",
+      });
     } finally {
       event.target.value = "";
     }
@@ -408,24 +550,32 @@ export function useDashboardLocalLibrary({ loadProject, openEditor }: UseDashboa
 
   function toggleProjectSelection(projectId: string, isSelected: boolean) {
     setSelectedProjectIds((current) => {
-      if (isSelected) return current.includes(projectId) ? current : [...current, projectId];
+      if (isSelected)
+        return current.includes(projectId) ? current : [...current, projectId];
       return current.filter((id) => id !== projectId);
     });
   }
 
   function selectVisibleProjects() {
-    setSelectedProjectIds((current) => [...new Set([...current, ...filteredProjectIds])]);
+    setSelectedProjectIds((current) => [
+      ...new Set([...current, ...filteredProjectIds]),
+    ]);
   }
 
   function deselectVisibleProjects() {
-    setSelectedProjectIds((current) => current.filter((id) => !filteredProjectIds.includes(id)));
+    setSelectedProjectIds((current) =>
+      current.filter((id) => !filteredProjectIds.includes(id)),
+    );
   }
 
   function clearSelectedProjects() {
     setSelectedProjectIds([]);
   }
 
-  async function runLocalLibraryAction(action: () => Promise<void>, failureMessage: string) {
+  async function runLocalLibraryAction(
+    action: () => Promise<void>,
+    failureMessage: string,
+  ) {
     setLibraryMessage(null);
     setIsLibraryActionPending(true);
 
@@ -497,7 +647,10 @@ export function useDashboardLocalLibrary({ loadProject, openEditor }: UseDashboa
 
 export type DashboardLocalLibrary = ReturnType<typeof useDashboardLocalLibrary>;
 
-export function matchesReviewFilter(summary: ProjectReviewSummary, filter: ReviewFilter) {
+export function matchesReviewFilter(
+  summary: ProjectReviewSummary,
+  filter: ReviewFilter,
+) {
   if (filter === "all") return true;
   if (filter === "changes-requested") return summary.changesRequested > 0;
   if (filter === "needs-review") return summary.needsReview > 0;
@@ -506,7 +659,10 @@ export function matchesReviewFilter(summary: ProjectReviewSummary, filter: Revie
   return summary.status === "clean";
 }
 
-export function matchesFolderFilter(assignment: ProjectFolderAssignment | undefined, filter: FolderFilter) {
+export function matchesFolderFilter(
+  assignment: ProjectFolderAssignment | undefined,
+  filter: FolderFilter,
+) {
   if (filter === "all") return true;
   if (filter === "none") return !assignment;
   return assignment?.folderId === filter;
