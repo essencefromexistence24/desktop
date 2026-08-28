@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
 :root {
   color-scheme: dark;
   --background: 0 0% 0%;
@@ -20,7 +22,7 @@
   --wb-canvas: 0 0% 5%;
   --wb-canvas-foreground: 0 0% 96%;
   --wb-grid-line: 0 0% 18%;
-  --wb-selection: 204 88% 55%;
+  --wb-selection: 0 0% 96%;
   --wb-swatch-primary: var(--primary);
   --wb-swatch-ink: 0 0% 96%;
   --wb-swatch-graphite: 0 0% 58%;
@@ -69,9 +71,31 @@
   --wb-gradient-coral-end: 358 100% 69%;
   --wb-gradient-sunrise-start: 8 100% 60%;
   --wb-gradient-sunrise-end: 36 90% 52%;
+  --wb-gradient-midnight-start: 240 30% 12%;
+  --wb-gradient-midnight-end: 252 35% 22%;
+  --wb-gradient-berry-start: 278 75% 52%;
+  --wb-gradient-berry-end: 262 82% 38%;
+  --wb-gradient-tide-start: 205 95% 62%;
+  --wb-gradient-tide-end: 188 96% 58%;
+  --wb-gradient-horizon-start: 35 95% 70%;
+  --wb-gradient-horizon-end: 15 95% 66%;
+  --wb-gradient-dusk-start: 210 25% 28%;
+  --wb-gradient-dusk-end: 0 78% 66%;
+  --wb-gradient-cosmos-start: 228 68% 32%;
+  --wb-gradient-cosmos-end: 188 78% 44%;
+  --wb-gradient-peach-start: 12 95% 72%;
+  --wb-gradient-peach-end: 350 92% 73%;
+  --wb-gradient-violetfield-start: 255 82% 64%;
+  --wb-gradient-violetfield-end: 275 88% 68%;
+  --wb-gradient-pacific-start: 198 92% 58%;
+  --wb-gradient-pacific-end: 172 72% 48%;
+  --wb-gradient-flare-start: 335 85% 62%;
+  --wb-gradient-flare-end: 25 98% 62%;
   --wb-shadow-panel: 0 18px 60px hsl(0 0% 0% / 0.4);
   --wb-shadow-inset: inset 0 1px 0 hsl(var(--foreground) / 0.06);
   --radius: 8px;
-  --font-mono: "JetBrains Mono", "JetBrains Mono NL", ui-monospace, SFMono-Regular,
+  --font-sans: "Geist", "Geist Sans", "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", "JetBrains Mono", "JetBrains Mono NL", ui-monospace, SFMono-Regular,
     Consolas, "Liberation Mono", monospace;
+  --font-geist: "Geist", "Geist Sans", "Inter", sans-serif;
 }

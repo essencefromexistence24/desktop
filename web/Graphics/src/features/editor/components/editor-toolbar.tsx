@@ -10,6 +10,7 @@ import {
   AlignStartHorizontal,
   AlignStartVertical,
   AlignVerticalSpaceBetween,
+  ArrowRight,
   BringToFront,
   ChevronDown,
   ClipboardCopy,
@@ -17,6 +18,9 @@ import {
   Circle,
   Component,
   Copy,
+  Diamond,
+  Hexagon,
+  Minus,
   MoveDown,
   MoveUp,
   PenTool,
@@ -32,8 +36,10 @@ import {
   SendToBack,
   Square,
   SquareScissors,
+  Star,
   StickyNote,
   Trash2,
+  Triangle,
   Type,
   Undo2,
   Ungroup,
@@ -96,6 +102,12 @@ const primaryTools = [
 const shapeTools = [
   { id: "rectangle", label: "Rectangle", icon: Square },
   { id: "ellipse", label: "Ellipse", icon: Circle },
+  { id: "diamond", label: "Diamond", icon: Diamond },
+  { id: "triangle", label: "Triangle", icon: Triangle },
+  { id: "star", label: "Star", icon: Star },
+  { id: "hexagon", label: "Hexagon", icon: Hexagon },
+  { id: "line", label: "Line", icon: Minus },
+  { id: "arrow", label: "Arrow", icon: ArrowRight },
 ] satisfies Array<{
   id: EditorTool;
   label: string;

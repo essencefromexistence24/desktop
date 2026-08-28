@@ -955,7 +955,11 @@ function shouldUseReducedRenderProfile() {
 
 function shouldUseManualShaderStart() {
   var signals = shaderSafetySignals();
-  return signals.edgeBrowser || signals.reducedMotion || shouldUseReducedRenderProfileFromSignals(signals);
+  // Do NOT gate on `edgeBrowser` here: the desktop preview runs inside WebView2 whose
+  // UA contains "Edg/", so treating that as a hand-holding manual start would force the
+  // user to click "Start shader" every time. Only genuinely constrained devices
+  // (low memory/cores, slow link, save-data, reduced-motion) keep manual start.
+  return signals.reducedMotion || shouldUseReducedRenderProfileFromSignals(signals);
 }
 
 function guardedRenderScale() {

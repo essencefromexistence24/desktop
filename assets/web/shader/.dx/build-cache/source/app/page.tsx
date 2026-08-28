@@ -2,7 +2,7 @@ import { Icon } from "../components/icons/icon";
 
 export const metadata = {
   title: "Shader",
-  description: "Shader",
+  description: "Create and explore real-time generative WebGL shaders.",
 } as const;
 
 export default function HomePage() {
@@ -18,7 +18,10 @@ export default function HomePage() {
       <script defer src="/canvas-export.js"></script>
       <header className="topbar">
         <div className="brand">
-          <img className="brand-mark" src="/favicon.svg" alt="Shader Logo" />
+          <picture>
+            <source media="(prefers-color-scheme: dark)" srcSet="/logo-dark.svg" />
+            <img className="brand-mark" src="/logo-light.svg" alt="Shader" />
+          </picture>
           <span className="brand-name">Shader</span>
         </div>
 
@@ -210,49 +213,30 @@ export default function HomePage() {
             role="status"
             aria-live="polite"
           >
-            <div className="shader-loader-panel">
-              {/* <div
-                className="shader-loader-mark p-2"
+            <div className="shader-loader-panel" style={{ display: "grid", placeItems: "center", width: "96px", height: "96px", padding: "0", background: "transparent", border: "none", boxShadow: "none" }}>
+              <svg
+                className="shader-loader-spinner"
+                xmlns="http://www.w3.org/2000/svg"
+                width="48"
+                height="48"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                style={{ animation: "shader-loader-spin 1s linear infinite" }}
+                aria-hidden="true"
               >
-                
-                <svg
-                  className="shader-loader-spinner h-16 w-16"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#000000"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  style={{ animation: "shader-loader-spin 1.5s linear infinite" }}
-                >
-                  <path d="M12 2v4"/>
-                  <path d="m16.2 7.8 2.9-2.9"/>
-                  <path d="M18 12h4"/>
-                  <path d="m16.2 16.2 2.9 2.9"/>
-                  <path d="M12 18v4"/>
-                  <path d="m4.9 19.1 2.9-2.9"/>
-                  <path d="M2 12h4"/>
-                  <path d="m4.9 4.9 2.9 2.9"/>
-                </svg>
-              </div> */}
-              <div className="shader-loader-copy">
-                <span className="shader-loader-title">Preparing shader engine</span>
-                <span className="shader-loader-detail" id="shader-boot-status">
-                  Initializing rendering engine
-                </span>
-              </div>
-              <button
-                className="shader-loader-action"
-                hidden="hidden"
-                id="shader-boot-start"
-                type="button"
-              >
-                Start shader
-              </button>
-              <div className="shader-loader-shimmer" aria-hidden="true" />
+                <path d="M12 2v4" />
+                <path d="m16.2 7.8 2.9-2.9" />
+                <path d="M18 12h4" />
+                <path d="m16.2 16.2 2.9 2.9" />
+                <path d="M12 18v4" />
+                <path d="m4.9 19.1 2.9-2.9" />
+                <path d="M2 12h4" />
+                <path d="m4.9 4.9 2.9 2.9" />
+              </svg>
             </div>
           </div>
           <div className="canvas-frame" id="canvas-frame">

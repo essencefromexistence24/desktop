@@ -315,6 +315,16 @@ export default function WhiteboardPage() {
                 <button aria-label="Neon gradient" className="wb-swatch" data-swatch="neon" data-whiteboard-swatch="neon" type="button" />
                 <button aria-label="Coral gradient" className="wb-swatch" data-swatch="coral" data-whiteboard-swatch="coral" type="button" />
                 <button aria-label="Sunrise gradient" className="wb-swatch" data-swatch="sunrise" data-whiteboard-swatch="sunrise" type="button" />
+                <button aria-label="Midnight gradient" className="wb-swatch" data-swatch="midnight" data-whiteboard-swatch="midnight" type="button" />
+                <button aria-label="Berry gradient" className="wb-swatch" data-swatch="berry" data-whiteboard-swatch="berry" type="button" />
+                <button aria-label="Tide gradient" className="wb-swatch" data-swatch="tide" data-whiteboard-swatch="tide" type="button" />
+                <button aria-label="Horizon gradient" className="wb-swatch" data-swatch="horizon" data-whiteboard-swatch="horizon" type="button" />
+                <button aria-label="Dusk gradient" className="wb-swatch" data-swatch="dusk" data-whiteboard-swatch="dusk" type="button" />
+                <button aria-label="Cosmos gradient" className="wb-swatch" data-swatch="cosmos" data-whiteboard-swatch="cosmos" type="button" />
+                <button aria-label="Peach gradient" className="wb-swatch" data-swatch="peach" data-whiteboard-swatch="peach" type="button" />
+                <button aria-label="Violet field gradient" className="wb-swatch" data-swatch="violetfield" data-whiteboard-swatch="violetfield" type="button" />
+                <button aria-label="Pacific gradient" className="wb-swatch" data-swatch="pacific" data-whiteboard-swatch="pacific" type="button" />
+                <button aria-label="Flare gradient" className="wb-swatch" data-swatch="flare" data-whiteboard-swatch="flare" type="button" />
               </div>
             </div>
           </div>
@@ -325,11 +335,13 @@ export default function WhiteboardPage() {
             </label>
             <label className="wb-font-field">
               <span>Google Font</span>
-              <input aria-label="Google font family" data-whiteboard-font-input="true" list="wb-google-fonts" placeholder="JetBrains Mono" value="JetBrains Mono" />
+              <input aria-label="Google font family" data-whiteboard-font-input="true" list="wb-google-fonts" placeholder="Geist" value="Geist" />
             </label>
             <datalist id="wb-google-fonts">
-              <option value="JetBrains Mono" />
+              <option value="Geist" />
               <option value="Inter" />
+              <option value="Geist Mono" />
+              <option value="JetBrains Mono" />
               <option value="Roboto" />
               <option value="Open Sans" />
               <option value="Lato" />

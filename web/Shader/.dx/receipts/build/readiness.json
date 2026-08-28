@@ -41,30 +41,32 @@
     "styles": 4,
     "content_documents": 0,
     "mdx_documents": 0,
-    "assets": 28,
-    "image_assets": 6,
-    "image_metadata_assets": 6,
+    "assets": 31,
+    "image_assets": 9,
+    "image_metadata_assets": 9,
     "optimized_image_variants": 0,
-    "image_placeholders": 6,
-    "image_placeholder_artifacts": 6,
-    "image_placeholder_artifact_bytes": 1010,
+    "image_placeholders": 9,
+    "image_placeholder_artifacts": 9,
+    "image_placeholder_artifact_bytes": 1537,
     "image_placeholder_artifact_outputs": [
       ".dx/www/output/.dx/build-cache/image-placeholders/public/dx-shader/assets/apple-touch-icon-653d1ed174ed39da.placeholder.svg",
       ".dx/www/output/.dx/build-cache/image-placeholders/public/dx-shader/assets/favicon-95cdf2c6b75c0830.placeholder.svg",
-      ".dx/www/output/.dx/build-cache/image-placeholders/public/dx-shader/assets/favicon-95cdf2c6b75c0830.placeholder.svg",
+      ".dx/www/output/.dx/build-cache/image-placeholders/public/dx-shader/assets/favicon-b0698a08bf67b748.placeholder.svg",
       ".dx/www/output/.dx/build-cache/image-placeholders/public/dx-shader/favicon-95cdf2c6b75c0830.placeholder.svg",
       ".dx/www/output/.dx/build-cache/image-placeholders/public/favicon-b0698a08bf67b748.placeholder.svg",
-      ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg"
+      ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg",
+      ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-dark-b0698a08bf67b748.placeholder.svg",
+      ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-light-b0698a08bf67b748.placeholder.svg",
+      ".dx/www/output/.dx/build-cache/image-placeholders/public/route-b0698a08bf67b748.placeholder.svg"
     ],
-    "image_route_references": 10,
+    "image_route_references": 11,
     "image_formats": {
       "png": 3,
-      "svg": 3
+      "svg": 6
     },
     "image_dimension_sources": {
       "png-ihdr": 3,
-      "svg-root-attributes": 2,
-      "svg-viewbox": 1
+      "svg-root-attributes": 6
     },
     "node_modules_required": false
   },

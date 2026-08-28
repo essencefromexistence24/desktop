@@ -1,7 +1,7 @@
 {
   "schema": "dx.build.graph.consumerSnapshot",
   "sourceSchema": "dx.build.graph",
-  "generatedAt": "2026-08-08T18:09:28.011235500+00:00",
+  "generatedAt": "2026-08-27T17:02:52.565837+00:00",
   "coreConceptMap": {
     "conceptCount": 9,
     "coveredNodeKinds": [
@@ -33,13 +33,13 @@
     "publicArchitecture": false
   },
   "graph": {
-    "nodeCount": 47,
-    "edgeCount": 18,
+    "nodeCount": 53,
+    "edgeCount": 21,
     "nodeKindCounts": {
       "dx-style-css": 4,
       "dx-style-source-map": 4,
-      "image-placeholder-asset": 6,
-      "public-asset": 28,
+      "image-placeholder-asset": 9,
+      "public-asset": 31,
       "route-shell-chunk": 1,
       "server-data-route": 1,
       "source-module-chunk": 2,
@@ -71,31 +71,33 @@
       "retainedImportAssetReferenceCount": 0
     },
     "imageOptimization": {
-      "imageAssetCount": 6,
-      "metadataAssetCount": 6,
+      "imageAssetCount": 9,
+      "metadataAssetCount": 9,
       "optimizedVariantCount": 0,
-      "placeholderCount": 6,
-      "placeholderArtifactCount": 6,
-      "placeholderArtifactBytes": 1010,
+      "placeholderCount": 9,
+      "placeholderArtifactCount": 9,
+      "placeholderArtifactBytes": 1537,
       "placeholderArtifactOutputs": [
         ".dx/www/output/.dx/build-cache/image-placeholders/public/dx-shader/assets/apple-touch-icon-653d1ed174ed39da.placeholder.svg",
         ".dx/www/output/.dx/build-cache/image-placeholders/public/dx-shader/assets/favicon-95cdf2c6b75c0830.placeholder.svg",
-        ".dx/www/output/.dx/build-cache/image-placeholders/public/dx-shader/assets/favicon-95cdf2c6b75c0830.placeholder.svg",
+        ".dx/www/output/.dx/build-cache/image-placeholders/public/dx-shader/assets/favicon-b0698a08bf67b748.placeholder.svg",
         ".dx/www/output/.dx/build-cache/image-placeholders/public/dx-shader/favicon-95cdf2c6b75c0830.placeholder.svg",
         ".dx/www/output/.dx/build-cache/image-placeholders/public/favicon-b0698a08bf67b748.placeholder.svg",
-        ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg"
+        ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg",
+        ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-dark-b0698a08bf67b748.placeholder.svg",
+        ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-light-b0698a08bf67b748.placeholder.svg",
+        ".dx/www/output/.dx/build-cache/image-placeholders/public/route-b0698a08bf67b748.placeholder.svg"
       ],
-      "placeholderArtifactEdgeCount": 6,
-      "routeReferenceCount": 1,
+      "placeholderArtifactEdgeCount": 9,
+      "routeReferenceCount": 2,
       "styleReferenceCount": 0,
       "formatCounts": {
         "png": 3,
-        "svg": 3
+        "svg": 6
       },
       "dimensionSourceCounts": {
         "png-ihdr": 3,
-        "svg-root-attributes": 2,
-        "svg-viewbox": 1
+        "svg-root-attributes": 6
       },
       "status": "metadata-plus-placeholder-artifacts-boundary",
       "fullPipelineParity": false

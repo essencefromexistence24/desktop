@@ -8629,10 +8629,10 @@ impl Sidebar {
     }
 
     /// 16-cell grid of DX web tool icons + 3 other sidebar actions shown at the bottom of the
-    /// sidebar. Cells 1-13 always show the 13 DX web tools (Whiteboard, Design, Graphics,
-    /// Presentations, Spreadsheets, Video, CMS, Graph, Media, Train, Metasearch, 3D, Shader)
+    /// sidebar. Cells 1-11 always show the 11 DX web tools (Whiteboard, Graphics,
+    /// Spreadsheets, Video, CMS, Graph, Media, Train, Metasearch, Route, 3D, Shader)
     /// regardless of which workspace screen is active or whether the sidebar is expanded or
-    /// collapsed. Cells 14-16 hold three other icons: DX Web (top-level dx_web entry), the editor
+    /// collapsed. Cells 12-14 hold three other icons: DX Web (top-level dx_web entry), the editor
     /// sounds toggle, and a settings button.
     fn render_sidebar_dx_web_tool_grid(
         &self,
@@ -8646,9 +8646,7 @@ impl Sidebar {
         // 13 DX web tool icons shown in cells 1-13 (always, in both expanded and collapsed sidebar).
         let web_tool_cells: Vec<(&'static str, &'static str)> = vec![
             ("whiteboard", "Whiteboard"),
-            ("design", "Design"),
             ("graphics", "Graphics"),
-            ("presentations", "Presentations"),
             ("spreadsheets", "Spreadsheets"),
             ("video", "Video"),
             ("cms", "CMS"),

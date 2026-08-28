@@ -210,8 +210,22 @@ let activePresetMutationVersion = 0;
 let activePresetSourceMutationVersion = 0;
 let settingsHydrationPromise: Promise<void> | null = null;
 
+function isPreviewStatic(): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    const port = Number(window.location.port || 0);
+    if (port >= 4200 && port <= 4300) return true;
+    if (window.location.protocol === 'file:') return true;
+  } catch {}
+  return false;
+}
+
 function warnSettingsPersistenceFailure(): void {
   if (hasShownSettingsPersistenceWarning) {
+    return;
+  }
+  if (isPreviewStatic()) {
+    // In static preview the backend is absent — persist to localStorage only, no toast.
     return;
   }
   hasShownSettingsPersistenceWarning = true;
@@ -253,6 +267,10 @@ async function flushSettingsPatch(keepalive = false): Promise<void> {
   try {
     await savePersistedChatSettingsPatch(patch, { keepalive });
   } catch {
+    if (isPreviewStatic()) {
+      // Preview has no backend — persist locally via loadLegacy path, drop patch.
+      return;
+    }
     const retryPatch: SettingsPatch = {};
     mergePatch(retryPatch, patch);
     mergePatch(retryPatch, pendingPatch);

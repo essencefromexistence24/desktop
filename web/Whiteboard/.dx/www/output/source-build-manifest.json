@@ -7,7 +7,7 @@
       "route": "/",
       "path": "app/page.tsx",
       "output": ".dx/www/output/.dx/build-cache/source/app/page.tsx",
-      "hash": "d1a5428f118f2ea4",
+      "hash": "f6fbb5a4463e1ab9",
       "imports": [
         {
           "specifier": "../components/icons/icon",
@@ -94,15 +94,15 @@
       "packet_output": ".dx/www/output/.dx/build-cache/source-routes/root/index.dxpk",
       "page_graph_output": ".dx/www/output/.dx/build-cache/source-routes/root/page-graph.json",
       "route_unit_output": ".dx/www/output/.dx/build-cache/source-routes/root/route-unit.json",
-      "shell_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-509372dc6ecf6bb7.mjs",
-      "entry_module_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-d1a5428f118f2ea4.mjs",
+      "shell_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-13d1710605429be0.mjs",
+      "entry_module_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-f6fbb5a4463e1ab9.mjs",
       "server_data_output": ".dx/www/output/source-routes/root/server-data.json",
       "source_module_chunks": [
         {
           "source_path": "app/page.tsx",
-          "chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-d1a5428f118f2ea4.mjs",
+          "chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-f6fbb5a4463e1ab9.mjs",
           "kind": "tsx",
-          "hash": "d1a5428f118f2ea4",
+          "hash": "f6fbb5a4463e1ab9",
           "dependencies": [
             {
               "specifier": "../components/icons/icon",
@@ -244,9 +244,9 @@
           "node_modules_required": false
         }
       ],
-      "fallback_hash": "509372dc6ecf6bb7",
-      "fallback_bytes": 24697,
-      "packet_bytes": 37824,
+      "fallback_hash": "13d1710605429be0",
+      "fallback_bytes": 27516,
+      "packet_bytes": 40734,
       "node_modules_required": false
     }
   ],
@@ -301,7 +301,7 @@
       "source_map_exact_segment_mapping": false,
       "source_map_evidence_only": true,
       "source_map_linked": true,
-      "source_map_hash": "83f89187e4e4f4d7",
+      "source_map_hash": "4686ecd1ed395d90",
       "hash": "b99c7b8a561eae1b",
       "rule_count": 21,
       "original_rule_count": 21,
@@ -331,11 +331,11 @@
       "source_map_exact_segment_mapping": false,
       "source_map_evidence_only": true,
       "source_map_linked": true,
-      "source_map_hash": "b03d5418dd5a70be",
-      "hash": "febf9b3c3c692aa4",
-      "rule_count": 300,
-      "original_rule_count": 300,
-      "retained_rule_count": 300,
+      "source_map_hash": "406e54edfef75e8b",
+      "hash": "76beab2b55e8dfe6",
+      "rule_count": 324,
+      "original_rule_count": 324,
+      "retained_rule_count": 324,
       "pruned_rule_count": 0,
       "minified": true,
       "node_modules_required": false,
@@ -343,7 +343,7 @@
       "source_owned_contract": true,
       "external_runtime_required": false,
       "external_runtime_executed": false,
-      "import_count": 0,
+      "import_count": 1,
       "flattened_imports": [
         {
           "specifier": "./theme.css",
@@ -361,7 +361,13 @@
           "inlined": true
         }
       ],
-      "retained_imports": [],
+      "retained_imports": [
+        {
+          "specifier": "https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap",
+          "reason": "external-or-rooted",
+          "inlined": false
+        }
+      ],
       "asset_references": []
     },
     {
@@ -377,8 +383,8 @@
       "source_map_exact_segment_mapping": false,
       "source_map_evidence_only": true,
       "source_map_linked": true,
-      "source_map_hash": "1ba787501ae9c1cb",
-      "hash": "1fa420a552a0f126",
+      "source_map_hash": "1e6b1db39e51db17",
+      "hash": "e5a5ff8a904c5c80",
       "rule_count": 1,
       "original_rule_count": 1,
       "retained_rule_count": 1,
@@ -389,9 +395,15 @@
       "source_owned_contract": true,
       "external_runtime_required": false,
       "external_runtime_executed": false,
-      "import_count": 0,
+      "import_count": 1,
       "flattened_imports": [],
-      "retained_imports": [],
+      "retained_imports": [
+        {
+          "specifier": "https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap",
+          "reason": "external-or-rooted",
+          "inlined": false
+        }
+      ],
       "asset_references": []
     },
     {
@@ -407,11 +419,11 @@
       "source_map_exact_segment_mapping": false,
       "source_map_evidence_only": true,
       "source_map_linked": true,
-      "source_map_hash": "2be1e26f999ed832",
-      "hash": "9b3c94fd258af37e",
-      "rule_count": 272,
-      "original_rule_count": 272,
-      "retained_rule_count": 272,
+      "source_map_hash": "dedbab85ed20d36a",
+      "hash": "46e6f00c21faf8d6",
+      "rule_count": 296,
+      "original_rule_count": 296,
+      "retained_rule_count": 296,
       "pruned_rule_count": 0,
       "minified": true,
       "node_modules_required": false,
@@ -451,9 +463,9 @@
     },
     {
       "path": "public/favicon.svg",
-      "output": ".dx/www/output/public/favicon-8ef8e37dd36b0f62.svg",
-      "hash": "8ef8e37dd36b0f62",
-      "size": 1188,
+      "output": ".dx/www/output/public/favicon-81a1cb073dbeda57.svg",
+      "hash": "81a1cb073dbeda57",
+      "size": 1224,
       "node_modules_required": false,
       "lifecycle_scripts_executed": false,
       "source_owned_contract": true,
@@ -494,9 +506,9 @@
     },
     {
       "path": "public/icon.svg",
-      "output": ".dx/www/output/public/icon-1f5e3f2581bd66f8.svg",
-      "hash": "1f5e3f2581bd66f8",
-      "size": 487,
+      "output": ".dx/www/output/public/icon-c9d5f79efb354004.svg",
+      "hash": "c9d5f79efb354004",
+      "size": 1173,
       "node_modules_required": false,
       "lifecycle_scripts_executed": false,
       "source_owned_contract": true,
@@ -505,9 +517,9 @@
       "image_metadata": {
         "format": "svg",
         "mime_type": "image/svg+xml",
-        "width": 180,
-        "height": 180,
-        "dimension_source": "svg-viewbox",
+        "width": 1024,
+        "height": 1024,
+        "dimension_source": "svg-root-attributes",
         "status": "metadata-read",
         "optimization": {
           "status": "metadata-plus-svg-placeholder",
@@ -518,14 +530,143 @@
           "blur_placeholder_emitted": false,
           "placeholder": {
             "kind": "svg-placeholder-data-url",
-            "data_url": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22180%22%20height%3D%22180%22%20viewBox%3D%220%200%20180%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f3f4f6%22%2F%3E%3C%2Fsvg%3E",
-            "width": 180,
-            "height": 180,
-            "bytes": 290,
+            "data_url": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221024%22%20height%3D%221024%22%20viewBox%3D%220%200%201024%201024%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f3f4f6%22%2F%3E%3C%2Fsvg%3E",
+            "width": 1024,
+            "height": 1024,
+            "bytes": 294,
             "source": "dx-source-owned-svg-placeholder",
-            "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-653d1ed174ed39da.placeholder.svg",
-            "hash": "653d1ed174ed39da",
-            "artifact_bytes": 169
+            "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg",
+            "hash": "b0698a08bf67b748",
+            "artifact_bytes": 173
+          },
+          "boundary": "metadata-plus-svg-placeholder-no-resize-or-encoding",
+          "informed_by": [
+            "turbopack-image::process::get_meta_data",
+            "turbopack-image::process::svg"
+          ]
+        }
+      }
+    },
+    {
+      "path": "public/logo-dark.svg",
+      "output": ".dx/www/output/public/logo-dark-1043f13147ec8686.svg",
+      "hash": "1043f13147ec8686",
+      "size": 1170,
+      "node_modules_required": false,
+      "lifecycle_scripts_executed": false,
+      "source_owned_contract": true,
+      "external_runtime_required": false,
+      "external_runtime_executed": false,
+      "image_metadata": {
+        "format": "svg",
+        "mime_type": "image/svg+xml",
+        "width": 1024,
+        "height": 1024,
+        "dimension_source": "svg-root-attributes",
+        "status": "metadata-read",
+        "optimization": {
+          "status": "metadata-plus-svg-placeholder",
+          "variants_emitted": 0,
+          "optimizer_invoked": false,
+          "resize_emitted": false,
+          "encoding_emitted": false,
+          "blur_placeholder_emitted": false,
+          "placeholder": {
+            "kind": "svg-placeholder-data-url",
+            "data_url": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221024%22%20height%3D%221024%22%20viewBox%3D%220%200%201024%201024%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f3f4f6%22%2F%3E%3C%2Fsvg%3E",
+            "width": 1024,
+            "height": 1024,
+            "bytes": 294,
+            "source": "dx-source-owned-svg-placeholder",
+            "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-dark-b0698a08bf67b748.placeholder.svg",
+            "hash": "b0698a08bf67b748",
+            "artifact_bytes": 173
+          },
+          "boundary": "metadata-plus-svg-placeholder-no-resize-or-encoding",
+          "informed_by": [
+            "turbopack-image::process::get_meta_data",
+            "turbopack-image::process::svg"
+          ]
+        }
+      }
+    },
+    {
+      "path": "public/logo-light.svg",
+      "output": ".dx/www/output/public/logo-light-c9d5f79efb354004.svg",
+      "hash": "c9d5f79efb354004",
+      "size": 1173,
+      "node_modules_required": false,
+      "lifecycle_scripts_executed": false,
+      "source_owned_contract": true,
+      "external_runtime_required": false,
+      "external_runtime_executed": false,
+      "image_metadata": {
+        "format": "svg",
+        "mime_type": "image/svg+xml",
+        "width": 1024,
+        "height": 1024,
+        "dimension_source": "svg-root-attributes",
+        "status": "metadata-read",
+        "optimization": {
+          "status": "metadata-plus-svg-placeholder",
+          "variants_emitted": 0,
+          "optimizer_invoked": false,
+          "resize_emitted": false,
+          "encoding_emitted": false,
+          "blur_placeholder_emitted": false,
+          "placeholder": {
+            "kind": "svg-placeholder-data-url",
+            "data_url": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221024%22%20height%3D%221024%22%20viewBox%3D%220%200%201024%201024%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f3f4f6%22%2F%3E%3C%2Fsvg%3E",
+            "width": 1024,
+            "height": 1024,
+            "bytes": 294,
+            "source": "dx-source-owned-svg-placeholder",
+            "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-light-b0698a08bf67b748.placeholder.svg",
+            "hash": "b0698a08bf67b748",
+            "artifact_bytes": 173
+          },
+          "boundary": "metadata-plus-svg-placeholder-no-resize-or-encoding",
+          "informed_by": [
+            "turbopack-image::process::get_meta_data",
+            "turbopack-image::process::svg"
+          ]
+        }
+      }
+    },
+    {
+      "path": "public/route.svg",
+      "output": ".dx/www/output/public/route-c9d5f79efb354004.svg",
+      "hash": "c9d5f79efb354004",
+      "size": 1173,
+      "node_modules_required": false,
+      "lifecycle_scripts_executed": false,
+      "source_owned_contract": true,
+      "external_runtime_required": false,
+      "external_runtime_executed": false,
+      "image_metadata": {
+        "format": "svg",
+        "mime_type": "image/svg+xml",
+        "width": 1024,
+        "height": 1024,
+        "dimension_source": "svg-root-attributes",
+        "status": "metadata-read",
+        "optimization": {
+          "status": "metadata-plus-svg-placeholder",
+          "variants_emitted": 0,
+          "optimizer_invoked": false,
+          "resize_emitted": false,
+          "encoding_emitted": false,
+          "blur_placeholder_emitted": false,
+          "placeholder": {
+            "kind": "svg-placeholder-data-url",
+            "data_url": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221024%22%20height%3D%221024%22%20viewBox%3D%220%200%201024%201024%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f3f4f6%22%2F%3E%3C%2Fsvg%3E",
+            "width": 1024,
+            "height": 1024,
+            "bytes": 294,
+            "source": "dx-source-owned-svg-placeholder",
+            "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/route-b0698a08bf67b748.placeholder.svg",
+            "hash": "b0698a08bf67b748",
+            "artifact_bytes": 173
           },
           "boundary": "metadata-plus-svg-placeholder-no-resize-or-encoding",
           "informed_by": [
@@ -537,9 +678,9 @@
     },
     {
       "path": "public/whiteboard-runtime.js",
-      "output": ".dx/www/output/public/whiteboard-runtime-44f069aa63b41fee.js",
-      "hash": "44f069aa63b41fee",
-      "size": 116532,
+      "output": ".dx/www/output/public/whiteboard-runtime-6cc480e938d3531c.js",
+      "hash": "6cc480e938d3531c",
+      "size": 127002,
       "node_modules_required": false,
       "lifecycle_scripts_executed": false,
       "source_owned_contract": true,

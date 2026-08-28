@@ -732,22 +732,10 @@ impl DxWebToolLogo {
 
 const DX_WEB_TOOL_LOGOS: &[DxWebToolLogo] = &[
     DxWebToolLogo {
-        id: "design",
-        label: "Design",
-        light_path: "icons/dx_web_tools/design-light-transparent.svg",
-        dark_path: "icons/dx_web_tools/design-dark-transparent.svg",
-    },
-    DxWebToolLogo {
         id: "graphics",
         label: "Graphics",
         light_path: "icons/dx_web_tools/graphics-light-transparent.svg",
         dark_path: "icons/dx_web_tools/graphics-dark-transparent.svg",
-    },
-    DxWebToolLogo {
-        id: "presentations",
-        label: "Presentations",
-        light_path: "icons/dx_web_tools/presentations-light-transparent.svg",
-        dark_path: "icons/dx_web_tools/presentations-dark-transparent.svg",
     },
     DxWebToolLogo {
         id: "spreadsheets",

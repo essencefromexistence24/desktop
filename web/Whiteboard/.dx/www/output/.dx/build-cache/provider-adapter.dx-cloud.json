@@ -6,7 +6,7 @@
   "account_bound": false,
   "network_required": false,
   "secrets_required": false,
-  "deployment_id": "dxlocal-9fce00726390d663",
+  "deployment_id": "dxlocal-ac94ab9bf1226774",
   "deploy_adapter_path": ".dx/build-cache/deploy-adapter.json",
   "no_node_modules_required": true,
   "runtime": {
@@ -17,7 +17,7 @@
   },
   "build_manifest": {
     "path": ".dx/build-cache/manifest.json",
-    "hash": "blake3:9fce00726390d6639885db57505805f5ac6ce90e07272011b0f90024ef75e5df",
+    "hash": "blake3:ac94ab9bf122677469e81f42f2249c21fe882df1c56ff7f95d95ddb4c4c3e576",
     "signed": false,
     "signature_required_for_release": true,
     "signature_policy": "sign manifest before hosted promotion"
@@ -40,32 +40,53 @@
       "encoded_from": null
     },
     {
-      "path": ".dx/build-cache/image-placeholders/public/icon-653d1ed174ed39da.placeholder.svg",
+      "path": ".dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": null,
       "encoded_from": null
     },
     {
-      "path": "_dx/styles/react-route-cacdba51273ec77f.css",
+      "path": ".dx/build-cache/image-placeholders/public/logo-dark-b0698a08bf67b748.placeholder.svg",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": null,
+      "encoded_from": null
+    },
+    {
+      "path": ".dx/build-cache/image-placeholders/public/logo-light-b0698a08bf67b748.placeholder.svg",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": null,
+      "encoded_from": null
+    },
+    {
+      "path": ".dx/build-cache/image-placeholders/public/route-b0698a08bf67b748.placeholder.svg",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": null,
+      "encoded_from": null
+    },
+    {
+      "path": "_dx/styles/react-route-45873ef2a467540b.css",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "text/css; charset=utf-8",
       "content_encoding": null,
       "encoded_from": null
     },
     {
-      "path": "_dx/styles/react-route-cacdba51273ec77f.css.br",
+      "path": "_dx/styles/react-route-45873ef2a467540b.css.br",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "text/css; charset=utf-8",
       "content_encoding": "br",
-      "encoded_from": "_dx/styles/react-route-cacdba51273ec77f.css"
+      "encoded_from": "_dx/styles/react-route-45873ef2a467540b.css"
     },
     {
-      "path": "_dx/styles/react-route-cacdba51273ec77f.css.gz",
+      "path": "_dx/styles/react-route-45873ef2a467540b.css.gz",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "text/css; charset=utf-8",
       "content_encoding": "gzip",
-      "encoded_from": "_dx/styles/react-route-cacdba51273ec77f.css"
+      "encoded_from": "_dx/styles/react-route-45873ef2a467540b.css"
     },
     {
       "path": "agent-cursor.js",
@@ -173,6 +194,48 @@
       "encoded_from": "icon.svg"
     },
     {
+      "path": "logo-dark.svg",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": null,
+      "encoded_from": null
+    },
+    {
+      "path": "logo-dark.svg.br",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "br",
+      "encoded_from": "logo-dark.svg"
+    },
+    {
+      "path": "logo-dark.svg.gz",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "gzip",
+      "encoded_from": "logo-dark.svg"
+    },
+    {
+      "path": "logo-light.svg",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": null,
+      "encoded_from": null
+    },
+    {
+      "path": "logo-light.svg.br",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "br",
+      "encoded_from": "logo-light.svg"
+    },
+    {
+      "path": "logo-light.svg.gz",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "gzip",
+      "encoded_from": "logo-light.svg"
+    },
+    {
       "path": "public/agent-cursor-b383c71fb0eaf48f.js",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
@@ -215,67 +278,151 @@
       "encoded_from": "public/canvas-export-85222fce691117f3.js"
     },
     {
-      "path": "public/favicon-8ef8e37dd36b0f62.svg",
+      "path": "public/favicon-81a1cb073dbeda57.svg",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": null,
       "encoded_from": null
     },
     {
-      "path": "public/favicon-8ef8e37dd36b0f62.svg.br",
+      "path": "public/favicon-81a1cb073dbeda57.svg.br",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "br",
-      "encoded_from": "public/favicon-8ef8e37dd36b0f62.svg"
+      "encoded_from": "public/favicon-81a1cb073dbeda57.svg"
     },
     {
-      "path": "public/favicon-8ef8e37dd36b0f62.svg.gz",
+      "path": "public/favicon-81a1cb073dbeda57.svg.gz",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "gzip",
-      "encoded_from": "public/favicon-8ef8e37dd36b0f62.svg"
+      "encoded_from": "public/favicon-81a1cb073dbeda57.svg"
     },
     {
-      "path": "public/icon-1f5e3f2581bd66f8.svg",
+      "path": "public/icon-c9d5f79efb354004.svg",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": null,
       "encoded_from": null
     },
     {
-      "path": "public/icon-1f5e3f2581bd66f8.svg.br",
+      "path": "public/icon-c9d5f79efb354004.svg.br",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "br",
-      "encoded_from": "public/icon-1f5e3f2581bd66f8.svg"
+      "encoded_from": "public/icon-c9d5f79efb354004.svg"
     },
     {
-      "path": "public/icon-1f5e3f2581bd66f8.svg.gz",
+      "path": "public/icon-c9d5f79efb354004.svg.gz",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "gzip",
-      "encoded_from": "public/icon-1f5e3f2581bd66f8.svg"
+      "encoded_from": "public/icon-c9d5f79efb354004.svg"
     },
     {
-      "path": "public/whiteboard-runtime-44f069aa63b41fee.js",
+      "path": "public/logo-dark-1043f13147ec8686.svg",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": null,
+      "encoded_from": null
+    },
+    {
+      "path": "public/logo-dark-1043f13147ec8686.svg.br",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "br",
+      "encoded_from": "public/logo-dark-1043f13147ec8686.svg"
+    },
+    {
+      "path": "public/logo-dark-1043f13147ec8686.svg.gz",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "gzip",
+      "encoded_from": "public/logo-dark-1043f13147ec8686.svg"
+    },
+    {
+      "path": "public/logo-light-c9d5f79efb354004.svg",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": null,
+      "encoded_from": null
+    },
+    {
+      "path": "public/logo-light-c9d5f79efb354004.svg.br",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "br",
+      "encoded_from": "public/logo-light-c9d5f79efb354004.svg"
+    },
+    {
+      "path": "public/logo-light-c9d5f79efb354004.svg.gz",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "gzip",
+      "encoded_from": "public/logo-light-c9d5f79efb354004.svg"
+    },
+    {
+      "path": "public/route-c9d5f79efb354004.svg",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": null,
+      "encoded_from": null
+    },
+    {
+      "path": "public/route-c9d5f79efb354004.svg.br",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "br",
+      "encoded_from": "public/route-c9d5f79efb354004.svg"
+    },
+    {
+      "path": "public/route-c9d5f79efb354004.svg.gz",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "gzip",
+      "encoded_from": "public/route-c9d5f79efb354004.svg"
+    },
+    {
+      "path": "public/whiteboard-runtime-6cc480e938d3531c.js",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": null,
       "encoded_from": null
     },
     {
-      "path": "public/whiteboard-runtime-44f069aa63b41fee.js.br",
+      "path": "public/whiteboard-runtime-6cc480e938d3531c.js.br",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "br",
-      "encoded_from": "public/whiteboard-runtime-44f069aa63b41fee.js"
+      "encoded_from": "public/whiteboard-runtime-6cc480e938d3531c.js"
     },
     {
-      "path": "public/whiteboard-runtime-44f069aa63b41fee.js.gz",
+      "path": "public/whiteboard-runtime-6cc480e938d3531c.js.gz",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "gzip",
-      "encoded_from": "public/whiteboard-runtime-44f069aa63b41fee.js"
+      "encoded_from": "public/whiteboard-runtime-6cc480e938d3531c.js"
+    },
+    {
+      "path": "route.svg",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": null,
+      "encoded_from": null
+    },
+    {
+      "path": "route.svg.br",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "br",
+      "encoded_from": "route.svg"
+    },
+    {
+      "path": "route.svg.gz",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "gzip",
+      "encoded_from": "route.svg"
     },
     {
       "path": "styles/generated.css",
@@ -417,7 +564,7 @@
     "schema": "dx.www.deploy.cache_manifest",
     "schema_revision": 1,
     "path": ".dx/build-cache/cache-manifest.json",
-    "public_runtime_artifacts": 49,
+    "public_runtime_artifacts": 67,
     "precompressed_encodings": [
       "br",
       "gzip"
@@ -455,7 +602,7 @@
     "requires_provider_account": false,
     "network_required": false,
     "node_modules_required": false,
-    "artifact_count": 65,
+    "artifact_count": 86,
     "forge_receipt_count": 0,
     "forge": {
       "root": "forge",
@@ -540,13 +687,13 @@
     "release_ready": false,
     "hosted_provider_proof": false,
     "matrix_status": "local-proof-and-upload-plan-only",
-    "public_runtime_artifacts": 49,
-    "evidence_artifacts": 23
+    "public_runtime_artifacts": 67,
+    "evidence_artifacts": 26
   },
   "readiness": {
     "schema": "dx.www.readiness.deploy_contract",
     "schema_revision": 1,
-    "manifest_hash": "blake3:9fce00726390d6639885db57505805f5ac6ce90e07272011b0f90024ef75e5df",
+    "manifest_hash": "blake3:ac94ab9bf122677469e81f42f2249c21fe882df1c56ff7f95d95ddb4c4c3e576",
     "target_score": 99,
     "current_honest_score": 99,
     "fastest_world_claim": false,
@@ -1405,9 +1552,9 @@
       "proof_graph"
     ],
     "output_hashes": {
-      "manifest_hash": "blake3:9fce00726390d6639885db57505805f5ac6ce90e07272011b0f90024ef75e5df",
-      "serializer_source_blake3": "40a4ed3baa896427c7be62c5c872ec0a876ad6b05fe2073d41c406d65e523334",
-      "serializer_machine_blake3": "6e179dafee5c6a1a184db7196f119fed73559879a5592b496ddd53884cdc5d76"
+      "manifest_hash": "blake3:ac94ab9bf122677469e81f42f2249c21fe882df1c56ff7f95d95ddb4c4c3e576",
+      "serializer_source_blake3": "7c5cafad4973dbaf53e966b76c890f58323547da53394d89d5debab72ac2dee2",
+      "serializer_machine_blake3": "1bfd99badd41051b2849117b0df52473d47881039d90d33dec98eb87b1e99b06"
     },
     "receipt_freshness": "written-by-dx-build-not-release-proof",
     "stale_reasons": [
@@ -1640,7 +1787,7 @@
     "machine_path_within_root": true,
     "serializer_machine_generated": true,
     "release_ready": false,
-    "manifest_hash": "blake3:9fce00726390d6639885db57505805f5ac6ce90e07272011b0f90024ef75e5df"
+    "manifest_hash": "blake3:ac94ab9bf122677469e81f42f2249c21fe882df1c56ff7f95d95ddb4c4c3e576"
   },
   "bundle_partition": {
     "schema": "dx.www.deploy.bundle_partition",
@@ -1648,10 +1795,10 @@
     "separation_enforced": true,
     "public_runtime_bundle": {
       "deployable": true,
-      "artifact_count": 49,
+      "artifact_count": 67,
       "artifacts": [
         {
-          "path": "_dx/styles/react-route-cacdba51273ec77f.css",
+          "path": "_dx/styles/react-route-45873ef2a467540b.css",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "text/css; charset=utf-8",
@@ -1659,20 +1806,20 @@
           "encoded_from": null
         },
         {
-          "path": "_dx/styles/react-route-cacdba51273ec77f.css.br",
+          "path": "_dx/styles/react-route-45873ef2a467540b.css.br",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "text/css; charset=utf-8",
           "content_encoding": "br",
-          "encoded_from": "_dx/styles/react-route-cacdba51273ec77f.css"
+          "encoded_from": "_dx/styles/react-route-45873ef2a467540b.css"
         },
         {
-          "path": "_dx/styles/react-route-cacdba51273ec77f.css.gz",
+          "path": "_dx/styles/react-route-45873ef2a467540b.css.gz",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "text/css; charset=utf-8",
           "content_encoding": "gzip",
-          "encoded_from": "_dx/styles/react-route-cacdba51273ec77f.css"
+          "encoded_from": "_dx/styles/react-route-45873ef2a467540b.css"
         },
         {
           "path": "agent-cursor.js",
@@ -1803,6 +1950,54 @@
           "encoded_from": "icon.svg"
         },
         {
+          "path": "logo-dark.svg",
+          "kind": "immutable-asset",
+          "cache_control": "public, max-age=31536000, immutable",
+          "content_type": "image/svg+xml",
+          "content_encoding": null,
+          "encoded_from": null
+        },
+        {
+          "path": "logo-dark.svg.br",
+          "kind": "immutable-asset",
+          "cache_control": "public, max-age=31536000, immutable",
+          "content_type": "image/svg+xml",
+          "content_encoding": "br",
+          "encoded_from": "logo-dark.svg"
+        },
+        {
+          "path": "logo-dark.svg.gz",
+          "kind": "immutable-asset",
+          "cache_control": "public, max-age=31536000, immutable",
+          "content_type": "image/svg+xml",
+          "content_encoding": "gzip",
+          "encoded_from": "logo-dark.svg"
+        },
+        {
+          "path": "logo-light.svg",
+          "kind": "immutable-asset",
+          "cache_control": "public, max-age=31536000, immutable",
+          "content_type": "image/svg+xml",
+          "content_encoding": null,
+          "encoded_from": null
+        },
+        {
+          "path": "logo-light.svg.br",
+          "kind": "immutable-asset",
+          "cache_control": "public, max-age=31536000, immutable",
+          "content_type": "image/svg+xml",
+          "content_encoding": "br",
+          "encoded_from": "logo-light.svg"
+        },
+        {
+          "path": "logo-light.svg.gz",
+          "kind": "immutable-asset",
+          "cache_control": "public, max-age=31536000, immutable",
+          "content_type": "image/svg+xml",
+          "content_encoding": "gzip",
+          "encoded_from": "logo-light.svg"
+        },
+        {
           "path": "public/agent-cursor-b383c71fb0eaf48f.js",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
@@ -1851,7 +2046,7 @@
           "encoded_from": "public/canvas-export-85222fce691117f3.js"
         },
         {
-          "path": "public/favicon-8ef8e37dd36b0f62.svg",
+          "path": "public/favicon-81a1cb073dbeda57.svg",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "image/svg+xml",
@@ -1859,23 +2054,23 @@
           "encoded_from": null
         },
         {
-          "path": "public/favicon-8ef8e37dd36b0f62.svg.br",
+          "path": "public/favicon-81a1cb073dbeda57.svg.br",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "image/svg+xml",
           "content_encoding": "br",
-          "encoded_from": "public/favicon-8ef8e37dd36b0f62.svg"
+          "encoded_from": "public/favicon-81a1cb073dbeda57.svg"
         },
         {
-          "path": "public/favicon-8ef8e37dd36b0f62.svg.gz",
+          "path": "public/favicon-81a1cb073dbeda57.svg.gz",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "image/svg+xml",
           "content_encoding": "gzip",
-          "encoded_from": "public/favicon-8ef8e37dd36b0f62.svg"
+          "encoded_from": "public/favicon-81a1cb073dbeda57.svg"
         },
         {
-          "path": "public/icon-1f5e3f2581bd66f8.svg",
+          "path": "public/icon-c9d5f79efb354004.svg",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "image/svg+xml",
@@ -1883,23 +2078,95 @@
           "encoded_from": null
         },
         {
-          "path": "public/icon-1f5e3f2581bd66f8.svg.br",
+          "path": "public/icon-c9d5f79efb354004.svg.br",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "image/svg+xml",
           "content_encoding": "br",
-          "encoded_from": "public/icon-1f5e3f2581bd66f8.svg"
+          "encoded_from": "public/icon-c9d5f79efb354004.svg"
         },
         {
-          "path": "public/icon-1f5e3f2581bd66f8.svg.gz",
+          "path": "public/icon-c9d5f79efb354004.svg.gz",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "image/svg+xml",
           "content_encoding": "gzip",
-          "encoded_from": "public/icon-1f5e3f2581bd66f8.svg"
+          "encoded_from": "public/icon-c9d5f79efb354004.svg"
         },
         {
-          "path": "public/whiteboard-runtime-44f069aa63b41fee.js",
+          "path": "public/logo-dark-1043f13147ec8686.svg",
+          "kind": "immutable-asset",
+          "cache_control": "public, max-age=31536000, immutable",
+          "content_type": "image/svg+xml",
+          "content_encoding": null,
+          "encoded_from": null
+        },
+        {
+          "path": "public/logo-dark-1043f13147ec8686.svg.br",
+          "kind": "immutable-asset",
+          "cache_control": "public, max-age=31536000, immutable",
+          "content_type": "image/svg+xml",
+          "content_encoding": "br",
+          "encoded_from": "public/logo-dark-1043f13147ec8686.svg"
+        },
+        {
+          "path": "public/logo-dark-1043f13147ec8686.svg.gz",
+          "kind": "immutable-asset",
+          "cache_control": "public, max-age=31536000, immutable",
+          "content_type": "image/svg+xml",
+          "content_encoding": "gzip",
+          "encoded_from": "public/logo-dark-1043f13147ec8686.svg"
+        },
+        {
+          "path": "public/logo-light-c9d5f79efb354004.svg",
+          "kind": "immutable-asset",
+          "cache_control": "public, max-age=31536000, immutable",
+          "content_type": "image/svg+xml",
+          "content_encoding": null,
+          "encoded_from": null
+        },
+        {
+          "path": "public/logo-light-c9d5f79efb354004.svg.br",
+          "kind": "immutable-asset",
+          "cache_control": "public, max-age=31536000, immutable",
+          "content_type": "image/svg+xml",
+          "content_encoding": "br",
+          "encoded_from": "public/logo-light-c9d5f79efb354004.svg"
+        },
+        {
+          "path": "public/logo-light-c9d5f79efb354004.svg.gz",
+          "kind": "immutable-asset",
+          "cache_control": "public, max-age=31536000, immutable",
+          "content_type": "image/svg+xml",
+          "content_encoding": "gzip",
+          "encoded_from": "public/logo-light-c9d5f79efb354004.svg"
+        },
+        {
+          "path": "public/route-c9d5f79efb354004.svg",
+          "kind": "immutable-asset",
+          "cache_control": "public, max-age=31536000, immutable",
+          "content_type": "image/svg+xml",
+          "content_encoding": null,
+          "encoded_from": null
+        },
+        {
+          "path": "public/route-c9d5f79efb354004.svg.br",
+          "kind": "immutable-asset",
+          "cache_control": "public, max-age=31536000, immutable",
+          "content_type": "image/svg+xml",
+          "content_encoding": "br",
+          "encoded_from": "public/route-c9d5f79efb354004.svg"
+        },
+        {
+          "path": "public/route-c9d5f79efb354004.svg.gz",
+          "kind": "immutable-asset",
+          "cache_control": "public, max-age=31536000, immutable",
+          "content_type": "image/svg+xml",
+          "content_encoding": "gzip",
+          "encoded_from": "public/route-c9d5f79efb354004.svg"
+        },
+        {
+          "path": "public/whiteboard-runtime-6cc480e938d3531c.js",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "application/javascript; charset=utf-8",
@@ -1907,20 +2174,44 @@
           "encoded_from": null
         },
         {
-          "path": "public/whiteboard-runtime-44f069aa63b41fee.js.br",
+          "path": "public/whiteboard-runtime-6cc480e938d3531c.js.br",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "application/javascript; charset=utf-8",
           "content_encoding": "br",
-          "encoded_from": "public/whiteboard-runtime-44f069aa63b41fee.js"
+          "encoded_from": "public/whiteboard-runtime-6cc480e938d3531c.js"
         },
         {
-          "path": "public/whiteboard-runtime-44f069aa63b41fee.js.gz",
+          "path": "public/whiteboard-runtime-6cc480e938d3531c.js.gz",
           "kind": "immutable-asset",
           "cache_control": "public, max-age=31536000, immutable",
           "content_type": "application/javascript; charset=utf-8",
           "content_encoding": "gzip",
-          "encoded_from": "public/whiteboard-runtime-44f069aa63b41fee.js"
+          "encoded_from": "public/whiteboard-runtime-6cc480e938d3531c.js"
+        },
+        {
+          "path": "route.svg",
+          "kind": "immutable-asset",
+          "cache_control": "public, max-age=31536000, immutable",
+          "content_type": "image/svg+xml",
+          "content_encoding": null,
+          "encoded_from": null
+        },
+        {
+          "path": "route.svg.br",
+          "kind": "immutable-asset",
+          "cache_control": "public, max-age=31536000, immutable",
+          "content_type": "image/svg+xml",
+          "content_encoding": "br",
+          "encoded_from": "route.svg"
+        },
+        {
+          "path": "route.svg.gz",
+          "kind": "immutable-asset",
+          "cache_control": "public, max-age=31536000, immutable",
+          "content_type": "image/svg+xml",
+          "content_encoding": "gzip",
+          "encoded_from": "route.svg"
         },
         {
           "path": "styles/generated.css",
@@ -2054,7 +2345,7 @@
     "evidence_bundle": {
       "deployable_public_bytes": false,
       "cache_control": "no-store",
-      "artifact_count": 23,
+      "artifact_count": 26,
       "artifacts": [
         {
           "path": ".dx/build-cache/cache-manifest.json",
@@ -2097,7 +2388,31 @@
           "encoded_from": null
         },
         {
-          "path": ".dx/build-cache/image-placeholders/public/icon-653d1ed174ed39da.placeholder.svg",
+          "path": ".dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg",
+          "kind": "immutable-asset",
+          "cache_control": "no-store",
+          "content_type": "image/svg+xml",
+          "content_encoding": null,
+          "encoded_from": null
+        },
+        {
+          "path": ".dx/build-cache/image-placeholders/public/logo-dark-b0698a08bf67b748.placeholder.svg",
+          "kind": "immutable-asset",
+          "cache_control": "no-store",
+          "content_type": "image/svg+xml",
+          "content_encoding": null,
+          "encoded_from": null
+        },
+        {
+          "path": ".dx/build-cache/image-placeholders/public/logo-light-b0698a08bf67b748.placeholder.svg",
+          "kind": "immutable-asset",
+          "cache_control": "no-store",
+          "content_type": "image/svg+xml",
+          "content_encoding": null,
+          "encoded_from": null
+        },
+        {
+          "path": ".dx/build-cache/image-placeholders/public/route-b0698a08bf67b748.placeholder.svg",
           "kind": "immutable-asset",
           "cache_control": "no-store",
           "content_type": "image/svg+xml",
@@ -2311,7 +2626,46 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": ".dx/build-cache/image-placeholders/public/icon-653d1ed174ed39da.placeholder.svg",
+      "path": ".dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg",
+      "kind": "immutable-asset",
+      "bundle": "evidence",
+      "cache_control": "no-store",
+      "content_type": "image/svg+xml",
+      "content_encoding": null,
+      "encoded_from": null,
+      "cdn_headers": {},
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": ".dx/build-cache/image-placeholders/public/logo-dark-b0698a08bf67b748.placeholder.svg",
+      "kind": "immutable-asset",
+      "bundle": "evidence",
+      "cache_control": "no-store",
+      "content_type": "image/svg+xml",
+      "content_encoding": null,
+      "encoded_from": null,
+      "cdn_headers": {},
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": ".dx/build-cache/image-placeholders/public/logo-light-b0698a08bf67b748.placeholder.svg",
+      "kind": "immutable-asset",
+      "bundle": "evidence",
+      "cache_control": "no-store",
+      "content_type": "image/svg+xml",
+      "content_encoding": null,
+      "encoded_from": null,
+      "cdn_headers": {},
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": ".dx/build-cache/image-placeholders/public/route-b0698a08bf67b748.placeholder.svg",
       "kind": "immutable-asset",
       "bundle": "evidence",
       "cache_control": "no-store",
@@ -2480,7 +2834,7 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "_dx/styles/react-route-cacdba51273ec77f.css",
+      "path": "_dx/styles/react-route-45873ef2a467540b.css",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
@@ -2493,13 +2847,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "_dx/styles/react-route-cacdba51273ec77f.css.br",
+      "path": "_dx/styles/react-route-45873ef2a467540b.css.br",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "text/css; charset=utf-8",
       "content_encoding": "br",
-      "encoded_from": "_dx/styles/react-route-cacdba51273ec77f.css",
+      "encoded_from": "_dx/styles/react-route-45873ef2a467540b.css",
       "cdn_headers": {
         "Content-Encoding": "br",
         "Vary": "Accept-Encoding",
@@ -2510,13 +2864,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "_dx/styles/react-route-cacdba51273ec77f.css.gz",
+      "path": "_dx/styles/react-route-45873ef2a467540b.css.gz",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "text/css; charset=utf-8",
       "content_encoding": "gzip",
-      "encoded_from": "_dx/styles/react-route-cacdba51273ec77f.css",
+      "encoded_from": "_dx/styles/react-route-45873ef2a467540b.css",
       "cdn_headers": {
         "Content-Encoding": "gzip",
         "Vary": "Accept-Encoding",
@@ -2788,6 +3142,100 @@
       "lifecycle_scripts_executed": false
     },
     {
+      "path": "logo-dark.svg",
+      "kind": "immutable-asset",
+      "bundle": "public-runtime",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": null,
+      "encoded_from": null,
+      "cdn_headers": {},
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": "logo-dark.svg.br",
+      "kind": "immutable-asset",
+      "bundle": "public-runtime",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "br",
+      "encoded_from": "logo-dark.svg",
+      "cdn_headers": {
+        "Content-Encoding": "br",
+        "Vary": "Accept-Encoding",
+        "Content-Type": "image/svg+xml"
+      },
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": "logo-dark.svg.gz",
+      "kind": "immutable-asset",
+      "bundle": "public-runtime",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "gzip",
+      "encoded_from": "logo-dark.svg",
+      "cdn_headers": {
+        "Content-Encoding": "gzip",
+        "Vary": "Accept-Encoding",
+        "Content-Type": "image/svg+xml"
+      },
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": "logo-light.svg",
+      "kind": "immutable-asset",
+      "bundle": "public-runtime",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": null,
+      "encoded_from": null,
+      "cdn_headers": {},
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": "logo-light.svg.br",
+      "kind": "immutable-asset",
+      "bundle": "public-runtime",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "br",
+      "encoded_from": "logo-light.svg",
+      "cdn_headers": {
+        "Content-Encoding": "br",
+        "Vary": "Accept-Encoding",
+        "Content-Type": "image/svg+xml"
+      },
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": "logo-light.svg.gz",
+      "kind": "immutable-asset",
+      "bundle": "public-runtime",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "gzip",
+      "encoded_from": "logo-light.svg",
+      "cdn_headers": {
+        "Content-Encoding": "gzip",
+        "Vary": "Accept-Encoding",
+        "Content-Type": "image/svg+xml"
+      },
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
       "path": "public/agent-cursor-b383c71fb0eaf48f.js",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
@@ -2882,7 +3330,7 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/favicon-8ef8e37dd36b0f62.svg",
+      "path": "public/favicon-81a1cb073dbeda57.svg",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
@@ -2895,13 +3343,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/favicon-8ef8e37dd36b0f62.svg.br",
+      "path": "public/favicon-81a1cb073dbeda57.svg.br",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "br",
-      "encoded_from": "public/favicon-8ef8e37dd36b0f62.svg",
+      "encoded_from": "public/favicon-81a1cb073dbeda57.svg",
       "cdn_headers": {
         "Content-Encoding": "br",
         "Vary": "Accept-Encoding",
@@ -2912,13 +3360,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/favicon-8ef8e37dd36b0f62.svg.gz",
+      "path": "public/favicon-81a1cb073dbeda57.svg.gz",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "gzip",
-      "encoded_from": "public/favicon-8ef8e37dd36b0f62.svg",
+      "encoded_from": "public/favicon-81a1cb073dbeda57.svg",
       "cdn_headers": {
         "Content-Encoding": "gzip",
         "Vary": "Accept-Encoding",
@@ -2929,7 +3377,7 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/icon-1f5e3f2581bd66f8.svg",
+      "path": "public/icon-c9d5f79efb354004.svg",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
@@ -2942,13 +3390,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/icon-1f5e3f2581bd66f8.svg.br",
+      "path": "public/icon-c9d5f79efb354004.svg.br",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "br",
-      "encoded_from": "public/icon-1f5e3f2581bd66f8.svg",
+      "encoded_from": "public/icon-c9d5f79efb354004.svg",
       "cdn_headers": {
         "Content-Encoding": "br",
         "Vary": "Accept-Encoding",
@@ -2959,13 +3407,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/icon-1f5e3f2581bd66f8.svg.gz",
+      "path": "public/icon-c9d5f79efb354004.svg.gz",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "image/svg+xml",
       "content_encoding": "gzip",
-      "encoded_from": "public/icon-1f5e3f2581bd66f8.svg",
+      "encoded_from": "public/icon-c9d5f79efb354004.svg",
       "cdn_headers": {
         "Content-Encoding": "gzip",
         "Vary": "Accept-Encoding",
@@ -2976,7 +3424,148 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/whiteboard-runtime-44f069aa63b41fee.js",
+      "path": "public/logo-dark-1043f13147ec8686.svg",
+      "kind": "immutable-asset",
+      "bundle": "public-runtime",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": null,
+      "encoded_from": null,
+      "cdn_headers": {},
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": "public/logo-dark-1043f13147ec8686.svg.br",
+      "kind": "immutable-asset",
+      "bundle": "public-runtime",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "br",
+      "encoded_from": "public/logo-dark-1043f13147ec8686.svg",
+      "cdn_headers": {
+        "Content-Encoding": "br",
+        "Vary": "Accept-Encoding",
+        "Content-Type": "image/svg+xml"
+      },
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": "public/logo-dark-1043f13147ec8686.svg.gz",
+      "kind": "immutable-asset",
+      "bundle": "public-runtime",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "gzip",
+      "encoded_from": "public/logo-dark-1043f13147ec8686.svg",
+      "cdn_headers": {
+        "Content-Encoding": "gzip",
+        "Vary": "Accept-Encoding",
+        "Content-Type": "image/svg+xml"
+      },
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": "public/logo-light-c9d5f79efb354004.svg",
+      "kind": "immutable-asset",
+      "bundle": "public-runtime",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": null,
+      "encoded_from": null,
+      "cdn_headers": {},
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": "public/logo-light-c9d5f79efb354004.svg.br",
+      "kind": "immutable-asset",
+      "bundle": "public-runtime",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "br",
+      "encoded_from": "public/logo-light-c9d5f79efb354004.svg",
+      "cdn_headers": {
+        "Content-Encoding": "br",
+        "Vary": "Accept-Encoding",
+        "Content-Type": "image/svg+xml"
+      },
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": "public/logo-light-c9d5f79efb354004.svg.gz",
+      "kind": "immutable-asset",
+      "bundle": "public-runtime",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "gzip",
+      "encoded_from": "public/logo-light-c9d5f79efb354004.svg",
+      "cdn_headers": {
+        "Content-Encoding": "gzip",
+        "Vary": "Accept-Encoding",
+        "Content-Type": "image/svg+xml"
+      },
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": "public/route-c9d5f79efb354004.svg",
+      "kind": "immutable-asset",
+      "bundle": "public-runtime",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": null,
+      "encoded_from": null,
+      "cdn_headers": {},
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": "public/route-c9d5f79efb354004.svg.br",
+      "kind": "immutable-asset",
+      "bundle": "public-runtime",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "br",
+      "encoded_from": "public/route-c9d5f79efb354004.svg",
+      "cdn_headers": {
+        "Content-Encoding": "br",
+        "Vary": "Accept-Encoding",
+        "Content-Type": "image/svg+xml"
+      },
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": "public/route-c9d5f79efb354004.svg.gz",
+      "kind": "immutable-asset",
+      "bundle": "public-runtime",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "gzip",
+      "encoded_from": "public/route-c9d5f79efb354004.svg",
+      "cdn_headers": {
+        "Content-Encoding": "gzip",
+        "Vary": "Accept-Encoding",
+        "Content-Type": "image/svg+xml"
+      },
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": "public/whiteboard-runtime-6cc480e938d3531c.js",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
@@ -2989,13 +3578,13 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/whiteboard-runtime-44f069aa63b41fee.js.br",
+      "path": "public/whiteboard-runtime-6cc480e938d3531c.js.br",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "br",
-      "encoded_from": "public/whiteboard-runtime-44f069aa63b41fee.js",
+      "encoded_from": "public/whiteboard-runtime-6cc480e938d3531c.js",
       "cdn_headers": {
         "Content-Encoding": "br",
         "Vary": "Accept-Encoding",
@@ -3006,17 +3595,64 @@
       "lifecycle_scripts_executed": false
     },
     {
-      "path": "public/whiteboard-runtime-44f069aa63b41fee.js.gz",
+      "path": "public/whiteboard-runtime-6cc480e938d3531c.js.gz",
       "kind": "immutable-asset",
       "bundle": "public-runtime",
       "cache_control": "public, max-age=31536000, immutable",
       "content_type": "application/javascript; charset=utf-8",
       "content_encoding": "gzip",
-      "encoded_from": "public/whiteboard-runtime-44f069aa63b41fee.js",
+      "encoded_from": "public/whiteboard-runtime-6cc480e938d3531c.js",
       "cdn_headers": {
         "Content-Encoding": "gzip",
         "Vary": "Accept-Encoding",
         "Content-Type": "application/javascript; charset=utf-8"
+      },
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": "route.svg",
+      "kind": "immutable-asset",
+      "bundle": "public-runtime",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": null,
+      "encoded_from": null,
+      "cdn_headers": {},
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": "route.svg.br",
+      "kind": "immutable-asset",
+      "bundle": "public-runtime",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "br",
+      "encoded_from": "route.svg",
+      "cdn_headers": {
+        "Content-Encoding": "br",
+        "Vary": "Accept-Encoding",
+        "Content-Type": "image/svg+xml"
+      },
+      "account_required": false,
+      "network_required": false,
+      "lifecycle_scripts_executed": false
+    },
+    {
+      "path": "route.svg.gz",
+      "kind": "immutable-asset",
+      "bundle": "public-runtime",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/svg+xml",
+      "content_encoding": "gzip",
+      "encoded_from": "route.svg",
+      "cdn_headers": {
+        "Content-Encoding": "gzip",
+        "Vary": "Accept-Encoding",
+        "Content-Type": "image/svg+xml"
       },
       "account_required": false,
       "network_required": false,

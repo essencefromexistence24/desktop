@@ -150,6 +150,15 @@ export async function authFetch(
     });
   } catch (err) {
     if (err instanceof TypeError) {
+      // In static web-preview (42xx port / file://) the backend is absent — don't spam
+      // "Train isn't running" errors; let caller fallback to local storage.
+      try {
+        const port = typeof window !== 'undefined' ? Number(window.location.port || 0) : 0;
+        const isPreview = (port >= 4200 && port <= 4300) || (typeof window !== 'undefined' && window.location.protocol === 'file:');
+        if (isPreview) {
+          throw new Error("Preview mode: backend unavailable (local fallback).");
+        }
+      } catch {}
       if (!isTauri && typeof navigator !== "undefined" && navigator.onLine === false) {
         throw new Error(
           "You appear to be offline. Check your network connection and try again.",

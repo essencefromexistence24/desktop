@@ -43,8 +43,8 @@ export type WhiteboardRenderScene = {
   readonly selectionArea?: WhiteboardBounds | null;
 };
 
-const SELECTION_STROKE = "hsl(212 100% 58%)";
-const SELECTION_FILL = "hsl(0 0% 100%)";
+const SELECTION_STROKE = "hsl(0 0% 96% / 0.95)";
+const SELECTION_FILL = "hsl(0 0% 96% / 0.08)";
 
 export function renderWhiteboardScene(context: WhiteboardCanvasContext, scene: WhiteboardRenderScene): void {
   const viewport = scene.viewport ?? scene.document.viewport;
@@ -272,8 +272,8 @@ function renderSelection(
   context.save();
   context.strokeStyle = SELECTION_STROKE;
   context.fillStyle = SELECTION_FILL;
-  context.lineWidth = 1;
-  context.setLineDash([4, 4]);
+  context.lineWidth = 1.25;
+  context.setLineDash([5, 4]);
   context.beginPath();
   context.rect(bounds.x, bounds.y, bounds.width, bounds.height);
   context.stroke();
@@ -291,10 +291,10 @@ function renderSelection(
 
 function renderSelectionArea(context: WhiteboardCanvasContext, bounds: WhiteboardBounds): void {
   context.save();
-  context.strokeStyle = SELECTION_STROKE;
-  context.fillStyle = "hsla(212, 100%, 58%, 0.1)";
+  context.strokeStyle = "hsl(0 0% 96% / 0.55)";
+  context.fillStyle = "hsl(0 0% 96% / 0.06)";
   context.lineWidth = 1;
-  context.setLineDash([6, 6]);
+  context.setLineDash([5, 4]);
   context.beginPath();
   context.rect(bounds.x, bounds.y, bounds.width, bounds.height);
   context.fill();

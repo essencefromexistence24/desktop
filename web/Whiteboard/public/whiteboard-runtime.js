@@ -13,8 +13,8 @@
   const STORAGE_KEY = "dx.whiteboard.example.document.workspace";
   const CREATE_THRESHOLD = 8;
   const MAX_INLINE_MEDIA_BYTES = 8 * 1024 * 1024;
-  const DEFAULT_TEXT_FONT = "JetBrains Mono";
-  const TEXT_FONT_FALLBACK = "'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace";
+  const DEFAULT_TEXT_FONT = "Geist";
+  const TEXT_FONT_FALLBACK = "'Geist', 'Inter', ui-sans-serif, system-ui, sans-serif";
 
   const toolLabels = {
     select: "Move",
@@ -112,6 +112,16 @@
     neon: { type: "linear", value: "linear-gradient(135deg, #00f260 0%, #0575e6 100%)" },
     coral: { type: "linear", value: "linear-gradient(135deg, #ff9966 0%, #ff5e62 100%)" },
     sunrise: { type: "linear", value: "linear-gradient(135deg, #ff512f 0%, #f09819 100%)" },
+    midnight: { type: "linear", value: "linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)" },
+    berry: { type: "linear", value: "linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%)" },
+    tide: { type: "linear", value: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)" },
+    horizon: { type: "linear", value: "linear-gradient(135deg, #f6d365 0%, #fda085 100%)" },
+    dusk: { type: "linear", value: "linear-gradient(135deg, #2c3e50 0%, #fd746c 100%)" },
+    cosmos: { type: "linear", value: "linear-gradient(135deg, #1a2980 0%, #26d0ce 100%)" },
+    peach: { type: "linear", value: "linear-gradient(135deg, #ff9a8b 0%, #ff6a88 50%, #ff99ac 100%)" },
+    violetfield: { type: "linear", value: "linear-gradient(135deg, #4776e6 0%, #8e54e9 100%)" },
+    pacific: { type: "linear", value: "linear-gradient(135deg, #34e89e 0%, #0f3443 100%)" },
+    flare: { type: "linear", value: "linear-gradient(135deg, #ff5e62 0%, #ff9966 100%)" },
     custom: { type: "solid", value: "#ffffff" }
   };
 
@@ -143,6 +153,16 @@
     neon: "Neon",
     coral: "Coral",
     sunrise: "Sunrise",
+    midnight: "Midnight",
+    berry: "Berry",
+    tide: "Tide",
+    horizon: "Horizon",
+    dusk: "Dusk",
+    cosmos: "Cosmos",
+    peach: "Peach",
+    violetfield: "Violet Field",
+    pacific: "Pacific",
+    flare: "Flare",
     custom: "Custom"
   };
 
@@ -371,6 +391,23 @@
       : null;
   }
 
+  function distanceToBounds(point, bounds, pad=0) {
+    const x1 = bounds.x - pad, y1 = bounds.y - pad, x2 = bounds.x + bounds.width + pad, y2 = bounds.y + bounds.height + pad;
+    const dx = Math.max(x1 - point.x, 0, point.x - x2);
+    const dy = Math.max(y1 - point.y, 0, point.y - y2);
+    return Math.hypot(dx, dy);
+  }
+  function findNearestNearPoint(pt, radius=18) {
+    let best = null, bestDist = Infinity;
+    for (const node of svgNodes("[data-whiteboard-object-id]")) {
+      const id = node.dataset.whiteboardObjectId;
+      const b = objectBounds(id);
+      if (!b) continue;
+      const d = distanceToBounds(pt, b, 2);
+      if (d <= radius && d < bestDist) { bestDist = d; best = id; }
+    }
+    return best;
+  }
   function inspectBounds(id) {
     const node = primaryObject(id);
     if (!node) return objectBounds(id);
@@ -1143,6 +1180,12 @@
     setAttribute(outline, "y", round(bounds.y - 4));
     setAttribute(outline, "width", round(bounds.width + 8));
     setAttribute(outline, "height", round(bounds.height + 8));
+    // Ensure rounded border
+    try { outline.setAttribute("rx", "12"); outline.setAttribute("ry", "12"); } catch {}
+    if (outline.dataset.hoverPreview === "true") delete outline.dataset.hoverPreview;
+    outline.style.opacity = "";
+    outline.style.strokeDasharray = "";
+    outline.style.stroke = "";
   }
 
   function updateInspector() {
@@ -1186,6 +1229,21 @@
     textEditor.style.left = `${Math.round(left)}px`;
     textEditor.style.top = `${Math.round(top)}px`;
     textEditor.style.width = `${Math.max(160, Math.round(nodeRect.width + 28))}px`;
+    // Match editor font styling to the SVG text element
+    try {
+      const computed = window.getComputedStyle(node);
+      const fontSize = node.getAttribute("font-size") || computed.fontSize || "30px";
+      const fontFamily = node.dataset.whiteboardFontFamily || node.getAttribute("font-family") || computed.fontFamily || TEXT_FONT_FALLBACK;
+      const fill = node.style.fill || node.getAttribute("fill") || computed.fill || "currentColor";
+      textEditor.style.fontSize = /px$/.test(String(fontSize)) ? String(fontSize) : `${fontSize}px`;
+      textEditor.style.fontFamily = fontFamily;
+      textEditor.style.color = fill !== "none" ? fill : "currentColor";
+      textEditor.style.lineHeight = computed.lineHeight || "1.2";
+      textEditor.style.fontWeight = computed.fontWeight || "600";
+      textEditor.style.textAlign = computed.textAlign || "left";
+      // Ensure rounded corners consistent
+      textEditor.style.borderRadius = "8px";
+    } catch {}
   }
 
   function openTextEditor(id) {
@@ -1204,7 +1262,20 @@
     state.editingTextId = id;
     state.editingOriginalText = extractTextContent(node);
     textEditor.value = state.editingOriginalText;
-    textEditor.style.fontFamily = node.dataset.whiteboardFontFamily || node.getAttribute("font-family") || TEXT_FONT_FALLBACK;
+    // Copy full text styling so inline edit feels native
+    try {
+      const computed = window.getComputedStyle(node);
+      const fontSize = node.getAttribute("font-size") || computed.fontSize || "30px";
+      const fontFamily = node.dataset.whiteboardFontFamily || node.getAttribute("font-family") || computed.fontFamily || TEXT_FONT_FALLBACK;
+      textEditor.style.fontFamily = fontFamily;
+      textEditor.style.fontSize = /px$/.test(String(fontSize)) ? String(fontSize) : `${fontSize}px`;
+      textEditor.style.color = node.style.fill || node.getAttribute("fill") || computed.fill || "hsl(var(--foreground))";
+      textEditor.style.fontWeight = computed.fontWeight || "600";
+      textEditor.style.lineHeight = computed.lineHeight || "1.35";
+      textEditor.style.textAlign = computed.textAlign || "left";
+    } catch {
+      textEditor.style.fontFamily = node.dataset.whiteboardFontFamily || node.getAttribute("font-family") || TEXT_FONT_FALLBACK;
+    }
     positionTextEditor(node);
     textEditor.hidden = false;
     
@@ -2295,8 +2366,16 @@
       return;
     }
     event.preventDefault();
-    const object = target.closest?.("[data-whiteboard-object-id], [data-whiteboard-owned-by]");
-    const id = object?.dataset.whiteboardObjectId || object?.dataset.whiteboardOwnedBy;
+    let object = target.closest?.("[data-whiteboard-object-id], [data-whiteboard-owned-by]");
+    let id = object?.dataset.whiteboardObjectId || object?.dataset.whiteboardOwnedBy;
+    // Proximity selection: if click is near an element (within ~18px), treat as click on it
+    if (!id && state.tool === "select") {
+      try {
+        const pt = pointFromEvent(event);
+        id = findNearestNearPoint(pt, 22) || "";
+        if (id) object = primaryObject(id);
+      } catch {}
+    }
     if (id) {
       const now = Date.now();
       if (state.lastClickId === id && now - (state.lastClickTime || 0) < 350) {
@@ -2453,17 +2532,54 @@
 
   window.addEventListener("pointermove", (event) => {
     if (!state.drag) {
-      const objectNode = event.target.closest?.("[data-whiteboard-object-id], [data-whiteboard-owned-by]");
-      const id = objectNode?.dataset.whiteboardObjectId || objectNode?.dataset.whiteboardOwnedBy;
+      // Direct hover or near-proximity hover (rounded border feedback)
+      let id = event.target.closest?.("[data-whiteboard-object-id], [data-whiteboard-owned-by]")?.dataset.whiteboardObjectId || event.target.closest?.("[data-whiteboard-object-id], [data-whiteboard-owned-by]")?.dataset.whiteboardOwnedBy || "";
+      if (!id && state.tool === "select") {
+        try {
+          const pt = pointFromEvent(event);
+          id = findNearestNearPoint(pt, 20) || "";
+        } catch {}
+      }
       if (id && state.tool === "select") {
         if (state.hoveredId !== id) {
-          if (state.hoveredId) objectNodes(state.hoveredId).forEach((n) => delete n.dataset.hovered);
+          if (state.hoveredId) objectNodes(state.hoveredId).forEach((n) => { delete n.dataset.hovered; delete n.dataset.near; });
           state.hoveredId = id;
-          objectNodes(id).forEach((n) => n.dataset.hovered = "true");
+          objectNodes(id).forEach((n) => { n.dataset.hovered = "true"; n.dataset.near = "true"; });
+          // Also update selection outline preview for near-hover (rounded border hint)
+          try {
+            const b = objectBounds(id);
+            if (b && !state.selectedIds.includes(id)) {
+              const outline = svg.querySelector("[data-whiteboard-selection-outline]");
+              if (outline) {
+                outline.setAttribute("x", String(Math.round(b.x - 4)));
+                outline.setAttribute("y", String(Math.round(b.y - 4)));
+                outline.setAttribute("width", String(Math.round(b.width + 8)));
+                outline.setAttribute("height", String(Math.round(b.height + 8)));
+                outline.setAttribute("rx", "12");
+                outline.style.opacity = "0.55";
+                outline.style.strokeDasharray = "0";
+                outline.style.stroke = "hsl(var(--foreground) / 0.5)";
+                outline.removeAttribute("hidden");
+                outline.dataset.hoverPreview = "true";
+              }
+            }
+          } catch {}
         }
       } else if (state.hoveredId) {
-        objectNodes(state.hoveredId).forEach((n) => delete n.dataset.hovered);
+        objectNodes(state.hoveredId).forEach((n) => { delete n.dataset.hovered; delete n.dataset.near; });
         state.hoveredId = "";
+        // restore selection outline if it was hover preview
+        try {
+          const outline = svg.querySelector("[data-whiteboard-selection-outline]");
+          if (outline && outline.dataset.hoverPreview === "true") {
+            delete outline.dataset.hoverPreview;
+            outline.style.opacity = "";
+            outline.style.strokeDasharray = "";
+            outline.style.stroke = "";
+            outline.setAttribute("rx", "18");
+            updateSelectionOutline();
+          }
+        } catch {}
       }
       return;
     }
@@ -2590,98 +2706,129 @@
   const exportBtn = root.querySelector("[data-whiteboard-export]");
   if (exportBtn) {
     exportBtn.addEventListener("click", async () => {
+      let svgUrl = null;
+      let blobUrl = null;
       try {
         exportBtn.disabled = true;
         exportBtn.title = "Exporting...";
-
+        exportBtn.classList.remove("is-success");
         const svgEl = svg;
-
-        // Serialise SVG to XML string
+        // Clone and sanitize SVG for export
+        const clone = svgEl.cloneNode(true);
+        // Remove selection outline and selection area from export
+        const outline = clone.querySelector("[data-whiteboard-selection-outline]");
+        if (outline) outline.remove();
+        const area = clone.querySelector(".wb-selection-area");
+        if (area) area.remove();
         const serializer = new XMLSerializer();
-        const svgText = serializer.serializeToString(svgEl);
+        let svgText = serializer.serializeToString(clone);
+        // Ensure xmlns present
+        if (!svgText.includes("xmlns")) {
+          svgText = svgText.replace("<svg", "<svg xmlns=\"" + SVG_NS + "\"");
+        }
         const svgBlob = new Blob([svgText], { type: "image/svg+xml;charset=utf-8" });
-        const svgUrl = URL.createObjectURL(svgBlob);
-
-        // Measure actual content bounds
-        const elements = svgEl.querySelectorAll("[data-whiteboard-object-id]");
+        svgUrl = URL.createObjectURL(svgBlob);
+        // Measure content bounds safely
         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-        elements.forEach((el) => {
-          const bbox = el.getBBox();
-          if (bbox.width > 0 || bbox.height > 0) {
-            minX = Math.min(minX, bbox.x);
-            minY = Math.min(minY, bbox.y);
-            maxX = Math.max(maxX, bbox.x + bbox.width);
-            maxY = Math.max(maxY, bbox.y + bbox.height);
-          }
-        });
+        try {
+          const elements = svgEl.querySelectorAll("[data-whiteboard-object-id]");
+          elements.forEach((el) => {
+            try {
+              const bbox = el.getBBox();
+              if (isFinite(bbox.x) && isFinite(bbox.y) && (bbox.width > 0 || bbox.height > 0)) {
+                minX = Math.min(minX, bbox.x);
+                minY = Math.min(minY, bbox.y);
+                maxX = Math.max(maxX, bbox.x + bbox.width);
+                maxY = Math.max(maxY, bbox.y + bbox.height);
+              }
+            } catch {}
+          });
+        } catch {}
         if (!isFinite(minX)) { minX = 0; minY = 0; maxX = 1200; maxY = 720; }
-
-        const pad = 40;
+        if (maxX - minX < 16) { maxX = minX + 16; }
+        if (maxY - minY < 16) { maxY = minY + 16; }
+        const pad = 24;
         const cropX = Math.max(0, minX - pad);
         const cropY = Math.max(0, minY - pad);
-        const cropW = maxX - minX + pad * 2;
-        const cropH = maxY - minY + pad * 2;
-
+        const cropW = Math.max(16, maxX - minX + pad * 2);
+        const cropH = Math.max(16, maxY - minY + pad * 2);
         const scale = 2;
+        // Guard against huge canvas (memory crash)
+        const maxDim = 4096;
+        const safeScale = (cropW * scale > maxDim || cropH * scale > maxDim) ? Math.min(maxDim / cropW, maxDim / cropH, scale) : scale;
         const canvasEl = document.createElement("canvas");
-        canvasEl.width = cropW * scale;
-        canvasEl.height = cropH * scale;
+        canvasEl.width = Math.round(cropW * safeScale);
+        canvasEl.height = Math.round(cropH * safeScale);
+        if (canvasEl.width === 0 || canvasEl.height === 0) throw new Error("Invalid canvas size");
         const ctx = canvasEl.getContext("2d");
         if (!ctx) throw new Error("Canvas 2D context unavailable");
-
-        // Fill white background
-        ctx.fillStyle = "#fff";
-        ctx.fillRect(0, 0, canvasEl.width, canvasEl.height);
-
-        // Draw SVG onto canvas
+        // Fill with theme background (not pure white)
+        const bg = getComputedStyle(document.documentElement).getPropertyValue("--wb-canvas") ? `hsl(${getComputedStyle(document.documentElement).getPropertyValue("--wb-canvas").trim()})` : "#0a0a0a";
+        try { ctx.fillStyle = bg; ctx.fillRect(0,0,canvasEl.width, canvasEl.height); } catch { ctx.fillStyle = "#0a0a0a"; ctx.fillRect(0,0,canvasEl.width, canvasEl.height); }
         const img = new Image();
+        img.decoding = "sync";
         await new Promise((resolve, reject) => {
-          img.onload = resolve;
-          img.onerror = reject;
+          const t = setTimeout(() => reject(new Error("SVG load timeout")), 4000);
+          img.onload = () => { clearTimeout(t); resolve(true); };
+          img.onerror = (e) => { clearTimeout(t); reject(e); };
           img.src = svgUrl;
         });
-        ctx.scale(scale, scale);
+        ctx.setTransform(safeScale,0,0,safeScale,0,0);
         ctx.drawImage(img, -cropX, -cropY);
-        URL.revokeObjectURL(svgUrl);
-
-        // Convert to PNG blob
-        const blob = await new Promise((resolve) => canvasEl.toBlob(resolve, "image/png"));
-
-        // Try to send to dx editor via IPC
+        if (svgUrl) { URL.revokeObjectURL(svgUrl); svgUrl = null; }
+        const blob = await new Promise((resolve, reject) => {
+          canvasEl.toBlob((b) => b ? resolve(b) : reject(new Error("Canvas toBlob returned null (tainted?)")), "image/png");
+        });
+        if (!blob) throw new Error("Export blob is null");
         const ipc = window.ipc;
         if (ipc && typeof ipc.postMessage === "function") {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const base64 = reader.result.split(",")[1];
-            ipc.postMessage(JSON.stringify({
-              kind: "dx-www-canvas-export",
-              data: base64,
-              mime: "image/png",
-              timestamp: Date.now(),
-            }));
-          };
-          reader.readAsDataURL(blob);
+          try {
+            const reader = new FileReader();
+            reader.onload = () => {
+              try {
+                const base64 = String(reader.result).split(",")[1] || "";
+                ipc.postMessage(JSON.stringify({ kind: "dx-www-canvas-export", data: base64, mime: "image/png", timestamp: Date.now() }));
+              } catch {}
+            };
+            reader.onerror = () => {
+              try {
+                blobUrl = URL.createObjectURL(blob);
+                const a = document.createElement("a"); a.href = blobUrl; a.download = `whiteboard-export-${Date.now()}.png`; document.body.appendChild(a); a.click(); a.remove();
+              } catch {}
+            };
+            reader.readAsDataURL(blob);
+          } catch {
+            blobUrl = URL.createObjectURL(blob);
+            const a = document.createElement("a"); a.href = blobUrl; a.download = `whiteboard-export-${Date.now()}.png`; document.body.appendChild(a); a.click(); a.remove();
+          }
         } else {
-          // Fallback: download the PNG
-          const url = URL.createObjectURL(blob);
+          blobUrl = URL.createObjectURL(blob);
           const a = document.createElement("a");
-          a.href = url;
+          a.href = blobUrl;
           a.download = `whiteboard-export-${Date.now()}.png`;
+          document.body.appendChild(a);
           a.click();
-          URL.revokeObjectURL(url);
+          a.remove();
         }
-        // Brief success feedback
         exportBtn.classList.add("is-success");
         exportBtn.title = "Exported ✓";
-        setTimeout(() => {
-          exportBtn.classList.remove("is-success");
-          exportBtn.title = "Export canvas";
-        }, 2000);
+        setTimeout(() => { exportBtn.classList.remove("is-success"); exportBtn.title = "Export canvas"; }, 2000);
       } catch (err) {
         console.error("[export] Failed:", err);
-        exportBtn.title = "Export failed";
-        setTimeout(() => { exportBtn.title = "Export canvas"; }, 2000);
+        // Fallback: offer SVG download so user still gets export
+        try {
+          if (svgUrl) {
+            const a = document.createElement("a");
+            a.href = svgUrl;
+            a.download = `whiteboard-export-${Date.now()}.svg`;
+            document.body.appendChild(a); a.click(); a.remove();
+          }
+        } catch {}
+        exportBtn.title = "Export failed — SVG fallback attempted";
+        setTimeout(() => { exportBtn.title = "Export canvas"; }, 2500);
       } finally {
+        try { if (svgUrl) URL.revokeObjectURL(svgUrl); } catch {}
+        try { if (blobUrl) setTimeout(() => URL.revokeObjectURL(blobUrl), 4000); } catch {}
         exportBtn.disabled = false;
       }
     });

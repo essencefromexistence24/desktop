@@ -18,9 +18,7 @@ $webRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 # tool-id-folder -> published folder name (must match web_preview::project_dir_name)
 $projects = [ordered]@{
     "3D"            = "3d"
-    "Design"        = "Design"
     "Graphics"      = "Graphics"
-    "Presentations" = "Presentations"
     "Spreadsheets"  = "Spreadsheets"
     "Video"         = "Video"
     "Whiteboard"    = "whiteboard"
@@ -30,14 +28,13 @@ $projects = [ordered]@{
     "media"         = "media"
     "Train"         = "Train"
     "Metasearch"    = "metasearch"
+    "Router"        = "router"
 }
 
 # tool-id-folder -> source build output directory (relative to project folder)
 $outputDirs = @{
     "3D"            = "out"
-    "Design"        = "out"
     "Graphics"      = "out"
-    "Presentations" = "out"
     "Spreadsheets"  = "out"
     "Video"         = "out"
     "Whiteboard"    = ".dx\www\output"
@@ -47,6 +44,7 @@ $outputDirs = @{
     "media"         = "dist"
     "Train"         = "dist"
     "Metasearch"    = ".dx\www\output"
+    "Router"        = "apps\web\.next"
 }
 
 # Override the default "build" npm script per project.

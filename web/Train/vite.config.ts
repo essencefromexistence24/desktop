@@ -63,7 +63,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "G:/Dx/desktop/assets/web/Train",
+    outDir: "dist",
     commonjsOptions: {
       include: [/node_modules/, /@dagrejs\/dagre/, /@dagrejs\/graphlib/],
     },

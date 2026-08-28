@@ -97,7 +97,7 @@ fn stable_port_for_tool(tool_id: &str) -> Option<u16> {
 /// from the agent cursor WS relay (3001) and the preview port range (42xx).
 const CMS_BACKEND_PORT: u16 = 3002;
 const METASEARCH_BACKEND_PORT: u16 = 8888;
-const TRAIN_BACKEND_PORT: u16 = 8888;
+const TRAIN_BACKEND_PORT: u16 = 8890;
 const ROUTE_BACKEND_PORT: u16 = 3004;
 
 /// Spawn the real backend for a tool that has one and return its origin.
@@ -108,6 +108,7 @@ fn spawn_backend_for_tool(tool_id: &str) -> Option<String> {
         "cms" => spawn_cms_backend(),
         "metasearch" => spawn_metasearch_backend(),
         "route" => spawn_route_backend(),
+        "train" => spawn_train_backend(),
         _ => None,
     }
 }
@@ -157,18 +158,7 @@ fn spawn_cms_backend() -> Option<String> {
 }
 
 fn spawn_metasearch_backend() -> Option<String> {
-    let metasearch_root = std::env::var("DX_METASEARCH_ROOT")
-        .ok()
-        .map(PathBuf::from)
-        .or_else(|| {
-            let root = web_root()?;
-            // The `dx` project file in the web source points at the repo root.
-            let proj = root.join("Metasearch").join("dx");
-            std::fs::read_to_string(&proj)
-                .ok()
-                .and_then(|s| s.trim().strip_prefix("proj ").map(String::from))
-                .and_then(|s| std::fs::canonicalize(s).ok())
-        })?;
+    let metasearch_root = resolve_metasearch_root()?;
 
     if std::net::TcpListener::bind(("127.0.0.1", METASEARCH_BACKEND_PORT)).is_err() {
         info!(
@@ -178,17 +168,7 @@ fn spawn_metasearch_backend() -> Option<String> {
         return Some(format!("http://127.0.0.1:{}/", METASEARCH_BACKEND_PORT));
     }
 
-    let binary = metasearch_root
-        .join("target")
-        .join("release")
-        .join(if cfg!(windows) {
-            "metasearch.exe"
-        } else {
-            "metasearch"
-        });
-    if !binary.is_file() {
-        return None;
-    }
+    let binary = find_metasearch_binary(&metasearch_root)?;
 
     match Command::new(&binary)
         .current_dir(&metasearch_root)
@@ -208,6 +188,131 @@ fn spawn_metasearch_backend() -> Option<String> {
     }
 }
 
+/// Resolve the Metasearch backend root: the directory that contains `config.toml`
+/// (and the `templates/` + `static/` dirs it references).
+///
+/// Resolution order:
+/// 1. `DX_METASEARCH_ROOT` environment override.
+/// 2. The `cwd` from the `companion()` block in `<webRoot>/Metasearch/dx`
+///    (resolved relative to the project dir, e.g. `../../../metasearch`).
+/// 3. A `metasearch` sibling of the DX web root (e.g. `G:\Dx\metasearch`).
+fn resolve_metasearch_root() -> Option<PathBuf> {
+    if let Ok(env) = std::env::var("DX_METASEARCH_ROOT") {
+        let p = PathBuf::from(env);
+        if p.join("config.toml").is_file() {
+            return Some(p);
+        }
+    }
+
+    if let Some(root) = web_root() {
+        let proj_dir = root.join("Metasearch");
+        let dx_file = proj_dir.join("dx");
+        if dx_file.is_file() {
+            if let Ok(contents) = std::fs::read_to_string(&dx_file) {
+                for line in contents.lines().map(str::trim) {
+                    if let Some(rest) = line.strip_prefix("cwd") {
+                        let raw = rest
+                            .split_once('=')
+                            .map(|(_, v)| v)
+                            .unwrap_or(rest)
+                            .trim()
+                            .trim_matches('"')
+                            .trim_matches(',')
+                            .trim();
+                        if !raw.is_empty() {
+                            if let Ok(joined) = proj_dir.join(raw).canonicalize() {
+                                if joined.join("config.toml").is_file() {
+                                    return Some(joined);
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Fallback: `<webRoot parent>/metasearch` (the canonical dev layout `G:\Dx\metasearch`).
+        if let Some(parent) = root.parent() {
+            let cand = parent.join("metasearch");
+            if cand.join("config.toml").is_file() {
+                return Some(cand);
+            }
+        }
+    }
+
+    None
+}
+
+/// Locate the metasearch companion binary. Tries the repo's own build outputs first
+/// (`target/release`, `target/debug`, `bin`), then the shared `{webRoot}/../bin`
+/// (e.g. `G:\Dx\bin\dx-metasearch.exe`).
+fn find_metasearch_binary(root: &Path) -> Option<PathBuf> {
+    let exe = if cfg!(windows) { "metasearch.exe" } else { "metasearch" };
+    let dx_exe = if cfg!(windows) {
+        "dx-metasearch.exe"
+    } else {
+        "dx-metasearch"
+    };
+
+    let mut candidates = vec![
+        root.join("target").join("release").join(exe),
+        root.join("target").join("debug").join(exe),
+        root.join("bin").join(dx_exe),
+        root.join(dx_exe),
+    ];
+
+    if let Some(web_root) = web_root() {
+        if let Some(parent) = web_root.parent() {
+            candidates.push(parent.join("bin").join(dx_exe));
+        }
+    }
+
+    for c in candidates {
+        if c.is_file() {
+            return Some(c);
+        }
+    }
+    None
+}
+
+/// Ensure the Train workflow's supporting services are running. Returns the origin of the
+/// *live* backend that should be used, or `None` when it's unavailable (callers then fall
+/// back to the static preview server for this tool).
+fn spawn_train_backend() -> Option<String> {
+    spawn_or_reuse_llama_server();
+    None
+}
+
+/// Find `llama-server` on PATH and start it on `TRAIN_BACKEND_PORT` if it's not already
+/// listening there. Used by the Train workflow so the chat backend has a live endpoint.
+fn spawn_or_reuse_llama_server() {
+    if std::net::TcpListener::bind(("127.0.0.1", TRAIN_BACKEND_PORT)).is_err() {
+        info!(
+            port = TRAIN_BACKEND_PORT,
+            "llama-server already listening, reusing"
+        );
+        return;
+    }
+
+    let Some(binary) = find_executable("llama-server") else {
+        warn!("llama-server not found on PATH; Train chat backend unavailable");
+        return;
+    };
+
+    let port = TRAIN_BACKEND_PORT.to_string();
+    match Command::new(&binary)
+        .args(["--host", "127.0.0.1", "--port", &port])
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .spawn()
+    {
+        Ok(_) => info!(port = TRAIN_BACKEND_PORT, "llama-server spawned"),
+        Err(e) => warn!(%e, "failed to spawn llama-server"),
+    }
+}
+
 /// Spawn the Route Next.js app (`npx node scripts/dev/run-next.mjs start`).
 /// Uses the production build under `<Route>/.build/next` with PORT overridden
 /// to the fixed backend port so the dashboard is reachable on the same origin
@@ -218,10 +323,21 @@ fn spawn_route_backend() -> Option<String> {
         .map(PathBuf::from)
         .or_else(|| web_root().map(|r| r.join("Route")))?;
 
-    let build_dir = route_root.join(".build").join("next");
+    // Try .build/next first (production), then .next (standard Next.js), then apps/web/.next
+    let mut build_dir = route_root.join(".build").join("next");
     if !build_dir.is_dir() {
-        warn!(root = %route_root.display(), "Route build output missing (.build/next)");
-        return None;
+        let alt = route_root.join(".next");
+        if alt.is_dir() {
+            build_dir = alt;
+        } else {
+            let alt2 = route_root.join("apps").join("web").join(".next");
+            if alt2.is_dir() {
+                build_dir = alt2;
+            } else {
+                warn!(root = %route_root.display(), "Route build output missing (.build/next or .next)");
+                return None;
+            }
+        }
     }
 
     if std::net::TcpListener::bind(("127.0.0.1", ROUTE_BACKEND_PORT)).is_err() {
@@ -317,9 +433,13 @@ fn find_dx_web_root() -> Option<PathBuf> {
         }
     }
 
-    let fallback = PathBuf::from(r"G:\Dx\code\web");
+    let fallback = PathBuf::from(r"G:\Dx\desktop\web");
     if is_dx_web_root(&fallback) {
         return Some(fallback);
+    }
+    let fallback2 = PathBuf::from(r"G:\Dx\code\web");
+    if is_dx_web_root(&fallback2) {
+        return Some(fallback2);
     }
 
     None
@@ -428,9 +548,11 @@ fn find_assets_web_root() -> Option<PathBuf> {
         }
     }
 
-    // fallback
-    let fb = PathBuf::from(r"G:\Dx\code\assets\web");
-    if fb.is_dir() { Some(fb) } else { None }
+    // fallback — support both G:\Dx\desktop\assets\web and legacy G:\Dx\code\assets\web
+    let fb = PathBuf::from(r"G:\Dx\desktop\assets\web");
+    if fb.is_dir() { return Some(fb); }
+    let fb2 = PathBuf::from(r"G:\Dx\code\assets\web");
+    if fb2.is_dir() { Some(fb2) } else { None }
 }
 
 fn has_output_subdirs(p: &Path) -> bool {

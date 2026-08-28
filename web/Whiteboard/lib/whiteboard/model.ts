@@ -249,14 +249,14 @@ export const DEFAULT_WHITEBOARD_VIEWPORT: WhiteboardViewport = {
 
 export const DEFAULT_WHITEBOARD_STYLE: WhiteboardStyle = {
   fill: "transparent",
-  stroke: "#1f2937",
+  stroke: "#ffffff",
   strokeWidth: 2,
   strokeStyle: "solid",
   opacity: 1,
   lineCap: "round",
-  fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif",
+  fontFamily: "Geist, Inter, ui-sans-serif, system-ui, sans-serif",
   fontSize: 16,
-  textColor: "#111827",
+  textColor: "#f9fafb",
 };
 
 export function makeDocumentId(value: string): WhiteboardDocumentId {

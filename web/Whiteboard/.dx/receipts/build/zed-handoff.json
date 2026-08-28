@@ -17,8 +17,8 @@
   "source_module_chunks": 2,
   "style_optimization": {
     "style_node_count": 4,
-    "original_rule_count": 594,
-    "retained_rule_count": 594,
+    "original_rule_count": 642,
+    "retained_rule_count": 642,
     "pruned_rule_count": 0,
     "minified_style_count": 4,
     "source_map_count": 4,
@@ -33,7 +33,7 @@
     "source_map_link_count": 4,
     "source_map_hash_count": 4,
     "flattened_import_count": 3,
-    "retained_import_count": 0,
+    "retained_import_count": 2,
     "asset_reference_count": 0,
     "entry_style_asset_reference_count": 0,
     "flattened_import_asset_reference_count": 0,
@@ -69,23 +69,25 @@
     "status": "source-metadata-only"
   },
   "image_pipeline": {
-    "image_asset_count": 2,
-    "metadata_asset_count": 2,
+    "image_asset_count": 5,
+    "metadata_asset_count": 5,
     "optimized_variant_count": 0,
-    "placeholder_count": 2,
-    "placeholder_artifact_count": 2,
-    "placeholder_artifact_bytes": 342,
+    "placeholder_count": 5,
+    "placeholder_artifact_count": 5,
+    "placeholder_artifact_bytes": 865,
     "placeholder_artifact_outputs": [
       ".dx/www/output/.dx/build-cache/image-placeholders/public/favicon-b0698a08bf67b748.placeholder.svg",
-      ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-653d1ed174ed39da.placeholder.svg"
+      ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg",
+      ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-dark-b0698a08bf67b748.placeholder.svg",
+      ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-light-b0698a08bf67b748.placeholder.svg",
+      ".dx/www/output/.dx/build-cache/image-placeholders/public/route-b0698a08bf67b748.placeholder.svg"
     ],
     "route_reference_count": 1,
     "formats": {
-      "svg": 2
+      "svg": 5
     },
     "dimension_sources": {
-      "svg-root-attributes": 1,
-      "svg-viewbox": 1
+      "svg-root-attributes": 5
     },
     "status": "metadata-plus-placeholder-artifacts-boundary",
     "full_pipeline_parity": false
@@ -95,14 +97,14 @@
       "route": "/",
       "source_path": "app/page.tsx",
       "html_output": ".dx/www/output/.dx/build-cache/source-routes/root/index.html",
-      "shell_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-509372dc6ecf6bb7.mjs",
-      "entry_module_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-d1a5428f118f2ea4.mjs",
+      "shell_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-13d1710605429be0.mjs",
+      "entry_module_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-f6fbb5a4463e1ab9.mjs",
       "source_module_chunks": [
         {
           "source_path": "app/page.tsx",
-          "chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-d1a5428f118f2ea4.mjs",
+          "chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-f6fbb5a4463e1ab9.mjs",
           "kind": "tsx",
-          "hash": "d1a5428f118f2ea4"
+          "hash": "f6fbb5a4463e1ab9"
         },
         {
           "source_path": "components/icons/icon.tsx",
@@ -111,7 +113,7 @@
           "hash": "8db49bf807790749"
         }
       ],
-      "fallback_hash": "509372dc6ecf6bb7"
+      "fallback_hash": "13d1710605429be0"
     }
   ],
   "node_modules_required": false,

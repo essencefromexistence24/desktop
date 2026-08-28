@@ -154,9 +154,7 @@ impl StatusBar {
     fn render_center_tools(&self, cx: &mut Context<Self>) -> impl IntoElement {
         let web_tools = [
             ("whiteboard", "Whiteboard"),
-            ("design", "Design"),
             ("graphics", "Graphics"),
-            ("presentations", "Presentations"),
             ("spreadsheets", "Spreadsheets"),
             ("video", "Video"),
             ("cms", "CMS"),

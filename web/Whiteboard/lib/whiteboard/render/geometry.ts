@@ -130,7 +130,7 @@ export function selectionBounds(elements: readonly WhiteboardElement[]): Whitebo
   return unionRects(elements.map(getElementBounds));
 }
 
-export function selectionHandleRects(bounds: WhiteboardRect, handleSize = 8): WhiteboardHandleRect[] {
+export function selectionHandleRects(bounds: WhiteboardRect, handleSize = 6): WhiteboardHandleRect[] {
   const half = handleSize / 2;
   const centerX = bounds.x + bounds.width / 2;
   const centerY = bounds.y + bounds.height / 2;
@@ -160,7 +160,7 @@ export function selectionHandleRects(bounds: WhiteboardRect, handleSize = 8): Wh
 export function detectSelectionHandle(
   bounds: WhiteboardRect,
   point: WhiteboardPoint,
-  handleSize = 8,
+  handleSize = 6,
 ): WhiteboardSelectionHandle | null {
   for (const rect of selectionHandleRects(bounds, handleSize)) {
     if (containsPoint(rect, point)) {

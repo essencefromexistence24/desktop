@@ -152,7 +152,8 @@ export function isExpectedBackgroundChatStorageError(error: unknown): boolean {
     (error.message === "Invalid or expired token" ||
       error.message === "Not authenticated" ||
       error.message === "Request failed (401)" ||
-      error.message === "Train isn't running -- please relaunch it.")
+      error.message === "Train isn't running -- please relaunch it." ||
+      error.message === "Preview mode: backend unavailable (local fallback).")
   );
 }
 

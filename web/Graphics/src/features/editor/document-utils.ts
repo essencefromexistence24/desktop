@@ -93,6 +93,129 @@ export function createLayerFromTool(
     });
   }
 
+  if (tool === "diamond") {
+    const width = 180;
+    const height = 112;
+    const pathData = `M ${width / 2} 0 L ${width} ${height / 2} L ${width / 2} ${height} L 0 ${height / 2} Z`;
+    return {
+      ...baseLayer(id, "path", "Diamond", point.x, point.y, width, height, {
+        fill: "#93c5fd",
+        stroke: "#2563eb",
+        strokeWidth: 2,
+        strokeLineCap: "round",
+        strokeLineJoin: "round",
+      }),
+      pathData,
+      pathViewBox: { x: 0, y: 0, width, height },
+      fillRule: "nonzero",
+    };
+  }
+
+  if (tool === "triangle") {
+    const width = 180;
+    const height = 156;
+    const pathData = `M ${width / 2} 0 L ${width} ${height} L 0 ${height} Z`;
+    return {
+      ...baseLayer(id, "path", "Triangle", point.x, point.y, width, height, {
+        fill: "#fda4af",
+        stroke: "#e11d48",
+        strokeWidth: 2,
+        strokeLineCap: "round",
+        strokeLineJoin: "round",
+      }),
+      pathData,
+      pathViewBox: { x: 0, y: 0, width, height },
+      fillRule: "nonzero",
+    };
+  }
+
+  if (tool === "star") {
+    const width = 180;
+    const height = 172;
+    const cx = width / 2;
+    const cy = height / 2;
+    const outer = Math.min(width, height) / 2 - 4;
+    const inner = outer * 0.42;
+    const points: string[] = [];
+    for (let i = 0; i < 10; i++) {
+      const radius = i % 2 === 0 ? outer : inner;
+      const angle = ((Math.PI * 2 * i) / 10 - Math.PI / 2);
+      const x = cx + Math.cos(angle) * radius;
+      const y = cy + Math.sin(angle) * radius;
+      points.push(`${i === 0 ? "M" : "L"} ${x.toFixed(1)} ${y.toFixed(1)}`);
+    }
+    points.push("Z");
+    const pathData = points.join(" ");
+    return {
+      ...baseLayer(id, "path", "Star", point.x, point.y, width, height, {
+        fill: "#fde68a",
+        stroke: "#d97706",
+        strokeWidth: 2,
+        strokeLineCap: "round",
+        strokeLineJoin: "round",
+      }),
+      pathData,
+      pathViewBox: { x: 0, y: 0, width, height },
+      fillRule: "nonzero",
+    };
+  }
+
+  if (tool === "hexagon") {
+    const width = 180;
+    const height = 156;
+    const pathData = `M ${width * 0.25} 0 L ${width * 0.75} 0 L ${width} ${height / 2} L ${width * 0.75} ${height} L ${width * 0.25} ${height} L 0 ${height / 2} Z`;
+    return {
+      ...baseLayer(id, "path", "Hexagon", point.x, point.y, width, height, {
+        fill: "#a7f3d0",
+        stroke: "#059669",
+        strokeWidth: 2,
+        strokeLineCap: "round",
+        strokeLineJoin: "round",
+      }),
+      pathData,
+      pathViewBox: { x: 0, y: 0, width, height },
+      fillRule: "nonzero",
+    };
+  }
+
+  if (tool === "line") {
+    const width = 180;
+    const height = 2;
+    const pathData = `M 0 ${height / 2} L ${width} ${height / 2}`;
+    return {
+      ...baseLayer(id, "path", "Line", point.x, point.y, width, height, {
+        fill: "transparent",
+        stroke: "#f4f4f5",
+        strokeWidth: 3,
+        strokeLineCap: "round",
+        strokeLineJoin: "round",
+      }),
+      pathData,
+      pathViewBox: { x: 0, y: 0, width, height },
+      fillRule: "nonzero",
+    };
+  }
+
+  if (tool === "arrow") {
+    const width = 180;
+    const height = 24;
+    const shaftY = height / 2;
+    const headSize = 10;
+    const pathData = `M 0 ${shaftY} L ${width - headSize} ${shaftY} M ${width - headSize - 6} ${shaftY - 6} L ${width} ${shaftY} L ${width - headSize - 6} ${shaftY + 6}`;
+    return {
+      ...baseLayer(id, "path", "Arrow", point.x, point.y, width, height, {
+        fill: "transparent",
+        stroke: "#f4f4f5",
+        strokeWidth: 3,
+        strokeLineCap: "round",
+        strokeLineJoin: "round",
+      }),
+      pathData,
+      pathViewBox: { x: 0, y: 0, width, height },
+      fillRule: "nonzero",
+    };
+  }
+
   if (tool === "pen") {
     return {
       ...baseLayer(id, "path", "Pen path", point.x, point.y, 1, 1, {

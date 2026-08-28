@@ -8,13 +8,13 @@
         "id": "app/page",
         "name": "Page",
         "package_id": null,
-        "content_hash": "d1a5428f118f2ea4847054e0a80022523e36dfe9a2a9bad2000e68a4b00197d1"
+        "content_hash": "f6fbb5a4463e1ab9c61148e5805cd33c1e72e436118d41603769de60fa3a72b8"
       },
       {
         "id": "app/layout",
         "name": "Layout",
         "package_id": null,
-        "content_hash": "25468073426ce417de58e38348120ca2f1e62be39b9b3201d8a0dee6032eb9ed"
+        "content_hash": "187a98a5f3121cb1ee4f5b3fcfc677a517659fa1faa35bdc7903f7d0ca41cc2f"
       },
       {
         "id": "component/icon",
@@ -53,8 +53,16 @@
         "value": "348 84% 62%"
       },
       {
+        "name": "--font-geist",
+        "value": "\"Geist\", \"Geist Sans\", \"Inter\", sans-serif"
+      },
+      {
         "name": "--font-mono",
-        "value": "\"JetBrains Mono\", \"JetBrains Mono NL\", ui-monospace, SFMono-Regular,\r\n    Consolas, \"Liberation Mono\", monospace"
+        "value": "\"Geist Mono\", \"JetBrains Mono\", \"JetBrains Mono NL\", ui-monospace, SFMono-Regular,\r\n    Consolas, \"Liberation Mono\", monospace"
+      },
+      {
+        "name": "--font-sans",
+        "value": "\"Geist\", \"Geist Sans\", \"Inter\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
       },
       {
         "name": "--foreground",
@@ -129,6 +137,22 @@
         "value": "156 100% 65%"
       },
       {
+        "name": "--wb-gradient-berry-end",
+        "value": "262 82% 38%"
+      },
+      {
+        "name": "--wb-gradient-berry-start",
+        "value": "278 75% 52%"
+      },
+      {
+        "name": "--wb-gradient-blossom-end",
+        "value": "12 75% 88%"
+      },
+      {
+        "name": "--wb-gradient-blossom-start",
+        "value": "358 100% 80%"
+      },
+      {
         "name": "--wb-gradient-candy-end",
         "value": "340 100% 65%"
       },
@@ -137,12 +161,60 @@
         "value": "290 100% 70%"
       },
       {
+        "name": "--wb-gradient-citrus-end",
+        "value": "50 100% 50%"
+      },
+      {
+        "name": "--wb-gradient-citrus-start",
+        "value": "32 93% 55%"
+      },
+      {
+        "name": "--wb-gradient-coral-end",
+        "value": "358 100% 69%"
+      },
+      {
+        "name": "--wb-gradient-coral-start",
+        "value": "21 100% 70%"
+      },
+      {
+        "name": "--wb-gradient-cosmos-end",
+        "value": "188 78% 44%"
+      },
+      {
+        "name": "--wb-gradient-cosmos-start",
+        "value": "228 68% 32%"
+      },
+      {
+        "name": "--wb-gradient-dusk-end",
+        "value": "0 78% 66%"
+      },
+      {
+        "name": "--wb-gradient-dusk-start",
+        "value": "210 25% 28%"
+      },
+      {
+        "name": "--wb-gradient-ember-end",
+        "value": "330 75% 50%"
+      },
+      {
+        "name": "--wb-gradient-ember-start",
+        "value": "0 100% 60%"
+      },
+      {
         "name": "--wb-gradient-fire-end",
         "value": "45 95% 50%"
       },
       {
         "name": "--wb-gradient-fire-start",
         "value": "10 90% 55%"
+      },
+      {
+        "name": "--wb-gradient-flare-end",
+        "value": "25 98% 62%"
+      },
+      {
+        "name": "--wb-gradient-flare-start",
+        "value": "335 85% 62%"
       },
       {
         "name": "--wb-gradient-forest-end",
@@ -169,12 +241,60 @@
         "value": "265 90% 65%"
       },
       {
+        "name": "--wb-gradient-horizon-end",
+        "value": "15 95% 66%"
+      },
+      {
+        "name": "--wb-gradient-horizon-start",
+        "value": "35 95% 70%"
+      },
+      {
         "name": "--wb-gradient-ice-end",
         "value": "210 80% 60%"
       },
       {
         "name": "--wb-gradient-ice-start",
         "value": "180 80% 80%"
+      },
+      {
+        "name": "--wb-gradient-lagoon-end",
+        "value": "208 68% 32%"
+      },
+      {
+        "name": "--wb-gradient-lagoon-start",
+        "value": "160 57% 54%"
+      },
+      {
+        "name": "--wb-gradient-lavender-end",
+        "value": "356 89% 65%"
+      },
+      {
+        "name": "--wb-gradient-lavender-start",
+        "value": "276 72% 69%"
+      },
+      {
+        "name": "--wb-gradient-meadow-end",
+        "value": "82 65% 63%"
+      },
+      {
+        "name": "--wb-gradient-meadow-start",
+        "value": "100 57% 43%"
+      },
+      {
+        "name": "--wb-gradient-midnight-end",
+        "value": "252 35% 22%"
+      },
+      {
+        "name": "--wb-gradient-midnight-start",
+        "value": "240 30% 12%"
+      },
+      {
+        "name": "--wb-gradient-neon-end",
+        "value": "211 96% 46%"
+      },
+      {
+        "name": "--wb-gradient-neon-start",
+        "value": "145 100% 47%"
       },
       {
         "name": "--wb-gradient-ocean-end",
@@ -185,12 +305,36 @@
         "value": "192 100% 45%"
       },
       {
+        "name": "--wb-gradient-pacific-end",
+        "value": "172 72% 48%"
+      },
+      {
+        "name": "--wb-gradient-pacific-start",
+        "value": "198 92% 58%"
+      },
+      {
+        "name": "--wb-gradient-peach-end",
+        "value": "350 92% 73%"
+      },
+      {
+        "name": "--wb-gradient-peach-start",
+        "value": "12 95% 72%"
+      },
+      {
         "name": "--wb-gradient-steel-end",
         "value": "225 30% 30%"
       },
       {
         "name": "--wb-gradient-steel-start",
         "value": "215 25% 45%"
+      },
+      {
+        "name": "--wb-gradient-sunrise-end",
+        "value": "36 90% 52%"
+      },
+      {
+        "name": "--wb-gradient-sunrise-start",
+        "value": "8 100% 60%"
       },
       {
         "name": "--wb-gradient-sunset-end",
@@ -201,12 +345,36 @@
         "value": "335 100% 65%"
       },
       {
+        "name": "--wb-gradient-tide-end",
+        "value": "188 96% 58%"
+      },
+      {
+        "name": "--wb-gradient-tide-start",
+        "value": "205 95% 62%"
+      },
+      {
+        "name": "--wb-gradient-twilight-end",
+        "value": "197 39% 28%"
+      },
+      {
+        "name": "--wb-gradient-twilight-start",
+        "value": "198 45% 11%"
+      },
+      {
+        "name": "--wb-gradient-violetfield-end",
+        "value": "275 88% 68%"
+      },
+      {
+        "name": "--wb-gradient-violetfield-start",
+        "value": "255 82% 64%"
+      },
+      {
         "name": "--wb-grid-line",
         "value": "0 0% 18%"
       },
       {
         "name": "--wb-selection",
-        "value": "204 88% 55%"
+        "value": "0 0% 96%"
       },
       {
         "name": "--wb-shadow-inset",
@@ -231,6 +399,10 @@
       {
         "name": "--wb-swatch-mint",
         "value": "var(--success)"
+      },
+      {
+        "name": "--wb-swatch-primary",
+        "value": "var(--primary)"
       },
       {
         "name": "--wb-swatch-rose",
@@ -463,8 +635,8 @@
       },
       {
         "name": "wb-demo-math",
-        "rule": "fill: hsl(var(--info)); font-family: \"JetBrains Mono\", var(--font-mono); font-size: 34px; font-style: italic;",
-        "source_hash": "761ff69f02abbc2331db2d9ea5e87e2993d343975934c895afb723cdf8ddd3cb"
+        "rule": "fill: hsl(var(--info)); font-family: \"Geist\", var(--font-sans); font-size: 34px; font-style: italic;",
+        "source_hash": "968605baea62c034d86b4ebbc2c2284141cae89d168c4d6f83bda21af21687f7"
       },
       {
         "name": "wb-demo-muted-label",
@@ -473,8 +645,8 @@
       },
       {
         "name": "wb-demo-note",
-        "rule": "fill: hsl(var(--success)); font-family: \"JetBrains Mono\", var(--font-mono); font-size: 30px;",
-        "source_hash": "1451c90d5031f2c8b6beefb819c3de13499ae2564246f9f8fa5cc8b0be1c67e4"
+        "rule": "fill: hsl(var(--success)); font-family: \"Geist\", var(--font-sans); font-size: 30px;",
+        "source_hash": "765500a3d9a19285b06c94c80e294e68e71011b7a4acbda523eb7439751e6a5a"
       },
       {
         "name": "wb-demo-path",
@@ -508,13 +680,13 @@
       },
       {
         "name": "wb-element-label",
-        "rule": "font-family: var(--font-mono); font-weight: 760; pointer-events: none;",
-        "source_hash": "02004d20bcc2dff19021e08e22c445df3146c8f409bb10c6e10cd9c11e3164ff"
+        "rule": "font-family: var(--font-sans); font-weight: 760; pointer-events: none;",
+        "source_hash": "2711860c2030a83574df25bb9b3d0b8ecc05ed5df024dcc8213506e7c705ac3a"
       },
       {
         "name": "wb-export-button",
-        "rule": "color: hsl(var(--accent));",
-        "source_hash": "c461bf5d183b5bbf0eaea4563c406cc3fc0aac3d11ce268d01aa6e506d0adf25"
+        "rule": "color: hsl(var(--foreground)); border-color: hsl(var(--border)); background: hsl(var(--surface-raised));",
+        "source_hash": "a7681283cff6a1878a4c574acc63b54cc525abb90cf1bdd0c33cbbb6d7802ac8"
       },
       {
         "name": "wb-export-format-grid",
@@ -843,8 +1015,8 @@
       },
       {
         "name": "wb-preview-selection",
-        "rule": "fill: none; stroke: hsl(var(--wb-selection)); stroke-dasharray: 8 6; stroke-width: 2;",
-        "source_hash": "505dde181cf55a73b64867f2021f8b3556c46ab2ca83227d4a15895a6097949e"
+        "rule": "fill: none; stroke: hsl(var(--foreground) / 0.75); stroke-dasharray: 5 4; stroke-width: 1.25; opacity: 0.9;",
+        "source_hash": "fdeb0cfc3786101332b6a8e5d6a8ca73d2cf420f4d80e5c5cabd37279525f71a"
       },
       {
         "name": "wb-preview-shape",
@@ -853,8 +1025,8 @@
       },
       {
         "name": "wb-preview-text",
-        "rule": "fill: var(--wb-preview-stroke); font-family: var(--font-mono); font-size: 20px; font-weight: 760; opacity: var(--wb-preview-opacity);",
-        "source_hash": "1841aad5d170f969cefe707dab350e7f2665aa1471aba60ef7e87940664a66ab"
+        "rule": "fill: var(--wb-preview-stroke); font-family: var(--font-sans); font-size: 20px; font-weight: 760; opacity: var(--wb-preview-opacity);",
+        "source_hash": "cf5e8eb15ee8372d3f0474c8f95ba38646bee07768a94cca8b225f4194cd191c"
       },
       {
         "name": "wb-primary-button",
@@ -868,13 +1040,13 @@
       },
       {
         "name": "wb-selection-area",
-        "rule": "fill: hsl(var(--wb-selection) / 0.12); stroke: hsl(var(--wb-selection)); stroke-dasharray: 6 5; stroke-width: 1.5;",
-        "source_hash": "c191b63e947c60d27212227b5cfd63c0d10046fee68ebc4ac39f357ffb690c3f"
+        "rule": "fill: hsl(var(--foreground) / 0.06); stroke: hsl(var(--foreground) / 0.55); stroke-dasharray: 5 4; stroke-width: 1; opacity: 0.9;",
+        "source_hash": "3a404fc19c910e387bb7962e207c790c2efb1fa179e9f764bf43576bd3a1e52d"
       },
       {
         "name": "wb-selection-outline",
-        "rule": "fill: none; stroke: hsl(var(--wb-selection)); stroke-dasharray: 8 6; stroke-width: 2; pointer-events: none;",
-        "source_hash": "9213201e4a79781f15b624af7dc8b47f8cfe71ee5b52d87d4f7e390450556a59"
+        "rule": "fill: none; stroke: hsl(var(--foreground) / 0.92); stroke-dasharray: 6 4; stroke-width: 1.25; opacity: 0.95; filter: drop-shadow(0 1px 3px hsl(0 0% 0% / 0.18)); pointer-events: none; transition: stroke 120ms ease, opacity 120ms ease;",
+        "source_hash": "9d5a2fa2001c2fa8cd10931555f521ea252fe028360019a11e3ec005de83f843"
       },
       {
         "name": "wb-shortcut-grid",
@@ -908,8 +1080,8 @@
       },
       {
         "name": "wb-text-editor",
-        "rule": "position: absolute; z-index: 2147483646; min-width: 180px; min-height: 38px; border: 2px solid hsl(var(--primary)); border-radius: var(--radius); background: transparent; color: hsl(var(--foreground)); box-shadow: none; font-family: \"JetBrains Mono\", var(--font-mono); font-size: 0.9rem; font-weight: 760; line-height: 1.2; outline: none; padding: 8px 10px;",
-        "source_hash": "9a5bb17462d4d95b93409627f8a6069057fc2a3842b48b008e516e9394108de0"
+        "rule": "position: absolute; z-index: 2147483646; min-width: 180px; min-height: 38px; border: 2px solid hsl(var(--primary)); border-radius: var(--radius); background: transparent; color: hsl(var(--foreground)); box-shadow: none; font-family: \"Geist\", var(--font-sans); font-size: var(--wb-editor-font-size, 0.9rem); font-weight: 760; line-height: 1.2; outline: none; padding: 8px 10px;",
+        "source_hash": "f140f686f0925816df443293c20d45077ec4a042db9595cf58d824a7ca217698"
       },
       {
         "name": "wb-text-field",

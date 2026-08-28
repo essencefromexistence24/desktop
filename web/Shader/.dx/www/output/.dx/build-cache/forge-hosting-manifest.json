@@ -1,11 +1,11 @@
 {
   "version": 1,
   "manifest_kind": "dx-www-forge-hosting-release-gate",
-  "generated": "2026-08-08T18:09:28.953283100+00:00",
+  "generated": "2026-08-27T17:02:53.909586500+00:00",
   "node_modules_required": false,
   "package_installs_executed": false,
   "lifecycle_scripts_executed": false,
-  "manifest_hash": "blake3:f528e7943239036146fe65ad31bfaed829e91a2bdba1a3b7d323d2a6c3c39da1",
+  "manifest_hash": "blake3:a89d5f0f9e716d8148b508dc2b9327e9e1c043d09be80647b409f08227f23470",
   "cache_headers": [
     {
       "glob": "**/*.html",
@@ -29,7 +29,7 @@
       ".dx/build-cache/manifest.json",
       ".dx/build-cache/deploy-adapter.json"
     ],
-    "immutable_asset_count": 153,
+    "immutable_asset_count": 175,
     "inputs": [
       {
         "path": ".dx/build-cache/rollback.json",
@@ -50,7 +50,7 @@
   },
   "signed_manifest": {
     "path": ".dx/build-cache/manifest.json",
-    "hash": "blake3:f528e7943239036146fe65ad31bfaed829e91a2bdba1a3b7d323d2a6c3c39da1",
+    "hash": "blake3:a89d5f0f9e716d8148b508dc2b9327e9e1c043d09be80647b409f08227f23470",
     "signed": false,
     "signature_required_for_release": true,
     "signature_policy": "sign manifest before hosted promotion",

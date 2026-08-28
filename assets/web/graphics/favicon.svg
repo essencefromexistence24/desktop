@@ -1,8 +1,8 @@
 <svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <title>Graphics light logo dx-ecosystem-logos</title>
-  <desc>light monochrome geometric symbol on white background for Graphics.</desc>
-  <metadata><![CDATA[{"kind":"light","tool":"graphics","label":"Graphics","letter":"G","primary_repo":"G:/Canva","legacy_repo":"","collection":"web-preview","source_project":"Canva","asset_family":"dx-ecosystem-logos","brand":"DX pure symbol logo family: transparent smooth rainbow marks plus monochrome background and transparent light/dark variants"}]]></metadata>
-  <rect width="1024" height="1024" rx="48" fill="#FFFFFF"/>
+  <title>Graphics light transparent logo dx-ecosystem-logos</title>
+  <desc>light monochrome geometric symbol with transparent background for Graphics.</desc>
+  <metadata><![CDATA[{"kind":"light-transparent","tool":"graphics","label":"Graphics","letter":"G","primary_repo":"G:/Canva","legacy_repo":"","collection":"web-preview","source_project":"Canva","asset_family":"dx-ecosystem-logos","brand":"DX pure symbol logo family: transparent smooth rainbow marks plus monochrome background and transparent light/dark variants"}]]></metadata>
+  <rect width="1024" height="1024" fill="#FFFFFF"/>
   <g color="#000000">
     <g color="currentColor" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
       <path d="M746 328C660 228 464 206 342 308C224 406 226 622 346 724C470 830 672 800 748 668V548H554" stroke-width="104"/>

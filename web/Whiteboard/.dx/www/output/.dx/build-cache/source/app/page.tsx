@@ -292,7 +292,8 @@ export default function WhiteboardPage() {
                 <span>Apply paint</span>
               </button>
               <div className="wb-swatch-grid" aria-label="Quick colors">
-                <button aria-label="Aurora gradient" className="wb-swatch" data-active="true" data-swatch="aurora" data-whiteboard-swatch="aurora" type="button" />
+                <button aria-label="Theme primary color" className="wb-swatch" data-active="true" data-swatch="primary" data-whiteboard-swatch="primary" type="button" />
+                <button aria-label="Aurora gradient" className="wb-swatch" data-swatch="aurora" data-whiteboard-swatch="aurora" type="button" />
                 <button aria-label="Sunset gradient" className="wb-swatch" data-swatch="sunset" data-whiteboard-swatch="sunset" type="button" />
                 <button aria-label="Ocean gradient" className="wb-swatch" data-swatch="ocean" data-whiteboard-swatch="ocean" type="button" />
                 <button aria-label="Candy gradient" className="wb-swatch" data-swatch="candy" data-whiteboard-swatch="candy" type="button" />
@@ -304,6 +305,26 @@ export default function WhiteboardPage() {
                 <button aria-label="Fire gradient" className="wb-swatch" data-swatch="fire" data-whiteboard-swatch="fire" type="button" />
                 <button aria-label="Ice gradient" className="wb-swatch" data-swatch="ice" data-whiteboard-swatch="ice" type="button" />
                 <button aria-label="Steel gradient" className="wb-swatch" data-swatch="steel" data-whiteboard-swatch="steel" type="button" />
+                <button aria-label="Ember gradient" className="wb-swatch" data-swatch="ember" data-whiteboard-swatch="ember" type="button" />
+                <button aria-label="Citrus gradient" className="wb-swatch" data-swatch="citrus" data-whiteboard-swatch="citrus" type="button" />
+                <button aria-label="Meadow gradient" className="wb-swatch" data-swatch="meadow" data-whiteboard-swatch="meadow" type="button" />
+                <button aria-label="Lagoon gradient" className="wb-swatch" data-swatch="lagoon" data-whiteboard-swatch="lagoon" type="button" />
+                <button aria-label="Twilight gradient" className="wb-swatch" data-swatch="twilight" data-whiteboard-swatch="twilight" type="button" />
+                <button aria-label="Blossom gradient" className="wb-swatch" data-swatch="blossom" data-whiteboard-swatch="blossom" type="button" />
+                <button aria-label="Lavender gradient" className="wb-swatch" data-swatch="lavender" data-whiteboard-swatch="lavender" type="button" />
+                <button aria-label="Neon gradient" className="wb-swatch" data-swatch="neon" data-whiteboard-swatch="neon" type="button" />
+                <button aria-label="Coral gradient" className="wb-swatch" data-swatch="coral" data-whiteboard-swatch="coral" type="button" />
+                <button aria-label="Sunrise gradient" className="wb-swatch" data-swatch="sunrise" data-whiteboard-swatch="sunrise" type="button" />
+                <button aria-label="Midnight gradient" className="wb-swatch" data-swatch="midnight" data-whiteboard-swatch="midnight" type="button" />
+                <button aria-label="Berry gradient" className="wb-swatch" data-swatch="berry" data-whiteboard-swatch="berry" type="button" />
+                <button aria-label="Tide gradient" className="wb-swatch" data-swatch="tide" data-whiteboard-swatch="tide" type="button" />
+                <button aria-label="Horizon gradient" className="wb-swatch" data-swatch="horizon" data-whiteboard-swatch="horizon" type="button" />
+                <button aria-label="Dusk gradient" className="wb-swatch" data-swatch="dusk" data-whiteboard-swatch="dusk" type="button" />
+                <button aria-label="Cosmos gradient" className="wb-swatch" data-swatch="cosmos" data-whiteboard-swatch="cosmos" type="button" />
+                <button aria-label="Peach gradient" className="wb-swatch" data-swatch="peach" data-whiteboard-swatch="peach" type="button" />
+                <button aria-label="Violet field gradient" className="wb-swatch" data-swatch="violetfield" data-whiteboard-swatch="violetfield" type="button" />
+                <button aria-label="Pacific gradient" className="wb-swatch" data-swatch="pacific" data-whiteboard-swatch="pacific" type="button" />
+                <button aria-label="Flare gradient" className="wb-swatch" data-swatch="flare" data-whiteboard-swatch="flare" type="button" />
               </div>
             </div>
           </div>
@@ -314,11 +335,13 @@ export default function WhiteboardPage() {
             </label>
             <label className="wb-font-field">
               <span>Google Font</span>
-              <input aria-label="Google font family" data-whiteboard-font-input="true" list="wb-google-fonts" placeholder="JetBrains Mono" value="JetBrains Mono" />
+              <input aria-label="Google font family" data-whiteboard-font-input="true" list="wb-google-fonts" placeholder="Geist" value="Geist" />
             </label>
             <datalist id="wb-google-fonts">
-              <option value="JetBrains Mono" />
+              <option value="Geist" />
               <option value="Inter" />
+              <option value="Geist Mono" />
+              <option value="JetBrains Mono" />
               <option value="Roboto" />
               <option value="Open Sans" />
               <option value="Lato" />

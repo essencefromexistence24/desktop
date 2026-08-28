@@ -155,7 +155,7 @@ test("keeps constrained devices behind manual or visible startup", () => {
   assert.match(safetySignals[1], /prefers-reduced-data: reduce/);
   assert.match(safetySignals[1], /prefers-reduced-motion: reduce/);
   assert.match(safetySignals[1], /isEdgeBrowser\(\)/);
-  assert.match(manualStart[1], /signals\.edgeBrowser/);
+  assert.doesNotMatch(manualStart[1], /signals\.edgeBrowser/);
   assert.match(manualStart[1], /signals\.reducedMotion/);
   assert.match(manualStart[1], /shouldUseReducedRenderProfileFromSignals\(signals\)/);
   assert.match(reducedRender[1], /signals\.lowMemory/);

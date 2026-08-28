@@ -1,7 +1,7 @@
 {
   "schema": "dx.build.graph.consumerSnapshot",
   "sourceSchema": "dx.build.graph",
-  "generatedAt": "2026-08-08T12:10:48.599047200+00:00",
+  "generatedAt": "2026-08-27T17:03:13.317244+00:00",
   "coreConceptMap": {
     "conceptCount": 9,
     "coveredNodeKinds": [
@@ -33,14 +33,14 @@
     "publicArchitecture": false
   },
   "graph": {
-    "nodeCount": 23,
-    "edgeCount": 15,
+    "nodeCount": 29,
+    "edgeCount": 18,
     "nodeKindCounts": {
       "dx-style-css": 4,
       "dx-style-import-source": 3,
       "dx-style-source-map": 4,
-      "image-placeholder-asset": 2,
-      "public-asset": 5,
+      "image-placeholder-asset": 5,
+      "public-asset": 8,
       "route-shell-chunk": 1,
       "server-data-route": 1,
       "source-module-chunk": 2,
@@ -48,8 +48,8 @@
     },
     "styleOptimization": {
       "styleNodeCount": 4,
-      "originalRuleCount": 594,
-      "retainedRuleCount": 594,
+      "originalRuleCount": 642,
+      "retainedRuleCount": 642,
       "prunedRuleCount": 0,
       "minifiedStyleCount": 4,
       "sourceMapCount": 4,
@@ -65,32 +65,34 @@
       "sourceMapHashCount": 4,
       "sourceMapArtifactCount": 4,
       "flattenedImportCount": 3,
-      "retainedImportCount": 0,
+      "retainedImportCount": 2,
       "assetReferenceCount": 0,
       "entryStyleAssetReferenceCount": 0,
       "flattenedImportAssetReferenceCount": 0,
       "retainedImportAssetReferenceCount": 0
     },
     "imageOptimization": {
-      "imageAssetCount": 2,
-      "metadataAssetCount": 2,
+      "imageAssetCount": 5,
+      "metadataAssetCount": 5,
       "optimizedVariantCount": 0,
-      "placeholderCount": 2,
-      "placeholderArtifactCount": 2,
-      "placeholderArtifactBytes": 342,
+      "placeholderCount": 5,
+      "placeholderArtifactCount": 5,
+      "placeholderArtifactBytes": 865,
       "placeholderArtifactOutputs": [
         ".dx/www/output/.dx/build-cache/image-placeholders/public/favicon-b0698a08bf67b748.placeholder.svg",
-        ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-653d1ed174ed39da.placeholder.svg"
+        ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg",
+        ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-dark-b0698a08bf67b748.placeholder.svg",
+        ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-light-b0698a08bf67b748.placeholder.svg",
+        ".dx/www/output/.dx/build-cache/image-placeholders/public/route-b0698a08bf67b748.placeholder.svg"
       ],
-      "placeholderArtifactEdgeCount": 2,
+      "placeholderArtifactEdgeCount": 5,
       "routeReferenceCount": 0,
       "styleReferenceCount": 0,
       "formatCounts": {
-        "svg": 2
+        "svg": 5
       },
       "dimensionSourceCounts": {
-        "svg-root-attributes": 1,
-        "svg-viewbox": 1
+        "svg-root-attributes": 5
       },
       "status": "metadata-plus-placeholder-artifacts-boundary",
       "fullPipelineParity": false

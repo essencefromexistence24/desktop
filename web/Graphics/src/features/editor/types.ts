@@ -13,6 +13,12 @@ export type EditorTool =
   | "frame"
   | "rectangle"
   | "ellipse"
+  | "diamond"
+  | "triangle"
+  | "star"
+  | "hexagon"
+  | "line"
+  | "arrow"
   | "text"
   | "sticky"
   | "comment";

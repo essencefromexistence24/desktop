@@ -1,7 +1,7 @@
 {
   "schema": "dx.www.deploy.provider_adapter_smoke_matrix",
   "schema_revision": 1,
-  "manifest_hash": "blake3:9fce00726390d6639885db57505805f5ac6ce90e07272011b0f90024ef75e5df",
+  "manifest_hash": "blake3:ac94ab9bf122677469e81f42f2249c21fe882df1c56ff7f95d95ddb4c4c3e576",
   "release_ready": false,
   "hosted_provider_proof": false,
   "provider_adapter_path": ".dx/build-cache/provider-adapter.dx-cloud.json",
@@ -14,9 +14,9 @@
     "route_handlers": 0,
     "server_actions": 0,
     "health_checks": 0,
-    "immutable_assets": 50,
-    "public_runtime_artifacts": 49,
-    "evidence_artifacts": 23
+    "immutable_assets": 71,
+    "public_runtime_artifacts": 67,
+    "evidence_artifacts": 26
   },
   "matrix": [
     {
