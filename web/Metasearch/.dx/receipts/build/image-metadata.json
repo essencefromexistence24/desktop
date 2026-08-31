@@ -1,21 +1,21 @@
 {
   "schema": "dx.www.imageMetadataReceipt",
   "schema_revision": 1,
-  "generatedAt": "2026-08-08T18:10:13.889225400+00:00",
+  "generatedAt": "2026-08-30T14:52:56.778454200+00:00",
   "projectRoot": "G:/Dx/desktop/web/Metasearch",
   "receiptPath": ".dx/receipts/build/image-metadata.json",
   "summary": {
-    "image_assets": 3,
-    "metadata_assets": 3,
+    "image_assets": 6,
+    "metadata_assets": 6,
     "optimized_variants_emitted": 0,
-    "placeholders_emitted": 3,
-    "route_references": 60,
+    "placeholders_emitted": 6,
+    "route_references": 62,
     "style_references": 0,
     "formats": {
-      "svg": 3
+      "svg": 6
     },
     "dimension_sources": {
-      "svg-root-attributes": 3
+      "svg-root-attributes": 6
     },
     "node_modules_required": false
   },
@@ -37,9 +37,9 @@
   "assets": [
     {
       "path": "public/favicon.svg",
-      "output": ".dx/www/output/public/favicon-6f610c26851426c5.svg",
-      "hash": "6f610c26851426c5",
-      "bytes": 1099,
+      "output": ".dx/www/output/public/favicon-2f8f048456a4b0ae.svg",
+      "hash": "2f8f048456a4b0ae",
+      "bytes": 1123,
       "image_metadata": {
         "format": "svg",
         "mime_type": "image/svg+xml",
@@ -78,9 +78,9 @@
     },
     {
       "path": "public/icon.svg",
-      "output": ".dx/www/output/public/icon-6f610c26851426c5.svg",
-      "hash": "6f610c26851426c5",
-      "bytes": 1099,
+      "output": ".dx/www/output/public/icon-d5c850b974136aac.svg",
+      "hash": "d5c850b974136aac",
+      "bytes": 1071,
       "image_metadata": {
         "format": "svg",
         "mime_type": "image/svg+xml",
@@ -118,10 +118,118 @@
       "node_modules_required": false
     },
     {
+      "path": "public/logo-dark.svg",
+      "output": ".dx/www/output/public/logo-dark-8295f9405d7b6237.svg",
+      "hash": "8295f9405d7b6237",
+      "bytes": 1068,
+      "image_metadata": {
+        "format": "svg",
+        "mime_type": "image/svg+xml",
+        "width": 1024,
+        "height": 1024,
+        "dimension_source": "svg-root-attributes",
+        "status": "metadata-read",
+        "optimization": {
+          "status": "metadata-plus-svg-placeholder",
+          "variants_emitted": 0,
+          "optimizer_invoked": false,
+          "resize_emitted": false,
+          "encoding_emitted": false,
+          "blur_placeholder_emitted": false,
+          "placeholder": {
+            "kind": "svg-placeholder-data-url",
+            "data_url": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221024%22%20height%3D%221024%22%20viewBox%3D%220%200%201024%201024%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f3f4f6%22%2F%3E%3C%2Fsvg%3E",
+            "width": 1024,
+            "height": 1024,
+            "bytes": 294,
+            "source": "dx-source-owned-svg-placeholder",
+            "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-dark-b0698a08bf67b748.placeholder.svg",
+            "hash": "b0698a08bf67b748",
+            "artifact_bytes": 173
+          },
+          "boundary": "metadata-plus-svg-placeholder-no-resize-or-encoding",
+          "informed_by": [
+            "turbopack-image::process::get_meta_data",
+            "turbopack-image::process::svg"
+          ]
+        }
+      },
+      "referenced_by_routes": [
+        {
+          "route": "/",
+          "source_path": "app/page.tsx",
+          "specifier": "/logo-dark.svg",
+          "kind": "static-image-url"
+        },
+        {
+          "route": "/media",
+          "source_path": "app/media/page.tsx",
+          "specifier": "/logo-dark.svg",
+          "kind": "static-image-url"
+        }
+      ],
+      "referenced_by_styles": [],
+      "node_modules_required": false
+    },
+    {
+      "path": "public/logo-light.svg",
+      "output": ".dx/www/output/public/logo-light-d5c850b974136aac.svg",
+      "hash": "d5c850b974136aac",
+      "bytes": 1071,
+      "image_metadata": {
+        "format": "svg",
+        "mime_type": "image/svg+xml",
+        "width": 1024,
+        "height": 1024,
+        "dimension_source": "svg-root-attributes",
+        "status": "metadata-read",
+        "optimization": {
+          "status": "metadata-plus-svg-placeholder",
+          "variants_emitted": 0,
+          "optimizer_invoked": false,
+          "resize_emitted": false,
+          "encoding_emitted": false,
+          "blur_placeholder_emitted": false,
+          "placeholder": {
+            "kind": "svg-placeholder-data-url",
+            "data_url": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221024%22%20height%3D%221024%22%20viewBox%3D%220%200%201024%201024%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f3f4f6%22%2F%3E%3C%2Fsvg%3E",
+            "width": 1024,
+            "height": 1024,
+            "bytes": 294,
+            "source": "dx-source-owned-svg-placeholder",
+            "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-light-b0698a08bf67b748.placeholder.svg",
+            "hash": "b0698a08bf67b748",
+            "artifact_bytes": 173
+          },
+          "boundary": "metadata-plus-svg-placeholder-no-resize-or-encoding",
+          "informed_by": [
+            "turbopack-image::process::get_meta_data",
+            "turbopack-image::process::svg"
+          ]
+        }
+      },
+      "referenced_by_routes": [
+        {
+          "route": "/",
+          "source_path": "app/page.tsx",
+          "specifier": "/logo-light.svg",
+          "kind": "static-image-url"
+        },
+        {
+          "route": "/media",
+          "source_path": "app/media/page.tsx",
+          "specifier": "/logo-light.svg",
+          "kind": "static-image-url"
+        }
+      ],
+      "referenced_by_styles": [],
+      "node_modules_required": false
+    },
+    {
       "path": "public/logo.svg",
-      "output": ".dx/www/output/public/logo-20a2f162f4d8f50b.svg",
-      "hash": "20a2f162f4d8f50b",
-      "bytes": 2758,
+      "output": ".dx/www/output/public/logo-d5c850b974136aac.svg",
+      "hash": "d5c850b974136aac",
+      "bytes": 1071,
       "image_metadata": {
         "format": "svg",
         "mime_type": "image/svg+xml",
@@ -154,20 +262,48 @@
           ]
         }
       },
-      "referenced_by_routes": [
-        {
-          "route": "/",
-          "source_path": "app/page.tsx",
-          "specifier": "/logo.svg",
-          "kind": "static-image-url"
-        },
-        {
-          "route": "/media",
-          "source_path": "app/media/page.tsx",
-          "specifier": "/logo.svg",
-          "kind": "static-image-url"
+      "referenced_by_routes": [],
+      "referenced_by_styles": [],
+      "node_modules_required": false
+    },
+    {
+      "path": "public/route.svg",
+      "output": ".dx/www/output/public/route-d5c850b974136aac.svg",
+      "hash": "d5c850b974136aac",
+      "bytes": 1071,
+      "image_metadata": {
+        "format": "svg",
+        "mime_type": "image/svg+xml",
+        "width": 1024,
+        "height": 1024,
+        "dimension_source": "svg-root-attributes",
+        "status": "metadata-read",
+        "optimization": {
+          "status": "metadata-plus-svg-placeholder",
+          "variants_emitted": 0,
+          "optimizer_invoked": false,
+          "resize_emitted": false,
+          "encoding_emitted": false,
+          "blur_placeholder_emitted": false,
+          "placeholder": {
+            "kind": "svg-placeholder-data-url",
+            "data_url": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221024%22%20height%3D%221024%22%20viewBox%3D%220%200%201024%201024%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f3f4f6%22%2F%3E%3C%2Fsvg%3E",
+            "width": 1024,
+            "height": 1024,
+            "bytes": 294,
+            "source": "dx-source-owned-svg-placeholder",
+            "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/route-b0698a08bf67b748.placeholder.svg",
+            "hash": "b0698a08bf67b748",
+            "artifact_bytes": 173
+          },
+          "boundary": "metadata-plus-svg-placeholder-no-resize-or-encoding",
+          "informed_by": [
+            "turbopack-image::process::get_meta_data",
+            "turbopack-image::process::svg"
+          ]
         }
-      ],
+      },
+      "referenced_by_routes": [],
       "referenced_by_styles": [],
       "node_modules_required": false
     }

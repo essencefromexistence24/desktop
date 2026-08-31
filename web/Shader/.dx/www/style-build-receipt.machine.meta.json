@@ -1,0 +1,13 @@
+{
+  "cache_schema": "dx.www.json_receipt",
+  "cache_version": 2,
+  "cache_kind": 3,
+  "source_path": "G:\\Dx\\desktop\\web\\Shader\\.dx/receipts/style/build.json",
+  "source_len": 252488,
+  "source_modified_unix_ms": 1788013106310,
+  "source_blake3": "37f33af93547069e17fa06e1a4d3a668c6600eea77ff0a1bad6254b850f05a35",
+  "machine_path": "G:\\Dx\\desktop\\web\\Shader\\.dx\\www\\style-build-receipt.machine",
+  "machine_payload_len": 271640,
+  "machine_archive_len": 271640,
+  "machine_payload_blake3": "c3019b8df744fe6435ef209a13e5eb2f70adc935696b8c2eaa4ae3482c8dbe75"
+}

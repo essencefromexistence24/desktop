@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated": "2026-08-27T17:02:53.908911700+00:00",
-  "manifest_hash": "blake3:a89d5f0f9e716d8148b508dc2b9327e9e1c043d09be80647b409f08227f23470",
+  "generated": "2026-08-30T14:24:14.027572800+00:00",
+  "manifest_hash": "blake3:f0a947814c19e26bfae8afbaf7f4ec435da0a4872ff3baf55c9d3484b7efea24",
   "runtime": "dx-www-production-contract",
   "secret_fields_collected": false,
   "privacy": {
@@ -102,23 +102,23 @@
       "collects_content": false
     },
     {
-      "path": "_dx/styles/react-route-53580e76005ac468.css",
+      "path": "_dx/styles/react-route-6f99b7d7a67b461c.css",
       "metric": "packet.bytes",
-      "bytes": 35627,
+      "bytes": 35458,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "_dx/styles/react-route-53580e76005ac468.css.br",
+      "path": "_dx/styles/react-route-6f99b7d7a67b461c.css.br",
       "metric": "packet.bytes",
-      "bytes": 6437,
+      "bytes": 6411,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "_dx/styles/react-route-53580e76005ac468.css.gz",
+      "path": "_dx/styles/react-route-6f99b7d7a67b461c.css.gz",
       "metric": "packet.bytes",
-      "bytes": 7322,
+      "bytes": 7288,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
@@ -146,21 +146,21 @@
     {
       "path": "app/index.dxpk",
       "metric": "packet.bytes",
-      "bytes": 33997,
+      "bytes": 33527,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "app/index.dxpk.br",
       "metric": "packet.bytes",
-      "bytes": 8772,
+      "bytes": 8645,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "app/index.dxpk.gz",
       "metric": "packet.bytes",
-      "bytes": 10570,
+      "bytes": 10405,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
@@ -496,21 +496,21 @@
     {
       "path": "dx-shader/styles.css",
       "metric": "packet.bytes",
-      "bytes": 35020,
+      "bytes": 36564,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "dx-shader/styles.css.br",
       "metric": "packet.bytes",
-      "bytes": 6001,
+      "bytes": 6204,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "dx-shader/styles.css.gz",
       "metric": "packet.bytes",
-      "bytes": 6914,
+      "bytes": 7131,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
@@ -949,23 +949,23 @@
       "collects_content": false
     },
     {
-      "path": "public/dx-shader/styles-7e4d75e5137b2964.css",
+      "path": "public/dx-shader/styles-a2dd58a124b7e1a5.css",
       "metric": "packet.bytes",
-      "bytes": 35020,
+      "bytes": 36564,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/dx-shader/styles-7e4d75e5137b2964.css.br",
+      "path": "public/dx-shader/styles-a2dd58a124b7e1a5.css.br",
       "metric": "packet.bytes",
-      "bytes": 6001,
+      "bytes": 6204,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/dx-shader/styles-7e4d75e5137b2964.css.gz",
+      "path": "public/dx-shader/styles-a2dd58a124b7e1a5.css.gz",
       "metric": "packet.bytes",
-      "bytes": 6914,
+      "bytes": 7131,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
@@ -1140,42 +1140,42 @@
     {
       "path": "styles/dx-shader.css",
       "metric": "packet.bytes",
-      "bytes": 29323,
+      "bytes": 29265,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "styles/dx-shader.css.br",
       "metric": "packet.bytes",
-      "bytes": 5403,
+      "bytes": 5421,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "styles/dx-shader.css.gz",
       "metric": "packet.bytes",
-      "bytes": 6175,
+      "bytes": 6186,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "styles/generated.css",
       "metric": "packet.bytes",
-      "bytes": 1605,
+      "bytes": 1487,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "styles/generated.css.br",
       "metric": "packet.bytes",
-      "bytes": 527,
+      "bytes": 493,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "styles/generated.css.gz",
       "metric": "packet.bytes",
-      "bytes": 647,
+      "bytes": 608,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
@@ -1264,7 +1264,7 @@
       "collects_content": false
     }
   ],
-  "packet_bytes_total": 1091436,
+  "packet_bytes_total": 1094153,
   "server_action_receipts": [],
   "hooks": {
     "health": [],

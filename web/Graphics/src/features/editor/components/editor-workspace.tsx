@@ -202,7 +202,7 @@ export function EditorWorkspace({
 }: EditorWorkspaceProps) {
   const editor = useEditorDocument(initialDocument);
   const [tool, setTool] = useState<EditorTool>("select");
-  const [view, setView] = useState<CanvasView>({ x: 72, y: 48, zoom: 1 });
+  const [view, setView] = useState<CanvasView>({ x: 72, y: 48, zoom: 0.75 });
   const autoFitSignatureRef = useRef<string | null>(null);
   const [canvasViewportSize, setCanvasViewportSize] = useState<ViewportSize>({
     width: 0,
@@ -345,14 +345,9 @@ export function EditorWorkspace({
       return;
     }
 
-    const enforcedView = {
-      ...nextView,
-      zoom: 1,
-    };
-
     return scheduleEffectStateSync(() => {
       autoFitSignatureRef.current = fitSignature;
-      setView(enforcedView);
+      setView(nextView);
     });
   }, [canvasViewportSize, editor.activePage.id, editor.activePage.layers]);
 

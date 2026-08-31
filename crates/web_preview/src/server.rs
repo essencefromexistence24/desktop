@@ -17,7 +17,7 @@ use axum::{
     },
     http::{
         StatusCode,
-        header::{ACCEPT, CONTENT_TYPE},
+        header::{ACCEPT, CACHE_CONTROL, CONTENT_TYPE},
     },
     response::IntoResponse,
     routing::get,
@@ -63,8 +63,35 @@ fn project_dir_name(tool_id: &str) -> &str {
         "whiteboard" => "whiteboard",
         "shader" => "shader",
         "dx-web" => "Metasearch",
+        // The tool id is `route` but the checked-out folder is `Router`. Without
+        // this entry the case-insensitive scans compare "route" against "Router"
+        // and never match, so the tool resolves to nothing.
+        "route" => "Router",
         other => other,
     }
+}
+
+/// Resolve a project folder under `root` whose name matches `wanted`
+/// case-insensitively. Windows is case-insensitive anyway, but the checkout
+/// names differ in more than case for some tools (`route` -> `Router`), so a
+/// plain `join` is not enough.
+fn resolve_dir_case_insensitive(root: &Path, wanted: &str) -> Option<PathBuf> {
+    let direct = root.join(wanted);
+    if direct.is_dir() {
+        return Some(direct);
+    }
+
+    std::fs::read_dir(root)
+        .ok()?
+        .flatten()
+        .map(|entry| entry.path())
+        .find(|path| {
+            path.is_dir()
+                && path
+                    .file_name()
+                    .and_then(|name| name.to_str())
+                    .is_some_and(|name| name.eq_ignore_ascii_case(wanted))
+        })
 }
 
 /// Stable per-tool preview ports. Fixed ports keep the tool on the same
@@ -113,6 +140,13 @@ fn spawn_backend_for_tool(tool_id: &str) -> Option<String> {
     }
 }
 
+/// The CMS admin SPA is mounted under `/admin`. The site root is reserved for
+/// published pages and answers 404 until a site is actually published, so the
+/// preview has to open `/admin` directly.
+fn cms_origin() -> String {
+    format!("http://127.0.0.1:{}/admin/", CMS_BACKEND_PORT)
+}
+
 fn spawn_cms_backend() -> Option<String> {
     let root = web_root()?;
     let cms_dir = root.join("Cms");
@@ -127,7 +161,7 @@ fn spawn_cms_backend() -> Option<String> {
             port = CMS_BACKEND_PORT,
             "CMS backend port already in use, reusing"
         );
-        return Some(format!("http://127.0.0.1:{}/", CMS_BACKEND_PORT));
+        return Some(cms_origin());
     }
 
     let bun = find_executable("bun")?;
@@ -148,7 +182,7 @@ fn spawn_cms_backend() -> Option<String> {
     {
         Ok(_) => {
             info!(port = CMS_BACKEND_PORT, "CMS backend spawned");
-            Some(format!("http://127.0.0.1:{}/", CMS_BACKEND_PORT))
+            Some(cms_origin())
         }
         Err(e) => {
             warn!(%e, "failed to spawn CMS backend");
@@ -313,31 +347,27 @@ fn spawn_or_reuse_llama_server() {
     }
 }
 
-/// Spawn the Route Next.js app (`npx node scripts/dev/run-next.mjs start`).
-/// Uses the production build under `<Route>/.build/next` with PORT overridden
-/// to the fixed backend port so the dashboard is reachable on the same origin
-/// as the other tools and its data dir resolves from the project `.env`.
+/// Spawn the Route Next.js app on the fixed backend port. Route's production
+/// build lives under `<Router>/.next` and is served via `next start` (the app
+/// has middleware, API routes and a SQLite database, so it cannot be statically
+/// exported like the other tools). PORT is overridden to the fixed backend port
+/// so the dashboard is reachable on the same origin as the other tools.
 fn spawn_route_backend() -> Option<String> {
+    // `Route` never existed on disk — the app lives in `Router`. Resolve the
+    // folder case-insensitively so a renamed checkout can't silently break the
+    // lookup again.
     let route_root = std::env::var("DX_ROUTE_ROOT")
         .ok()
         .map(PathBuf::from)
-        .or_else(|| web_root().map(|r| r.join("Route")))?;
+        .or_else(|| {
+            let root = web_root()?;
+            resolve_dir_case_insensitive(root, project_dir_name("route"))
+        })?;
 
-    // Try .build/next first (production), then .next (standard Next.js), then apps/web/.next
-    let mut build_dir = route_root.join(".build").join("next");
-    if !build_dir.is_dir() {
-        let alt = route_root.join(".next");
-        if alt.is_dir() {
-            build_dir = alt;
-        } else {
-            let alt2 = route_root.join("apps").join("web").join(".next");
-            if alt2.is_dir() {
-                build_dir = alt2;
-            } else {
-                warn!(root = %route_root.display(), "Route build output missing (.build/next or .next)");
-                return None;
-            }
-        }
+    // The production build lives in `.next` as `next start`. Require it.
+    if !route_root.join(".next").is_dir() {
+        warn!(root = %route_root.display(), "Route build output missing (.next)");
+        return None;
     }
 
     if std::net::TcpListener::bind(("127.0.0.1", ROUTE_BACKEND_PORT)).is_err() {
@@ -349,11 +379,11 @@ fn spawn_route_backend() -> Option<String> {
     }
 
     let node = find_executable("node")?;
+    let next_bin = resolve_next_bin(&route_root, &node)?;
     match Command::new(&node)
-        .args(["scripts/dev/run-next.mjs", "start"])
+        .arg(&next_bin)
+        .args(["start", "-p", &ROUTE_BACKEND_PORT.to_string(), "-H", "127.0.0.1"])
         .current_dir(&route_root)
-        .env("PORT", ROUTE_BACKEND_PORT.to_string())
-        .env("HOST", "127.0.0.1")
         .env("NODE_ENV", "production")
         .stdin(Stdio::null())
         .stdout(Stdio::null())
@@ -369,6 +399,35 @@ fn spawn_route_backend() -> Option<String> {
             None
         }
     }
+}
+
+/// Resolve the local `next` CLI entry for a project so `next start` runs against
+/// that project's own install (`node_modules/.bin/next` or `node_modules/next/dist/bin/next`).
+fn resolve_next_bin(project_root: &Path, node: &Path) -> Option<PathBuf> {
+    let candidates = [
+        project_root.join("node_modules").join("next").join("dist").join("bin").join("next"),
+        project_root.join("node_modules").join(".bin").join("next"),
+    ];
+    for c in candidates {
+        if c.is_file() {
+            return Some(c);
+        }
+    }
+    // Fall back to resolving the package script via node -e.
+    if let Ok(out) = Command::new(node)
+        .args(["-e", "console.log(require.resolve('next/dist/bin/next'))"])
+        .current_dir(project_root)
+        .output()
+    {
+        let p = String::from_utf8_lossy(&out.stdout).trim().to_string();
+        if !p.is_empty() {
+            let q = PathBuf::from(p);
+            if q.is_file() {
+                return Some(q);
+            }
+        }
+    }
+    None
 }
 
 /// Find an executable on PATH (Windows: also with .exe appended).
@@ -485,20 +544,7 @@ fn project_output_dir(tool_id: &str) -> Option<PathBuf> {
 
     // Original: for 2 www framework (whiteboard/shader) and any built inside web sources under <name>/.dx/www/output
     let root = web_root()?;
-    let mut project_dir = root.join(wanted);
-    if !project_dir.is_dir() {
-        project_dir = std::fs::read_dir(root)
-            .ok()?
-            .flatten()
-            .map(|entry| entry.path())
-            .find(|path| {
-                path.is_dir()
-                    && path
-                        .file_name()
-                        .and_then(|name| name.to_str())
-                        .is_some_and(|name| name.eq_ignore_ascii_case(wanted))
-            })?;
-    }
+    let project_dir = resolve_dir_case_insensitive(root, wanted)?;
 
     let output_dir = project_dir.join(".dx").join("www").join("output");
     output_dir
@@ -608,12 +654,18 @@ pub fn local_preview_url(tool_id: &str) -> Option<String> {
     }
 }
 
+/// Parse the port out of an origin that may also carry a path (the CMS origin
+/// is `http://127.0.0.1:3002/admin/`). The port lives in the authority, so the
+/// scheme and path have to be stripped before splitting on the last colon.
 fn backend_origin_port(origin: &str) -> Option<u16> {
-    origin
-        .trim_end_matches('/')
-        .rsplit(':')
-        .next()
-        .and_then(|s| s.parse().ok())
+    let authority = origin
+        .split_once("://")
+        .map(|(_, rest)| rest)
+        .unwrap_or(origin)
+        .split('/')
+        .next()?;
+
+    authority.rsplit(':').next()?.parse().ok()
 }
 
 pub fn ensure_dx_preview_server_running() {
@@ -884,6 +936,7 @@ async fn serve_dx_file_direct(
             } else {
                 let placeholder = placeholder_html(&tool);
                 return axum::http::Response::builder()
+                    .header(CACHE_CONTROL, "no-store, max-age=0")
                     .header(CONTENT_TYPE, "text/html; charset=utf-8")
                     .body(Body::from(placeholder))
                     .unwrap()
@@ -898,6 +951,7 @@ async fn serve_dx_file_direct(
         Ok(bytes) => {
             let mime = mime_type_for(&target);
             axum::http::Response::builder()
+                .header(CACHE_CONTROL, "no-store, max-age=0")
                 .header(CONTENT_TYPE, mime)
                 .body(Body::from(bytes))
                 .unwrap()
@@ -983,6 +1037,21 @@ fn mime_type_for(path: &Path) -> &'static str {
     get_mime_type(&format!(".{ext}"))
 }
 
+/// Read a file from the live `assets/web` tree on disk (when resolvable), so the
+/// embedded fallback server can serve freshly published static sites instead of
+/// the compile-time snapshot baked into the binary. `asset_path` is the `web/...`
+/// key used by [`Assets`]; returns `None` when the disk tree is unavailable or the
+/// file is missing, in which case callers fall back to the embedded bytes.
+fn load_disk_preview_file(asset_path: &str) -> Option<std::borrow::Cow<'static, [u8]>> {
+    let root = find_assets_web_root()?;
+    let rel = asset_path.strip_prefix("web/").unwrap_or(asset_path);
+    let file = root.join(rel);
+    if !file.is_file() {
+        return None;
+    }
+    Some(std::borrow::Cow::Owned(std::fs::read(file).ok()?))
+}
+
 /// Legacy embedded server that serves the bundled `assets/web` tree. Kept as a
 /// fallback for callers (and the `OpenWebPreview` action) that still build
 /// `http://127.0.0.1:<port>/<project>` URLs. New code should prefer
@@ -1005,11 +1074,21 @@ pub fn start_embedded_web_server() -> u16 {
                 let mut asset_path = format!("web/{}", path);
                 let assets = Assets;
 
-                let mut bytes_opt = assets.load(&asset_path).ok().flatten();
+                // Prefer the live on-disk `assets/web` tree (fresh publishes) over
+                // the snapshot of `assets/web` embedded into the binary at build time,
+                // so clicking a statusbar/tool icon never opens a stale baked-in copy.
+                let mut bytes_opt = load_disk_preview_file(&asset_path);
+
+                if bytes_opt.is_none() {
+                    bytes_opt = assets.load(&asset_path).ok().flatten();
+                }
 
                 if bytes_opt.is_none() {
                     let index_path = format!("{}/index.html", asset_path.trim_end_matches('/'));
-                    if let Ok(Some(bytes)) = assets.load(&index_path) {
+                    if let Some(bytes) = load_disk_preview_file(&index_path) {
+                        bytes_opt = Some(bytes);
+                        asset_path = index_path;
+                    } else if let Ok(Some(bytes)) = assets.load(&index_path) {
                         bytes_opt = Some(bytes);
                         asset_path = index_path;
                     }
@@ -1021,7 +1100,11 @@ pub fn start_embedded_web_server() -> u16 {
                         .with_status_code(200)
                         .with_header(
                             Header::from_bytes(&b"Content-Type"[..], mime_type.as_bytes()).unwrap(),
-                        );
+                        )
+                        .with_header(Header::from_bytes(
+                            &b"Cache-Control"[..],
+                            &b"no-store, max-age=0"[..],
+                        ).unwrap());
                     let _ = request.respond(response);
                 } else {
                     let response = Response::empty(404);

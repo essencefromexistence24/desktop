@@ -8,7 +8,7 @@ current_score=99
 target_score=99
 fastest_world_claim=false
 proof_scope="build-output-deploy-adapter-proof-graph"
-manifest_hash="blake3:b7e17c90c6feb9eb86914f177ce0c712693b603a2c9981c123b3a63f290bfca6"
+manifest_hash="blake3:9576ad6a60660bead11be679095c192ccf963b8c08b35bcdbe7867f31e4a675f"
 inputs=".dx/build-cache/manifest.json;.dx/build-cache/deploy-adapter.json;readiness_gate_status;proof_nodes;same-machine-performance;tiny-static-no-js-artifact;tiny-static-no-js-browser;lighthouse-paint-receipts;production-http-local-replay;production-http-tcp-preview;server-action-replay-ledger;route-handler-provider-replay;primitive-proof;native-event-catalog;native-event-browser-binder;island-abi;island-browser;reactivity-model;state-runtime-browser;bundle-partition;docs-onboarding-receipt;docs-onboarding-doctor;visual-edit-workbench-receipts;proof_graph"
 output_hashes="manifest_hash=blake3;serializer_source_blake3=source_blake3;serializer_machine_blake3=machine_blake3"
 receipt_freshness="written-by-dx-build-not-release-proof"

@@ -1,7 +1,7 @@
 {
   "schema": "dx.build.graph",
   "format": 1,
-  "generatedAt": "2026-08-27T17:02:52.562322400+00:00",
+  "generatedAt": "2026-08-30T14:24:11.644983100+00:00",
   "projectRoot": "G:/Dx/desktop/web/Shader",
   "receiptPath": "G:/Dx/desktop/web/Shader/.dx/receipts/graph/latest.json",
   "names": {
@@ -29,7 +29,7 @@
         "path": "styles/dx-shader.css",
         "output": ".dx/www/output/styles/dx-shader.css",
         "contract": "dx.build.graph",
-        "hash": "eb8cb93f532f73d2",
+        "hash": "6d43dbc1ed9551d1",
         "original_rule_count": 230,
         "retained_rule_count": 230,
         "pruned_rule_count": 0,
@@ -44,7 +44,7 @@
         "source_map_exact_segment_mapping": false,
         "source_map_evidence_only": true,
         "source_map_linked": true,
-        "source_map_hash": "776ed218358c2bb2",
+        "source_map_hash": "cd3748f1288c436d",
         "node_modules_required": false,
         "lifecycle_scripts_executed": false,
         "source_owned_contract": true,
@@ -78,9 +78,9 @@
         "path": "styles/generated.css",
         "output": ".dx/www/output/styles/generated.css",
         "contract": "dx.build.graph",
-        "hash": "cc366d69865a7ce1",
-        "original_rule_count": 19,
-        "retained_rule_count": 19,
+        "hash": "cca26b6980df7c79",
+        "original_rule_count": 16,
+        "retained_rule_count": 16,
         "pruned_rule_count": 0,
         "minified": true,
         "source_map_output": ".dx/www/output/styles/generated.css.map",
@@ -93,7 +93,7 @@
         "source_map_exact_segment_mapping": false,
         "source_map_evidence_only": true,
         "source_map_linked": true,
-        "source_map_hash": "378ef576a43f182e",
+        "source_map_hash": "3eed0a73c5ad8afd",
         "node_modules_required": false,
         "lifecycle_scripts_executed": false,
         "source_owned_contract": true,
@@ -190,7 +190,7 @@
         "source_map_exact_segment_mapping": false,
         "source_map_evidence_only": true,
         "source_map_linked": true,
-        "source_map_hash": "776ed218358c2bb2",
+        "source_map_hash": "cd3748f1288c436d",
         "node_modules_required": false,
         "lifecycle_scripts_executed": false,
         "source_owned_contract": true,
@@ -213,7 +213,7 @@
         "source_map_exact_segment_mapping": false,
         "source_map_evidence_only": true,
         "source_map_linked": true,
-        "source_map_hash": "378ef576a43f182e",
+        "source_map_hash": "3eed0a73c5ad8afd",
         "node_modules_required": false,
         "lifecycle_scripts_executed": false,
         "source_owned_contract": true,
@@ -950,10 +950,10 @@
         "id": "public-asset:public/dx-shader/styles.css",
         "kind": "public-asset",
         "path": "public/dx-shader/styles.css",
-        "output": ".dx/www/output/public/dx-shader/styles-7e4d75e5137b2964.css",
+        "output": ".dx/www/output/public/dx-shader/styles-a2dd58a124b7e1a5.css",
         "contract": "dx.build.graph",
-        "hash": "7e4d75e5137b2964",
-        "bytes": 35020,
+        "hash": "a2dd58a124b7e1a5",
+        "bytes": 36564,
         "node_modules_required": false,
         "lifecycle_scripts_executed": false,
         "source_owned_contract": true,
@@ -1243,12 +1243,12 @@
         "external_runtime_executed": false
       },
       {
-        "id": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-e7270c536bac4737.mjs",
+        "id": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-7e2017d91d346f63.mjs",
         "kind": "route-shell-chunk",
-        "path": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-e7270c536bac4737.mjs",
+        "path": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-7e2017d91d346f63.mjs",
         "route": "/",
         "contract": "dx.www.moduleGraph",
-        "fallback_hash": "e7270c536bac4737",
+        "fallback_hash": "7e2017d91d346f63",
         "node_modules_required": false
       },
       {
@@ -1279,14 +1279,14 @@
         "external_runtime_executed": false
       },
       {
-        "id": "source-module-chunk:.dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-5a769af35d7bc2cc.mjs",
+        "id": "source-module-chunk:.dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-927e9ea85396b359.mjs",
         "kind": "source-module-chunk",
-        "path": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-5a769af35d7bc2cc.mjs",
+        "path": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-927e9ea85396b359.mjs",
         "source_path": "app/page.tsx",
         "route": "/",
         "source_kind": "tsx",
         "contract": "dx.www.moduleGraph",
-        "hash": "5a769af35d7bc2cc",
+        "hash": "927e9ea85396b359",
         "browser_executable": true,
         "source_transformed": false,
         "transform_kind": "metadata-only",
@@ -1427,7 +1427,7 @@
         "path": "app/page.tsx",
         "route": "/",
         "contract": "dx.www.moduleGraph",
-        "hash": "5a769af35d7bc2cc",
+        "hash": "927e9ea85396b359",
         "parser_backend": "oxc-parser",
         "ecmascript_analysis": {
           "schema": "dx.ecmascript.analysis",
@@ -1498,7 +1498,7 @@
         "kind": "emits-css-source-map",
         "source_path": "styles/dx-shader.css",
         "output": ".dx/www/output/styles/dx-shader.css.map",
-        "source_map_hash": "776ed218358c2bb2",
+        "source_map_hash": "cd3748f1288c436d",
         "source_map_linked": true,
         "node_modules_required": false,
         "lifecycle_scripts_executed": false,
@@ -1534,7 +1534,7 @@
         "kind": "emits-css-source-map",
         "source_path": "styles/generated.css",
         "output": ".dx/www/output/styles/generated.css.map",
-        "source_map_hash": "378ef576a43f182e",
+        "source_map_hash": "3eed0a73c5ad8afd",
         "source_map_linked": true,
         "node_modules_required": false,
         "lifecycle_scripts_executed": false,
@@ -1733,7 +1733,7 @@
         "full_pipeline_parity": false
       },
       {
-        "from": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-e7270c536bac4737.mjs",
+        "from": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-7e2017d91d346f63.mjs",
         "to": "server-data-route:.dx/www/output/source-routes/root/server-data.json",
         "kind": "links-server-data",
         "route": "/",
@@ -1746,12 +1746,12 @@
         "external_runtime_executed": false
       },
       {
-        "from": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-e7270c536bac4737.mjs",
-        "to": "source-module-chunk:.dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-5a769af35d7bc2cc.mjs",
+        "from": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-7e2017d91d346f63.mjs",
+        "to": "source-module-chunk:.dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-927e9ea85396b359.mjs",
         "kind": "links-entry-module"
       },
       {
-        "from": "source-module-chunk:.dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-5a769af35d7bc2cc.mjs",
+        "from": "source-module-chunk:.dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-927e9ea85396b359.mjs",
         "to": "source-module-chunk:.dx/www/output/.dx/build-cache/source-routes/root/modules/components-icons-icon-tsx-8db49bf807790749.mjs",
         "kind": "imports-source-module",
         "specifier": "../components/icons/icon",
@@ -1759,7 +1759,7 @@
       },
       {
         "from": "tsx-route:app/page.tsx",
-        "to": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-e7270c536bac4737.mjs",
+        "to": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-7e2017d91d346f63.mjs",
         "kind": "emits"
       },
       {
@@ -1777,7 +1777,7 @@
       },
       {
         "from": "tsx-route:app/page.tsx",
-        "to": "source-module-chunk:.dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-5a769af35d7bc2cc.mjs",
+        "to": "source-module-chunk:.dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-927e9ea85396b359.mjs",
         "kind": "imports-source-module"
       }
     ]

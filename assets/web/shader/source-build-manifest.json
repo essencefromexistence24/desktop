@@ -7,7 +7,7 @@
       "route": "/",
       "path": "app/page.tsx",
       "output": ".dx/www/output/.dx/build-cache/source/app/page.tsx",
-      "hash": "5a769af35d7bc2cc",
+      "hash": "927e9ea85396b359",
       "imports": [
         {
           "specifier": "../components/icons/icon",
@@ -95,15 +95,15 @@
       "packet_output": ".dx/www/output/.dx/build-cache/source-routes/root/index.dxpk",
       "page_graph_output": ".dx/www/output/.dx/build-cache/source-routes/root/page-graph.json",
       "route_unit_output": ".dx/www/output/.dx/build-cache/source-routes/root/route-unit.json",
-      "shell_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-e7270c536bac4737.mjs",
-      "entry_module_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-5a769af35d7bc2cc.mjs",
+      "shell_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-7e2017d91d346f63.mjs",
+      "entry_module_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-927e9ea85396b359.mjs",
       "server_data_output": ".dx/www/output/source-routes/root/server-data.json",
       "source_module_chunks": [
         {
           "source_path": "app/page.tsx",
-          "chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-5a769af35d7bc2cc.mjs",
+          "chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-927e9ea85396b359.mjs",
           "kind": "tsx",
-          "hash": "5a769af35d7bc2cc",
+          "hash": "927e9ea85396b359",
           "dependencies": [
             {
               "specifier": "../components/icons/icon",
@@ -246,9 +246,9 @@
           "node_modules_required": false
         }
       ],
-      "fallback_hash": "e7270c536bac4737",
-      "fallback_bytes": 6804,
-      "packet_bytes": 33997,
+      "fallback_hash": "7e2017d91d346f63",
+      "fallback_bytes": 6765,
+      "packet_bytes": 33527,
       "node_modules_required": false
     }
   ],
@@ -303,8 +303,8 @@
       "source_map_exact_segment_mapping": false,
       "source_map_evidence_only": true,
       "source_map_linked": true,
-      "source_map_hash": "776ed218358c2bb2",
-      "hash": "eb8cb93f532f73d2",
+      "source_map_hash": "cd3748f1288c436d",
+      "hash": "6d43dbc1ed9551d1",
       "rule_count": 230,
       "original_rule_count": 230,
       "retained_rule_count": 230,
@@ -348,11 +348,11 @@
       "source_map_exact_segment_mapping": false,
       "source_map_evidence_only": true,
       "source_map_linked": true,
-      "source_map_hash": "378ef576a43f182e",
-      "hash": "cc366d69865a7ce1",
-      "rule_count": 19,
-      "original_rule_count": 19,
-      "retained_rule_count": 19,
+      "source_map_hash": "3eed0a73c5ad8afd",
+      "hash": "cca26b6980df7c79",
+      "rule_count": 16,
+      "original_rule_count": 16,
+      "retained_rule_count": 16,
       "pruned_rule_count": 0,
       "minified": true,
       "node_modules_required": false,
@@ -888,9 +888,9 @@
     },
     {
       "path": "public/dx-shader/styles.css",
-      "output": ".dx/www/output/public/dx-shader/styles-7e4d75e5137b2964.css",
-      "hash": "7e4d75e5137b2964",
-      "size": 35020,
+      "output": ".dx/www/output/public/dx-shader/styles-a2dd58a124b7e1a5.css",
+      "hash": "a2dd58a124b7e1a5",
+      "size": 36564,
       "node_modules_required": false,
       "lifecycle_scripts_executed": false,
       "source_owned_contract": true,

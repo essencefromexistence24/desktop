@@ -157,11 +157,13 @@ impl StatusBar {
             ("graphics", "Graphics"),
             ("spreadsheets", "Spreadsheets"),
             ("video", "Video"),
-            ("cms", "CMS"),
+            // CMS hidden from the statusbar web-tool icons (kept, not deleted).
+            // ("cms", "CMS"),
             ("graph", "Graph"),
             ("media", "Media"),
             ("train", "Train"),
-            ("metasearch", "Metasearch"),
+            // Metasearch hidden from the statusbar web-tool icons (kept, not deleted).
+            // ("metasearch", "Metasearch"),
             ("route", "Route"),
             ("3d", "3D"),
             ("shader", "Shader"),

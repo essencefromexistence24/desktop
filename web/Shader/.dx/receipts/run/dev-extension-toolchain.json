@@ -1,0 +1,24 @@
+{
+  "schema": "dx.dev.extension_toolchain",
+  "version": 2,
+  "generated_at": "2026-08-29T14:18:26.375429700+00:00",
+  "config_source": "dx",
+  "serializer_cache": ".dx/serializer",
+  "triggered_paths": [
+    "style.css"
+  ],
+  "commands": [
+    {
+      "name": "style",
+      "command": "dx style build --json",
+      "passed": true,
+      "status": 0,
+      "stderr": ""
+    }
+  ],
+  "planned_commands": [
+    "style"
+  ],
+  "passed": true,
+  "policy": "dx config driven TSX/.sr/dx changes run the minimum serializer, imports, style, and icon tools before the hot reload event is published"
+}

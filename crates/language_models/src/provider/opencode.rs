@@ -54,7 +54,7 @@ fn reasoning_effort_display(effort: ReasoningEffort) -> (&'static str, &'static 
 }
 
 const PROVIDER_ID: LanguageModelProviderId = LanguageModelProviderId::new("opencode");
-const PROVIDER_NAME: LanguageModelProviderName = LanguageModelProviderName::new("Free");
+const PROVIDER_NAME: LanguageModelProviderName = LanguageModelProviderName::new("Opencode Zen");
 
 const API_KEY_ENV_VAR_NAME: &str = "OPENCODE_API_KEY";
 const PUBLIC_API_KEY: &str = "public";

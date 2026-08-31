@@ -1,0 +1,10 @@
+schema="dx.dev.extension_toolchain"
+version=2
+generated_at="2026-08-29T14:18:26.376292400+00:00"
+config_source="dx"
+passed=true
+triggered_paths=["style.css"]
+planned_commands=["style"]
+serializer_cache=".dx/serializer"
+policy="dx config driven minimal toolchain before hot reload publish"
+legacy_json=".dx/receipts/run/dev-extension-toolchain.json"

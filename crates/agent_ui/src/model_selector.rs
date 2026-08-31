@@ -107,7 +107,7 @@ impl ModelPickerDelegate {
                                 if let Some(AgentModelList::Grouped(groups)) = &this.delegate.models
                                 {
                                     for group_name in groups.keys() {
-                                        if group_name.0 != "Free" {
+                                        if group_name.0 != "Opencode Zen" {
                                             this.delegate
                                                 .collapsed_model_groups
                                                 .insert(group_name.clone());
@@ -390,7 +390,7 @@ impl PickerDelegate for ModelPickerDelegate {
                 });
 
                 Some(
-                    ModelSelectorHeader::new(header.title.clone(), ix > 1)
+                    ModelSelectorHeader::new(header.title.clone(), true)
                         .count(header.model_count)
                         .expanded(!collapsed)
                         .on_toggle(on_toggle)

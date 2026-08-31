@@ -41,24 +41,27 @@
     "styles": 5,
     "content_documents": 0,
     "mdx_documents": 0,
-    "assets": 18,
-    "image_assets": 3,
-    "image_metadata_assets": 3,
+    "assets": 21,
+    "image_assets": 6,
+    "image_metadata_assets": 6,
     "optimized_image_variants": 0,
-    "image_placeholders": 3,
-    "image_placeholder_artifacts": 3,
-    "image_placeholder_artifact_bytes": 519,
+    "image_placeholders": 6,
+    "image_placeholder_artifacts": 6,
+    "image_placeholder_artifact_bytes": 1038,
     "image_placeholder_artifact_outputs": [
       ".dx/www/output/.dx/build-cache/image-placeholders/public/favicon-b0698a08bf67b748.placeholder.svg",
       ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg",
-      ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-b0698a08bf67b748.placeholder.svg"
+      ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-b0698a08bf67b748.placeholder.svg",
+      ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-dark-b0698a08bf67b748.placeholder.svg",
+      ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-light-b0698a08bf67b748.placeholder.svg",
+      ".dx/www/output/.dx/build-cache/image-placeholders/public/route-b0698a08bf67b748.placeholder.svg"
     ],
-    "image_route_references": 60,
+    "image_route_references": 62,
     "image_formats": {
-      "svg": 3
+      "svg": 6
     },
     "image_dimension_sources": {
-      "svg-root-attributes": 3
+      "svg-root-attributes": 6
     },
     "node_modules_required": false
   },

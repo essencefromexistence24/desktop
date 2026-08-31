@@ -7,7 +7,7 @@
       "route": "/media",
       "path": "app/media/page.tsx",
       "output": ".dx/www/output/.dx/build-cache/source/app/media/page.tsx",
-      "hash": "93e65191d4d488cb",
+      "hash": "9ed3259240c77efa",
       "imports": [
         {
           "specifier": "../../components/metasearch/search-controls",
@@ -92,7 +92,7 @@
       "route": "/",
       "path": "app/page.tsx",
       "output": ".dx/www/output/.dx/build-cache/source/app/page.tsx",
-      "hash": "d63b123753599478",
+      "hash": "d1f41728d824b449",
       "imports": [
         {
           "specifier": "../components/metasearch/search-controls",
@@ -269,15 +269,15 @@
       "packet_output": ".dx/www/output/.dx/build-cache/source-routes/media/index.dxpk",
       "page_graph_output": ".dx/www/output/.dx/build-cache/source-routes/media/page-graph.json",
       "route_unit_output": ".dx/www/output/.dx/build-cache/source-routes/media/route-unit.json",
-      "shell_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/media/route-shell-5488cbb3f48c028b.mjs",
-      "entry_module_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/media/modules/app-media-page-tsx-93e65191d4d488cb.mjs",
+      "shell_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/media/route-shell-1850375526b2e92a.mjs",
+      "entry_module_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/media/modules/app-media-page-tsx-9ed3259240c77efa.mjs",
       "server_data_output": ".dx/www/output/source-routes/media/server-data.json",
       "source_module_chunks": [
         {
           "source_path": "app/media/page.tsx",
-          "chunk_output": ".dx/www/output/.dx/build-cache/source-routes/media/modules/app-media-page-tsx-93e65191d4d488cb.mjs",
+          "chunk_output": ".dx/www/output/.dx/build-cache/source-routes/media/modules/app-media-page-tsx-9ed3259240c77efa.mjs",
           "kind": "tsx",
-          "hash": "93e65191d4d488cb",
+          "hash": "9ed3259240c77efa",
           "dependencies": [
             {
               "specifier": "../../components/metasearch/search-controls",
@@ -498,8 +498,8 @@
           "node_modules_required": false
         }
       ],
-      "fallback_hash": "5488cbb3f48c028b",
-      "fallback_bytes": 3992,
+      "fallback_hash": "1850375526b2e92a",
+      "fallback_bytes": 4093,
       "packet_bytes": 48622,
       "node_modules_required": false
     },
@@ -510,15 +510,15 @@
       "packet_output": ".dx/www/output/.dx/build-cache/source-routes/root/index.dxpk",
       "page_graph_output": ".dx/www/output/.dx/build-cache/source-routes/root/page-graph.json",
       "route_unit_output": ".dx/www/output/.dx/build-cache/source-routes/root/route-unit.json",
-      "shell_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-3110742141b0864d.mjs",
-      "entry_module_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-d63b123753599478.mjs",
+      "shell_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-5af2deeeeefb8358.mjs",
+      "entry_module_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-d1f41728d824b449.mjs",
       "server_data_output": ".dx/www/output/source-routes/root/server-data.json",
       "source_module_chunks": [
         {
           "source_path": "app/page.tsx",
-          "chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-d63b123753599478.mjs",
+          "chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-d1f41728d824b449.mjs",
           "kind": "tsx",
-          "hash": "d63b123753599478",
+          "hash": "d1f41728d824b449",
           "dependencies": [
             {
               "specifier": "../components/metasearch/search-controls",
@@ -739,8 +739,8 @@
           "node_modules_required": false
         }
       ],
-      "fallback_hash": "3110742141b0864d",
-      "fallback_bytes": 3348,
+      "fallback_hash": "5af2deeeeefb8358",
+      "fallback_bytes": 3452,
       "packet_bytes": 48611,
       "node_modules_required": false
     }
@@ -982,9 +982,9 @@
   "assets": [
     {
       "path": "public/favicon.svg",
-      "output": ".dx/www/output/public/favicon-6f610c26851426c5.svg",
-      "hash": "6f610c26851426c5",
-      "size": 1099,
+      "output": ".dx/www/output/public/favicon-2f8f048456a4b0ae.svg",
+      "hash": "2f8f048456a4b0ae",
+      "size": 1123,
       "node_modules_required": false,
       "lifecycle_scripts_executed": false,
       "source_owned_contract": true,
@@ -1025,9 +1025,9 @@
     },
     {
       "path": "public/icon.svg",
-      "output": ".dx/www/output/public/icon-6f610c26851426c5.svg",
-      "hash": "6f610c26851426c5",
-      "size": 1099,
+      "output": ".dx/www/output/public/icon-d5c850b974136aac.svg",
+      "hash": "d5c850b974136aac",
+      "size": 1071,
       "node_modules_required": false,
       "lifecycle_scripts_executed": false,
       "source_owned_contract": true,
@@ -1067,10 +1067,124 @@
       }
     },
     {
+      "path": "public/logo-dark.svg",
+      "output": ".dx/www/output/public/logo-dark-8295f9405d7b6237.svg",
+      "hash": "8295f9405d7b6237",
+      "size": 1068,
+      "node_modules_required": false,
+      "lifecycle_scripts_executed": false,
+      "source_owned_contract": true,
+      "external_runtime_required": false,
+      "external_runtime_executed": false,
+      "image_metadata": {
+        "format": "svg",
+        "mime_type": "image/svg+xml",
+        "width": 1024,
+        "height": 1024,
+        "dimension_source": "svg-root-attributes",
+        "status": "metadata-read",
+        "optimization": {
+          "status": "metadata-plus-svg-placeholder",
+          "variants_emitted": 0,
+          "optimizer_invoked": false,
+          "resize_emitted": false,
+          "encoding_emitted": false,
+          "blur_placeholder_emitted": false,
+          "placeholder": {
+            "kind": "svg-placeholder-data-url",
+            "data_url": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221024%22%20height%3D%221024%22%20viewBox%3D%220%200%201024%201024%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f3f4f6%22%2F%3E%3C%2Fsvg%3E",
+            "width": 1024,
+            "height": 1024,
+            "bytes": 294,
+            "source": "dx-source-owned-svg-placeholder",
+            "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-dark-b0698a08bf67b748.placeholder.svg",
+            "hash": "b0698a08bf67b748",
+            "artifact_bytes": 173
+          },
+          "boundary": "metadata-plus-svg-placeholder-no-resize-or-encoding",
+          "informed_by": [
+            "turbopack-image::process::get_meta_data",
+            "turbopack-image::process::svg"
+          ]
+        }
+      },
+      "referenced_by_routes": [
+        {
+          "route": "/",
+          "source_path": "app/page.tsx",
+          "specifier": "/logo-dark.svg",
+          "kind": "static-image-url"
+        },
+        {
+          "route": "/media",
+          "source_path": "app/media/page.tsx",
+          "specifier": "/logo-dark.svg",
+          "kind": "static-image-url"
+        }
+      ]
+    },
+    {
+      "path": "public/logo-light.svg",
+      "output": ".dx/www/output/public/logo-light-d5c850b974136aac.svg",
+      "hash": "d5c850b974136aac",
+      "size": 1071,
+      "node_modules_required": false,
+      "lifecycle_scripts_executed": false,
+      "source_owned_contract": true,
+      "external_runtime_required": false,
+      "external_runtime_executed": false,
+      "image_metadata": {
+        "format": "svg",
+        "mime_type": "image/svg+xml",
+        "width": 1024,
+        "height": 1024,
+        "dimension_source": "svg-root-attributes",
+        "status": "metadata-read",
+        "optimization": {
+          "status": "metadata-plus-svg-placeholder",
+          "variants_emitted": 0,
+          "optimizer_invoked": false,
+          "resize_emitted": false,
+          "encoding_emitted": false,
+          "blur_placeholder_emitted": false,
+          "placeholder": {
+            "kind": "svg-placeholder-data-url",
+            "data_url": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221024%22%20height%3D%221024%22%20viewBox%3D%220%200%201024%201024%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f3f4f6%22%2F%3E%3C%2Fsvg%3E",
+            "width": 1024,
+            "height": 1024,
+            "bytes": 294,
+            "source": "dx-source-owned-svg-placeholder",
+            "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-light-b0698a08bf67b748.placeholder.svg",
+            "hash": "b0698a08bf67b748",
+            "artifact_bytes": 173
+          },
+          "boundary": "metadata-plus-svg-placeholder-no-resize-or-encoding",
+          "informed_by": [
+            "turbopack-image::process::get_meta_data",
+            "turbopack-image::process::svg"
+          ]
+        }
+      },
+      "referenced_by_routes": [
+        {
+          "route": "/",
+          "source_path": "app/page.tsx",
+          "specifier": "/logo-light.svg",
+          "kind": "static-image-url"
+        },
+        {
+          "route": "/media",
+          "source_path": "app/media/page.tsx",
+          "specifier": "/logo-light.svg",
+          "kind": "static-image-url"
+        }
+      ]
+    },
+    {
       "path": "public/logo.svg",
-      "output": ".dx/www/output/public/logo-20a2f162f4d8f50b.svg",
-      "hash": "20a2f162f4d8f50b",
-      "size": 2758,
+      "output": ".dx/www/output/public/logo-d5c850b974136aac.svg",
+      "hash": "d5c850b974136aac",
+      "size": 1071,
       "node_modules_required": false,
       "lifecycle_scripts_executed": false,
       "source_owned_contract": true,
@@ -1107,21 +1221,7 @@
             "turbopack-image::process::svg"
           ]
         }
-      },
-      "referenced_by_routes": [
-        {
-          "route": "/",
-          "source_path": "app/page.tsx",
-          "specifier": "/logo.svg",
-          "kind": "static-image-url"
-        },
-        {
-          "route": "/media",
-          "source_path": "app/media/page.tsx",
-          "specifier": "/logo.svg",
-          "kind": "static-image-url"
-        }
-      ]
+      }
     },
     {
       "path": "public/metasearch/answer-common.ts",
@@ -1665,6 +1765,49 @@
           "kind": "static-image-url"
         }
       ]
+    },
+    {
+      "path": "public/route.svg",
+      "output": ".dx/www/output/public/route-d5c850b974136aac.svg",
+      "hash": "d5c850b974136aac",
+      "size": 1071,
+      "node_modules_required": false,
+      "lifecycle_scripts_executed": false,
+      "source_owned_contract": true,
+      "external_runtime_required": false,
+      "external_runtime_executed": false,
+      "image_metadata": {
+        "format": "svg",
+        "mime_type": "image/svg+xml",
+        "width": 1024,
+        "height": 1024,
+        "dimension_source": "svg-root-attributes",
+        "status": "metadata-read",
+        "optimization": {
+          "status": "metadata-plus-svg-placeholder",
+          "variants_emitted": 0,
+          "optimizer_invoked": false,
+          "resize_emitted": false,
+          "encoding_emitted": false,
+          "blur_placeholder_emitted": false,
+          "placeholder": {
+            "kind": "svg-placeholder-data-url",
+            "data_url": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221024%22%20height%3D%221024%22%20viewBox%3D%220%200%201024%201024%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f3f4f6%22%2F%3E%3C%2Fsvg%3E",
+            "width": 1024,
+            "height": 1024,
+            "bytes": 294,
+            "source": "dx-source-owned-svg-placeholder",
+            "output": ".dx/www/output/.dx/build-cache/image-placeholders/public/route-b0698a08bf67b748.placeholder.svg",
+            "hash": "b0698a08bf67b748",
+            "artifact_bytes": 173
+          },
+          "boundary": "metadata-plus-svg-placeholder-no-resize-or-encoding",
+          "informed_by": [
+            "turbopack-image::process::get_meta_data",
+            "turbopack-image::process::svg"
+          ]
+        }
+      }
     }
   ],
   "node_modules_required": false

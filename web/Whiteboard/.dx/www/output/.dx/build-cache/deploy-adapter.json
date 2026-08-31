@@ -555,7 +555,7 @@
   "next_familiar_fixtures": null,
   "build_manifest": {
     "path": ".dx/build-cache/manifest.json",
-    "hash": "blake3:ac94ab9bf122677469e81f42f2249c21fe882df1c56ff7f95d95ddb4c4c3e576",
+    "hash": "blake3:23729bb973d0098d27b2d057c31255e3cac1a223d6ba20e5f937bcc8eec74291",
     "signed": false,
     "signature_required_for_release": true,
     "signature_policy": "sign manifest before hosted promotion"
@@ -567,7 +567,7 @@
   "readiness": {
     "schema": "dx.www.readiness.deploy_contract",
     "schema_revision": 1,
-    "manifest_hash": "blake3:ac94ab9bf122677469e81f42f2249c21fe882df1c56ff7f95d95ddb4c4c3e576",
+    "manifest_hash": "blake3:23729bb973d0098d27b2d057c31255e3cac1a223d6ba20e5f937bcc8eec74291",
     "target_score": 99,
     "current_honest_score": 99,
     "fastest_world_claim": false,
@@ -1426,9 +1426,9 @@
       "proof_graph"
     ],
     "output_hashes": {
-      "manifest_hash": "blake3:ac94ab9bf122677469e81f42f2249c21fe882df1c56ff7f95d95ddb4c4c3e576",
-      "serializer_source_blake3": "7c5cafad4973dbaf53e966b76c890f58323547da53394d89d5debab72ac2dee2",
-      "serializer_machine_blake3": "1bfd99badd41051b2849117b0df52473d47881039d90d33dec98eb87b1e99b06"
+      "manifest_hash": "blake3:23729bb973d0098d27b2d057c31255e3cac1a223d6ba20e5f937bcc8eec74291",
+      "serializer_source_blake3": "5d279d46c565d39c13385ef0a29420c6ec5b5fecd12b977faf4b063b91f2ba86",
+      "serializer_machine_blake3": "50ea6385443d93c226949a2717a6d295055d0501f5d0e708f4a60beda6dd741b"
     },
     "receipt_freshness": "written-by-dx-build-not-release-proof",
     "stale_reasons": [
@@ -1661,7 +1661,7 @@
     "machine_path_within_root": true,
     "serializer_machine_generated": true,
     "release_ready": false,
-    "manifest_hash": "blake3:ac94ab9bf122677469e81f42f2249c21fe882df1c56ff7f95d95ddb4c4c3e576"
+    "manifest_hash": "blake3:23729bb973d0098d27b2d057c31255e3cac1a223d6ba20e5f937bcc8eec74291"
   },
   "cache_manifest": {
     "schema": "dx.www.deploy.cache_manifest",

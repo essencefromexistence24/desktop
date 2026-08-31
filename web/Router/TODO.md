@@ -24,6 +24,10 @@ Status legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[-]` cancelled
 
 ## Done
 
+- [x] Upgrade `better-sqlite3` 12.11.1 → 13.0.3 to fix native
+  `RemoveEnvironmentCleanupHook` assertion that crashed `next build` during page-data
+  collection on Node 24; production Turbopack build now completes (2026-08-31)
+
 - [x] Merge 73 missing providers + 86 registry catalogs from OmniRoute; fix
   generate-providers paths; regenerate catalog → 433 providers / 1740 models (2026-08-22)
 - [x] Copy 4 missing provider icons from OmniRoute → 464 total (2026-08-22)

@@ -6,18 +6,25 @@
 <title>Router</title>
 <style>
 body{margin:0;height:100vh;display:flex;align-items:center;justify-content:center;background:#0a0a0a;color:#ededed;font-family:system-ui,sans-serif}
-.box{text-align:center}
-.loader{width:48px;height:48px;border:3px solid rgba(255,255,255,0.12);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px}
-@keyframes spin{to{transform:rotate(360deg)}}
-h1{font-weight:300;letter-spacing:0.04em;margin:0 0 8px}
-p{opacity:0.6;font-size:14px;margin:0}
+.box{max-width:430px;text-align:center;padding:0 24px}
+h1{font-weight:300;letter-spacing:.04em;margin:0 0 12px;font-size:20px}
+p{opacity:.65;font-size:14px;line-height:1.6;margin:0 0 20px}
+a{display:inline-block;padding:8px 16px;border:1px solid #333;border-radius:6px;color:#ededed;text-decoration:none;font-size:14px}
+a:hover{background:#1a1a1a;border-color:#555}
+code{background:#1a1a1a;padding:2px 6px;border-radius:4px;font-size:13px}
 </style>
 </head>
 <body>
 <div class="box">
-<div class="loader"></div>
-<h1>Router</h1>
-<p>Route AI requests across providers — preview ready</p>
+  <h1>Router is a server app</h1>
+  <p>
+    This tool is a Next.js server (middleware, API routes and a SQLite
+    database), so it cannot be published as static files. It is normally served
+    by <code>next start</code> on port <code>3004</code>. You are seeing this
+    page because that server is not running &mdash; its build output
+    (<code>web\Router\.next</code>) is missing.
+  </p>
+  <a href="http://127.0.0.1:3004/dashboard">Open Router on port 3004</a>
 </div>
 </body>
 </html>

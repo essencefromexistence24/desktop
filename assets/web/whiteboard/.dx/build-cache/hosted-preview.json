@@ -3,7 +3,7 @@
   "deployment_kind": "dx-www-hosted-preview-bundle",
   "provider": "dx-www-cloud-local",
   "adapter_kind": "account-free-preview",
-  "generated": "2026-08-27T17:03:14.170371400+00:00",
+  "generated": "2026-08-30T14:30:09.338399800+00:00",
   "requires_provider_account": false,
   "account_bound": false,
   "network_required": false,
@@ -13,7 +13,7 @@
   "lifecycle_scripts_executed": false,
   "build": {
     "dir": ".dx/build",
-    "manifest_hash": "blake3:ac94ab9bf122677469e81f42f2249c21fe882df1c56ff7f95d95ddb4c4c3e576",
+    "manifest_hash": "blake3:23729bb973d0098d27b2d057c31255e3cac1a223d6ba20e5f937bcc8eec74291",
     "route_count": 1,
     "immutable_asset_count": 71,
     "server_action_count": 0,

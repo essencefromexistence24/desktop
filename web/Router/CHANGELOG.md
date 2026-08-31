@@ -43,7 +43,21 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   15 category files (was silently reading a non-existent `route/src/...` tree and
   producing a stale catalog).
 
+### Fixed
+
+- **`better-sqlite3` upgraded 12.11.1 → 13.0.3** (in `optionalDependencies`):
+  v13 ships N-API prebuilds and no longer calls Node's `RemoveEnvironmentCleanupHook`
+  from the `Statement` destructor. This eliminated the native assertion
+  (`Assertion failed: (env) != nullptr` / `node::RemoveEnvironmentCleanupHook`) that
+  crashed `next build` during page-data collection on Node 24 (`Router/.next` was
+  produced; production `next build` now completes).
+
 ### Verified
+
+- `next build` (Turbopack, `NEXT_BUILD_CPUS=1`) completes: `Router/.next/BUILD_ID`
+  present, no FATAL/assertion errors in the build log.
+- `better-sqlite3@13.0.3` native binding loads on Node 24.20.0: in-memory DB create +
+  query returned SQLite `3.53.4`.
 
 - Regenerated `src/lib/ai/providers.generated.ts`: **433 providers / ~1,740 models**
   (APIKey 314, WebCookie 35, OAuth 27, Local 14, Audio 12, NoAuth 12, Search 13,

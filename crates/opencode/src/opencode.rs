@@ -160,6 +160,8 @@ pub enum Model {
     Nemotron3_5LightningFree,
     #[serde(rename = "laguna-s-2.1-free")]
     LagunaS2_1Free,
+    #[serde(rename = "ling-3.0-flash-fin-free")]
+    Ling3_0FlashFinFree,
     #[serde(rename = "muse-spark-1.2-contributor-free")]
     MuseSpark1_2ContributorFree,
     #[serde(rename = "minimax-m3-free", alias = "low")]
@@ -241,6 +243,7 @@ impl Model {
             | Self::Nemotron3_5LightningFree
             | Self::XPreviewFFree
             | Self::LagunaS2_1Free
+            | Self::Ling3_0FlashFinFree
             | Self::MuseSpark1_2ContributorFree => &[OpenCodeSubscription::Free],
 
             // These former free models are retained for settings compatibility,
@@ -314,6 +317,7 @@ impl Model {
             Self::Nemotron3_5LightningFree => "nemotron-3.5-lightning-free",
             Self::XPreviewFFree => "x-preview-f-free",
             Self::LagunaS2_1Free => "laguna-s-2.1-free",
+            Self::Ling3_0FlashFinFree => "ling-3.0-flash-fin-free",
             Self::MuseSpark1_2ContributorFree => "muse-spark-1.2-contributor-free",
 
             Self::Custom { name, .. } => name,
@@ -379,6 +383,7 @@ impl Model {
             Self::Nemotron3_5LightningFree => "Nemotron 3.5 Lightning Free",
             Self::XPreviewFFree => "OX Alpha (Free)",
             Self::LagunaS2_1Free => "Laguna S 2.1 Free",
+            Self::Ling3_0FlashFinFree => "Ling 3.0 Flash Fin Free",
             Self::MuseSpark1_2ContributorFree => "Muse Spark 1.2 Contributor Free",
 
             Self::Custom {
@@ -452,6 +457,7 @@ impl Model {
             | Self::Nemotron3_5LightningFree
             | Self::XPreviewFFree
             | Self::LagunaS2_1Free
+            | Self::Ling3_0FlashFinFree
             | Self::MuseSpark1_2ContributorFree => ApiProtocol::OpenAiChat,
 
             Self::Custom { protocol, .. } => *protocol,
@@ -547,6 +553,7 @@ impl Model {
             Self::Nemotron3_5LightningFree => 1_000_000,
             Self::XPreviewFFree => 200_000,
             Self::LagunaS2_1Free => 128_000,
+            Self::Ling3_0FlashFinFree => 128_000,
             Self::MuseSpark1_2ContributorFree => 128_000,
             Self::DeepSeekV4Pro | Self::DeepSeekV4Flash => 1_000_000,
 
@@ -619,6 +626,7 @@ impl Model {
             Self::Nemotron3_5LightningFree => Some(128_000),
             Self::XPreviewFFree => Some(32_000),
             Self::LagunaS2_1Free => Some(32_000),
+            Self::Ling3_0FlashFinFree => Some(32_000),
             Self::MuseSpark1_2ContributorFree => Some(32_000),
             Self::MimoV2_5Pro | Self::MimoV2_5 | Self::MimoV2_5Free => Some(128_000),
 
@@ -697,6 +705,7 @@ impl Model {
             | Self::Nemotron3_5LightningFree
             | Self::XPreviewFFree
             | Self::LagunaS2_1Free
+            | Self::Ling3_0FlashFinFree
             | Self::MuseSpark1_2ContributorFree => false,
 
             Self::Custom { protocol, .. } => matches!(

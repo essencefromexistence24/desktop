@@ -16,7 +16,7 @@ use crate::{
 use agent_client_protocol::schema as acp;
 use std::{cell::RefCell, ops::Range};
 
-use acp_thread::{ContentBlock, PlanEntry, SandboxAuthorizationDetails};
+use acp_thread::{AcpThreadEvent, ContentBlock, PlanEntry, SandboxAuthorizationDetails};
 use agent::{SkillLoadingIssue, SkillLoadingIssueKind, SkillLoadingIssuesUpdated};
 use agent_settings::{AgentProfile, UserAgentsMd};
 use agent_skills::MAX_SKILL_DESCRIPTION_LEN;
@@ -586,6 +586,37 @@ impl PermissionSelection {
     }
 }
 
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub(crate) enum ComposerPermissionMode {
+    Ask,
+    Approve,
+    FullAccess,
+}
+
+impl Default for ComposerPermissionMode {
+    fn default() -> Self {
+        Self::FullAccess
+    }
+}
+
+impl ComposerPermissionMode {
+    fn label(&self) -> &'static str {
+        match self {
+            Self::Ask => "Ask for approval",
+            Self::Approve => "Approve for me",
+            Self::FullAccess => "Full access",
+        }
+    }
+
+    fn icon(&self) -> IconName {
+        match self {
+            Self::Ask => IconName::Eye,
+            Self::Approve => IconName::Check,
+            Self::FullAccess => IconName::Settings,
+        }
+    }
+}
+
 pub struct ThreadView {
     pub(crate) root_thread_id: ThreadId,
     pub session_id: acp::SessionId,
@@ -641,6 +672,7 @@ pub struct ThreadView {
     pub new_server_version_available: Option<SharedString>,
     pub resumed_without_history: bool,
     pub(crate) permission_selections: HashMap<acp::ToolCallId, PermissionSelection>,
+    pub composer_permission_mode: ComposerPermissionMode,
     pub _cancel_task: Option<Task<()>>,
     _save_task: Option<Task<()>>,
     _draft_resolve_task: Option<Task<()>>,
@@ -1057,6 +1089,13 @@ impl ThreadView {
             Self::handle_message_editor_event,
         ));
 
+        // Auto-bypass permission prompts when Full access is selected
+        subscriptions.push(cx.subscribe_in(
+            &thread,
+            window,
+            Self::handle_thread_event_for_auto_approve,
+        ));
+
         // If this thread is backed by a NativeAgent, listen for skill loading
         // issues so we can surface them as banners. The agent emits a single
         // replacement-style event per project refresh, so we overwrite our
@@ -1176,6 +1215,7 @@ impl ThreadView {
             is_loading_contents: false,
             new_server_version_available: None,
             permission_selections: HashMap::default(),
+            composer_permission_mode: ComposerPermissionMode::FullAccess,
             _cancel_task: None,
             _save_task: None,
             _draft_resolve_task: None,
@@ -4656,6 +4696,18 @@ impl ThreadView {
         // Previously focus-gated selection could result in border not appearing reliably in some renders/states.
         // Use the standard border color unconditionally for the outer container frame (inner editor focus uses its own treatment).
         let chat_input_border = border;
+        // Responsive empty-state title: small on narrow panels/windows, large on wide
+        // (was fixed 1.9rem -> too big on small widths, then fixed 1.0rem -> too small on large)
+        let (title_size, title_line_height) = {
+            let vw = window.viewport_size().width;
+            if vw < px(700.) {
+                (rems(1.), rems(1.2))
+            } else if vw < px(1100.) {
+                (rems(1.45), rems(1.65))
+            } else {
+                (rems(1.9), rems(2.1))
+            }
+        };
 
         v_flex()
             .id("agent-chat-input-lane")
@@ -4707,9 +4759,11 @@ impl ThreadView {
                         .justify_center()
                         .child(
                             div()
-                                .text_size(rems(1.9))
+                                .text_size(title_size)
                                 .font_weight(gpui::FontWeight::BOLD)
-                                .line_height(rems(2.1))
+                                .line_height(title_line_height)
+                                .text_center()
+                                .px_2()
                                 .child(format!("What you want to build in {}?", folder)),
                         ),
                 )
@@ -5149,38 +5203,99 @@ impl ThreadView {
     }
 
     fn render_permission_selector(&self, cx: &mut Context<Self>) -> AnyElement {
-        let current_mode = "Full access";
+        let current_mode = self.composer_permission_mode;
+        let weak = cx.entity().downgrade();
         PopoverMenu::new("permission-selector")
             .trigger_with_tooltip(
-                Button::new("permission-selector-trigger", current_mode)
+                Button::new("permission-selector-trigger", current_mode.label())
                     .label_size(LabelSize::Small)
-                    .start_icon(Icon::new(IconName::Settings).size(IconSize::XSmall))
+                    .start_icon(Icon::new(current_mode.icon()).size(IconSize::XSmall))
                     .color(Color::Muted),
                 Tooltip::text("Tool permissions"),
             )
             .anchor(gpui::Anchor::BottomLeft)
             .menu(move |window, cx| {
-                Some(ContextMenu::build(window, cx, |mut menu, _window, _cx| {
+                let weak = weak.clone();
+                Some(ContextMenu::build(window, cx, move |mut menu, _, cx| {
                     menu = menu.header("Permissions");
-                    menu = menu.item(
-                        ContextMenuEntry::new("Ask for approval")
-                            .icon(IconName::Eye)
-                            .handler(|_, _| {}),
-                    );
-                    menu = menu.item(
-                        ContextMenuEntry::new("Approve for me")
-                            .icon(IconName::Check)
-                            .handler(|_, _| {}),
-                    );
-                    menu = menu.item(
-                        ContextMenuEntry::new("Full access")
-                            .icon(IconName::Settings)
-                            .handler(|_, _| {}),
-                    );
+                    for mode in [
+                        ComposerPermissionMode::Ask,
+                        ComposerPermissionMode::Approve,
+                        ComposerPermissionMode::FullAccess,
+                    ] {
+                        let is_selected = current_mode == mode;
+                        let weak_clone = weak.clone();
+                        menu = menu.toggleable_entry(
+                            mode.label(),
+                            is_selected,
+                            IconPosition::End,
+                            Some(mode.icon()),
+                            move |window, cx| {
+                                if let Some(view) = weak_clone.upgrade() {
+                                    view.update(cx, |view, cx| {
+                                        view.composer_permission_mode = mode;
+                                        if mode == ComposerPermissionMode::FullAccess {
+                                            view.maybe_auto_authorize_pending_if_full_access(
+                                                window, cx,
+                                            );
+                                        }
+                                        cx.notify();
+                                    });
+                                }
+                            },
+                        );
+                    }
                     menu
                 }))
             })
             .into_any_element()
+    }
+
+    fn maybe_auto_authorize_pending_if_full_access(
+        &mut self,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) {
+        if self.composer_permission_mode != ComposerPermissionMode::FullAccess {
+            return;
+        }
+        // Full access = always bypass permission prompts by auto-approving pending tool calls
+        // Use AllowAlways so future identical commands are also auto-approved
+        let _ = self.authorize_pending_tool_call(
+            acp::PermissionOptionKind::AllowAlways,
+            window,
+            cx,
+        );
+    }
+
+    fn handle_thread_event_for_auto_approve(
+        &mut self,
+        thread: &Entity<AcpThread>,
+        event: &AcpThreadEvent,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) {
+        if self.composer_permission_mode != ComposerPermissionMode::FullAccess {
+            return;
+        }
+        match event {
+            AcpThreadEvent::ToolAuthorizationRequested(_)
+            | AcpThreadEvent::NewEntry
+            | AcpThreadEvent::EntryUpdated(_) => {
+                let has_pending = {
+                    let session_id = thread.read(cx).session_id().clone();
+                    self.conversation.read(cx).pending_tool_call(&session_id, cx).is_some()
+                };
+                if has_pending {
+                    let _ = self.authorize_pending_tool_call(
+                        acp::PermissionOptionKind::AllowAlways,
+                        window,
+                        cx,
+                    );
+                }
+            }
+            _ => {}
+        }
     }
 
     fn render_profile_option_slots(&self, cx: &mut Context<Self>) -> Vec<AnyElement> {
@@ -9491,6 +9606,10 @@ impl ThreadView {
                 )
             })
             .when_some(confirmation_options, |this, options| {
+                // Full access bypasses permission UI entirely
+                if self.composer_permission_mode == ComposerPermissionMode::FullAccess {
+                    return this;
+                }
                 let is_first = self.is_first_tool_call(active_session_id, &tool_call.id, cx);
                 this.child(self.render_permission_buttons(
                     self.thread.read(cx).session_id().clone(),

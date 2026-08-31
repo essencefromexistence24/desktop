@@ -213,31 +213,29 @@ export default function HomePage() {
             role="status"
             aria-live="polite"
           >
-            <div className="shader-loader-panel" style={{ display: "grid", placeItems: "center", width: "96px", height: "96px", padding: "0", background: "transparent", border: "none", boxShadow: "none" }}>
-              <svg
-                className="shader-loader-spinner"
-                xmlns="http://www.w3.org/2000/svg"
-                width="48"
-                height="48"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                style={{ animation: "shader-loader-spin 1s linear infinite" }}
-                aria-hidden="true"
-              >
-                <path d="M12 2v4" />
-                <path d="m16.2 7.8 2.9-2.9" />
-                <path d="M18 12h4" />
-                <path d="m16.2 16.2 2.9 2.9" />
-                <path d="M12 18v4" />
-                <path d="m4.9 19.1 2.9-2.9" />
-                <path d="M2 12h4" />
-                <path d="m4.9 4.9 2.9 2.9" />
-              </svg>
-            </div>
+            <svg
+              className="shader-loader-spinner"
+              xmlns="http://www.w3.org/2000/svg"
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ animation: "shader-loader-spin 1s linear infinite" }}
+              aria-hidden="true"
+            >
+              <path d="M12 2v4" />
+              <path d="m16.2 7.8 2.9-2.9" />
+              <path d="M18 12h4" />
+              <path d="m16.2 16.2 2.9 2.9" />
+              <path d="M12 18v4" />
+              <path d="m4.9 19.1 2.9-2.9" />
+              <path d="M2 12h4" />
+              <path d="m4.9 4.9 2.9 2.9" />
+            </svg>
           </div>
           <div className="canvas-frame" id="canvas-frame">
             <div className="canvas-shell" id="canvas-shell">

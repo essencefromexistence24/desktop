@@ -4,13 +4,13 @@
   "source_path": "app/page.tsx",
   "shell": {
     "fallback": {
-      "html": "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><link rel=\"icon\" href=\"./favicon.svg\" type=\"image/svg+xml\"><link rel=\"apple-touch-icon\" href=\"./icon.svg\"><meta name=\"description\" content=\"Create and explore real-time generative WebGL shaders.\"><link rel=\"stylesheet\" href=\"./styles/dx-shader.css\"><link rel=\"stylesheet\" href=\"./styles/generated.css\"><link rel=\"stylesheet\" href=\"./styles/globals.css\"><link rel=\"stylesheet\" href=\"./styles/theme.css\"><link rel=\"stylesheet\" href=\"./_dx/styles/react-route-53580e76005ac468.css\" data-dx-generated=\"true\"><title>Shader</title></head><body><main class=\"dx-shader-root\" data-dx-runtime=\"static\" data-dx-output-mode=\"tiny-static\" data-dx-js=\"none\" data-dx-route=\"/\" data-dx-assets=\"/agent-cursor.js,/canvas-export.js,/dx-shader/js/engine.js,/dx-shader/js/main.js,/dx-shader/js/palettes.js,/dx-shader/js/shaders.js,/dx-shader/js/ui.js,/logo-light.svg,/sw-register.js\" data-dx-template=\"dx-shader\"><script defer src=\"./dx-shader/js/palettes.js\"></script><script defer src=\"./dx-shader/js/shaders.js\"></script><script defer src=\"./dx-shader/js/engine.js\"></script><script defer src=\"./dx-shader/js/ui.js\"></script><script defer src=\"./dx-shader/js/main.js\"></script><script src=\"./sw-register.js\"></script><script defer src=\"./agent-cursor.js\"></script><script defer src=\"./canvas-export.js\"></script><header class=\"topbar\"><div class=\"brand\"><picture><source media=\"(prefers-color-scheme: dark)\" srcset=\"/logo-dark.svg\"><img class=\"brand-mark\" src=\"./logo-light.svg\" alt=\"Shader\"></picture><span class=\"brand-name\">Shader</span></div><div class=\"topbar-center\"><div class=\"segmented\" id=\"dx-shader-aspect-control\" role=\"group\" aria-label=\"Canvas aspect ratio\"></div></div><div class=\"topbar-actions\"><button class=\"btn btn-primary\" id=\"btn-random\" title=\"Randomize everything (R)\" type=\"button\"><svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><rect x=\"1.5\" y=\"1.5\" width=\"13\" height=\"13\" rx=\"3\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.5\"></rect><circle cx=\"5.4\" cy=\"5.4\" r=\"1.25\" fill=\"currentColor\"></circle><circle cx=\"10.6\" cy=\"10.6\" r=\"1.25\" fill=\"currentColor\"></circle><circle cx=\"10.6\" cy=\"5.4\" r=\"1.25\" fill=\"currentColor\"></circle><circle cx=\"5.4\" cy=\"10.6\" r=\"1.25\" fill=\"currentColor\"></circle></svg>Randomize</button><div class=\"topbar-divider\"></div><button class=\"btn\" id=\"btn-export-png\" title=\"Save still image (S)\" type=\"button\"><svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><rect x=\"1.5\" y=\"1.5\" width=\"13\" height=\"13\" rx=\"2\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.5\"></rect><circle cx=\"5.5\" cy=\"5.5\" r=\"1.5\" fill=\"currentColor\"></circle><path d=\"M2 12 L6 8 L9 11 L11.5 8.5 L14 11\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.5\"></path></svg>Image</button><button class=\"btn\" id=\"btn-export-video\" title=\"Record looping video\" type=\"button\"><svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><rect x=\"1.5\" y=\"3.5\" width=\"9\" height=\"9\" rx=\"2\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.5\"></rect><path d=\"M10.5 7 L14.5 4.5 V11.5 L10.5 9\" fill=\"currentColor\"></path></svg>Video</button><button class=\"btn\" id=\"btn-export-gif\" title=\"Render seamless looping GIF\" type=\"button\"><svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M13.5 8 a5.5 5.5 0 1 1 -1.6 -3.9\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.5\"></path><path d=\"M13.8 1.6 V4.4 H11\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.5\"></path></svg>GIF</button><button class=\"btn\" id=\"btn-set\" title=\"Generate a consistent set of variations\" type=\"button\"><svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><rect x=\"1.5\" y=\"1.5\" width=\"5.5\" height=\"5.5\" rx=\"1.5\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.4\"></rect><rect x=\"9\" y=\"1.5\" width=\"5.5\" height=\"5.5\" rx=\"1.5\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.4\"></rect><rect x=\"1.5\" y=\"9\" width=\"5.5\" height=\"5.5\" rx=\"1.5\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.4\"></rect><rect x=\"9\" y=\"9\" width=\"5.5\" height=\"5.5\" rx=\"1.5\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.4\"></rect></svg>Set</button><div class=\"topbar-divider\"></div></div></header><div class=\"app\"><section class=\"stage\" id=\"stage\"><div class=\"shader-loader\" data-loader-mode=\"auto\" data-loader-state=\"preparing\" id=\"shader-boot-loader\" role=\"status\" aria-live=\"polite\"><div class=\"shader-loader-panel\"><svg class=\"shader-loader-spinner\" xmlns=\"http://www.w3.org/2000/svg\" width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.5\" strokeLinecap=\"round\" strokeLinejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 2v4\"></path><path d=\"m16.2 7.8 2.9-2.9\"></path><path d=\"M18 12h4\"></path><path d=\"m16.2 16.2 2.9 2.9\"></path><path d=\"M12 18v4\"></path><path d=\"m4.9 19.1 2.9-2.9\"></path><path d=\"M2 12h4\"></path><path d=\"m4.9 4.9 2.9 2.9\"></path></svg></div></div><div class=\"canvas-frame\" id=\"canvas-frame\"><div class=\"canvas-shell\" id=\"canvas-shell\"><div class=\"shader-static-fallback\" id=\"shader-static-fallback\" aria-hidden=\"true\"><span class=\"shader-static-title\">Shader</span><span class=\"shader-static-detail\">Safe shader preview</span></div><noscript><div class=\"shader-static-fallback shader-static-fallback-noscript\"><span class=\"shader-static-title\">Shader</span><span class=\"shader-static-detail\">JavaScript is required to start the live shader.</span></div></noscript><canvas id=\"view\"></canvas></div></div><div class=\"stage-meta\"><div class=\"meta-left\"><button class=\"icon-btn\" id=\"btn-play\" title=\"Play / pause (Space)\" type=\"button\"><svg id=\"icon-pause\" viewBox=\"0 0 14 14\"><rect x=\"2.5\" y=\"2\" width=\"3\" height=\"10\" rx=\"1\" fill=\"currentColor\"></rect><rect x=\"8.5\" y=\"2\" width=\"3\" height=\"10\" rx=\"1\" fill=\"currentColor\"></rect></svg><svg id=\"icon-play\" viewBox=\"0 0 14 14\"><path d=\"M3.5 2 L12 7 L3.5 12 Z\" fill=\"currentColor\"></path></svg></button><span class=\"meta-item mono\" id=\"meta-mode\">...</span><span class=\"meta-sep\"></span><span class=\"meta-item mono dim\" id=\"meta-seed\">seed 0000</span></div><div class=\"meta-right\"><span class=\"meta-item mono dim\" id=\"meta-loop\">4.0s loop</span><span class=\"meta-sep\"></span><span class=\"meta-item mono dim\" id=\"meta-res\">0x0</span><span class=\"meta-sep\"></span><span class=\"meta-item mono dim\" id=\"meta-fps\">60 fps</span></div></div></section><aside class=\"rail\" id=\"rail\"></aside></div><div class=\"overlay is-hidden\" id=\"overlay\" hidden=\"hidden\"><div class=\"overlay-card\"><div class=\"overlay-title\" id=\"overlay-title\">Rendering</div><div class=\"overlay-detail mono\" id=\"overlay-detail\">...</div><div class=\"progress\"><div class=\"progress-fill\" id=\"overlay-bar\"></div></div><button class=\"btn overlay-cancel\" id=\"overlay-cancel\" type=\"button\">Cancel</button></div></div><div class=\"toast mono is-hidden\" id=\"toast\" hidden=\"hidden\"></div></main></body></html>",
-      "bytes": 6804,
+      "html": "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><link rel=\"icon\" href=\"./favicon.svg\" type=\"image/svg+xml\"><link rel=\"apple-touch-icon\" href=\"./icon.svg\"><meta name=\"description\" content=\"Create and explore real-time generative WebGL shaders.\"><link rel=\"stylesheet\" href=\"./styles/dx-shader.css\"><link rel=\"stylesheet\" href=\"./styles/generated.css\"><link rel=\"stylesheet\" href=\"./styles/globals.css\"><link rel=\"stylesheet\" href=\"./styles/theme.css\"><link rel=\"stylesheet\" href=\"./_dx/styles/react-route-6f99b7d7a67b461c.css\" data-dx-generated=\"true\"><title>Shader</title></head><body><main class=\"dx-shader-root\" data-dx-runtime=\"static\" data-dx-output-mode=\"tiny-static\" data-dx-js=\"none\" data-dx-route=\"/\" data-dx-assets=\"/agent-cursor.js,/canvas-export.js,/dx-shader/js/engine.js,/dx-shader/js/main.js,/dx-shader/js/palettes.js,/dx-shader/js/shaders.js,/dx-shader/js/ui.js,/logo-light.svg,/sw-register.js\" data-dx-template=\"dx-shader\"><script defer src=\"./dx-shader/js/palettes.js\"></script><script defer src=\"./dx-shader/js/shaders.js\"></script><script defer src=\"./dx-shader/js/engine.js\"></script><script defer src=\"./dx-shader/js/ui.js\"></script><script defer src=\"./dx-shader/js/main.js\"></script><script src=\"./sw-register.js\"></script><script defer src=\"./agent-cursor.js\"></script><script defer src=\"./canvas-export.js\"></script><header class=\"topbar\"><div class=\"brand\"><picture><source media=\"(prefers-color-scheme: dark)\" srcset=\"/logo-dark.svg\"><img class=\"brand-mark\" src=\"./logo-light.svg\" alt=\"Shader\"></picture><span class=\"brand-name\">Shader</span></div><div class=\"topbar-center\"><div class=\"segmented\" id=\"dx-shader-aspect-control\" role=\"group\" aria-label=\"Canvas aspect ratio\"></div></div><div class=\"topbar-actions\"><button class=\"btn btn-primary\" id=\"btn-random\" title=\"Randomize everything (R)\" type=\"button\"><svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><rect x=\"1.5\" y=\"1.5\" width=\"13\" height=\"13\" rx=\"3\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.5\"></rect><circle cx=\"5.4\" cy=\"5.4\" r=\"1.25\" fill=\"currentColor\"></circle><circle cx=\"10.6\" cy=\"10.6\" r=\"1.25\" fill=\"currentColor\"></circle><circle cx=\"10.6\" cy=\"5.4\" r=\"1.25\" fill=\"currentColor\"></circle><circle cx=\"5.4\" cy=\"10.6\" r=\"1.25\" fill=\"currentColor\"></circle></svg>Randomize</button><div class=\"topbar-divider\"></div><button class=\"btn\" id=\"btn-export-png\" title=\"Save still image (S)\" type=\"button\"><svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><rect x=\"1.5\" y=\"1.5\" width=\"13\" height=\"13\" rx=\"2\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.5\"></rect><circle cx=\"5.5\" cy=\"5.5\" r=\"1.5\" fill=\"currentColor\"></circle><path d=\"M2 12 L6 8 L9 11 L11.5 8.5 L14 11\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.5\"></path></svg>Image</button><button class=\"btn\" id=\"btn-export-video\" title=\"Record looping video\" type=\"button\"><svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><rect x=\"1.5\" y=\"3.5\" width=\"9\" height=\"9\" rx=\"2\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.5\"></rect><path d=\"M10.5 7 L14.5 4.5 V11.5 L10.5 9\" fill=\"currentColor\"></path></svg>Video</button><button class=\"btn\" id=\"btn-export-gif\" title=\"Render seamless looping GIF\" type=\"button\"><svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M13.5 8 a5.5 5.5 0 1 1 -1.6 -3.9\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.5\"></path><path d=\"M13.8 1.6 V4.4 H11\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.5\"></path></svg>GIF</button><button class=\"btn\" id=\"btn-set\" title=\"Generate a consistent set of variations\" type=\"button\"><svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><rect x=\"1.5\" y=\"1.5\" width=\"5.5\" height=\"5.5\" rx=\"1.5\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.4\"></rect><rect x=\"9\" y=\"1.5\" width=\"5.5\" height=\"5.5\" rx=\"1.5\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.4\"></rect><rect x=\"1.5\" y=\"9\" width=\"5.5\" height=\"5.5\" rx=\"1.5\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.4\"></rect><rect x=\"9\" y=\"9\" width=\"5.5\" height=\"5.5\" rx=\"1.5\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.4\"></rect></svg>Set</button><div class=\"topbar-divider\"></div></div></header><div class=\"app\"><section class=\"stage\" id=\"stage\"><div class=\"shader-loader\" data-loader-mode=\"auto\" data-loader-state=\"preparing\" id=\"shader-boot-loader\" role=\"status\" aria-live=\"polite\"><svg class=\"shader-loader-spinner\" xmlns=\"http://www.w3.org/2000/svg\" width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.5\" strokeLinecap=\"round\" strokeLinejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 2v4\"></path><path d=\"m16.2 7.8 2.9-2.9\"></path><path d=\"M18 12h4\"></path><path d=\"m16.2 16.2 2.9 2.9\"></path><path d=\"M12 18v4\"></path><path d=\"m4.9 19.1 2.9-2.9\"></path><path d=\"M2 12h4\"></path><path d=\"m4.9 4.9 2.9 2.9\"></path></svg></div><div class=\"canvas-frame\" id=\"canvas-frame\"><div class=\"canvas-shell\" id=\"canvas-shell\"><div class=\"shader-static-fallback\" id=\"shader-static-fallback\" aria-hidden=\"true\"><span class=\"shader-static-title\">Shader</span><span class=\"shader-static-detail\">Safe shader preview</span></div><noscript><div class=\"shader-static-fallback shader-static-fallback-noscript\"><span class=\"shader-static-title\">Shader</span><span class=\"shader-static-detail\">JavaScript is required to start the live shader.</span></div></noscript><canvas id=\"view\"></canvas></div></div><div class=\"stage-meta\"><div class=\"meta-left\"><button class=\"icon-btn\" id=\"btn-play\" title=\"Play / pause (Space)\" type=\"button\"><svg id=\"icon-pause\" viewBox=\"0 0 14 14\"><rect x=\"2.5\" y=\"2\" width=\"3\" height=\"10\" rx=\"1\" fill=\"currentColor\"></rect><rect x=\"8.5\" y=\"2\" width=\"3\" height=\"10\" rx=\"1\" fill=\"currentColor\"></rect></svg><svg id=\"icon-play\" viewBox=\"0 0 14 14\"><path d=\"M3.5 2 L12 7 L3.5 12 Z\" fill=\"currentColor\"></path></svg></button><span class=\"meta-item mono\" id=\"meta-mode\">...</span><span class=\"meta-sep\"></span><span class=\"meta-item mono dim\" id=\"meta-seed\">seed 0000</span></div><div class=\"meta-right\"><span class=\"meta-item mono dim\" id=\"meta-loop\">4.0s loop</span><span class=\"meta-sep\"></span><span class=\"meta-item mono dim\" id=\"meta-res\">0x0</span><span class=\"meta-sep\"></span><span class=\"meta-item mono dim\" id=\"meta-fps\">60 fps</span></div></div></section><aside class=\"rail\" id=\"rail\"></aside></div><div class=\"overlay is-hidden\" id=\"overlay\" hidden=\"hidden\"><div class=\"overlay-card\"><div class=\"overlay-title\" id=\"overlay-title\">Rendering</div><div class=\"overlay-detail mono\" id=\"overlay-detail\">...</div><div class=\"progress\"><div class=\"progress-fill\" id=\"overlay-bar\"></div></div><button class=\"btn overlay-cancel\" id=\"overlay-cancel\" type=\"button\">Cancel</button></div></div><div class=\"toast mono is-hidden\" id=\"toast\" hidden=\"hidden\"></div></main></body></html>",
+      "bytes": 6765,
       "crawlable": true,
       "accessibility_warnings": []
     },
     "style_hrefs": [
-      "/_dx/styles/react-route-53580e76005ac468.css"
+      "/_dx/styles/react-route-6f99b7d7a67b461c.css"
     ],
     "streaming_strategy": "static-single-flush",
     "first_flush_bytes": 0,
@@ -26,7 +26,7 @@
           "id": "app/page",
           "name": "Page",
           "package_id": null,
-          "content_hash": "5a769af35d7bc2cc4e1a6400d75539503df0555bb3dd66afcf63d1e3aa3f370b"
+          "content_hash": "927e9ea85396b3593b1bdc24f97882a695193eb7b7596869275cfee4bca79620"
         },
         {
           "id": "app/layout",
@@ -486,11 +486,6 @@
           "source_hash": "8f507f85e9fdf5939017cd17cb757f7c41226dcdb932c4f9faeb811825d3ba7f"
         },
         {
-          "name": "h-16",
-          "rule": "height: calc(var(--spacing) * 16);",
-          "source_hash": "49ea0537868d7a9d6d425373cf611d27da8cd3af2d218cfbc457ff94b4a233a4"
-        },
-        {
           "name": "hidden",
           "rule": "display: none;",
           "source_hash": "b0d667ba69f2ee7750b3344539ea37ec568e9c63985472e74127db6c3cf27a54"
@@ -641,11 +636,6 @@
           "source_hash": "f20737e85647249ef2f66f86629f8b9e3ad8a0db2b4b2008f4f20f50007c58a2"
         },
         {
-          "name": "p-2",
-          "rule": "padding: calc(var(--spacing) * 2);",
-          "source_hash": "b04be72b6d2560ca03215a7aa89b8be0b34ba1c92f6c40e50ed369f074183f06"
-        },
-        {
           "name": "preset-chip",
           "rule": "height: 22px; width: 46px; border-radius: 5px; border: 1px solid var(--line-soft); overflow: hidden; display: flex; padding: 0; transition: transform 100ms ease, border-color 120ms ease;",
           "source_hash": "4b471c2e7877a5b60b7044e807414de3c7668d45cbfa9fe2ac9f6d19f474f2f1"
@@ -732,8 +722,8 @@
         },
         {
           "name": "shader-loader",
-          "rule": "position: absolute; inset: 0; z-index: 4; display: flex; align-items: center; justify-content: center; padding: 28px; background: var(--loader-bg); backdrop-filter: none; transition: opacity 260ms ease, visibility 260ms ease; contain: layout paint; isolation: isolate;",
-          "source_hash": "769681249ebaedcea8069bc439784ce5f803848a576ffc9f5d7f59ada29899d1"
+          "rule": "position: absolute; inset: 0; z-index: 4; display: flex; align-items: center; justify-content: center; padding: 0; background: transparent; backdrop-filter: none; transition: opacity 260ms ease, visibility 260ms ease; contain: layout paint; isolation: isolate;",
+          "source_hash": "ebd71c0fbbd121efca6f632bdd64a5f26be5ca2981bbbe73ff2942de226af17f"
         },
         {
           "name": "shader-loader-action",
@@ -762,18 +752,18 @@
         },
         {
           "name": "shader-loader-panel",
-          "rule": "position: relative; width: min(360px, 100%); display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius-m); padding: 18px; background: var(--loader-panel-bg); box-shadow: inset 0 1px 0 var(--glass-hi), var(--shadow-strong); contain: layout paint;",
-          "source_hash": "047a512545c2dae7f42d6c719c6bc10fcf861133915e6d0c040a6cefb942429b"
+          "rule": "position: relative; width: auto; height: auto; display: flex; align-items: center; justify-content: center; gap: 0; overflow: visible; border: none; border-radius: 0; padding: 0; background: transparent; box-shadow: none; contain: layout paint;",
+          "source_hash": "038f1b37d6074ef3efa47031e2ff43db165cf8d26eaa8e6b4724f008eccaeaa4"
         },
         {
           "name": "shader-loader-shimmer",
-          "rule": "position: absolute; inset: 0; transform: translateX(-120%); background: var(--loader-shimmer); animation: none; pointer-events: none; contain: paint;",
-          "source_hash": "4458c755c005f2952bed6793f96bf4c81c2a5bf5fd1f991ac9210325397da3ee"
+          "rule": "display: none !important; position: absolute; inset: 0; transform: translateX(-120%); background: var(--loader-shimmer); animation: none; pointer-events: none; contain: paint;",
+          "source_hash": "39b5eb74f8e066260614bfcc5dbf8e1ce09341a96f8621ac7041b1dde53886d6"
         },
         {
           "name": "shader-loader-spinner",
-          "rule": "position: absolute; width: 62px; height: 62px; color: var(--text-mid); animation: none;",
-          "source_hash": "03c0ee84721e2caab7b755bec483da068b0c66d06840933a76cceec54822e06a"
+          "rule": "position: static; width: 48px; height: 48px; color: var(--primary-bg); animation: shader-loader-spin 1s linear infinite;",
+          "source_hash": "5082066d5d336b73007303ebeb15975daf448d3d4bb7187b348987a513635976"
         },
         {
           "name": "shader-loader-title",
@@ -899,11 +889,6 @@
           "name": "topbar-divider",
           "rule": "width: 1px; height: 22px; background: var(--line); margin: 0 4px;",
           "source_hash": "62c54da5dc708d00676a980328d120283f02842cd53a9405f4fc0b334164ce18"
-        },
-        {
-          "name": "w-16",
-          "rule": "width: calc(var(--spacing) * 16);",
-          "source_hash": "2bc82ac0d498dd074b695e2cbaa4d39c2a8c0dde1d233c9768d153aec90bbd1d"
         }
       ],
       "delivery": "generated-css"
@@ -921,8 +906,8 @@
   },
   "packet": {
     "kind": "route",
-    "bytes": 33997,
-    "payload_bytes": 33745,
+    "bytes": 33527,
+    "payload_bytes": 33275,
     "section_count": 5,
     "roundtrip_matches": true
   },
@@ -947,9 +932,9 @@
       "selected": true,
       "output_mode": "tiny-static",
       "js": "required-or-fallback-only",
-      "html_bytes": 6804,
-      "css_bytes": 35627,
-      "total_public_bytes": 42431,
+      "html_bytes": 6765,
+      "css_bytes": 35458,
+      "total_public_bytes": 42223,
       "script_tag_count": 8,
       "runtime_required": false,
       "no_js_capable": false,
@@ -965,31 +950,31 @@
     "candidates": [
       {
         "mode": "Static",
-        "estimated_bytes": 42431,
+        "estimated_bytes": 42223,
         "selected": true,
         "reason": "HTML/CSS shell with no browser runtime"
       },
       {
         "mode": "MicroJs",
-        "estimated_bytes": 42431,
+        "estimated_bytes": 42223,
         "selected": false,
         "reason": "generated event/state JavaScript for tiny islands"
       },
       {
         "mode": "ServerFragment",
-        "estimated_bytes": 42751,
+        "estimated_bytes": 42543,
         "selected": false,
         "reason": "server-rendered fragment endpoint path"
       },
       {
         "mode": "WasmCore",
-        "estimated_bytes": 83928,
+        "estimated_bytes": 83250,
         "selected": false,
         "reason": "DXPK plus shared WASM core runtime"
       },
       {
         "mode": "WasmSplit",
-        "estimated_bytes": 77928,
+        "estimated_bytes": 77250,
         "selected": false,
         "reason": "DXPK plus split boot runtime"
       }
@@ -997,22 +982,22 @@
     "rejected_modes": [
       {
         "mode": "MicroJs",
-        "estimated_bytes": 42431,
+        "estimated_bytes": 42223,
         "reason": "candidate does not satisfy the current interaction contract"
       },
       {
         "mode": "ServerFragment",
-        "estimated_bytes": 42751,
+        "estimated_bytes": 42543,
         "reason": "estimated bytes are higher than the selected route mode"
       },
       {
         "mode": "WasmCore",
-        "estimated_bytes": 83928,
+        "estimated_bytes": 83250,
         "reason": "estimated bytes are higher than the selected route mode"
       },
       {
         "mode": "WasmSplit",
-        "estimated_bytes": 77928,
+        "estimated_bytes": 77250,
         "reason": "estimated bytes are higher than the selected route mode"
       }
     ],

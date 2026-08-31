@@ -80,23 +80,26 @@
     "status": "source-metadata-only"
   },
   "image_pipeline": {
-    "image_asset_count": 3,
-    "metadata_asset_count": 3,
+    "image_asset_count": 6,
+    "metadata_asset_count": 6,
     "optimized_variant_count": 0,
-    "placeholder_count": 3,
-    "placeholder_artifact_count": 3,
-    "placeholder_artifact_bytes": 519,
+    "placeholder_count": 6,
+    "placeholder_artifact_count": 6,
+    "placeholder_artifact_bytes": 1038,
     "placeholder_artifact_outputs": [
       ".dx/www/output/.dx/build-cache/image-placeholders/public/favicon-b0698a08bf67b748.placeholder.svg",
       ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg",
-      ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-b0698a08bf67b748.placeholder.svg"
+      ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-b0698a08bf67b748.placeholder.svg",
+      ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-dark-b0698a08bf67b748.placeholder.svg",
+      ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-light-b0698a08bf67b748.placeholder.svg",
+      ".dx/www/output/.dx/build-cache/image-placeholders/public/route-b0698a08bf67b748.placeholder.svg"
     ],
-    "route_reference_count": 60,
+    "route_reference_count": 62,
     "formats": {
-      "svg": 3
+      "svg": 6
     },
     "dimension_sources": {
-      "svg-root-attributes": 3
+      "svg-root-attributes": 6
     },
     "status": "metadata-plus-placeholder-artifacts-boundary",
     "full_pipeline_parity": false
@@ -106,14 +109,14 @@
       "route": "/media",
       "source_path": "app/media/page.tsx",
       "html_output": ".dx/www/output/.dx/build-cache/source-routes/media/index.html",
-      "shell_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/media/route-shell-5488cbb3f48c028b.mjs",
-      "entry_module_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/media/modules/app-media-page-tsx-93e65191d4d488cb.mjs",
+      "shell_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/media/route-shell-1850375526b2e92a.mjs",
+      "entry_module_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/media/modules/app-media-page-tsx-9ed3259240c77efa.mjs",
       "source_module_chunks": [
         {
           "source_path": "app/media/page.tsx",
-          "chunk_output": ".dx/www/output/.dx/build-cache/source-routes/media/modules/app-media-page-tsx-93e65191d4d488cb.mjs",
+          "chunk_output": ".dx/www/output/.dx/build-cache/source-routes/media/modules/app-media-page-tsx-9ed3259240c77efa.mjs",
           "kind": "tsx",
-          "hash": "93e65191d4d488cb"
+          "hash": "9ed3259240c77efa"
         },
         {
           "source_path": "components/metasearch/search-controls.tsx",
@@ -128,20 +131,20 @@
           "hash": "db84713bde16854e"
         }
       ],
-      "fallback_hash": "5488cbb3f48c028b"
+      "fallback_hash": "1850375526b2e92a"
     },
     {
       "route": "/",
       "source_path": "app/page.tsx",
       "html_output": ".dx/www/output/.dx/build-cache/source-routes/root/index.html",
-      "shell_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-3110742141b0864d.mjs",
-      "entry_module_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-d63b123753599478.mjs",
+      "shell_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-5af2deeeeefb8358.mjs",
+      "entry_module_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-d1f41728d824b449.mjs",
       "source_module_chunks": [
         {
           "source_path": "app/page.tsx",
-          "chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-d63b123753599478.mjs",
+          "chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-d1f41728d824b449.mjs",
           "kind": "tsx",
-          "hash": "d63b123753599478"
+          "hash": "d1f41728d824b449"
         },
         {
           "source_path": "components/metasearch/search-controls.tsx",
@@ -156,7 +159,7 @@
           "hash": "db84713bde16854e"
         }
       ],
-      "fallback_hash": "3110742141b0864d"
+      "fallback_hash": "5af2deeeeefb8358"
     }
   ],
   "node_modules_required": false,

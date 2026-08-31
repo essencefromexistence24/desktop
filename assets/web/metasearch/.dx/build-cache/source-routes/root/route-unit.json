@@ -4,8 +4,8 @@
   "source_path": "app/page.tsx",
   "shell": {
     "fallback": {
-      "html": "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><link rel=\"icon\" href=\"./favicon.svg\" type=\"image/svg+xml\"><link rel=\"apple-touch-icon\" href=\"./icon.svg\"><meta name=\"description\" content=\"Search results served through DX WWW.\"><link rel=\"stylesheet\" href=\"./styles/base.css\"><link rel=\"stylesheet\" href=\"./styles/generated.css\"><link rel=\"stylesheet\" href=\"./styles/globals.css\"><link rel=\"stylesheet\" href=\"./styles/results.css\"><link rel=\"stylesheet\" href=\"./styles/theme.css\"><link rel=\"stylesheet\" href=\"./_dx/styles/react-route-eecaa997c1488809.css\" data-dx-generated=\"true\"><title>DX Metasearch</title></head><body><main class=\"starter-shell\" data-dx-runtime=\"static\" data-dx-output-mode=\"tiny-static\" data-dx-js=\"none\" data-dx-route=\"/\" data-dx-assets=\"/logo.svg,/public/metasearch/answer-common.ts,/public/metasearch/answer-controls.ts,/public/metasearch/answer-evidence.ts,/public/metasearch/answer-media.ts,/public/metasearch/answer-renderer.ts,/public/metasearch/answer-summary.ts,/public/metasearch/answer-tts.ts,/public/metasearch/i18n-languages.ts,/public/metasearch/result-cards.ts,/public/metasearch/result-common.ts,/public/metasearch/results-renderer.ts,/public/metasearch/runtime.ts,/public/metasearch/search-scheduler.ts,/public/metasearch/url-safety.ts\"><div class=\"site-shell\" data-metasearch-app=\"true\" data-api-origin=\"http://localhost:8888\" data-flow-tts-endpoint=\"http://127.0.0.1:8789/api/flow/tts\"><div class=\"sticky-headers\"><header class=\"site-header\"><a class=\"brand\" href=\"./\" aria-label=\"DX Metasearch\"><img class=\"brand-mark\" src=\"./logo.svg\" alt=\"DX\"><span class=\"brand-text\"><span>DX</span><strong>Metasearch</strong></span></a></header></div><main class=\"results-shell\" id=\"results\"><section class=\"results-main\" aria-label=\"Search results\"><div class=\"results-status\" data-results-status=\"true\" aria-live=\"polite\"></div><div class=\"result-list\" data-result-list=\"true\"></div></section><aside class=\"response-shell\"><div class=\"response-summary\" data-response-summary=\"true\" aria-live=\"polite\"></div><div class=\"response-details\" data-response-details=\"true\"></div><div class=\"engine-list\" data-engine-list=\"true\"></div><div class=\"failed-engine-panel\" data-failed-engine-panel=\"true\" hidden><div class=\"failed-engine-list\" data-failed-engine-list=\"true\"></div></div></aside></main><script src=\"./public/metasearch/url-safety.ts\" defer></script><script src=\"./public/metasearch/i18n-languages.ts\" defer></script><script src=\"./public/metasearch/answer-common.ts\" defer></script><script src=\"./public/metasearch/answer-tts.ts\" defer></script><script src=\"./public/metasearch/answer-controls.ts\" defer></script><script src=\"./public/metasearch/answer-summary.ts\" defer></script><script src=\"./public/metasearch/answer-evidence.ts\" defer></script><script src=\"./public/metasearch/answer-media.ts\" defer></script><script src=\"./public/metasearch/answer-renderer.ts\" defer></script><script src=\"./public/metasearch/result-common.ts\" defer></script><script src=\"./public/metasearch/result-cards.ts\" defer></script><script src=\"./public/metasearch/results-renderer.ts\" defer></script><script src=\"./public/metasearch/search-scheduler.ts\" defer></script><script src=\"./public/metasearch/runtime.ts\" defer></script></div></main></body></html>",
-      "bytes": 3348,
+      "html": "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><link rel=\"icon\" href=\"./favicon.svg\" type=\"image/svg+xml\"><link rel=\"apple-touch-icon\" href=\"./icon.svg\"><meta name=\"description\" content=\"Search the web through a focused metasearch workspace.\"><link rel=\"stylesheet\" href=\"./styles/base.css\"><link rel=\"stylesheet\" href=\"./styles/generated.css\"><link rel=\"stylesheet\" href=\"./styles/globals.css\"><link rel=\"stylesheet\" href=\"./styles/results.css\"><link rel=\"stylesheet\" href=\"./styles/theme.css\"><link rel=\"stylesheet\" href=\"./_dx/styles/react-route-eecaa997c1488809.css\" data-dx-generated=\"true\"><title>Metasearch</title></head><body><main class=\"starter-shell\" data-dx-runtime=\"static\" data-dx-output-mode=\"tiny-static\" data-dx-js=\"none\" data-dx-route=\"/\" data-dx-assets=\"/logo-light.svg,/public/metasearch/answer-common.ts,/public/metasearch/answer-controls.ts,/public/metasearch/answer-evidence.ts,/public/metasearch/answer-media.ts,/public/metasearch/answer-renderer.ts,/public/metasearch/answer-summary.ts,/public/metasearch/answer-tts.ts,/public/metasearch/i18n-languages.ts,/public/metasearch/result-cards.ts,/public/metasearch/result-common.ts,/public/metasearch/results-renderer.ts,/public/metasearch/runtime.ts,/public/metasearch/search-scheduler.ts,/public/metasearch/url-safety.ts\"><div class=\"site-shell\" data-metasearch-app=\"true\" data-api-origin=\"http://localhost:8888\" data-flow-tts-endpoint=\"http://127.0.0.1:8789/api/flow/tts\"><div class=\"sticky-headers\"><header class=\"site-header\"><a class=\"brand\" href=\"./\" aria-label=\"Metasearch\"><picture><source media=\"(prefers-color-scheme: dark)\" srcset=\"/logo-dark.svg\"><img class=\"brand-mark\" src=\"./logo-light.svg\" alt=\"Metasearch\"></picture><span class=\"brand-text\"><strong>Metasearch</strong></span></a></header></div><main class=\"results-shell\" id=\"results\"><section class=\"results-main\" aria-label=\"Search results\"><div class=\"results-status\" data-results-status=\"true\" aria-live=\"polite\"></div><div class=\"result-list\" data-result-list=\"true\"></div></section><aside class=\"response-shell\"><div class=\"response-summary\" data-response-summary=\"true\" aria-live=\"polite\"></div><div class=\"response-details\" data-response-details=\"true\"></div><div class=\"engine-list\" data-engine-list=\"true\"></div><div class=\"failed-engine-panel\" data-failed-engine-panel=\"true\" hidden><div class=\"failed-engine-list\" data-failed-engine-list=\"true\"></div></div></aside></main><script src=\"./public/metasearch/url-safety.ts\" defer></script><script src=\"./public/metasearch/i18n-languages.ts\" defer></script><script src=\"./public/metasearch/answer-common.ts\" defer></script><script src=\"./public/metasearch/answer-tts.ts\" defer></script><script src=\"./public/metasearch/answer-controls.ts\" defer></script><script src=\"./public/metasearch/answer-summary.ts\" defer></script><script src=\"./public/metasearch/answer-evidence.ts\" defer></script><script src=\"./public/metasearch/answer-media.ts\" defer></script><script src=\"./public/metasearch/answer-renderer.ts\" defer></script><script src=\"./public/metasearch/result-common.ts\" defer></script><script src=\"./public/metasearch/result-cards.ts\" defer></script><script src=\"./public/metasearch/results-renderer.ts\" defer></script><script src=\"./public/metasearch/search-scheduler.ts\" defer></script><script src=\"./public/metasearch/runtime.ts\" defer></script></div></main></body></html>",
+      "bytes": 3452,
       "crawlable": true,
       "accessibility_warnings": []
     },
@@ -26,7 +26,7 @@
           "id": "app/page",
           "name": "Page",
           "package_id": null,
-          "content_hash": "d63b123753599478e1690c6596808b780d4dc4aec1f065c2a3501dc6ad721727"
+          "content_hash": "d1f41728d824b44904709171c98ede36b37248b22a417d60a44e24b47af0aa9e"
         },
         {
           "id": "app/layout",
@@ -1149,9 +1149,9 @@
       "selected": true,
       "output_mode": "tiny-static",
       "js": "required-or-fallback-only",
-      "html_bytes": 3348,
+      "html_bytes": 3452,
       "css_bytes": 61736,
-      "total_public_bytes": 65084,
+      "total_public_bytes": 65188,
       "script_tag_count": 14,
       "runtime_required": false,
       "no_js_capable": false,
@@ -1167,31 +1167,31 @@
     "candidates": [
       {
         "mode": "Static",
-        "estimated_bytes": 65084,
+        "estimated_bytes": 65188,
         "selected": true,
         "reason": "HTML/CSS shell with no browser runtime"
       },
       {
         "mode": "MicroJs",
-        "estimated_bytes": 65084,
+        "estimated_bytes": 65188,
         "selected": false,
         "reason": "generated event/state JavaScript for tiny islands"
       },
       {
         "mode": "ServerFragment",
-        "estimated_bytes": 65404,
+        "estimated_bytes": 65508,
         "selected": false,
         "reason": "server-rendered fragment endpoint path"
       },
       {
         "mode": "WasmCore",
-        "estimated_bytes": 121195,
+        "estimated_bytes": 121299,
         "selected": false,
         "reason": "DXPK plus shared WASM core runtime"
       },
       {
         "mode": "WasmSplit",
-        "estimated_bytes": 115195,
+        "estimated_bytes": 115299,
         "selected": false,
         "reason": "DXPK plus split boot runtime"
       }
@@ -1199,22 +1199,22 @@
     "rejected_modes": [
       {
         "mode": "MicroJs",
-        "estimated_bytes": 65084,
+        "estimated_bytes": 65188,
         "reason": "candidate does not satisfy the current interaction contract"
       },
       {
         "mode": "ServerFragment",
-        "estimated_bytes": 65404,
+        "estimated_bytes": 65508,
         "reason": "estimated bytes are higher than the selected route mode"
       },
       {
         "mode": "WasmCore",
-        "estimated_bytes": 121195,
+        "estimated_bytes": 121299,
         "reason": "estimated bytes are higher than the selected route mode"
       },
       {
         "mode": "WasmSplit",
-        "estimated_bytes": 115195,
+        "estimated_bytes": 115299,
         "reason": "estimated bytes are higher than the selected route mode"
       }
     ],

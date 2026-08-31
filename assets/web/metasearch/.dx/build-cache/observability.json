@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated": "2026-08-08T18:10:14.587198+00:00",
-  "manifest_hash": "blake3:b7e17c90c6feb9eb86914f177ce0c712693b603a2c9981c123b3a63f290bfca6",
+  "generated": "2026-08-30T14:52:57.539674200+00:00",
+  "manifest_hash": "blake3:9576ad6a60660bead11be679095c192ccf963b8c08b35bcdbe7867f31e4a675f",
   "runtime": "dx-www-production-contract",
   "secret_fields_collected": false,
   "privacy": {
@@ -105,6 +105,27 @@
       "collects_content": false
     },
     {
+      "path": ".dx/build-cache/image-placeholders/public/logo-dark-b0698a08bf67b748.placeholder.svg",
+      "metric": "packet.bytes",
+      "bytes": 173,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": ".dx/build-cache/image-placeholders/public/logo-light-b0698a08bf67b748.placeholder.svg",
+      "metric": "packet.bytes",
+      "bytes": 173,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": ".dx/build-cache/image-placeholders/public/route-b0698a08bf67b748.placeholder.svg",
+      "metric": "packet.bytes",
+      "bytes": 173,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
       "path": "_dx/styles/react-route-eecaa997c1488809.css",
       "metric": "packet.bytes",
       "bytes": 61736,
@@ -135,14 +156,14 @@
     {
       "path": "app/index.dxpk.br",
       "metric": "packet.bytes",
-      "bytes": 11550,
+      "bytes": 11546,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "app/index.dxpk.gz",
       "metric": "packet.bytes",
-      "bytes": 14144,
+      "bytes": 14143,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
@@ -156,77 +177,119 @@
     {
       "path": "app/media/index.dxpk.br",
       "metric": "packet.bytes",
-      "bytes": 11562,
+      "bytes": 11551,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "app/media/index.dxpk.gz",
       "metric": "packet.bytes",
-      "bytes": 14150,
+      "bytes": 14153,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "favicon.svg",
       "metric": "packet.bytes",
-      "bytes": 1099,
+      "bytes": 1123,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "favicon.svg.br",
       "metric": "packet.bytes",
-      "bytes": 474,
+      "bytes": 477,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "favicon.svg.gz",
       "metric": "packet.bytes",
-      "bytes": 570,
+      "bytes": 571,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "icon.svg",
       "metric": "packet.bytes",
-      "bytes": 1099,
+      "bytes": 1071,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "icon.svg.br",
       "metric": "packet.bytes",
-      "bytes": 474,
+      "bytes": 471,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "icon.svg.gz",
       "metric": "packet.bytes",
-      "bytes": 570,
+      "bytes": 557,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "logo-dark.svg",
+      "metric": "packet.bytes",
+      "bytes": 1068,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "logo-dark.svg.br",
+      "metric": "packet.bytes",
+      "bytes": 465,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "logo-dark.svg.gz",
+      "metric": "packet.bytes",
+      "bytes": 558,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "logo-light.svg",
+      "metric": "packet.bytes",
+      "bytes": 1071,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "logo-light.svg.br",
+      "metric": "packet.bytes",
+      "bytes": 471,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "logo-light.svg.gz",
+      "metric": "packet.bytes",
+      "bytes": 557,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "logo.svg",
       "metric": "packet.bytes",
-      "bytes": 2758,
+      "bytes": 1071,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "logo.svg.br",
       "metric": "packet.bytes",
-      "bytes": 891,
+      "bytes": 471,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
       "path": "logo.svg.gz",
       "metric": "packet.bytes",
-      "bytes": 1037,
+      "bytes": 557,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
@@ -525,65 +588,149 @@
       "collects_content": false
     },
     {
-      "path": "public/favicon-6f610c26851426c5.svg",
+      "path": "public/favicon-2f8f048456a4b0ae.svg",
       "metric": "packet.bytes",
-      "bytes": 1099,
+      "bytes": 1123,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/favicon-6f610c26851426c5.svg.br",
+      "path": "public/favicon-2f8f048456a4b0ae.svg.br",
       "metric": "packet.bytes",
-      "bytes": 474,
+      "bytes": 477,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/favicon-6f610c26851426c5.svg.gz",
+      "path": "public/favicon-2f8f048456a4b0ae.svg.gz",
       "metric": "packet.bytes",
-      "bytes": 570,
+      "bytes": 571,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/icon-6f610c26851426c5.svg",
+      "path": "public/icon-d5c850b974136aac.svg",
       "metric": "packet.bytes",
-      "bytes": 1099,
+      "bytes": 1071,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/icon-6f610c26851426c5.svg.br",
+      "path": "public/icon-d5c850b974136aac.svg.br",
       "metric": "packet.bytes",
-      "bytes": 474,
+      "bytes": 471,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/icon-6f610c26851426c5.svg.gz",
+      "path": "public/icon-d5c850b974136aac.svg.gz",
       "metric": "packet.bytes",
-      "bytes": 570,
+      "bytes": 557,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/logo-20a2f162f4d8f50b.svg",
+      "path": "public/logo-d5c850b974136aac.svg",
       "metric": "packet.bytes",
-      "bytes": 2758,
+      "bytes": 1071,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/logo-20a2f162f4d8f50b.svg.br",
+      "path": "public/logo-d5c850b974136aac.svg.br",
       "metric": "packet.bytes",
-      "bytes": 891,
+      "bytes": 471,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
     {
-      "path": "public/logo-20a2f162f4d8f50b.svg.gz",
+      "path": "public/logo-d5c850b974136aac.svg.gz",
       "metric": "packet.bytes",
-      "bytes": 1037,
+      "bytes": 557,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/logo-dark-8295f9405d7b6237.svg",
+      "metric": "packet.bytes",
+      "bytes": 1068,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/logo-dark-8295f9405d7b6237.svg.br",
+      "metric": "packet.bytes",
+      "bytes": 465,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/logo-dark-8295f9405d7b6237.svg.gz",
+      "metric": "packet.bytes",
+      "bytes": 558,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/logo-light-d5c850b974136aac.svg",
+      "metric": "packet.bytes",
+      "bytes": 1071,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/logo-light-d5c850b974136aac.svg.br",
+      "metric": "packet.bytes",
+      "bytes": 471,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/logo-light-d5c850b974136aac.svg.gz",
+      "metric": "packet.bytes",
+      "bytes": 557,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/route-d5c850b974136aac.svg",
+      "metric": "packet.bytes",
+      "bytes": 1071,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/route-d5c850b974136aac.svg.br",
+      "metric": "packet.bytes",
+      "bytes": 471,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "public/route-d5c850b974136aac.svg.gz",
+      "metric": "packet.bytes",
+      "bytes": 557,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "route.svg",
+      "metric": "packet.bytes",
+      "bytes": 1071,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "route.svg.br",
+      "metric": "packet.bytes",
+      "bytes": 471,
+      "cache_control": "public, max-age=31536000, immutable",
+      "collects_content": false
+    },
+    {
+      "path": "route.svg.gz",
+      "metric": "packet.bytes",
+      "bytes": 557,
       "cache_control": "public, max-age=31536000, immutable",
       "collects_content": false
     },
@@ -693,7 +840,7 @@
       "collects_content": false
     }
   ],
-  "packet_bytes_total": 632151,
+  "packet_bytes_total": 640029,
   "server_action_receipts": [],
   "hooks": {
     "health": [

@@ -280,7 +280,7 @@ impl LanguageModels {
 
         let mut models = HashMap::default();
         // The OpenCode provider (`"opencode"`) is the built-in free tier, surfaced in the
-        // picker as the "Free" group. Pin it to the very top of the model list, ahead of every
+        // picker as the "Opencode Zen" group. Pin it to the very top of the model list, ahead of every
         // other provider, so the free models are most prominent.
         const FREE_PROVIDER_ID: &str = "opencode";
         for provider in providers {

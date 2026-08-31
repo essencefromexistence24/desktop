@@ -292,8 +292,8 @@ button { font: inherit; color: inherit; cursor: pointer; background: none; borde
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 28px;
-  background: var(--loader-bg);
+  padding: 0;
+  background: transparent;
   backdrop-filter: none;
   transition: opacity 260ms ease, visibility 260ms ease;
   contain: layout paint;
@@ -306,19 +306,18 @@ button { font: inherit; color: inherit; cursor: pointer; background: none; borde
 }
 .shader-loader-panel {
   position: relative;
-  width: min(360px, 100%);
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 14px;
+  width: auto;
+  height: auto;
+  display: flex;
   align-items: center;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-m);
-  padding: 18px;
-  background: var(--loader-panel-bg);
-  box-shadow:
-    inset 0 1px 0 var(--glass-hi),
-    var(--shadow-strong);
+  justify-content: center;
+  gap: 0;
+  overflow: visible;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
   contain: layout paint;
 }
 .shader-loader-mark {
@@ -336,11 +335,11 @@ button { font: inherit; color: inherit; cursor: pointer; background: none; borde
   height: 20px;
 }
 .shader-loader-spinner {
-  position: absolute;
-  width: 62px;
-  height: 62px;
-  color: var(--text-mid);
-  animation: none;
+  position: static;
+  width: 48px;
+  height: 48px;
+  color: var(--primary-bg);
+  animation: shader-loader-spin 1s linear infinite;
 }
 .shader-loader-copy {
   display: grid;
@@ -368,6 +367,7 @@ button { font: inherit; color: inherit; cursor: pointer; background: none; borde
 }
 .shader-loader-action[hidden] { display: none; }
 .shader-loader-shimmer {
+  display: none !important;
   position: absolute;
   inset: 0;
   transform: translateX(-120%);
@@ -1232,4 +1232,75 @@ select { cursor: pointer; appearance: none; padding-right: 22px;
   .intro .stagger-item {
     animation: none;
   }
+}
+
+/* ---------- custom select ---------- */
+.custom-select {
+  position: relative;
+  flex: 1;
+}
+.custom-select-trigger {
+  width: 100%;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-s);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  height: 28px;
+  padding: 0 22px 0 8px;
+  text-align: left;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.custom-select-trigger:focus, .custom-select-trigger:hover {
+  border-color: var(--focus);
+}
+.custom-select-icon {
+  position: absolute;
+  right: 6px;
+  display: flex;
+  color: var(--text-mid);
+  pointer-events: none;
+}
+.custom-select-popover {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  background: var(--surface-elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-s);
+  box-shadow: var(--shadow-soft);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  gap: 2px;
+}
+.custom-select-popover[hidden] {
+  display: none !important;
+}
+.custom-select-option {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 8px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  cursor: pointer;
+}
+.custom-select-option:hover, .custom-select-option:focus {
+  background: var(--bg-hover);
+}
+.custom-select-option.active {
+  background: var(--focus);
+  color: var(--bg);
 }

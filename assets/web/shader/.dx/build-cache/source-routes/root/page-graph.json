@@ -8,7 +8,7 @@
         "id": "app/page",
         "name": "Page",
         "package_id": null,
-        "content_hash": "5a769af35d7bc2cc4e1a6400d75539503df0555bb3dd66afcf63d1e3aa3f370b"
+        "content_hash": "927e9ea85396b3593b1bdc24f97882a695193eb7b7596869275cfee4bca79620"
       },
       {
         "id": "app/layout",
@@ -468,11 +468,6 @@
         "source_hash": "8f507f85e9fdf5939017cd17cb757f7c41226dcdb932c4f9faeb811825d3ba7f"
       },
       {
-        "name": "h-16",
-        "rule": "height: calc(var(--spacing) * 16);",
-        "source_hash": "49ea0537868d7a9d6d425373cf611d27da8cd3af2d218cfbc457ff94b4a233a4"
-      },
-      {
         "name": "hidden",
         "rule": "display: none;",
         "source_hash": "b0d667ba69f2ee7750b3344539ea37ec568e9c63985472e74127db6c3cf27a54"
@@ -623,11 +618,6 @@
         "source_hash": "f20737e85647249ef2f66f86629f8b9e3ad8a0db2b4b2008f4f20f50007c58a2"
       },
       {
-        "name": "p-2",
-        "rule": "padding: calc(var(--spacing) * 2);",
-        "source_hash": "b04be72b6d2560ca03215a7aa89b8be0b34ba1c92f6c40e50ed369f074183f06"
-      },
-      {
         "name": "preset-chip",
         "rule": "height: 22px; width: 46px; border-radius: 5px; border: 1px solid var(--line-soft); overflow: hidden; display: flex; padding: 0; transition: transform 100ms ease, border-color 120ms ease;",
         "source_hash": "4b471c2e7877a5b60b7044e807414de3c7668d45cbfa9fe2ac9f6d19f474f2f1"
@@ -714,8 +704,8 @@
       },
       {
         "name": "shader-loader",
-        "rule": "position: absolute; inset: 0; z-index: 4; display: flex; align-items: center; justify-content: center; padding: 28px; background: var(--loader-bg); backdrop-filter: none; transition: opacity 260ms ease, visibility 260ms ease; contain: layout paint; isolation: isolate;",
-        "source_hash": "769681249ebaedcea8069bc439784ce5f803848a576ffc9f5d7f59ada29899d1"
+        "rule": "position: absolute; inset: 0; z-index: 4; display: flex; align-items: center; justify-content: center; padding: 0; background: transparent; backdrop-filter: none; transition: opacity 260ms ease, visibility 260ms ease; contain: layout paint; isolation: isolate;",
+        "source_hash": "ebd71c0fbbd121efca6f632bdd64a5f26be5ca2981bbbe73ff2942de226af17f"
       },
       {
         "name": "shader-loader-action",
@@ -744,18 +734,18 @@
       },
       {
         "name": "shader-loader-panel",
-        "rule": "position: relative; width: min(360px, 100%); display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius-m); padding: 18px; background: var(--loader-panel-bg); box-shadow: inset 0 1px 0 var(--glass-hi), var(--shadow-strong); contain: layout paint;",
-        "source_hash": "047a512545c2dae7f42d6c719c6bc10fcf861133915e6d0c040a6cefb942429b"
+        "rule": "position: relative; width: auto; height: auto; display: flex; align-items: center; justify-content: center; gap: 0; overflow: visible; border: none; border-radius: 0; padding: 0; background: transparent; box-shadow: none; contain: layout paint;",
+        "source_hash": "038f1b37d6074ef3efa47031e2ff43db165cf8d26eaa8e6b4724f008eccaeaa4"
       },
       {
         "name": "shader-loader-shimmer",
-        "rule": "position: absolute; inset: 0; transform: translateX(-120%); background: var(--loader-shimmer); animation: none; pointer-events: none; contain: paint;",
-        "source_hash": "4458c755c005f2952bed6793f96bf4c81c2a5bf5fd1f991ac9210325397da3ee"
+        "rule": "display: none !important; position: absolute; inset: 0; transform: translateX(-120%); background: var(--loader-shimmer); animation: none; pointer-events: none; contain: paint;",
+        "source_hash": "39b5eb74f8e066260614bfcc5dbf8e1ce09341a96f8621ac7041b1dde53886d6"
       },
       {
         "name": "shader-loader-spinner",
-        "rule": "position: absolute; width: 62px; height: 62px; color: var(--text-mid); animation: none;",
-        "source_hash": "03c0ee84721e2caab7b755bec483da068b0c66d06840933a76cceec54822e06a"
+        "rule": "position: static; width: 48px; height: 48px; color: var(--primary-bg); animation: shader-loader-spin 1s linear infinite;",
+        "source_hash": "5082066d5d336b73007303ebeb15975daf448d3d4bb7187b348987a513635976"
       },
       {
         "name": "shader-loader-title",
@@ -881,11 +871,6 @@
         "name": "topbar-divider",
         "rule": "width: 1px; height: 22px; background: var(--line); margin: 0 4px;",
         "source_hash": "62c54da5dc708d00676a980328d120283f02842cd53a9405f4fc0b334164ce18"
-      },
-      {
-        "name": "w-16",
-        "rule": "width: calc(var(--spacing) * 16);",
-        "source_hash": "2bc82ac0d498dd074b695e2cbaa4d39c2a8c0dde1d233c9768d153aec90bbd1d"
       }
     ],
     "delivery": "generated-css"

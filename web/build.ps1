@@ -44,12 +44,36 @@ $outputDirs = @{
     "media"         = "dist"
     "Train"         = "dist"
     "Metasearch"    = ".dx\www\output"
-    "Router"        = "apps\web\.next"
+    # The Next.js app is the monorepo root (`web\Router`), not `apps\web` —
+    # `apps\web\.next` has never existed. Router is still built here; only the
+    # static publish is skipped (see $serverProjects).
+    "Router"        = ".next"
 }
 
+# Projects that ship a real server component and therefore CANNOT be published
+# as static files. Next.js hard-errors on `output: "export"` when the app has
+# middleware or route handlers, and Router has both (`src\middleware`,
+# `src\app\api\...`) plus a SQLite database. The desktop serves these by
+# spawning `next start` from the project folder instead — see
+# `spawn_route_backend()` in crates/web_preview/src/server.rs.
+$serverProjects = @("Router")
+
 # Override the default "build" npm script per project.
+# Values can be either a script name (passed to the package manager's `run`)
+# or a raw command line (executed via cmd /c).
+# - media uses vite:build (its package.json only defines vite:* scripts).
+# - cms runs `tsc -b && vite build` via node against the package's bundled
+#   binaries. Bun does not create node_modules/.bin shims, and `npx` resolves
+#   to an unrelated global tsc, so we point at the package entrypoints
+#   directly.
 $buildScripts = @{
-    "media" = "vite:build"
+    "media" = @{ Script = "vite:build" }
+    "cms"   = @{ Raw = "node node_modules/typescript/bin/tsc -b && node node_modules/vite/bin/vite.js build" }
+}
+
+function Get-BuildSpec([string]$name) {
+    if ($buildScripts.ContainsKey($name)) { return $buildScripts[$name] }
+    return @{ Script = "build" }
 }
 
 $projectsRoot = $webRoot
@@ -64,10 +88,7 @@ function Get-PackageManager([string]$dir) {
     return "npm.cmd"
 }
 
-function Get-BuildScript([string]$name) {
-    if ($buildScripts.ContainsKey($name)) { return $buildScripts[$name] }
-    return "build"
-}
+
 
 function Invoke-Build([string]$name, [string]$dir, [string[]]$command) {
     Write-Host ""
@@ -114,13 +135,19 @@ if (-not $SkipBuild) {
             if (-not (Test-Path -LiteralPath (Join-Path $projDir "node_modules"))) {
                 Invoke-Install $name $projDir $pm
             }
-            $scriptName = Get-BuildScript $name
-            # pnpm shim misparses "pnpm run X" under PS7's @(...) splatting;
-            # `pnpm X` is equivalent and works reliably.
-            if ($pm -eq "pnpm") {
-                Invoke-Build $name $projDir @($pm, $scriptName)
+            $spec = Get-BuildSpec $name
+            if ($spec.ContainsKey("Raw")) {
+                # Execute a raw shell command line via cmd /c.
+                Invoke-Build $name $projDir @("cmd.exe", "/c", $spec.Raw)
             } else {
-                Invoke-Build $name $projDir @($pm, "run", $scriptName)
+                $scriptName = $spec.Script
+                # pnpm shim misparses "pnpm run X" under PS7's @(...) splatting;
+                # `pnpm X` is equivalent and works reliably.
+                if ($pm -eq "pnpm") {
+                    Invoke-Build $name $projDir @($pm, $scriptName)
+                } else {
+                    Invoke-Build $name $projDir @($pm, "run", $scriptName)
+                }
             }
         }
     }
@@ -133,6 +160,17 @@ New-Item -ItemType Directory -Path $targetRoot -Force | Out-Null
 foreach ($name in $projects.Keys) {
     if ($Only -and $name -ne $Only) { continue }
     $projDir = Join-Path $projectsRoot $name
+
+    if ($serverProjects -contains $name) {
+        $buildId = Join-Path $projDir ".next\BUILD_ID"
+        if (Test-Path -LiteralPath $buildId) {
+            Write-Host "$name is a server app - not published statically (served by next start from $projDir\.next)"
+        } else {
+            Write-Warning "$name has no server build at $buildId - run its build first or the Route icon will fail"
+        }
+        continue
+    }
+
     $src = Join-Path $projDir $outputDirs[$name]
     $dst = Join-Path $targetRoot $projects[$name]
 

@@ -1,7 +1,7 @@
 {
   "schema": "dx.build.graph.consumerSnapshot",
   "sourceSchema": "dx.build.graph",
-  "generatedAt": "2026-08-27T17:02:52.565837+00:00",
+  "generatedAt": "2026-08-30T14:24:11.648519700+00:00",
   "coreConceptMap": {
     "conceptCount": 9,
     "coveredNodeKinds": [
@@ -47,8 +47,8 @@
     },
     "styleOptimization": {
       "styleNodeCount": 4,
-      "originalRuleCount": 251,
-      "retainedRuleCount": 251,
+      "originalRuleCount": 248,
+      "retainedRuleCount": 248,
       "prunedRuleCount": 0,
       "minifiedStyleCount": 4,
       "sourceMapCount": 4,

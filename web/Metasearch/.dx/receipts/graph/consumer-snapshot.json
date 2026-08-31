@@ -1,7 +1,7 @@
 {
   "schema": "dx.build.graph.consumerSnapshot",
   "sourceSchema": "dx.build.graph",
-  "generatedAt": "2026-08-08T18:10:13.895368200+00:00",
+  "generatedAt": "2026-08-30T14:52:56.788359800+00:00",
   "coreConceptMap": {
     "conceptCount": 9,
     "coveredNodeKinds": [
@@ -33,15 +33,15 @@
     "publicArchitecture": false
   },
   "graph": {
-    "nodeCount": 48,
-    "edgeCount": 26,
+    "nodeCount": 54,
+    "edgeCount": 29,
     "nodeKindCounts": {
       "app-route-handler": 1,
       "dx-style-css": 5,
       "dx-style-import-source": 4,
       "dx-style-source-map": 5,
-      "image-placeholder-asset": 3,
-      "public-asset": 18,
+      "image-placeholder-asset": 6,
+      "public-asset": 21,
       "route-shell-chunk": 2,
       "server-data-route": 2,
       "source-module-chunk": 6,
@@ -73,25 +73,28 @@
       "retainedImportAssetReferenceCount": 0
     },
     "imageOptimization": {
-      "imageAssetCount": 3,
-      "metadataAssetCount": 3,
+      "imageAssetCount": 6,
+      "metadataAssetCount": 6,
       "optimizedVariantCount": 0,
-      "placeholderCount": 3,
-      "placeholderArtifactCount": 3,
-      "placeholderArtifactBytes": 519,
+      "placeholderCount": 6,
+      "placeholderArtifactCount": 6,
+      "placeholderArtifactBytes": 1038,
       "placeholderArtifactOutputs": [
         ".dx/www/output/.dx/build-cache/image-placeholders/public/favicon-b0698a08bf67b748.placeholder.svg",
         ".dx/www/output/.dx/build-cache/image-placeholders/public/icon-b0698a08bf67b748.placeholder.svg",
-        ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-b0698a08bf67b748.placeholder.svg"
+        ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-b0698a08bf67b748.placeholder.svg",
+        ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-dark-b0698a08bf67b748.placeholder.svg",
+        ".dx/www/output/.dx/build-cache/image-placeholders/public/logo-light-b0698a08bf67b748.placeholder.svg",
+        ".dx/www/output/.dx/build-cache/image-placeholders/public/route-b0698a08bf67b748.placeholder.svg"
       ],
-      "placeholderArtifactEdgeCount": 3,
-      "routeReferenceCount": 2,
+      "placeholderArtifactEdgeCount": 6,
+      "routeReferenceCount": 4,
       "styleReferenceCount": 0,
       "formatCounts": {
-        "svg": 3
+        "svg": 6
       },
       "dimensionSourceCounts": {
-        "svg-root-attributes": 3
+        "svg-root-attributes": 6
       },
       "status": "metadata-plus-placeholder-artifacts-boundary",
       "fullPipelineParity": false

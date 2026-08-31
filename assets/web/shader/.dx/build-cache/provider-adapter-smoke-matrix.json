@@ -1,7 +1,7 @@
 {
   "schema": "dx.www.deploy.provider_adapter_smoke_matrix",
   "schema_revision": 1,
-  "manifest_hash": "blake3:a89d5f0f9e716d8148b508dc2b9327e9e1c043d09be80647b409f08227f23470",
+  "manifest_hash": "blake3:f0a947814c19e26bfae8afbaf7f4ec435da0a4872ff3baf55c9d3484b7efea24",
   "release_ready": false,
   "hosted_provider_proof": false,
   "provider_adapter_path": ".dx/build-cache/provider-adapter.dx-cloud.json",
