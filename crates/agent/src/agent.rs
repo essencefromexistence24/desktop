@@ -267,7 +267,15 @@ impl LanguageModels {
             .read(cx)
             .visible_providers()
             .into_iter()
-            .filter(|provider| provider.is_authenticated(cx))
+            .filter(|provider| {
+                // Always show Opencode Zen (free) even without key, but hide local llama/ollama providers per UX request
+                let provider_id = provider.id();
+                let id = provider_id.0.as_ref();
+                if id == "ollama" || id.contains("llama") || id == "local-llama-cpp" {
+                    return false;
+                }
+                provider.is_authenticated(cx) || id == "opencode"
+            })
             .collect::<Vec<_>>();
         let _native_provider_ids = providers
             .iter()

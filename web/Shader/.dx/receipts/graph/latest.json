@@ -1,7 +1,7 @@
 {
   "schema": "dx.build.graph",
   "format": 1,
-  "generatedAt": "2026-08-30T14:24:11.644983100+00:00",
+  "generatedAt": "2026-09-01T15:13:30.836659400+00:00",
   "projectRoot": "G:/Dx/desktop/web/Shader",
   "receiptPath": "G:/Dx/desktop/web/Shader/.dx/receipts/graph/latest.json",
   "names": {
@@ -29,9 +29,9 @@
         "path": "styles/dx-shader.css",
         "output": ".dx/www/output/styles/dx-shader.css",
         "contract": "dx.build.graph",
-        "hash": "6d43dbc1ed9551d1",
-        "original_rule_count": 230,
-        "retained_rule_count": 230,
+        "hash": "8c13248f6bc5eae1",
+        "original_rule_count": 231,
+        "retained_rule_count": 231,
         "pruned_rule_count": 0,
         "minified": true,
         "source_map_output": ".dx/www/output/styles/dx-shader.css.map",
@@ -44,7 +44,7 @@
         "source_map_exact_segment_mapping": false,
         "source_map_evidence_only": true,
         "source_map_linked": true,
-        "source_map_hash": "cd3748f1288c436d",
+        "source_map_hash": "c05f322b499cb4cd",
         "node_modules_required": false,
         "lifecycle_scripts_executed": false,
         "source_owned_contract": true,
@@ -190,7 +190,7 @@
         "source_map_exact_segment_mapping": false,
         "source_map_evidence_only": true,
         "source_map_linked": true,
-        "source_map_hash": "cd3748f1288c436d",
+        "source_map_hash": "c05f322b499cb4cd",
         "node_modules_required": false,
         "lifecycle_scripts_executed": false,
         "source_owned_contract": true,
@@ -1218,10 +1218,10 @@
         "id": "public-asset:public/sw-register.js",
         "kind": "public-asset",
         "path": "public/sw-register.js",
-        "output": ".dx/www/output/public/sw-register-00547238eb773f04.js",
+        "output": ".dx/www/output/public/sw-register-0cc3f6a59379baf8.js",
         "contract": "dx.build.graph",
-        "hash": "00547238eb773f04",
-        "bytes": 238,
+        "hash": "0cc3f6a59379baf8",
+        "bytes": 471,
         "node_modules_required": false,
         "lifecycle_scripts_executed": false,
         "source_owned_contract": true,
@@ -1232,10 +1232,10 @@
         "id": "public-asset:public/sw.js",
         "kind": "public-asset",
         "path": "public/sw.js",
-        "output": ".dx/www/output/public/sw-ad0e3a10d1dc62b8.js",
+        "output": ".dx/www/output/public/sw-9676dd3e259c9e9f.js",
         "contract": "dx.build.graph",
-        "hash": "ad0e3a10d1dc62b8",
-        "bytes": 1724,
+        "hash": "9676dd3e259c9e9f",
+        "bytes": 820,
         "node_modules_required": false,
         "lifecycle_scripts_executed": false,
         "source_owned_contract": true,
@@ -1243,12 +1243,12 @@
         "external_runtime_executed": false
       },
       {
-        "id": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-7e2017d91d346f63.mjs",
+        "id": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-d9500c28fb9121fe.mjs",
         "kind": "route-shell-chunk",
-        "path": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-7e2017d91d346f63.mjs",
+        "path": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-d9500c28fb9121fe.mjs",
         "route": "/",
         "contract": "dx.www.moduleGraph",
-        "fallback_hash": "7e2017d91d346f63",
+        "fallback_hash": "d9500c28fb9121fe",
         "node_modules_required": false
       },
       {
@@ -1498,7 +1498,7 @@
         "kind": "emits-css-source-map",
         "source_path": "styles/dx-shader.css",
         "output": ".dx/www/output/styles/dx-shader.css.map",
-        "source_map_hash": "cd3748f1288c436d",
+        "source_map_hash": "c05f322b499cb4cd",
         "source_map_linked": true,
         "node_modules_required": false,
         "lifecycle_scripts_executed": false,
@@ -1733,7 +1733,7 @@
         "full_pipeline_parity": false
       },
       {
-        "from": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-7e2017d91d346f63.mjs",
+        "from": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-d9500c28fb9121fe.mjs",
         "to": "server-data-route:.dx/www/output/source-routes/root/server-data.json",
         "kind": "links-server-data",
         "route": "/",
@@ -1746,7 +1746,7 @@
         "external_runtime_executed": false
       },
       {
-        "from": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-7e2017d91d346f63.mjs",
+        "from": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-d9500c28fb9121fe.mjs",
         "to": "source-module-chunk:.dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-927e9ea85396b359.mjs",
         "kind": "links-entry-module"
       },
@@ -1759,7 +1759,7 @@
       },
       {
         "from": "tsx-route:app/page.tsx",
-        "to": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-7e2017d91d346f63.mjs",
+        "to": "route-shell-chunk:.dx/www/output/.dx/build-cache/source-routes/root/route-shell-d9500c28fb9121fe.mjs",
         "kind": "emits"
       },
       {

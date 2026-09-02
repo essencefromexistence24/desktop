@@ -111,6 +111,7 @@ impl Render for StatusBar {
 
         h_flex()
             .w_full()
+            .relative()
             .justify_between()
             .gap(DynamicSpacing::Base08.rems(cx))
             .p(DynamicSpacing::Base04.rems(cx))
@@ -144,9 +145,35 @@ impl Render for StatusBar {
                     .border_b(px(1.0))
                     .border_color(cx.theme().colors().status_bar_background),
             })
-            .child(self.render_left_tools(&sidebar, cx))
-            .child(self.render_center_tools(cx))
-            .child(self.render_right_tools(&sidebar, cx))
+            .child(
+                h_flex()
+                    .flex_1()
+                    .flex_shrink_1()
+                    .min_w_0()
+                    .overflow_x_hidden()
+                    .child(self.render_left_tools(&sidebar, cx)),
+            )
+            .child(
+                div()
+                    .absolute()
+                    .left_1_2()
+                    .top_0()
+                    .bottom_0()
+                    .flex()
+                    .items_center()
+                    .justify_center()
+                    .overflow_hidden()
+                    .child(self.render_center_tools(cx)),
+            )
+            .child(
+                h_flex()
+                    .flex_1()
+                    .flex_shrink_1()
+                    .min_w_0()
+                    .overflow_x_hidden()
+                    .justify_end()
+                    .child(self.render_right_tools(&sidebar, cx)),
+            )
     }
 }
 

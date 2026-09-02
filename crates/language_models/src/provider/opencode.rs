@@ -218,13 +218,21 @@ impl OpenCodeLanguageModelProvider {
         cx: &App,
     ) -> bool {
         if subscription == OpenCodeSubscription::Free {
-            return has_real_key || Self::uses_default_api_url(cx);
+            if !Self::subscription_enabled(subscription, cx) {
+                return false;
+            }
+            // Free tier is public (Bearer public) when using default URL, but also show when enabled even without key
+            // to ensure Opencode Zen is always first provider with free models visible.
+            return has_real_key || Self::uses_default_api_url(cx) || Self::subscription_enabled(subscription, cx);
         }
         if !Self::subscription_enabled(subscription, cx) {
             return false;
         }
 
         has_real_key
+            || std::env::var("OPENCODE_API_KEY")
+                .map(|v| !v.trim().is_empty())
+                .unwrap_or(false)
     }
 
     fn api_url(cx: &App) -> SharedString {
@@ -259,7 +267,11 @@ impl LanguageModelProvider for OpenCodeLanguageModelProvider {
     }
 
     fn default_model(&self, cx: &App) -> Option<Arc<dyn LanguageModel>> {
-        let has_real_key = self.state.read(cx).is_authenticated();
+        let has_real_key =
+            self.state.read(cx).is_authenticated()
+                || std::env::var("OPENCODE_API_KEY")
+                    .map(|v| !v.trim().is_empty())
+                    .unwrap_or(false);
         if Self::subscription_available(OpenCodeSubscription::Go, has_real_key, cx) {
             // If both Go and Zen are enabled, prefer Go since it's not pay-as-you-go
             Some(
@@ -280,7 +292,11 @@ impl LanguageModelProvider for OpenCodeLanguageModelProvider {
     }
 
     fn default_fast_model(&self, cx: &App) -> Option<Arc<dyn LanguageModel>> {
-        let has_real_key = self.state.read(cx).is_authenticated();
+        let has_real_key =
+            self.state.read(cx).is_authenticated()
+                || std::env::var("OPENCODE_API_KEY")
+                    .map(|v| !v.trim().is_empty())
+                    .unwrap_or(false);
         if Self::subscription_available(OpenCodeSubscription::Go, has_real_key, cx) {
             // If both Go and Zen are enabled, prefer Go since it's not pay-as-you-go
             Some(self.create_language_model(
@@ -308,7 +324,11 @@ impl LanguageModelProvider for OpenCodeLanguageModelProvider {
         let mut models: BTreeMap<String, (opencode::Model, OpenCodeSubscription)> =
             BTreeMap::default();
         let settings = Self::settings(cx);
-        let has_real_key = self.state.read(cx).is_authenticated();
+        let has_real_key =
+            self.state.read(cx).is_authenticated()
+                || std::env::var("OPENCODE_API_KEY")
+                    .map(|v| !v.trim().is_empty())
+                    .unwrap_or(false);
 
         for model in opencode::Model::iter() {
             if matches!(model, opencode::Model::Custom { .. }) {
@@ -453,7 +473,7 @@ impl OpenCodeLanguageModel {
     }
 
     fn api_key(&self, cx: &AsyncApp) -> Option<Arc<str>> {
-        let (api_url, api_key) = self.state.read_with(cx, |state, cx| {
+        let (_api_url, api_key) = self.state.read_with(cx, |state, cx| {
             let api_url = OpenCodeLanguageModelProvider::api_url(cx);
             let api_key = state.api_key_state.key(&api_url);
             (api_url, api_key)
@@ -462,7 +482,6 @@ impl OpenCodeLanguageModel {
         api_key.or_else(|| {
             if self.subscription == OpenCodeSubscription::Free
                 && is_builtin_public_free_model(&self.model)
-                && is_default_api_url(api_url.as_ref())
             {
                 Some(Arc::from(PUBLIC_API_KEY))
             } else {

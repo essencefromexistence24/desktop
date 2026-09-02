@@ -43,8 +43,8 @@ pub fn acp_model_selector(
     let delegate = ModelPickerDelegate::new(selector, focus_handle, window, cx);
     Picker::list(delegate, window, cx)
         .show_scrollbar(true)
-        .width(rems(20.))
-        .max_height(Some(rems(20.).into()))
+        .width(rems(26.))
+        .max_height(Some(rems(24.).into()))
 }
 
 enum ModelPickerEntry {
@@ -377,7 +377,16 @@ impl PickerDelegate for ModelPickerDelegate {
     ) -> Option<Self::ListItem> {
         match self.filtered_entries.get(ix)? {
             ModelPickerEntry::Separator(title) => {
-                Some(ModelSelectorHeader::new(title, ix > 1).into_any_element())
+                let is_last = self
+                    .filtered_entries
+                    .iter()
+                    .skip(ix + 1)
+                    .all(|e| matches!(e, ModelPickerEntry::Model(_, _)));
+                Some(
+                    ModelSelectorHeader::new(title, ix > 1)
+                        .is_last(is_last)
+                        .into_any_element(),
+                )
             }
             ModelPickerEntry::ProviderHeader(header) => {
                 let group_name = header.group_name.clone();
@@ -388,9 +397,25 @@ impl PickerDelegate for ModelPickerDelegate {
                         .delegate
                         .toggle_model_group(group_name.clone(), query, window, cx);
                 });
+                let is_last = self
+                    .filtered_entries
+                    .iter()
+                    .skip(ix + 1)
+                    .all(|e| matches!(e, ModelPickerEntry::Model(_, _)));
 
+                let display_title = {
+                    let mut chars = header.title.chars();
+                    match chars.next() {
+                        Some(first) => {
+                            let upper: String = first.to_uppercase().collect();
+                            format!("{}{}", upper, chars.as_str())
+                        }
+                        None => header.title.to_string(),
+                    }
+                };
                 Some(
-                    ModelSelectorHeader::new(header.title.clone(), true)
+                    ModelSelectorHeader::new(display_title, ix > 1)
+                        .is_last(is_last)
                         .count(header.model_count)
                         .expanded(!collapsed)
                         .on_toggle(on_toggle)

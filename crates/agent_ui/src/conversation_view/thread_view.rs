@@ -18,6 +18,7 @@ use std::{cell::RefCell, ops::Range};
 
 use acp_thread::{AcpThreadEvent, ContentBlock, PlanEntry, SandboxAuthorizationDetails};
 use agent::{SkillLoadingIssue, SkillLoadingIssueKind, SkillLoadingIssuesUpdated};
+use git_ui::git_panel::GitPanel;
 use agent_settings::{AgentProfile, UserAgentsMd};
 use agent_skills::MAX_SKILL_DESCRIPTION_LEN;
 use cloud_api_types::{SubmitAgentThreadFeedbackBody, SubmitAgentThreadFeedbackCommentsBody};
@@ -27,7 +28,7 @@ use crate::completion_provider::AvailableSkill;
 use crate::message_editor::SharedSessionCapabilities;
 
 use db::kvp::KeyValueStore;
-use gpui::{List, Stateful, StatefulInteractiveElement, TaskExt};
+use gpui::{List, Stateful, StatefulInteractiveElement, Styled, TaskExt};
 use heapless::Vec as ArrayVec;
 use language_model::{
     FastModeConfirmation, LanguageModel, LanguageModelEffortLevel, LanguageModelId,
@@ -35,11 +36,11 @@ use language_model::{
 };
 use settings::{update_settings_file, update_settings_file_with_completion};
 use ui::{
-    ButtonLike, CalloutBorderPosition, Chip, IconButtonShape, SpinnerLabel, SpinnerVariant, SplitButton,
-    SplitButtonStyle, Tab,
+    ButtonLike, CalloutBorderPosition, Chip, IconButtonShape, ScrollAxes, Scrollbars, SpinnerLabel,
+    SpinnerVariant, SplitButton, SplitButtonStyle, Tab,
 };
 use workspace::notifications::NotificationId;
-use workspace::{OpenOptions, SERIALIZATION_THROTTLE_TIME};
+use workspace::{OpenOptions, SERIALIZATION_THROTTLE_TIME, Workspace};
 
 use super::composer_profile_options::{
     ComposerOptionEntry, ComposerOptionSlot, ComposerProfileKind,
@@ -610,9 +611,9 @@ impl ComposerPermissionMode {
 
     fn icon(&self) -> IconName {
         match self {
-            Self::Ask => IconName::Eye,
-            Self::Approve => IconName::Check,
-            Self::FullAccess => IconName::Settings,
+            Self::Ask => IconName::LockOutlined,
+            Self::Approve => IconName::Eye,
+            Self::FullAccess => IconName::Warning,
         }
     }
 }
@@ -672,7 +673,7 @@ pub struct ThreadView {
     pub new_server_version_available: Option<SharedString>,
     pub resumed_without_history: bool,
     pub(crate) permission_selections: HashMap<acp::ToolCallId, PermissionSelection>,
-    pub composer_permission_mode: ComposerPermissionMode,
+    pub(crate) composer_permission_mode: ComposerPermissionMode,
     pub _cancel_task: Option<Task<()>>,
     _save_task: Option<Task<()>>,
     _draft_resolve_task: Option<Task<()>>,
@@ -1095,6 +1096,19 @@ impl ThreadView {
             window,
             Self::handle_thread_event_for_auto_approve,
         ));
+
+        // Observe dock panel size changes so the empty-state title ("What you want to build...") stays responsive
+        // when the agent panel or threads panel is dragged. Without this, ThreadView wouldn't re-render on dock resize
+        // because it only observes viewport, not dock.
+        if let Some(ws) = workspace.upgrade() {
+            let right_dock = ws.read(cx).right_dock().clone();
+            subscriptions.push(cx.observe(&right_dock, |_, _, cx| cx.notify()));
+            let left_dock = ws.read(cx).left_dock().clone();
+            subscriptions.push(cx.observe(&left_dock, |_, _, cx| cx.notify()));
+            let bottom_dock = ws.read(cx).bottom_dock().clone();
+            subscriptions.push(cx.observe(&bottom_dock, |_, _, cx| cx.notify()));
+            subscriptions.push(cx.observe(&ws, |_, _, cx| cx.notify()));
+        }
 
         // If this thread is backed by a NativeAgent, listen for skill loading
         // issues so we can surface them as banners. The agent emits a single
@@ -4345,12 +4359,51 @@ impl ThreadView {
             .collect::<Vec<_>>();
         let file_count = changed_buffers.len();
         let stats = DiffStats::all_files(changed_buffers.iter().cloned(), cx);
-        let has_changes = file_count > 0 || stats.lines_added > 0 || stats.lines_removed > 0;
-        // Don't show in truly empty threads with no changes and no plan
+        // Only show on threads that have messages, like before (empty threads hidden)
         let is_empty_thread = self.thread.read(cx).entries().is_empty() && self.thread.read(cx).plan().entries.is_empty();
-        if is_empty_thread && !has_changes {
+        if is_empty_thread {
             return None;
         }
+        let git_has_changes = self
+            .project
+            .upgrade()
+            .and_then(|project| {
+                let git_store = project.read(cx).git_store().read(cx);
+                git_store
+                    .active_repository()
+                    .map(|repo| !repo.read(cx).status().next().is_none())
+            })
+            .unwrap_or(false);
+        let has_changes = file_count > 0
+            || stats.lines_added > 0
+            || stats.lines_removed > 0
+            || git_has_changes;
+        // If has git changes but no action_log changes, show git file count and try to get diff stats from git
+        let (file_count, stats) = if file_count == 0 && git_has_changes {
+            let (git_file_count, git_stats) = self
+                .project
+                .upgrade()
+                .and_then(|project| {
+                    let git_store = project.read(cx).git_store().read(cx);
+                    let repo = git_store.active_repository()?;
+                    let repo = repo.read(cx);
+                    let mut count = 0;
+                    let mut added: u32 = 0;
+                    let mut removed: u32 = 0;
+                    for entry in repo.status() {
+                        count += 1;
+                        if let Some(diff_stat) = entry.diff_stat {
+                            added += diff_stat.added;
+                            removed += diff_stat.deleted;
+                        }
+                    }
+                    Some((count, DiffStats { lines_added: added, lines_removed: removed }))
+                })
+                .unwrap_or((0, DiffStats::default()));
+            (git_file_count, git_stats)
+        } else {
+            (file_count, stats)
+        };
         let profile_stats = self.render_profile_telemetry(cx);
         let pending_edits = self.thread.read(cx).has_pending_edit_tool_calls();
         let focus_handle = self.focus_handle(cx);
@@ -4381,9 +4434,25 @@ impl ThreadView {
                                             "Review changes",
                                             &OpenAgentDiff,
                                         ))
-                                        .on_click(cx.listener(|_, _, window, cx| {
-                                            window.dispatch_action(OpenAgentDiff.boxed_clone(), cx);
-                                        }))
+                                        .on_click({
+                                            let workspace = self.workspace.clone();
+                                            cx.listener(move |_, _, window, cx| {
+                                                // Use git panel's components directly, show untracked tab as Review tab, don't recreate
+                                                // Handle ai/threads screen: ensure tab shows correctly even on ai screen
+                                                if let Some(workspace) = workspace.upgrade() {
+                                                    workspace.update(cx, |workspace, cx| {
+                                                        workspace.focus_panel::<git_ui::git_panel::GitPanel>(window, cx);
+                                                        if let Some(panel) = workspace.panel::<git_ui::git_panel::GitPanel>(cx) {
+                                                            panel.update(cx, |panel, cx| {
+                                                                panel.focus_handle(cx).focus(window, cx);
+                                                            });
+                                                        }
+                                                    });
+                                                } else {
+                                                    window.dispatch_action(OpenAgentDiff.boxed_clone(), cx);
+                                                }
+                                            })
+                                        })
                                         .child(
                                             div()
                                                 .size_4()
@@ -4696,17 +4765,41 @@ impl ThreadView {
         // Previously focus-gated selection could result in border not appearing reliably in some renders/states.
         // Use the standard border color unconditionally for the outer container frame (inner editor focus uses its own treatment).
         let chat_input_border = border;
-        // Responsive empty-state title: small on narrow panels/windows, large on wide
-        // (was fixed 1.9rem -> too big on small widths, then fixed 1.0rem -> too small on large)
+        // Responsive empty-state title: small on narrow panels, large on wide.
+        // Use actual dock panel width (including flexible size via flex) so dragging the agent/threads panel updates font.
         let (title_size, title_line_height) = {
-            let vw = window.viewport_size().width;
-            if vw < px(700.) {
-                (rems(1.), rems(1.2))
-            } else if vw < px(1100.) {
-                (rems(1.45), rems(1.65))
+            let viewport_width = window.viewport_size().width;
+            let panel_width = self
+                .workspace
+                .upgrade()
+                .and_then(|ws| {
+                    let ws = ws.read(cx);
+                    let right_state = ws.right_dock().read(cx).active_panel_size();
+                    let right_width = right_state
+                        .and_then(|s| s.size.or_else(|| s.flex.map(|f| viewport_width * f)))
+                        .or_else(|| ws.right_dock().read(cx).stored_active_panel_size(window, cx));
+                    if right_width.is_some() {
+                        right_width
+                    } else {
+                        let left_state = ws.left_dock().read(cx).active_panel_size();
+                        left_state
+                            .and_then(|s| s.size.or_else(|| s.flex.map(|f| viewport_width * f)))
+                            .or_else(|| ws.left_dock().read(cx).stored_active_panel_size(window, cx))
+                    }
+                })
+                .unwrap_or(viewport_width * 0.32);
+            let effective = if panel_width < px(200.) {
+                viewport_width * 0.32
             } else {
-                (rems(1.9), rems(2.1))
-            }
+                panel_width
+            };
+            // Very small on narrow (0.75), very big on wide (2.6), more correct per-pixel
+            let min_w = px(180.);
+            let max_w = px(650.);
+            let t = ((effective - min_w) / (max_w - min_w)).clamp(0.0, 1.0);
+            let size_val = 0.75 + t * (2.6 - 0.75);
+            let lh_val = size_val * 1.08;
+            (rems(size_val), rems(lh_val))
         };
 
         v_flex()
@@ -5216,7 +5309,7 @@ impl ThreadView {
             .anchor(gpui::Anchor::BottomLeft)
             .menu(move |window, cx| {
                 let weak = weak.clone();
-                Some(ContextMenu::build(window, cx, move |mut menu, _, cx| {
+                Some(ContextMenu::build(window, cx, move |mut menu, _, _cx| {
                     menu = menu.header("Permissions");
                     for mode in [
                         ComposerPermissionMode::Ask,
@@ -5225,24 +5318,23 @@ impl ThreadView {
                     ] {
                         let is_selected = current_mode == mode;
                         let weak_clone = weak.clone();
-                        menu = menu.toggleable_entry(
-                            mode.label(),
-                            is_selected,
-                            IconPosition::End,
-                            Some(mode.icon()),
-                            move |window, cx| {
-                                if let Some(view) = weak_clone.upgrade() {
-                                    view.update(cx, |view, cx| {
-                                        view.composer_permission_mode = mode;
-                                        if mode == ComposerPermissionMode::FullAccess {
-                                            view.maybe_auto_authorize_pending_if_full_access(
-                                                window, cx,
-                                            );
-                                        }
-                                        cx.notify();
-                                    });
-                                }
-                            },
+                        menu = menu.item(
+                            ContextMenuEntry::new(mode.label())
+                                .icon(mode.icon())
+                                .toggle(IconPosition::End, is_selected)
+                                .handler(move |window, cx| {
+                                    if let Some(view) = weak_clone.upgrade() {
+                                        view.update(cx, |view, cx| {
+                                            view.composer_permission_mode = mode;
+                                            if mode == ComposerPermissionMode::FullAccess {
+                                                view.maybe_auto_authorize_pending_if_full_access(
+                                                    window, cx,
+                                                );
+                                            }
+                                            cx.notify();
+                                        });
+                                    }
+                                }),
                         );
                     }
                     menu
@@ -10508,7 +10600,7 @@ impl ThreadView {
                     .child(
                         Button::new(("allow-btn", entry_ix), "Allow")
                             .start_icon(
-                                Icon::new(IconName::Check)
+                                Icon::new(IconName::Eye)
                                     .size(IconSize::XSmall)
                                     .color(Color::Success),
                             )
@@ -10540,7 +10632,7 @@ impl ThreadView {
                     .child(
                         Button::new(("deny-btn", entry_ix), "Deny")
                             .start_icon(
-                                Icon::new(IconName::Close)
+                                Icon::new(IconName::XCircle)
                                     .size(IconSize::XSmall)
                                     .color(Color::Error),
                             )

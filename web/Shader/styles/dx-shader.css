@@ -304,6 +304,17 @@ button { font: inherit; color: inherit; cursor: pointer; background: none; borde
 .shader-loader[data-loader-state="ready"] {
   display: none;
 }
+/* Hide static fallback while loader is visible — loader is transparent, fallback's rotated ::before rectangle must not bleed through (dx dev vs build parity). */
+.shader-loader:not([hidden]):not(.is-hidden):not([data-loader-state="ready"]) ~ .canvas-frame .shader-static-fallback {
+  display: none;
+}
+/* Hide the canvas shell while the loader is visible — before boot the canvas is
+   still at its default 300x150 size, so its black rounded shell paints as a stray
+   rectangle behind the transparent loader (build only: deferred scripts leave a
+   painted first frame; dev paints after the canvas is already sized). */
+.shader-loader:not([hidden]):not(.is-hidden):not([data-loader-state="ready"]) ~ .canvas-frame .canvas-shell {
+  visibility: hidden;
+}
 .shader-loader-panel {
   position: relative;
   width: auto;

@@ -17,8 +17,8 @@
   "source_module_chunks": 2,
   "style_optimization": {
     "style_node_count": 4,
-    "original_rule_count": 248,
-    "retained_rule_count": 248,
+    "original_rule_count": 249,
+    "retained_rule_count": 249,
     "pruned_rule_count": 0,
     "minified_style_count": 4,
     "source_map_count": 4,
@@ -103,7 +103,7 @@
       "route": "/",
       "source_path": "app/page.tsx",
       "html_output": ".dx/www/output/.dx/build-cache/source-routes/root/index.html",
-      "shell_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-7e2017d91d346f63.mjs",
+      "shell_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/route-shell-d9500c28fb9121fe.mjs",
       "entry_module_chunk_output": ".dx/www/output/.dx/build-cache/source-routes/root/modules/app-page-tsx-927e9ea85396b359.mjs",
       "source_module_chunks": [
         {
@@ -119,7 +119,7 @@
           "hash": "8db49bf807790749"
         }
       ],
-      "fallback_hash": "7e2017d91d346f63"
+      "fallback_hash": "d9500c28fb9121fe"
     }
   ],
   "node_modules_required": false,

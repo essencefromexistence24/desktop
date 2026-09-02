@@ -537,14 +537,18 @@ pub async fn list_models(
     api_key: &str,
     extra_headers: &CustomHeaders,
 ) -> Result<Vec<Model>, OpenRouterError> {
-    let uri = format!("{api_url}/models/user");
-    let request = HttpRequest::builder()
+    // Use public /models (all 300+ models) not /models/user (only user's 2). Fetch all when connected.
+    let uri = format!("{api_url}/models");
+    let mut builder = HttpRequest::builder()
         .method(Method::GET)
         .uri(uri)
         .header("Accept", "application/json")
-        .header("Authorization", format!("Bearer {}", api_key))
         .header("HTTP-Referer", "https://zed.dev")
-        .header("X-Title", "Zed Editor")
+        .header("X-Title", "Zed Editor");
+    if !api_key.trim().is_empty() {
+        builder = builder.header("Authorization", format!("Bearer {}", api_key));
+    }
+    let request = builder
         .extra_headers(extra_headers)
         .body(AsyncBody::default())
         .map_err(OpenRouterError::BuildRequestBody)?;

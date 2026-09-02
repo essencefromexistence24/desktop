@@ -102,11 +102,11 @@ impl State {
         let extra_headers = OpenRouterLanguageModelProvider::settings(cx)
             .custom_headers
             .clone();
-        let Some(api_key) = self.api_key_state.key(&api_url) else {
-            return Task::ready(Err(LanguageModelCompletionError::NoApiKey {
-                provider: PROVIDER_NAME,
-            }));
-        };
+        // Fetch all 300+ models via public /models, even without API key (shows all, not just user's 2)
+        let api_key = self
+            .api_key_state
+            .key(&api_url)
+            .unwrap_or_default();
         cx.spawn(async move |this, cx| {
             let models = list_models(http_client.as_ref(), &api_url, &api_key, &extra_headers)
                 .await
@@ -123,12 +123,9 @@ impl State {
     }
 
     fn restart_fetch_models_task(&mut self, cx: &mut Context<Self>) {
-        if self.is_authenticated() {
-            let task = self.fetch_models(cx);
-            self.fetch_models_task.replace(task);
-        } else {
-            self.available_models.clear();
-        }
+        // Always fetch all 300+ models via public /models, even without API key, so picker shows all
+        let task = self.fetch_models(cx);
+        self.fetch_models_task.replace(task);
     }
 }
 
@@ -160,6 +157,7 @@ impl OpenRouterLanguageModelProvider {
                 fetch_models_task: None,
             }
         });
+        state.update(cx, |state, cx| state.restart_fetch_models_task(cx));
 
         Self { http_client, state }
     }

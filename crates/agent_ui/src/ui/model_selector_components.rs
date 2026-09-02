@@ -15,6 +15,7 @@ enum ModelIcon {
 pub struct ModelSelectorHeader {
     title: SharedString,
     has_border: bool,
+    is_last: bool,
     count: Option<usize>,
     expanded: Option<bool>,
     on_toggle: Option<Box<dyn Fn(&ClickEvent, &mut Window, &mut App) + 'static>>,
@@ -25,10 +26,16 @@ impl ModelSelectorHeader {
         Self {
             title: title.into(),
             has_border,
+            is_last: false,
             count: None,
             expanded: None,
             on_toggle: None,
         }
+    }
+
+    pub fn is_last(mut self, is_last: bool) -> Self {
+        self.is_last = is_last;
+        self
     }
 
     pub fn count(mut self, count: usize) -> Self {
@@ -75,12 +82,11 @@ impl RenderOnce for ModelSelectorHeader {
         div()
             .px_2()
             .pb_1()
-            .when(self.has_border, |this| {
-                this.mt_1()
-                    .pt_2()
-                    .border_t_1()
-                    .border_color(cx.theme().colors().border_variant)
+            .when(!self.is_last, |this| {
+                this.border_b_1()
+                    .border_color(cx.theme().colors().border_variant.opacity(0.5))
             })
+            .when(self.has_border, |this| this.mt_1().pt_2())
             .child(
                 h_flex()
                     .id(header_id)

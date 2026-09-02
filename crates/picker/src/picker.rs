@@ -1169,7 +1169,8 @@ impl<D: PickerDelegate> Render for Picker<D> {
                         .children(self.delegate.render_header(window, cx))
                         .child(self.render_element_container(cx))
                         .when(self.show_scrollbar, |this| {
-                            let base_scrollbar_config = Scrollbars::new(ScrollAxes::Vertical);
+                            let base_scrollbar_config =
+                                Scrollbars::always_visible(ScrollAxes::Vertical);
 
                             this.map(|this| match &self.element_container {
                                 ElementContainer::List(state) => this.custom_scrollbars(

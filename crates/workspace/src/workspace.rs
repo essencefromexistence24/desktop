@@ -5913,6 +5913,15 @@ impl Workspace {
             } => {
                 window.invalidate_character_coordinates();
 
+                // A zoomed agent panel *replaces* the center instead of
+                // overlaying it (see `render_center_screen`), so while it is
+                // active the center panes — and therefore every tab inside
+                // them — are not painted at all. Activating a tab is an
+                // explicit request to look at that tab (git panel diff,
+                // project panel file, go-to-definition, ...), so hand the
+                // center back before doing anything else.
+                self.dismiss_zoomed_agent_panel(window, cx);
+
                 pane.update(cx, |pane, _| {
                     pane.track_alternate_file_items();
                 });
