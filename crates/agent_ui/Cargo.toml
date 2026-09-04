@@ -115,10 +115,12 @@ util.workspace = true
 uuid.workspace = true
 watch.workspace = true
 workspace.workspace = true
-windows.workspace = true
 zed_actions.workspace = true
 image.workspace = true
 reqwest_client = { workspace = true, optional = true }
+
+[target.'cfg(windows)'.dependencies]
+windows.workspace = true
 
 [dev-dependencies]
 acp_thread = { workspace = true, features = ["test-support"] }

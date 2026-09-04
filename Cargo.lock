@@ -1455,7 +1455,7 @@ dependencies = [
  "smol",
  "tempfile",
  "util",
- "which 6.0.3",
+ "which 8.0.6",
  "workspace",
  "zlog",
 ]
@@ -12252,7 +12252,7 @@ dependencies = [
  "smol",
  "util",
  "watch",
- "which 6.0.3",
+ "which 8.0.6",
 ]
 
 [[package]]
@@ -14969,7 +14969,7 @@ dependencies = [
  "util",
  "watch",
  "wax",
- "which 6.0.3",
+ "which 8.0.6",
  "worktree",
  "zed_credentials_provider",
  "zeroize",
@@ -16108,7 +16108,7 @@ dependencies = [
  "thiserror 2.0.18",
  "urlencoding",
  "util",
- "which 6.0.3",
+ "which 8.0.6",
 ]
 
 [[package]]
@@ -21166,7 +21166,7 @@ dependencies = [
  "url",
  "util_macros",
  "walkdir",
- "which 6.0.3",
+ "which 8.0.6",
  "windows 0.61.3",
 ]
 
@@ -22673,14 +22673,11 @@ dependencies = [
 
 [[package]]
 name = "which"
-version = "6.0.3"
+version = "8.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b4ee928febd44d98f2f459a4a79bd4d928591333a494a10a868418ac1b39cf1f"
+checksum = "bae2f2b2b816647a1cab1acc91f5bd20812d53cb344382635ec2181940c8034f"
 dependencies = [
- "either",
- "home",
- "rustix 0.38.44",
- "winsafe",
+ "libc",
 ]
 
 [[package]]
@@ -23614,12 +23611,6 @@ dependencies = [
  "toml 1.1.2+spec-1.1.0",
  "version_check",
 ]
-
-[[package]]
-name = "winsafe"
-version = "0.0.19"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d135d17ab770252ad95e9a872d365cf3090e3be864a34ab46f48555993efc904"
 
 [[package]]
 name = "winx"
