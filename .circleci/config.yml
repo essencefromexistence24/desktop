@@ -17,10 +17,12 @@ jobs:
       - checkout
       - run:
           name: Install Linux deps
-          command: ./script/linux
+          command: |
+            chmod +x ./script/linux ./script/download-wasi-sdk
+            bash ./script/linux
       - run:
           name: Download WASI SDK
-          command: ./script/download-wasi-sdk
+          command: bash ./script/download-wasi-sdk
       - restore_cache:
           keys:
             - cargo-registry-v1-{{ checksum "Cargo.lock" }}-{{ checksum "rust-toolchain.toml" }}
