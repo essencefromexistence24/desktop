@@ -20,6 +20,9 @@ jobs:
           no_output_timeout: 30m
           command: |
             chmod +x ./script/linux ./script/download-wasi-sdk
+            echo "=== switching apt from EC2 mirror to archive.ubuntu.com ==="
+            sudo sed -i 's|http://us-east-1.ec2.archive.ubuntu.com/ubuntu|http://archive.ubuntu.com/ubuntu|g; s|http://us-east-1.ec2.clouds.archive.ubuntu.com/ubuntu|http://archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null || true
+            grep -rh "^deb " /etc/apt/sources.list /etc/apt/sources.list.d/ 2>/dev/null | head -n 10 || true
             for i in 1 2 3; do
               echo "=== apt attempt $i/3 ==="
               if bash ./script/linux; then
