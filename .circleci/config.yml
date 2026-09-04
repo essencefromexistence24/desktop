@@ -23,6 +23,9 @@ jobs:
             echo "=== switching apt from EC2 mirror to archive.ubuntu.com ==="
             sudo sed -i 's|http://us-east-1.ec2.archive.ubuntu.com/ubuntu|http://archive.ubuntu.com/ubuntu|g; s|http://us-east-1.ec2.clouds.archive.ubuntu.com/ubuntu|http://archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null || true
             grep -rh "^deb " /etc/apt/sources.list /etc/apt/sources.list.d/ 2>/dev/null | head -n 10 || true
+            echo "=== suppressing needrestart interactive prompts ==="
+            sudo mkdir -p /etc/needrestart/conf.d
+            printf '%s\n' '$nrconf{restart} = "a";' | sudo tee /etc/needrestart/conf.d/99-ci.conf > /dev/null
             for i in 1 2 3; do
               echo "=== apt attempt $i/3 ==="
               if bash ./script/linux; then
@@ -38,17 +41,20 @@ jobs:
           command: bash ./script/download-wasi-sdk
       - restore_cache:
           keys:
-            - cargo-registry-v1-{{ checksum "Cargo.lock" }}-{{ checksum "rust-toolchain.toml" }}
-            - cargo-registry-v1-
+            - cargo-registry-v2-{{ checksum "Cargo.lock" }}-{{ checksum "rust-toolchain.toml" }}
+            - cargo-registry-v2-{{ checksum "Cargo.lock" }}-
+            - cargo-registry-v2-
       - run:
           name: Build dx-desktop (linux release)
+          # Full Zed release builds take 40-60 min; 10 min default would kill it.
+          no_output_timeout: 60m
           command: |
             rustc -vV
             cargo build --release -p zed --bin dx-desktop
             ls -lh target/release/dx-desktop
             file target/release/dx-desktop || true
       - save_cache:
-          key: cargo-registry-v1-{{ checksum "Cargo.lock" }}-{{ checksum "rust-toolchain.toml" }}
+          key: cargo-registry-v2-{{ checksum "Cargo.lock" }}-{{ checksum "rust-toolchain.toml" }}
           paths:
             - ~/.cargo/registry
             - ~/.cargo/git
