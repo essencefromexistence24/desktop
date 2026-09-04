@@ -28,6 +28,7 @@ if [[ -n $apt ]]; then
     libglib2.0-dev
     libgtk-3-dev
     libjavascriptcoregtk-4.1-dev
+    libsoup-3.0-dev
     libssl-dev
     libva-dev
     libvulkan1
