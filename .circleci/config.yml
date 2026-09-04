@@ -3,6 +3,10 @@ version: 2.1
 # Minimal linux-only build for dx-desktop.
 # Builds the native Linux `dx-desktop` binary and stores it as an artifact
 # for download to G:\Dx\bin. No macOS job, no tests, no clippy — to save credits.
+#
+# REQUIRED CircleCI project env var:
+#   GITHUB_TOKEN — a GitHub PAT with `contents: read` on github.com/essence-dx/media
+#   (Project Settings → Environment Variables → Add Variable)
 jobs:
   build-linux:
     machine:
@@ -13,6 +17,9 @@ jobs:
       CARGO_BUILD_JOBS: "2"
       CC: clang
       CXX: clang++
+      # Use the system git CLI instead of libgit2 so git credential config
+      # (set in the auth step below) is honoured when fetching private deps.
+      CARGO_NET_GIT_FETCH_WITH_CLI: "true"
     steps:
       - checkout
       - run:
@@ -37,21 +44,31 @@ jobs:
               if [ "$i" = "3" ]; then echo "deps failed after 3 attempts"; exit 1; fi
             done
       - run:
+          name: Configure GitHub auth for private Cargo deps
+          command: |
+            # Injects GITHUB_TOKEN into all https://github.com/ fetch URLs so
+            # cargo can clone the private essence-dx/media repo without SSH keys.
+            # GITHUB_TOKEN must be set as a CircleCI project environment variable.
+            git config --global url."https://${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
+      - run:
           name: Download WASI SDK
           command: bash ./script/download-wasi-sdk
       - restore_cache:
           keys:
-            - cargo-registry-v1-{{ checksum "Cargo.lock" }}-{{ checksum "rust-toolchain.toml" }}
-            - cargo-registry-v1-
+            - cargo-registry-v2-{{ checksum "Cargo.lock" }}-{{ checksum "rust-toolchain.toml" }}
+            - cargo-registry-v2-{{ checksum "Cargo.lock" }}-
+            - cargo-registry-v2-
       - run:
           name: Build dx-desktop (linux release)
+          # Full Zed release builds take 40-60 min; 10 min default would kill it.
+          no_output_timeout: 60m
           command: |
             rustc -vV
             cargo build --release -p zed --bin dx-desktop
             ls -lh target/release/dx-desktop
             file target/release/dx-desktop || true
       - save_cache:
-          key: cargo-registry-v1-{{ checksum "Cargo.lock" }}-{{ checksum "rust-toolchain.toml" }}
+          key: cargo-registry-v2-{{ checksum "Cargo.lock" }}-{{ checksum "rust-toolchain.toml" }}
           paths:
             - ~/.cargo/registry
             - ~/.cargo/git
