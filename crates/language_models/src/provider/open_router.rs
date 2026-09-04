@@ -103,10 +103,7 @@ impl State {
             .custom_headers
             .clone();
         // Fetch all 300+ models via public /models, even without API key (shows all, not just user's 2)
-        let api_key = self
-            .api_key_state
-            .key(&api_url)
-            .unwrap_or_default();
+        let api_key = self.api_key_state.key(&api_url).unwrap_or_default();
         cx.spawn(async move |this, cx| {
             let models = list_models(http_client.as_ref(), &api_url, &api_key, &extra_headers)
                 .await

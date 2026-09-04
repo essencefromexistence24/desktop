@@ -232,14 +232,11 @@ impl RenderOnce for ModelSelectorListItem {
                         })
                     })
                     .child(
-                        div()
-                            .min_w_0()
-                            .flex_1()
-                            .child(
-                                Label::new(self.title.clone())
-                                    .size(LabelSize::Large)
-                                    .truncate(),
-                            ),
+                        div().min_w_0().flex_1().child(
+                            Label::new(self.title.clone())
+                                .size(LabelSize::Large)
+                                .truncate(),
+                        ),
                     )
                     .when(self.is_latest, |parent| parent.child(Chip::new("Latest")))
                     .when_some(self.cost_info, |this, cost_info| {

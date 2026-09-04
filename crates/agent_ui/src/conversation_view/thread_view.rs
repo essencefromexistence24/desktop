@@ -18,11 +18,11 @@ use std::{cell::RefCell, ops::Range};
 
 use acp_thread::{AcpThreadEvent, ContentBlock, PlanEntry, SandboxAuthorizationDetails};
 use agent::{SkillLoadingIssue, SkillLoadingIssueKind, SkillLoadingIssuesUpdated};
-use git_ui::git_panel::GitPanel;
 use agent_settings::{AgentProfile, UserAgentsMd};
 use agent_skills::MAX_SKILL_DESCRIPTION_LEN;
 use cloud_api_types::{SubmitAgentThreadFeedbackBody, SubmitAgentThreadFeedbackCommentsBody};
 use editor::actions::OpenExcerpts;
+use git_ui::git_panel::GitPanel;
 
 use crate::completion_provider::AvailableSkill;
 use crate::message_editor::SharedSessionCapabilities;
@@ -4360,7 +4360,8 @@ impl ThreadView {
         let file_count = changed_buffers.len();
         let stats = DiffStats::all_files(changed_buffers.iter().cloned(), cx);
         // Only show on threads that have messages, like before (empty threads hidden)
-        let is_empty_thread = self.thread.read(cx).entries().is_empty() && self.thread.read(cx).plan().entries.is_empty();
+        let is_empty_thread = self.thread.read(cx).entries().is_empty()
+            && self.thread.read(cx).plan().entries.is_empty();
         if is_empty_thread {
             return None;
         }
@@ -4374,10 +4375,8 @@ impl ThreadView {
                     .map(|repo| !repo.read(cx).status().next().is_none())
             })
             .unwrap_or(false);
-        let has_changes = file_count > 0
-            || stats.lines_added > 0
-            || stats.lines_removed > 0
-            || git_has_changes;
+        let has_changes =
+            file_count > 0 || stats.lines_added > 0 || stats.lines_removed > 0 || git_has_changes;
         // If has git changes but no action_log changes, show git file count and try to get diff stats from git
         let (file_count, stats) = if file_count == 0 && git_has_changes {
             let (git_file_count, git_stats) = self
@@ -4397,7 +4396,13 @@ impl ThreadView {
                             removed += diff_stat.deleted;
                         }
                     }
-                    Some((count, DiffStats { lines_added: added, lines_removed: removed }))
+                    Some((
+                        count,
+                        DiffStats {
+                            lines_added: added,
+                            lines_removed: removed,
+                        },
+                    ))
                 })
                 .unwrap_or((0, DiffStats::default()));
             (git_file_count, git_stats)
@@ -4567,8 +4572,8 @@ impl ThreadView {
     }
 
     fn render_profile_telemetry(&self, cx: &mut Context<Self>) -> Option<AnyElement> {
-        use agent_settings::{AgentProfile, DxAiProfileKind};
         use acp_thread::TokenUsageRatio;
+        use agent_settings::{AgentProfile, DxAiProfileKind};
         use chrono::Utc;
         let profile_id = self.current_mode_id(cx)?.to_string();
         let profile = AgentProfile::dx_builtin_metadata_for_id(&profile_id)?;
@@ -4578,12 +4583,23 @@ impl ThreadView {
         if !is_goal && !is_automation && !is_multi {
             return None;
         }
-        let dot_divider = || Label::new("•").size(LabelSize::XSmall).color(Color::Disabled);
+        let dot_divider = || {
+            Label::new("•")
+                .size(LabelSize::XSmall)
+                .color(Color::Disabled)
+        };
         let mut cluster = h_flex().id("agent-profile-telemetry").gap_2();
-        cluster = cluster.child(Label::new(profile.display_name).size(LabelSize::Small).color(Color::Accent));
+        cluster = cluster.child(
+            Label::new(profile.display_name)
+                .size(LabelSize::Small)
+                .color(Color::Accent),
+        );
         if is_goal || is_automation {
             let store = ThreadMetadataStore::global(cx);
-            let created_at = store.read(cx).entry(self.root_thread_id).and_then(|meta| meta.created_at);
+            let created_at = store
+                .read(cx)
+                .entry(self.root_thread_id)
+                .and_then(|meta| meta.created_at);
             if let Some(created_at) = created_at {
                 let elapsed = Utc::now().signed_duration_since(created_at);
                 let elapsed_label = if elapsed.num_hours() >= 1 {
@@ -4594,9 +4610,18 @@ impl ThreadView {
                     format!("{}s", elapsed.num_seconds())
                 };
                 cluster = cluster.child(dot_divider()).child(
-                    h_flex().gap_1()
-                        .child(Icon::new(IconName::Clock).size(IconSize::XSmall).color(Color::Muted))
-                        .child(Label::new(elapsed_label).size(LabelSize::Small).color(Color::Muted)),
+                    h_flex()
+                        .gap_1()
+                        .child(
+                            Icon::new(IconName::Clock)
+                                .size(IconSize::XSmall)
+                                .color(Color::Muted),
+                        )
+                        .child(
+                            Label::new(elapsed_label)
+                                .size(LabelSize::Small)
+                                .color(Color::Muted),
+                        ),
                 );
             }
             if let Some(usage) = self.thread.read(cx).token_usage() {
@@ -4604,43 +4629,99 @@ impl ThreadView {
                     let s = n.to_string();
                     let mut out = String::new();
                     for (i, c) in s.chars().enumerate() {
-                        if i > 0 && (s.len() - i) % 3 == 0 { out.push(','); }
+                        if i > 0 && (s.len() - i) % 3 == 0 {
+                            out.push(',');
+                        }
                         out.push(c);
                     }
                     out
                 };
                 let used = fmt(usage.used_tokens);
                 cluster = cluster.child(dot_divider()).child(
-                    h_flex().gap_1()
-                        .child(Icon::new(IconName::BoltOutlined).size(IconSize::XSmall).color(if usage.ratio() == TokenUsageRatio::Exceeded { Color::Error } else { Color::Muted }))
-                        .child(Label::new(match usage.max_tokens { 0 => format!("{used} tokens"), max => format!("{used} / {}", fmt(max)) }).size(LabelSize::Small).color(Color::Muted)),
+                    h_flex()
+                        .gap_1()
+                        .child(
+                            Icon::new(IconName::BoltOutlined)
+                                .size(IconSize::XSmall)
+                                .color(if usage.ratio() == TokenUsageRatio::Exceeded {
+                                    Color::Error
+                                } else {
+                                    Color::Muted
+                                }),
+                        )
+                        .child(
+                            Label::new(match usage.max_tokens {
+                                0 => format!("{used} tokens"),
+                                max => format!("{used} / {}", fmt(max)),
+                            })
+                            .size(LabelSize::Small)
+                            .color(Color::Muted),
+                        ),
                 );
             }
         }
         if is_multi {
-            let prompts_sent = self.thread.read(cx).entries().iter().filter(|e| matches!(e, AgentThreadEntry::UserMessage(_))).count();
+            let prompts_sent = self
+                .thread
+                .read(cx)
+                .entries()
+                .iter()
+                .filter(|e| matches!(e, AgentThreadEntry::UserMessage(_)))
+                .count();
             cluster = cluster.child(dot_divider()).child(
-                h_flex().gap_1()
-                    .child(Icon::new(IconName::UserGroup).size(IconSize::XSmall).color(Color::Muted))
-                    .child(Label::new(format!("{prompts_sent} prompt{}", if prompts_sent == 1 { "" } else { "s" })).size(LabelSize::Small).color(Color::Muted)),
+                h_flex()
+                    .gap_1()
+                    .child(
+                        Icon::new(IconName::UserGroup)
+                            .size(IconSize::XSmall)
+                            .color(Color::Muted),
+                    )
+                    .child(
+                        Label::new(format!(
+                            "{prompts_sent} prompt{}",
+                            if prompts_sent == 1 { "" } else { "s" }
+                        ))
+                        .size(LabelSize::Small)
+                        .color(Color::Muted),
+                    ),
             );
         }
         if is_automation {
             let store = ThreadMetadataStore::global(cx);
-            let interacted_at = store.read(cx).entry(self.root_thread_id).and_then(|meta| meta.interacted_at.or(Some(meta.updated_at)));
+            let interacted_at = store
+                .read(cx)
+                .entry(self.root_thread_id)
+                .and_then(|meta| meta.interacted_at.or(Some(meta.updated_at)));
             if let Some(last_run) = interacted_at {
                 let elapsed_min = (Utc::now().signed_duration_since(last_run)).num_minutes();
                 cluster = cluster.child(dot_divider()).child(
-                    h_flex().gap_1()
-                        .child(Icon::new(IconName::HistoryRerun).size(IconSize::XSmall).color(Color::Muted))
-                        .child(Label::new(format!("next in {}m (last {}m ago)", elapsed_min.max(0), elapsed_min.max(0))).size(LabelSize::Small).color(Color::Muted)),
+                    h_flex()
+                        .gap_1()
+                        .child(
+                            Icon::new(IconName::HistoryRerun)
+                                .size(IconSize::XSmall)
+                                .color(Color::Muted),
+                        )
+                        .child(
+                            Label::new(format!(
+                                "next in {}m (last {}m ago)",
+                                elapsed_min.max(0),
+                                elapsed_min.max(0)
+                            ))
+                            .size(LabelSize::Small)
+                            .color(Color::Muted),
+                        ),
                 );
             }
         }
         Some(cluster.into_any())
     }
 
-    fn render_profile_context_strip(&self, window: &mut Window, cx: &mut Context<Self>) -> Option<AnyElement> {
+    fn render_profile_context_strip(
+        &self,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) -> Option<AnyElement> {
         let profile_id = self.current_mode_id(cx)?.to_string();
         let meta = AgentProfile::dx_builtin_metadata_for_id(&profile_id)?;
         let is_plan = matches!(meta.kind, agent_settings::DxAiProfileKind::Plan);
@@ -4674,9 +4755,16 @@ impl ThreadView {
         }
         if is_goal {
             let thread = self.thread.read(cx);
-            let title = thread.title().as_ref().map(|t| t.to_string()).unwrap_or_else(|| "No goal set — describe the desired end state.".to_string());
+            let title = thread
+                .title()
+                .as_ref()
+                .map(|t| t.to_string())
+                .unwrap_or_else(|| "No goal set — describe the desired end state.".to_string());
             let entries = thread.entries();
-            let pending = entries.iter().filter(|e| matches!(e, AgentThreadEntry::UserMessage(_))).count();
+            let pending = entries
+                .iter()
+                .filter(|e| matches!(e, AgentThreadEntry::UserMessage(_)))
+                .count();
             return Some(
                 div().id("goal-mode-details").w_full().rounded_md().border_1().border_color(cx.theme().colors().border_variant).bg(cx.theme().colors().element_background.opacity(0.5)).p_2()
                     .child(v_flex().gap_1p5()
@@ -4687,7 +4775,16 @@ impl ThreadView {
             );
         }
         if is_automation {
-            let site = self.thread.read(cx).work_dirs().and_then(|dirs| dirs.paths().first().map(|p| p.to_string_lossy().to_string())).unwrap_or_else(|| "No site selected".to_string());
+            let site = self
+                .thread
+                .read(cx)
+                .work_dirs()
+                .and_then(|dirs| {
+                    dirs.paths()
+                        .first()
+                        .map(|p| p.to_string_lossy().to_string())
+                })
+                .unwrap_or_else(|| "No site selected".to_string());
             return Some(
                 div().id("automation-site-setup").w_full().rounded_md().border_1().border_color(cx.theme().colors().border_variant).bg(cx.theme().colors().element_background.opacity(0.5)).p_2()
                     .child(v_flex().gap_1p5()
@@ -4707,14 +4804,35 @@ impl ThreadView {
         None
     }
 
-    fn navigate_changes(&mut self, direction: editor::Direction, window: &mut Window, cx: &mut Context<Self>) {
-        let Some(workspace) = self.workspace.upgrade() else { return; };
+    fn navigate_changes(
+        &mut self,
+        direction: editor::Direction,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) {
+        let Some(workspace) = self.workspace.upgrade() else {
+            return;
+        };
         workspace.update(cx, |workspace, cx| {
-            let Some(editor) = workspace.active_item(cx).and_then(|item| item.act_as::<Editor>(cx)) else { return; };
+            let Some(editor) = workspace
+                .active_item(cx)
+                .and_then(|item| item.act_as::<Editor>(cx))
+            else {
+                return;
+            };
             editor.update(cx, |editor, cx| {
                 let snapshot = editor.snapshot(window, cx);
-                let position = editor.selections.newest::<Point>(&snapshot.display_snapshot);
-                editor.go_to_hunk_before_or_after_position(&snapshot, position.head(), direction, true, window, cx);
+                let position = editor
+                    .selections
+                    .newest::<Point>(&snapshot.display_snapshot);
+                editor.go_to_hunk_before_or_after_position(
+                    &snapshot,
+                    position.head(),
+                    direction,
+                    true,
+                    window,
+                    cx,
+                );
                 editor.expand_selected_diff_hunks(cx);
             });
         });
@@ -4777,14 +4895,20 @@ impl ThreadView {
                     let right_state = ws.right_dock().read(cx).active_panel_size();
                     let right_width = right_state
                         .and_then(|s| s.size.or_else(|| s.flex.map(|f| viewport_width * f)))
-                        .or_else(|| ws.right_dock().read(cx).stored_active_panel_size(window, cx));
+                        .or_else(|| {
+                            ws.right_dock()
+                                .read(cx)
+                                .stored_active_panel_size(window, cx)
+                        });
                     if right_width.is_some() {
                         right_width
                     } else {
                         let left_state = ws.left_dock().read(cx).active_panel_size();
                         left_state
                             .and_then(|s| s.size.or_else(|| s.flex.map(|f| viewport_width * f)))
-                            .or_else(|| ws.left_dock().read(cx).stored_active_panel_size(window, cx))
+                            .or_else(|| {
+                                ws.left_dock().read(cx).stored_active_panel_size(window, cx)
+                            })
                     }
                 })
                 .unwrap_or(viewport_width * 0.32);
@@ -4822,51 +4946,55 @@ impl ThreadView {
                     this.flex_1().w_full()
                 }
             })
-            .when(self.thread.read(cx).entries().is_empty() && self.thread.read(cx).plan().entries.is_empty(), |this| {
-                let folder = self
-                    .project
-                    .upgrade()
-                    .and_then(|p| {
-                        p.read(cx).visible_worktrees(cx).next().map(|w| {
-                            let abs_path = w.read(cx).abs_path().to_path_buf();
-                            let raw = abs_path
-                                .file_name()
-                                .and_then(|n| n.to_str())
-                                .unwrap_or("this project");
-                            let mut chars = raw.chars();
-                            match chars.next() {
-                                Some(first) => {
-                                    let upper: String = first.to_uppercase().collect();
-                                    format!("{}{}", upper, chars.as_str())
+            .when(
+                self.thread.read(cx).entries().is_empty()
+                    && self.thread.read(cx).plan().entries.is_empty(),
+                |this| {
+                    let folder = self
+                        .project
+                        .upgrade()
+                        .and_then(|p| {
+                            p.read(cx).visible_worktrees(cx).next().map(|w| {
+                                let abs_path = w.read(cx).abs_path().to_path_buf();
+                                let raw = abs_path
+                                    .file_name()
+                                    .and_then(|n| n.to_str())
+                                    .unwrap_or("this project");
+                                let mut chars = raw.chars();
+                                match chars.next() {
+                                    Some(first) => {
+                                        let upper: String = first.to_uppercase().collect();
+                                        format!("{}{}", upper, chars.as_str())
+                                    }
+                                    None => raw.to_string(),
                                 }
-                                None => raw.to_string(),
-                            }
+                            })
                         })
-                    })
-                    .unwrap_or_else(|| "This project".to_string());
-                this.child(
-                    div()
-                        .w_full()
-                        .max_w(rems(48.))
-                        .flex()
-                        .justify_center()
-                        .child(
-                            div()
-                                .text_size(title_size)
-                                .font_weight(gpui::FontWeight::BOLD)
-                                .line_height(title_line_height)
-                                .text_center()
-                                .px_2()
-                                .child(format!("What you want to build in {}?", folder)),
-                        ),
-                )
-            })
+                        .unwrap_or_else(|| "This project".to_string());
+                    this.child(
+                        div()
+                            .w_full()
+                            .max_w(rems(48.))
+                            .flex()
+                            .justify_center()
+                            .child(
+                                div()
+                                    .text_size(title_size)
+                                    .font_weight(gpui::FontWeight::BOLD)
+                                    .line_height(title_line_height)
+                                    .text_center()
+                                    .px_2()
+                                    .child(format!("What you want to build in {}?", folder)),
+                            ),
+                    )
+                },
+            )
             .child(
                 h_flex()
                     .w_full()
                     .max_w(rems(28.))
                     .justify_center()
-                    .children(self.render_review_pill(cx))
+                    .children(self.render_review_pill(cx)),
             )
             .child(
                 v_flex()
@@ -5353,11 +5481,8 @@ impl ThreadView {
         }
         // Full access = always bypass permission prompts by auto-approving pending tool calls
         // Use AllowAlways so future identical commands are also auto-approved
-        let _ = self.authorize_pending_tool_call(
-            acp::PermissionOptionKind::AllowAlways,
-            window,
-            cx,
-        );
+        let _ =
+            self.authorize_pending_tool_call(acp::PermissionOptionKind::AllowAlways, window, cx);
     }
 
     fn handle_thread_event_for_auto_approve(
@@ -5376,7 +5501,10 @@ impl ThreadView {
             | AcpThreadEvent::EntryUpdated(_) => {
                 let has_pending = {
                     let session_id = thread.read(cx).session_id().clone();
-                    self.conversation.read(cx).pending_tool_call(&session_id, cx).is_some()
+                    self.conversation
+                        .read(cx)
+                        .pending_tool_call(&session_id, cx)
+                        .is_some()
                 };
                 if has_pending {
                     let _ = self.authorize_pending_tool_call(
@@ -13534,15 +13662,25 @@ pub(crate) fn open_link(
                     .detach_and_log_err(cx);
                 // Ensure code screen is visible on the right per screen-system
                 {
-                    if let Some(agent_pane) = workspace.pane_for_screen_kind(workspace::WorkspaceScreenKind::Agent, cx) {
+                    if let Some(agent_pane) =
+                        workspace.pane_for_screen_kind(workspace::WorkspaceScreenKind::Agent, cx)
+                    {
                         if let Some(item) = workspace.active_item(cx) {
                             if item.screen_kind(cx) == workspace::WorkspaceScreenKind::Agent {
                                 let has_code_pane = workspace.panes().iter().any(|pane| {
                                     pane != &agent_pane
-                                        && pane.read(cx).items().any(|item| item.screen_kind(cx) == workspace::WorkspaceScreenKind::Editor)
+                                        && pane.read(cx).items().any(|item| {
+                                            item.screen_kind(cx)
+                                                == workspace::WorkspaceScreenKind::Editor
+                                        })
                                 });
                                 if !has_code_pane {
-                                    workspace.split_and_move(agent_pane.clone(), workspace::pane_group::SplitDirection::Right, window, cx);
+                                    workspace.split_and_move(
+                                        agent_pane.clone(),
+                                        workspace::pane_group::SplitDirection::Right,
+                                        window,
+                                        cx,
+                                    );
                                 }
                             }
                         }

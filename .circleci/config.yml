@@ -1,0 +1,47 @@
+version: 2.1
+
+# Minimal linux-only build for dx-desktop.
+# Builds the native Linux `dx-desktop` binary and stores it as an artifact
+# for download to G:\Dx\bin. No macOS job, no tests, no clippy — to save credits.
+jobs:
+  build-linux:
+    machine:
+      image: ubuntu-2404:current
+    resource_class: xlarge.gen2
+    environment:
+      CARGO_INCREMENTAL: "0"
+      CARGO_BUILD_JOBS: "4"
+      CC: clang
+      CXX: clang++
+    steps:
+      - checkout
+      - run:
+          name: Install Linux deps
+          command: ./script/linux
+      - run:
+          name: Download WASI SDK
+          command: ./script/download-wasi-sdk
+      - restore_cache:
+          keys:
+            - cargo-registry-v1-{{ checksum "Cargo.lock" }}-{{ checksum "rust-toolchain.toml" }}
+            - cargo-registry-v1-
+      - run:
+          name: Build dx-desktop (linux release)
+          command: |
+            rustc -vV
+            cargo build --release -p zed --bin dx-desktop
+            ls -lh target/release/dx-desktop
+            file target/release/dx-desktop || true
+      - save_cache:
+          key: cargo-registry-v1-{{ checksum "Cargo.lock" }}-{{ checksum "rust-toolchain.toml" }}
+          paths:
+            - ~/.cargo/registry
+            - ~/.cargo/git
+      - store_artifacts:
+          path: target/release/dx-desktop
+          destination: dx-desktop-linux-x86_64
+
+workflows:
+  linux-only:
+    jobs:
+      - build-linux

@@ -282,7 +282,11 @@ fn resolve_metasearch_root() -> Option<PathBuf> {
 /// (`target/release`, `target/debug`, `bin`), then the shared `{webRoot}/../bin`
 /// (e.g. `G:\Dx\bin\dx-metasearch.exe`).
 fn find_metasearch_binary(root: &Path) -> Option<PathBuf> {
-    let exe = if cfg!(windows) { "metasearch.exe" } else { "metasearch" };
+    let exe = if cfg!(windows) {
+        "metasearch.exe"
+    } else {
+        "metasearch"
+    };
     let dx_exe = if cfg!(windows) {
         "dx-metasearch.exe"
     } else {
@@ -382,7 +386,13 @@ fn spawn_route_backend() -> Option<String> {
     let next_bin = resolve_next_bin(&route_root, &node)?;
     match Command::new(&node)
         .arg(&next_bin)
-        .args(["start", "-p", &ROUTE_BACKEND_PORT.to_string(), "-H", "127.0.0.1"])
+        .args([
+            "start",
+            "-p",
+            &ROUTE_BACKEND_PORT.to_string(),
+            "-H",
+            "127.0.0.1",
+        ])
         .current_dir(&route_root)
         .env("NODE_ENV", "production")
         .stdin(Stdio::null())
@@ -405,7 +415,12 @@ fn spawn_route_backend() -> Option<String> {
 /// that project's own install (`node_modules/.bin/next` or `node_modules/next/dist/bin/next`).
 fn resolve_next_bin(project_root: &Path, node: &Path) -> Option<PathBuf> {
     let candidates = [
-        project_root.join("node_modules").join("next").join("dist").join("bin").join("next"),
+        project_root
+            .join("node_modules")
+            .join("next")
+            .join("dist")
+            .join("bin")
+            .join("next"),
         project_root.join("node_modules").join(".bin").join("next"),
     ];
     for c in candidates {
@@ -596,7 +611,9 @@ fn find_assets_web_root() -> Option<PathBuf> {
 
     // fallback — support both G:\Dx\desktop\assets\web and legacy G:\Dx\code\assets\web
     let fb = PathBuf::from(r"G:\Dx\desktop\assets\web");
-    if fb.is_dir() { return Some(fb); }
+    if fb.is_dir() {
+        return Some(fb);
+    }
     let fb2 = PathBuf::from(r"G:\Dx\code\assets\web");
     if fb2.is_dir() { Some(fb2) } else { None }
 }
@@ -1101,10 +1118,10 @@ pub fn start_embedded_web_server() -> u16 {
                         .with_header(
                             Header::from_bytes(&b"Content-Type"[..], mime_type.as_bytes()).unwrap(),
                         )
-                        .with_header(Header::from_bytes(
-                            &b"Cache-Control"[..],
-                            &b"no-store, max-age=0"[..],
-                        ).unwrap());
+                        .with_header(
+                            Header::from_bytes(&b"Cache-Control"[..], &b"no-store, max-age=0"[..])
+                                .unwrap(),
+                        );
                     let _ = request.respond(response);
                 } else {
                     let response = Response::empty(404);
