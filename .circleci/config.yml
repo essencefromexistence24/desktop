@@ -1,68 +1,83 @@
 version: 2.1
 
-# Minimal linux-only build for dx-desktop.
-# Builds the native Linux `dx-desktop` binary and stores it as an artifact
-# for download to G:\Dx\bin. No macOS job, no tests, no clippy — to save credits.
+# macOS-only build for dx-desktop (Zed fork).
+# Windows + Linux build on the dev machine, so CircleCI does macOS only:
+# Apple hardware is the only place macOS binaries can be produced.
+#
+# Runner facts, verified 2026-09-04 against CircleCI docs:
+# - m4pro.medium (6 vCPU / 28 GiB) IS the Free-plan macOS class (free
+#   default since Nov 2025; M1/M2 classes are end-of-life since Feb 2026
+#   and must not be referenced).
+# - Xcode 26.4.1 is a supported image on m4pro.medium.
+# - Cost: 200 credits/min out of the 30,000/month pool, and Free jobs
+#   hard-cap at 1 hour total. Zed full release builds are heavy: keep the
+#   cargo cache warm (save/restore below) or every build stays cold and
+#   risks the cap forever.
 jobs:
-  build-linux:
-    machine:
-      image: ubuntu-2204:current
-    resource_class: large
+  build-macos:
+    macos:
+      xcode: "26.4.1"
+    resource_class: m4pro.medium # 6 vCPU / 28 GiB - free plan eligible
+    working_directory: ~/repo
     environment:
-      CARGO_INCREMENTAL: "0"
-      CARGO_BUILD_JOBS: "2"
-      CC: clang
-      CXX: clang++
+      BASH_ENV: /tmp/BASH_ENV
     steps:
       - checkout
       - run:
-          name: Install Linux deps
-          no_output_timeout: 30m
+          name: Install Rust toolchain
           command: |
-            chmod +x ./script/linux ./script/download-wasi-sdk
-            echo "=== switching apt from EC2 mirror to archive.ubuntu.com ==="
-            sudo sed -i 's|http://us-east-1.ec2.archive.ubuntu.com/ubuntu|http://archive.ubuntu.com/ubuntu|g; s|http://us-east-1.ec2.clouds.archive.ubuntu.com/ubuntu|http://archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null || true
-            grep -rh "^deb " /etc/apt/sources.list /etc/apt/sources.list.d/ 2>/dev/null | head -n 10 || true
-            echo "=== suppressing needrestart interactive prompts ==="
-            sudo mkdir -p /etc/needrestart/conf.d
-            printf '%s\n' '$nrconf{restart} = "a";' | sudo tee /etc/needrestart/conf.d/99-ci.conf > /dev/null
-            for i in 1 2 3; do
-              echo "=== apt attempt $i/3 ==="
-              if bash ./script/linux; then
-                echo "deps OK on attempt $i"
-                break
-              fi
-              echo "deps failed on attempt $i, retrying in 15s..."
-              sleep 15
-              if [ "$i" = "3" ]; then echo "deps failed after 3 attempts"; exit 1; fi
-            done
+            set -euo pipefail
+            touch "$BASH_ENV"
+            # rust-toolchain.toml pins the exact toolchain; rustup installs it.
+            if ! command -v rustup &>/dev/null; then
+              curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --profile minimal
+            fi
+            echo 'source "$HOME/.cargo/env"' >> "$BASH_ENV"
       - run:
-          name: Download WASI SDK
-          command: bash ./script/download-wasi-sdk
+          name: Install macOS build dependencies
+          command: |
+            set -euo pipefail
+            source "$BASH_ENV"
+            HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew install cmake pkgconf
+            cmake --version
       - restore_cache:
           keys:
-            - cargo-registry-v2-{{ checksum "Cargo.lock" }}-{{ checksum "rust-toolchain.toml" }}
-            - cargo-registry-v2-{{ checksum "Cargo.lock" }}-
-            - cargo-registry-v2-
+            - cargo-macos-{{ checksum "Cargo.lock" }}-{{ .Branch }}
+            - cargo-macos-{{ checksum "Cargo.lock" }}
+            - cargo-macos-
       - run:
-          name: Build dx-desktop (linux release)
-          # Full Zed release builds take 40-60 min; 10 min default would kill it.
+          name: Build dx-desktop (macOS arm64 release)
           no_output_timeout: 60m
           command: |
-            rustc -vV
+            set -euo pipefail
+            source "$BASH_ENV"
+            rustc --version && cargo --version
             cargo build --release -p zed --bin dx-desktop
-            ls -lh target/release/dx-desktop
-            file target/release/dx-desktop || true
       - save_cache:
-          key: cargo-registry-v2-{{ checksum "Cargo.lock" }}-{{ checksum "rust-toolchain.toml" }}
+          # Keep compiled deps even on failure so the next run resumes.
+          key: cargo-macos-{{ checksum "Cargo.lock" }}-{{ .Branch }}
+          when: on_fail
           paths:
             - ~/.cargo/registry
             - ~/.cargo/git
+            - ./target
+      - run:
+          name: Report binary size
+          command: |
+            ls -lh target/release/dx-desktop
+            file target/release/dx-desktop || true
       - store_artifacts:
           path: target/release/dx-desktop
-          destination: dx-desktop-linux-x86_64
+          destination: dx-desktop-macos-arm64
+      - save_cache:
+          key: cargo-macos-{{ checksum "Cargo.lock" }}-{{ .Branch }}
+          paths:
+            - ~/.cargo/registry
+            - ~/.cargo/git
+            - ./target
 
 workflows:
-  linux-only:
+  version: 2
+  macos-only:
     jobs:
-      - build-linux
+      - build-macos
