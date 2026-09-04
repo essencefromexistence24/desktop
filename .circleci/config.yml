@@ -17,9 +17,19 @@ jobs:
       - checkout
       - run:
           name: Install Linux deps
+          no_output_timeout: 30m
           command: |
             chmod +x ./script/linux ./script/download-wasi-sdk
-            bash ./script/linux
+            for i in 1 2 3; do
+              echo "=== apt attempt $i/3 ==="
+              if bash ./script/linux; then
+                echo "deps OK on attempt $i"
+                break
+              fi
+              echo "deps failed on attempt $i, retrying in 15s..."
+              sleep 15
+              if [ "$i" = "3" ]; then echo "deps failed after 3 attempts"; exit 1; fi
+            done
       - run:
           name: Download WASI SDK
           command: bash ./script/download-wasi-sdk
