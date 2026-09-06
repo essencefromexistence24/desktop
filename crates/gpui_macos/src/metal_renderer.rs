@@ -863,6 +863,13 @@ impl MetalRenderer {
         );
 
         for batch in scene.batches() {
+            // Classify BEFORE the by-value match below: its arms move the
+            // batch's ranges out, so `batch` cannot be matched on afterwards.
+            // (`LiquidGlass { .. }` / `Paths(_)` bind nothing and move nothing.)
+            let affects_backdrop = !matches!(
+                batch,
+                PrimitiveBatch::LiquidGlass { .. } | PrimitiveBatch::Paths(_)
+            );
             let ok = match batch {
                 PrimitiveBatch::Shadows(range) => self.draw_shadows(
                     &scene.shadows[range],
@@ -996,12 +1003,8 @@ impl MetalRenderer {
                 ),
                 PrimitiveBatch::SubpixelSprites { .. } => unreachable!(),
             };
-            if ok {
-                match batch {
-                    PrimitiveBatch::LiquidGlass { .. } => {}
-                    PrimitiveBatch::Paths(_) => {}
-                    _ => needs_backdrop_refresh = true,
-                }
+            if ok && affects_backdrop {
+                needs_backdrop_refresh = true;
             }
             if !ok {
                 command_encoder.end_encoding();
