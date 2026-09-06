@@ -53,6 +53,19 @@ zed_actions.workspace = true
 [target.'cfg(target_os = "macos")'.dependencies]
 web_preview_macos.workspace = true
 
+[target.'cfg(any(target_os = "linux", target_os = "macos"))'.dependencies]
+# Deps for the cross-platform local preview server (`server.rs`), which the
+# sidebar uses on every desktop OS. (Windows gets the same set from its
+# section below; kept separate to avoid touching the Windows closure.)
+assets.workspace = true
+axum.workspace = true
+futures.workspace = true
+gpui.workspace = true
+tiny_http.workspace = true
+tokio = { workspace = true, features = ["rt", "rt-multi-thread", "macros", "sync"] }
+tracing.workspace = true
+serde_json.workspace = true
+
 [target.'cfg(all(unix, not(target_os = "macos"), not(target_os = "windows")))'.dependencies]
 web_preview_linux.workspace = true
 rust-embed.workspace = true
