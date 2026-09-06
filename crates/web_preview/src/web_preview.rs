@@ -29,7 +29,7 @@ pub mod web_preview_view;
 #[cfg(target_os = "windows")]
 pub(crate) mod windows_visual_webview;
 
-#[cfg(any(target_os = "windows", target_os = "macos", target_os = "linux"))]
+#[cfg(target_os = "windows")]
 pub mod server;
 
 #[cfg(target_os = "windows")]
