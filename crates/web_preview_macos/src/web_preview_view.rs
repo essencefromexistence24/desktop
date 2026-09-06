@@ -21,6 +21,7 @@ use std::io::Cursor;
 #[cfg(target_os = "windows")]
 use std::num::NonZeroIsize;
 use std::{
+    borrow::Cow,
     cell::{Cell, RefCell},
     fs,
     panic::{AssertUnwindSafe, catch_unwind},
@@ -281,6 +282,31 @@ impl WebPreviewView {
             if let Some(existing_view_idx) = pane.index_for_item(&preview) {
                 pane.activate_item(existing_view_idx, true, true, window, cx);
             }
+        });
+        cx.notify();
+    }
+
+    pub fn open_new_url_in_active_pane(
+        workspace: &mut Workspace,
+        url: &str,
+        window: &mut Window,
+        cx: &mut Context<Workspace>,
+    ) {
+        let workspace_context = Self::workspace_context(workspace, cx);
+        let weak_workspace = workspace.weak_handle();
+        let view = cx.new(|cx| {
+            Self::new_for_url(
+                weak_workspace,
+                workspace_context,
+                url.to_string(),
+                None,
+                None,
+                window,
+                cx,
+            )
+        });
+        workspace.active_pane().update(cx, |pane, cx| {
+            pane.add_item(Box::new(view.clone()), true, true, None, window, cx);
         });
         cx.notify();
     }
@@ -653,7 +679,8 @@ impl WebPreviewView {
         if self.last_applied_bounds.borrow().as_ref().copied() == Some(bounds) {
             return;
         }
-        let Some(preview) = self.native_preview.borrow_mut().as_mut() else {
+        let mut native_preview_guard = self.native_preview.borrow_mut();
+        let Some(preview) = native_preview_guard.as_mut() else {
             return;
         };
         let _ = set_macos_native_preview_bounds(preview, bounds);
@@ -2163,6 +2190,8 @@ impl Item for WebPreviewView {
                 event_pump_task: None,
                 zoom_factor: 1.0,
                 is_active_item: false,
+                #[cfg(target_os = "macos")]
+                native_preview_visible: Cell::new(false),
                 #[cfg(any(target_os = "windows", target_os = "macos"))]
                 native_preview: Rc::new(RefCell::new(None)),
                 _subscriptions: vec![],
@@ -2593,11 +2622,43 @@ fn create_native_preview_for_macos_window(
             size: Size::Logical(LogicalSize::new(32.0, 32.0)),
         });
 
-    use rust_embed::RustEmbed;
-
-    #[derive(RustEmbed)]
-    #[folder = "../../assets/web/"]
-    struct WebProjectsAssets;
+    fn load_disk_preview_file(path: &str) -> Option<std::borrow::Cow<'static, [u8]>> {
+        fn assets_web_root() -> Option<std::path::PathBuf> {
+            if let Some(dir) = std::env::var_os("DX_ASSETS_WEB_ROOT").map(std::path::PathBuf::from)
+            {
+                if dir.is_dir() {
+                    return Some(dir);
+                }
+            }
+            if let Ok(exe) = std::env::current_exe() {
+                let mut dir = exe.parent()?.to_path_buf();
+                for _ in 0..6 {
+                    let candidate = dir.join("assets").join("web");
+                    if candidate.is_dir() {
+                        return Some(candidate);
+                    }
+                    dir = dir.parent()?.to_path_buf();
+                }
+            }
+            let mut dir = std::env::current_dir().ok()?;
+            for _ in 0..6 {
+                let candidate = dir.join("assets").join("web");
+                if candidate.is_dir() {
+                    return Some(candidate);
+                }
+                match dir.parent() {
+                    Some(parent) => dir = parent.to_path_buf(),
+                    None => break,
+                }
+            }
+            None
+        }
+        let root = assets_web_root()?;
+        let relative = path.trim_start_matches('/');
+        Some(std::borrow::Cow::Owned(
+            std::fs::read(root.join(relative)).ok()?,
+        ))
+    }
 
     fn guess_mime(path: &str) -> &'static str {
         if path.ends_with(".html") {
@@ -2625,7 +2686,7 @@ fn create_native_preview_for_macos_window(
 
     let webview = WebViewBuilder::new_with_web_context(web_context.as_mut())
         .with_bounds(initial_bounds)
-        .with_custom_protocol("dxcode".into(), move |request| {
+        .with_custom_protocol("dxcode".into(), move |_id, request| {
             let path = request.uri().path().trim_start_matches('/');
             let path = if path.is_empty() || path.ends_with('/') {
                 format!("{}index.html", path)
@@ -2633,18 +2694,18 @@ fn create_native_preview_for_macos_window(
                 path.to_string()
             };
 
-            match WebProjectsAssets::get(&path) {
-                Some(content) => {
+            match load_disk_preview_file(&path) {
+                Some(bytes) => {
                     let mime = guess_mime(&path);
                     wry::http::Response::builder()
                         .header("Content-Type", mime)
                         .status(200)
-                        .body(content.data.into_owned())
+                        .body(bytes)
                         .unwrap()
                 }
                 None => wry::http::Response::builder()
                     .status(404)
-                    .body(Vec::new())
+                    .body(Cow::Owned(Vec::new()))
                     .unwrap(),
             }
         })
@@ -2654,7 +2715,6 @@ fn create_native_preview_for_macos_window(
         .with_hotkeys_zoom(false)
         .with_back_forward_navigation_gestures(true)
         .with_accept_first_mouse(true)
-        .with_default_context_menus(false)
         .with_devtools(true)
         .with_visible(true)
         .with_initialization_script(WEB_PREVIEW_BRIDGE_SCRIPT)
@@ -2856,7 +2916,7 @@ fn load_bookmarks(profile_dir: &Path) -> Result<Vec<String>> {
 }
 
 fn scan_local_extensions() -> Result<Vec<DetectedExtension>> {
-    let mut extensions = Vec::new();
+    let mut extensions: Vec<DetectedExtension> = Vec::new();
 
     #[cfg(target_os = "windows")]
     {

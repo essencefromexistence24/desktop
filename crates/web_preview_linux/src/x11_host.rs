@@ -1,7 +1,11 @@
 use anyhow::{Result, anyhow};
 use gdkx11::{X11Display, X11Window};
 use gpui::{Bounds, Pixels, point, px, size};
-use gtk::{Fixed, Inhibit, Window, WindowType, cairo, glib::object::Cast, prelude::*};
+use gtk::{
+    Fixed, Window, WindowType, cairo,
+    glib::{Propagation, object::Cast},
+    prelude::*,
+};
 use image::{RgbaImage, imageops};
 use std::{
     cell::{Cell, RefCell},
@@ -34,7 +38,7 @@ impl X11PreviewHost {
         window.set_skip_taskbar_hint(true);
         window.set_skip_pager_hint(true);
         window.set_app_paintable(true);
-        if let Some(screen) = window.screen() {
+        if let Some(screen) = gtk::prelude::GtkWindowExt::screen(&window) {
             if let Some(visual) = screen.rgba_visual() {
                 window.set_visual(Some(&visual));
             }
@@ -156,7 +160,7 @@ fn install_transparent_background(widget: &impl IsA<gtk::Widget>) {
         cr.set_source_rgba(0.0, 0.0, 0.0, 0.0);
         let _ = cr.paint();
         cr.set_operator(cairo::Operator::Over);
-        Inhibit(true)
+        Propagation::Stop
     });
 }
 
@@ -236,14 +240,15 @@ fn attach_transient_parent(window: &Window, parent_xid: u64) -> Result<()> {
     let gdk_window = window
         .window()
         .ok_or_else(|| anyhow!("The GTK X11 host window did not expose a native GDK window"))?;
-    let gdk_window = gdk_window
-        .downcast::<X11Window>()
-        .map_err(|_| anyhow!("The GTK host window is not running on the X11 GDK backend"))?;
-    let display = gdk_window
-        .display()
+    let display = gdk_window.display();
+    let display = display
         .downcast::<X11Display>()
         .map_err(|_| anyhow!("The GTK X11 host window did not expose an X11 display"))?;
+    let native_window: gdkx11::gdk::Window = gdk_window
+        .downcast::<X11Window>()
+        .map_err(|_| anyhow!("The GTK host window is not running on the X11 GDK backend"))?
+        .upcast();
     let parent_window = X11Window::foreign_new_for_display(&display, parent_xid as _);
-    gdk_window.set_transient_for(&parent_window);
+    native_window.set_transient_for(parent_window.upcast_ref());
     Ok(())
 }

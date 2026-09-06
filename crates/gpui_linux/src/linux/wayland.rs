@@ -3,7 +3,7 @@ mod clipboard;
 mod cursor;
 mod display;
 mod serial;
-mod window;
+pub(crate) mod window;
 
 /// Contains Types for configuring layer_shell surfaces.
 pub mod layer_shell;

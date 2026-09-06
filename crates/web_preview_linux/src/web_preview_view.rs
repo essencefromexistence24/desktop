@@ -81,6 +81,73 @@ const MAX_WEB_PREVIEW_IPC_MESSAGE_BYTES: usize = 1024 * 1024;
 const MAX_DEFERRED_WEB_PREVIEW_IPC_MESSAGES: usize = 256;
 const MAX_DEFERRED_WEB_PREVIEW_IPC_BYTES: usize = 8 * 1024 * 1024;
 
+#[cfg(target_os = "linux")]
+use std::borrow::Cow;
+
+/// Read a preview asset from the live `assets/web` tree on disk (shipped
+/// next to the binary). Resolution order: `$DX_ASSETS_WEB_ROOT`, then
+/// `<exe-dir>/assets/web` and `<cwd>/assets/web`, walking upward.
+#[cfg(target_os = "linux")]
+fn load_disk_preview_file(path: &str) -> Option<Cow<'static, [u8]>> {
+    fn assets_web_root() -> Option<std::path::PathBuf> {
+        if let Some(dir) = std::env::var_os("DX_ASSETS_WEB_ROOT").map(std::path::PathBuf::from) {
+            if dir.is_dir() {
+                return Some(dir);
+            }
+        }
+        if let Ok(exe) = std::env::current_exe() {
+            let mut dir = exe.parent()?.to_path_buf();
+            for _ in 0..6 {
+                let candidate = dir.join("assets").join("web");
+                if candidate.is_dir() {
+                    return Some(candidate);
+                }
+                dir = dir.parent()?.to_path_buf();
+            }
+        }
+        let mut dir = std::env::current_dir().ok()?;
+        for _ in 0..6 {
+            let candidate = dir.join("assets").join("web");
+            if candidate.is_dir() {
+                return Some(candidate);
+            }
+            match dir.parent() {
+                Some(parent) => dir = parent.to_path_buf(),
+                None => break,
+            }
+        }
+        None
+    }
+    let root = assets_web_root()?;
+    let relative = path.trim_start_matches('/');
+    Some(Cow::Owned(std::fs::read(root.join(relative)).ok()?))
+}
+
+#[cfg(target_os = "linux")]
+fn guess_mime(path: &str) -> &'static str {
+    if path.ends_with(".html") {
+        "text/html"
+    } else if path.ends_with(".css") {
+        "text/css"
+    } else if path.ends_with(".js") {
+        "text/javascript"
+    } else if path.ends_with(".json") {
+        "application/json"
+    } else if path.ends_with(".png") {
+        "image/png"
+    } else if path.ends_with(".jpg") || path.ends_with(".jpeg") {
+        "image/jpeg"
+    } else if path.ends_with(".svg") {
+        "image/svg+xml"
+    } else if path.ends_with(".woff2") {
+        "font/woff2"
+    } else if path.ends_with(".wasm") {
+        "application/wasm"
+    } else {
+        "application/octet-stream"
+    }
+}
+
 pub type OnboardingCompleteCallback = Rc<dyn Fn(&mut Window, &mut App)>;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -310,6 +377,31 @@ impl WebPreviewView {
             if let Some(existing_view_idx) = pane.index_for_item(&preview) {
                 pane.activate_item(existing_view_idx, true, true, window, cx);
             }
+        });
+        cx.notify();
+    }
+
+    pub fn open_new_url_in_active_pane(
+        workspace: &mut Workspace,
+        url: &str,
+        window: &mut Window,
+        cx: &mut Context<Workspace>,
+    ) {
+        let workspace_context = Self::workspace_context(workspace, cx);
+        let weak_workspace = workspace.weak_handle();
+        let view = cx.new(|cx| {
+            Self::new_for_url(
+                weak_workspace,
+                workspace_context,
+                url.to_string(),
+                None,
+                None,
+                window,
+                cx,
+            )
+        });
+        workspace.active_pane().update(cx, |pane, cx| {
+            pane.add_item(Box::new(view.clone()), true, true, None, window, cx);
         });
         cx.notify();
     }
@@ -696,7 +788,8 @@ impl WebPreviewView {
         let Some(bounds) = self.host_bounds.borrow().as_ref().copied() else {
             return;
         };
-        let Some(preview) = self.native_preview.borrow_mut().as_mut() else {
+        let mut native_preview_guard = self.native_preview.borrow_mut();
+        let Some(preview) = native_preview_guard.as_mut() else {
             return;
         };
         let resolved_bounds = linux_preview_layout(preview, window, bounds);
@@ -2740,7 +2833,7 @@ fn create_native_preview_for_macos_window(
 
     let webview = WebViewBuilder::new_with_web_context(web_context.as_mut())
         .with_bounds(initial_bounds)
-        .with_custom_protocol("dxcode".into(), move |request| {
+        .with_custom_protocol("dxcode".into(), move |_id, request| {
             let path = request.uri().path().trim_start_matches('/');
             let path = if path.is_empty() || path.ends_with('/') {
                 format!("{}index.html", path)
@@ -2748,18 +2841,18 @@ fn create_native_preview_for_macos_window(
                 path.to_string()
             };
 
-            match WebProjectsAssets::get(&path) {
-                Some(content) => {
+            match load_disk_preview_file(&path) {
+                Some(bytes) => {
                     let mime = guess_mime(&path);
                     wry::http::Response::builder()
                         .header("Content-Type", mime)
                         .status(200)
-                        .body(content.data.into_owned())
+                        .body(bytes)
                         .unwrap()
                 }
                 None => wry::http::Response::builder()
                     .status(404)
-                    .body(Vec::new())
+                    .body(Cow::Owned(Vec::new()))
                     .unwrap(),
             }
         })
@@ -2768,7 +2861,6 @@ fn create_native_preview_for_macos_window(
         .with_clipboard(true)
         .with_hotkeys_zoom(false)
         .with_back_forward_navigation_gestures(true)
-        .with_default_context_menus(false)
         .with_devtools(true)
         .with_visible(true)
         .with_initialization_script(WEB_PREVIEW_BRIDGE_SCRIPT)
@@ -2870,7 +2962,7 @@ fn detect_linux_window_system(window: &Window) -> Result<LinuxWindowSystem> {
 fn x11_parent_window_id(window: &Window) -> Result<u64> {
     match HasWindowHandle::window_handle(window)?.as_raw() {
         RawWindowHandle::Xlib(handle) => Ok(handle.window),
-        RawWindowHandle::Xcb(handle) => Ok(handle.window.into()),
+        RawWindowHandle::Xcb(handle) => Ok(u64::from(handle.window.get())),
         _ => Err(anyhow!(
             "The Linux window is not using an X11 window handle for native web preview"
         )),
@@ -2953,7 +3045,7 @@ fn create_native_preview_for_linux_x11_window(
 
     let webview = WebViewBuilder::new_with_web_context(web_context.as_mut())
         .with_bounds(initial_bounds)
-        .with_custom_protocol("dx-code".into(), move |request| {
+        .with_custom_protocol("dx-code".into(), move |_id, request| {
             let path = request.uri().path().trim_start_matches('/');
             let path = if path.is_empty() || path.ends_with('/') {
                 format!("{}index.html", path)
@@ -2961,18 +3053,18 @@ fn create_native_preview_for_linux_x11_window(
                 path.to_string()
             };
 
-            match WebProjectsAssets::get(&path) {
-                Some(content) => {
+            match load_disk_preview_file(&path) {
+                Some(bytes) => {
                     let mime = guess_mime(&path);
                     wry::http::Response::builder()
                         .header("Content-Type", mime)
                         .status(200)
-                        .body(content.data.into_owned())
+                        .body(bytes)
                         .unwrap()
                 }
                 None => wry::http::Response::builder()
                     .status(404)
-                    .body(Vec::new())
+                    .body(Cow::Owned(Vec::new()))
                     .unwrap(),
             }
         })
@@ -2981,7 +3073,6 @@ fn create_native_preview_for_linux_x11_window(
         .with_clipboard(true)
         .with_hotkeys_zoom(false)
         .with_back_forward_navigation_gestures(true)
-        .with_default_context_menus(false)
         .with_devtools(true)
         .with_visible(true)
         .with_initialization_script(WEB_PREVIEW_BRIDGE_SCRIPT)
@@ -3069,7 +3160,7 @@ fn create_native_preview_for_linux_wayland_window(
 
     let webview = WebViewBuilder::new_with_web_context(web_context.as_mut())
         .with_bounds(initial_bounds)
-        .with_custom_protocol("dx-code".into(), move |request| {
+        .with_custom_protocol("dx-code".into(), move |_id, request| {
             let path = request.uri().path().trim_start_matches('/');
             let path = if path.is_empty() || path.ends_with('/') {
                 format!("{}index.html", path)
@@ -3077,18 +3168,18 @@ fn create_native_preview_for_linux_wayland_window(
                 path.to_string()
             };
 
-            match WebProjectsAssets::get(&path) {
-                Some(content) => {
+            match load_disk_preview_file(&path) {
+                Some(bytes) => {
                     let mime = guess_mime(&path);
                     wry::http::Response::builder()
                         .header("Content-Type", mime)
                         .status(200)
-                        .body(content.data.into_owned())
+                        .body(bytes)
                         .unwrap()
                 }
                 None => wry::http::Response::builder()
                     .status(404)
-                    .body(Vec::new())
+                    .body(Cow::Owned(Vec::new()))
                     .unwrap(),
             }
         })
@@ -3097,7 +3188,6 @@ fn create_native_preview_for_linux_wayland_window(
         .with_clipboard(true)
         .with_hotkeys_zoom(false)
         .with_back_forward_navigation_gestures(true)
-        .with_default_context_menus(false)
         .with_devtools(true)
         .with_visible(true)
         .with_initialization_script(WEB_PREVIEW_BRIDGE_SCRIPT)

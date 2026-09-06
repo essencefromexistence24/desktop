@@ -1,7 +1,7 @@
 use anyhow::{Context as _, Result, anyhow};
 use cocoa::{
     appkit::{NSBackingStoreBuffered, NSView, NSWindow, NSWindowStyleMask},
-    base::{NO, YES, id, nil},
+    base::{BOOL, NO, YES, id, nil},
     foundation::{NSPoint, NSRect, NSSize},
 };
 use gpui::{Bounds, Pixels, Window};
@@ -11,7 +11,7 @@ use objc::{
     declare::ClassDecl,
     msg_send,
     runtime::{Class, Object, Sel},
-    sel,
+    sel, sel_impl,
 };
 use objc2_app_kit::{NSPNGFileType, NSWindow as Objc2NSWindow, NSWindowOrderingMode};
 use raw_window_handle::{HasWindowHandle, RawWindowHandle};
@@ -291,7 +291,8 @@ fn screen_rect_for_preview_bounds(
     bounds: Bounds<Pixels>,
 ) -> Result<NSRect> {
     let local_rect = view_rect_for_preview_bounds(gpui_view, bounds);
-    let rect_in_window = unsafe { NSView::convertRect_toView_(gpui_view, local_rect, nil) };
+    let rect_in_window: NSRect =
+        unsafe { msg_send![gpui_view, convertRect: local_rect toView: nil] };
     let screen_rect: NSRect =
         unsafe { msg_send![parent_window, convertRectToScreen: rect_in_window] };
     Ok(screen_rect)
@@ -304,7 +305,8 @@ fn view_rect_for_preview_bounds(gpui_view: id, bounds: Bounds<Pixels>) -> NSRect
     let y = f32::from(bounds.origin.y) as f64;
 
     unsafe {
-        let is_flipped = NSView::isFlipped(gpui_view) == YES;
+        let is_flipped_raw: BOOL = unsafe { msg_send![gpui_view, isFlipped] };
+        let is_flipped = is_flipped_raw == YES;
         let frame = NSView::frame(gpui_view);
         let origin_y = if is_flipped {
             y

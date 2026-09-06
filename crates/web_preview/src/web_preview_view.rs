@@ -34470,11 +34470,43 @@ fn create_native_preview_for_macos_window(
             size: Size::Logical(LogicalSize::new(32.0, 32.0)),
         });
 
-    use rust_embed::RustEmbed;
-
-    #[derive(RustEmbed)]
-    #[folder = "../../assets/web/"]
-    struct WebProjectsAssets;
+    fn load_disk_preview_file(path: &str) -> Option<std::borrow::Cow<'static, [u8]>> {
+        fn assets_web_root() -> Option<std::path::PathBuf> {
+            if let Some(dir) = std::env::var_os("DX_ASSETS_WEB_ROOT").map(std::path::PathBuf::from)
+            {
+                if dir.is_dir() {
+                    return Some(dir);
+                }
+            }
+            if let Ok(exe) = std::env::current_exe() {
+                let mut dir = exe.parent()?.to_path_buf();
+                for _ in 0..6 {
+                    let candidate = dir.join("assets").join("web");
+                    if candidate.is_dir() {
+                        return Some(candidate);
+                    }
+                    dir = dir.parent()?.to_path_buf();
+                }
+            }
+            let mut dir = std::env::current_dir().ok()?;
+            for _ in 0..6 {
+                let candidate = dir.join("assets").join("web");
+                if candidate.is_dir() {
+                    return Some(candidate);
+                }
+                match dir.parent() {
+                    Some(parent) => dir = parent.to_path_buf(),
+                    None => break,
+                }
+            }
+            None
+        }
+        let root = assets_web_root()?;
+        let relative = path.trim_start_matches('/');
+        Some(std::borrow::Cow::Owned(
+            std::fs::read(root.join(relative)).ok()?,
+        ))
+    }
 
     fn guess_mime(path: &str) -> &'static str {
         if path.ends_with(".html") {
@@ -34502,7 +34534,7 @@ fn create_native_preview_for_macos_window(
 
     let webview = WebViewBuilder::new_with_web_context(web_context.as_mut())
         .with_bounds(initial_bounds)
-        .with_custom_protocol("dxcode".into(), move |request| {
+        .with_custom_protocol("dxcode".into(), move |_id, request| {
             let uri_str = request.uri().to_string();
             let path_str = uri_str.as_str();
 
@@ -34526,37 +34558,7 @@ fn create_native_preview_for_macos_window(
                 path.to_string()
             };
 
-            let mut content_data = None;
-
-            if let Some(content) = WebProjectsAssets::get(&path) {
-                content_data = Some(content.data.into_owned());
-            } else {
-                #[cfg(debug_assertions)]
-                {
-                    if let Ok(cwd) = std::env::current_dir() {
-                        let fs_path = cwd.join("assets").join("web").join(&path);
-                        if let Ok(bytes) = std::fs::read(&fs_path) {
-                            content_data = Some(bytes);
-                        }
-                    }
-                    if content_data.is_none() {
-                        if let Ok(exe) = std::env::current_exe() {
-                            if let Some(parent) = exe.parent() {
-                                let fs_path = parent.join("assets").join("web").join(&path);
-                                if let Ok(bytes) = std::fs::read(&fs_path) {
-                                    content_data = Some(bytes);
-                                }
-                            }
-                        }
-                    }
-                    if content_data.is_none() {
-                        let fb = std::path::PathBuf::from(r"G:\Dx\code\assets\web").join(&path);
-                        if let Ok(bytes) = std::fs::read(&fb) {
-                            content_data = Some(bytes);
-                        }
-                    }
-                }
-            }
+            let content_data = load_disk_preview_file(&path);
 
             match content_data {
                 Some(data) => {
@@ -34575,7 +34577,7 @@ fn create_native_preview_for_macos_window(
                     .status(404)
                     .header("Content-Type", "text/plain")
                     .header("Access-Control-Allow-Origin", "*")
-                    .body(Vec::new())
+                    .body(std::borrow::Cow::Owned(Vec::new()))
                     .unwrap(),
             }
         })
@@ -34584,7 +34586,6 @@ fn create_native_preview_for_macos_window(
         .with_clipboard(true)
         .with_hotkeys_zoom(false)
         .with_back_forward_navigation_gestures(true)
-        .with_default_context_menus(false)
         .with_devtools(true)
         .with_visible(true)
         .with_initialization_script(WEB_PREVIEW_BRIDGE_SCRIPT)

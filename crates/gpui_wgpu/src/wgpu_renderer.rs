@@ -126,6 +126,20 @@ struct WgpuResources {
     liquid_glass_backdrop_view: Option<wgpu::TextureView>,
 }
 
+impl WgpuResources {
+    /// Drop intermediate render targets so they are re-created clean on the
+    /// next frame. Used during GPU error recovery: destroying before
+    /// re-allocating avoids GPU memory spikes.
+    fn invalidate_intermediate_textures(&mut self) {
+        self.path_intermediate_texture = None;
+        self.path_intermediate_view = None;
+        self.path_msaa_texture = None;
+        self.path_msaa_view = None;
+        self.liquid_glass_backdrop_texture = None;
+        self.liquid_glass_backdrop_view = None;
+    }
+}
+
 pub struct WgpuRenderer {
     /// Shared GPU context for device recovery coordination (unused on WASM).
     #[allow(dead_code)]
@@ -152,9 +166,18 @@ pub struct WgpuRenderer {
     failed_frame_count: u32,
     device_lost: std::sync::Arc<std::sync::atomic::AtomicBool>,
     surface_configured: bool,
+    /// Set when the last `draw` hit the GPU error-recovery path. Linux shell
+    /// reads it right after `draw` to force another frame.
+    needs_redraw: bool,
 }
 
 impl WgpuRenderer {
+    /// Whether the last `draw` failed to present and the caller should render
+    /// another frame (GPU error recovery is in progress).
+    pub fn needs_redraw(&self) -> bool {
+        self.needs_redraw
+    }
+
     fn resources(&self) -> &WgpuResources {
         self.resources
             .as_ref()
@@ -481,6 +504,7 @@ impl WgpuRenderer {
             max_texture_size,
             last_error,
             failed_frame_count: 0,
+            needs_redraw: false,
             device_lost: context.device_lost_flag(),
             surface_configured: true,
         })
@@ -1164,6 +1188,7 @@ impl WgpuRenderer {
         // Android background/rotation transitions).  Attempting to acquire
         // a texture from an unconfigured surface can block indefinitely on
         // some drivers (Adreno).
+        self.needs_redraw = false;
         if !self.surface_configured {
             return false;
         }

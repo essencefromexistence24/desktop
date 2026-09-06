@@ -1,7 +1,11 @@
 use anyhow::{Result, anyhow};
 use gdkwayland::WaylandWindow;
 use gpui::{Bounds, Pixels, point, px, size};
-use gtk::{Fixed, Inhibit, Window, WindowType, cairo, glib::object::Cast, prelude::*};
+use gtk::{
+    Fixed, Window, WindowType, cairo,
+    glib::{Propagation, object::Cast},
+    prelude::*,
+};
 use image::{RgbaImage, imageops};
 use std::{cell::RefCell, rc::Rc};
 
@@ -31,7 +35,7 @@ impl WaylandPreviewHost {
         window.set_skip_taskbar_hint(true);
         window.set_skip_pager_hint(true);
         window.set_app_paintable(true);
-        if let Some(screen) = window.screen() {
+        if let Some(screen) = gtk::prelude::GtkWindowExt::screen(&window) {
             if let Some(visual) = screen.rgba_visual() {
                 window.set_visual(Some(&visual));
             }
@@ -170,7 +174,7 @@ fn install_transparent_background(widget: &impl IsA<gtk::Widget>) {
         cr.set_source_rgba(0.0, 0.0, 0.0, 0.0);
         let _ = cr.paint();
         cr.set_operator(cairo::Operator::Over);
-        Inhibit(true)
+        Propagation::Stop
     });
 }
 

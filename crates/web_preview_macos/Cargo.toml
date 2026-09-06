@@ -35,6 +35,6 @@ serde_json.workspace = true
 ui.workspace = true
 url.workspace = true
 workspace.workspace = true
-wry = "0.53"
+wry = { version = "0.53", features = ["devtools"] }
 rust-embed.workspace = true
 mime_guess.workspace = true
